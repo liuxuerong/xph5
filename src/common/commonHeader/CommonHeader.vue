@@ -3,7 +3,6 @@
   <div class="scan fl">
   </div>
   <div class="car fr">
-
   </div>
 </div>
 
