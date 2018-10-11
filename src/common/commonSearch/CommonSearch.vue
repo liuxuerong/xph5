@@ -12,18 +12,19 @@ export default {
 <style lang="stylus" scoped>
 @import '~styles/mixins.styl'
 .search
-  width: 100%;
+  width 100%
   height 130px
   line-height 130px
-  background-color: #F5F5F5;
-  font-size: 46px;
-  color: #4D4D4D;
-  padding-left: 30px;
-  margin-right: 43px;
+  background-color #F5F5F5
+  font-size 46px
+  color #4D4D4D
+  padding-left 30px
+  margin-right 43px
   position relative
   input
-    height: 100%;
-    background-color: #F5F5F5;
+    height 100%
+    background-color #F5F5F5
+    width 88%
   .inputIcon
      position absolute
      width 60px
@@ -35,6 +36,8 @@ export default {
   height 100px
   line-height 100px
   width 820px
+  input
+    width 91%
   .inputIcon
     top 24px
 </style>

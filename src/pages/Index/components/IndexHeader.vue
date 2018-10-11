@@ -3,7 +3,7 @@
     <h2>
       五星生活在等你哦~
     </h2>
-    <CommonSearch/>
+    <common-search/>
   </div>
 </template>
 <script>

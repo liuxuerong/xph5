@@ -1,7 +1,8 @@
 body {
   line-height: 1;
-  font-family: "PingFang-SC-Regular", simSun, "Lucida Grande", "Lucida Sans Unicode",
+  font-family: "PingFang SC", simSun, "Lucida Grande", "Lucida Sans Unicode",
     Arial;
+  color:#333;
 }
 i {
   font-style: normal;

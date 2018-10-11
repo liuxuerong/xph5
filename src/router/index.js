@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Index from '@/pages/Index/Index'
+import Index from '@/pages/index/Index'
 import Login from '@/pages/login/Login'
 import PhoneCode from '@/pages/login/PhoneCode'
 import RemberPassword from '@/pages/login/RemberPassword'
