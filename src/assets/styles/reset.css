@@ -35,3 +35,6 @@ color: #ccc;
 :-moz-placeholder { /* Firefox 18- */
 color: #ccc;
 }
+*{
+  box-sizing: border-box;
+}
