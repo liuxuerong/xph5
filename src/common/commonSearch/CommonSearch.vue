@@ -24,6 +24,7 @@ export default {
   input
     height 100%
     background-color #F5F5F5
+    width 88%
   .inputIcon
      position absolute
      width 60px
@@ -35,6 +36,8 @@ export default {
   height 100px
   line-height 100px
   width 820px
+  input
+    width 91%
   .inputIcon
     top 24px
 </style>
