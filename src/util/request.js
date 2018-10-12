@@ -122,43 +122,5 @@ export const http = (opts, params) => {
     })
   }
 
-  // 创建promise实例
-  let promise = new Promise(function (resolve, reject) {
-    let expOptions = {
-      success: function (res) {
-        // state(res, resolve, noLoading)
-        resolve(res)
-      },
-      fail: function (err) {
-        reject(err)
-      }
-    }
-
-    // 扩展请求配置
-    httpDefaultOptions = Object.assign(httpDefaultOptions, expOptions)
-
-    // 获取网络类型
-    // wx.getNetworkType({
-    //   success: function (res) {
-    //     // 返回网络类型, 有效值：
-    //     // wifi/2g/3g/4g/unknown(Android下不常见的网络类型)/none(无网络)
-    //     if (res.networkType !== 'none') {
-    //       // 执行请求
-    //       wx.request(httpDefaultOptions)
-    //     } else {
-    //       wx.hideLoading()
-    //       warnToast('网络连接失败')
-    //     }
-    //   },
-    //   fail: function (err) {
-    //     wx.hideLoading()
-    //     warnToast('未获取网络类型')
-    //   }
-    // })
-  })
-  console.log(httpDefaultOptions)
-  axios(httpDefaultOptions)
-  console.log(promise)
-  // 返回promise实例
-  return promise
+  return axios(httpDefaultOptions)
 }

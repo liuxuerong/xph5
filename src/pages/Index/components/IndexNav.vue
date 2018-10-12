@@ -83,10 +83,13 @@ export default {
       // axios.get(url).then((res) => {
       //   console.log(res)
       // })
-      async function test () {
-        this.provinces = await http(recommend)
-      }
-      test().then((res) => {
+      // async function test () {
+      //   this.provinces = await http(recommend)
+      // }
+      // test().then((res) => {
+      //   console.log(res)
+      // })
+      http(recommend).then((res) => {
         console.log(res)
       })
     }
