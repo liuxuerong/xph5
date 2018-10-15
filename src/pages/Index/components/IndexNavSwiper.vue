@@ -1,32 +1,19 @@
 <template>
-  <div class="indexNavSwiper">
-    <h4>家居精选</h4>
+  <div class="indexNavSwiper" >
+    <h4>{{swiperData.name}}</h4>
     <div class="swiperContainer">
-      <a href="#">
+      <a href="#" v-if="swiperData.title">
         <h3 class="title">
-        浴室精选 Featured
+          {{swiperData.title}}
         </h3>
       </a>
       <swiper :options="swiperOption">
-        <swiper-slide>
+        <swiper-slide v-for="item in swiperData.articles" :key="item.id">
           <a href="#" class="swiperHref">
-            <img src="/static/images/index_swiper.jpg" alt="">
+            <img :src="imageUrl+item.articleCoverImage" alt="">
           </a>
-        </swiper-slide>
-          <swiper-slide>
-          <a href="#" class="swiperHref">
-            <img src="/static/images/index_swiper.jpg" alt="">
-          </a>
-        </swiper-slide>
-          <swiper-slide>
-          <a href="#" class="swiperHref">
-            <img src="/static/images/index_swiper.jpg" alt="">
-          </a>
-        </swiper-slide>
-          <swiper-slide>
-          <a href="#" class="swiperHref">
-            <img src="/static/images/index_swiper.jpg" alt="">
-          </a>
+          <router-link to="" class="routerTitle">{{item.title}}</router-link>
+        <index-content :content="item" v-if="showContent"/>
         </swiper-slide>
         <div class="swiper-pagination" slot="pagination"></div>
       </swiper>
@@ -37,8 +24,14 @@
 <script>
 import 'swiper/dist/css/swiper.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
+import { config } from 'util/config.js'
+import IndexContent from './IndexContent'
 export default {
   name: 'IndexNavSwiper',
+  props: {
+    swiperData: Object,
+    showContent: Boolean
+  },
   data () {
     return {
       swiperOption: {
@@ -48,12 +41,17 @@ export default {
           el: '.swiper-pagination',
           type: 'fraction'
         }
-      }
+      },
+      navSwiperData: {},
+      imageUrl: config.imageUrl
     }
+  },
+  mounted () {
   },
   components: {
     swiper,
-    swiperSlide
+    swiperSlide,
+    IndexContent
   }
 }
 </script>
@@ -65,9 +63,8 @@ export default {
     line-height 164px
     font-size 66px
     color #333333
+    font-weight 600
   .swiperContainer
-    height 600px
-    margin-bottom 150px
     position relative
     .title
       position absolute
@@ -82,17 +79,24 @@ export default {
     display block
     width 100%
     height 600px
-
     img
       width 100%
       height 100%
+.routerTitle
+  position absolute
+  width 100%
+  text-align center
+  top 50%
+  transform translateY(-50%)
+  font-size 56px
+  color #fff
 </style>
 <style lang="stylus">
 .indexNavSwiper
   .swiper-container
     overflow visible
   .swiper-pagination-fraction
-    top -90px
+    top -180px
     text-align right
     color #333333
     font-size 60px
@@ -101,4 +105,6 @@ export default {
       font-weight 500
     .swiper-pagination-total
        font-size 40px
+  .indexContent
+    margin-top 0
 </style>

@@ -1,7 +1,12 @@
 <template>
   <div class="xpSwiper">
       <swiper :options="swiperOption">
-        <swiper-slide>
+        <swiper-slide v-for="item in swiperData" :key="item.adId">
+          <a href="#" class="swiperHref">
+            <img :src="imageUrl+item.image" alt="">
+          </a>
+        </swiper-slide>
+        <!-- <swiper-slide>
           <a href="#" class="swiperHref">
             <img src="/static/images/index_swiper.jpg" alt="">
           </a>
@@ -20,12 +25,7 @@
           <a href="#" class="swiperHref">
             <img src="/static/images/index_swiper.jpg" alt="">
           </a>
-        </swiper-slide>
-        <swiper-slide>
-          <a href="#" class="swiperHref">
-            <img src="/static/images/index_swiper.jpg" alt="">
-          </a>
-        </swiper-slide>
+        </swiper-slide> -->
         <div class="swiper-pagination" slot="pagination"></div>
       </swiper>
   </div>
@@ -33,10 +33,14 @@
 <script>
 import 'swiper/dist/css/swiper.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
+import { bannerList } from 'util/netApi'
+import { http } from 'util/request'
+import { config } from 'util/config.js'
 export default {
   name: 'IndexSwiper',
   data () {
     return {
+      imageUrl: config.imageUrl,
       swiperOption: {
         loop: true,
         autoplay: {
@@ -46,8 +50,16 @@ export default {
         pagination: {
           el: '.swiper-pagination'
         }
-      }
+      },
+      swiperData: []
     }
+  },
+  mounted () {
+    http(bannerList, ['find-banner']).then((res) => {
+      this.swiperData = res.data.body
+    }).catch((err) => {
+      console.log(err)
+    })
   },
   components: {
     swiper,
@@ -84,5 +96,5 @@ export default {
 
   .swiper-pagination-bullet-active
     background #BA825A
-    opacity 0
+    opacity 1
 </style>

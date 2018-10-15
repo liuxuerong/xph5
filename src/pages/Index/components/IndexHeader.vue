@@ -16,11 +16,5 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-.indexHeader
-  padding 0 50px
-  h2
-    color #333
-    font-size 86px
-    height 168px
-    line-height 168px
+
 </style>

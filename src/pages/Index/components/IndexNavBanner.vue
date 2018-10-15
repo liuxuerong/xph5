@@ -1,18 +1,57 @@
 <template>
   <div class="indexNavBanner">
-    <h4>推荐商品
-      <a href="#" class="seeMore fr">更多221篇></a>
+    <h4>{{bannerData.name}}
+      <a href="#" class="seeMore fr" v-if="showMore">更多></a>
     </h4>
-    <img src="/static/images/index_swiper.jpg" alt="" class="banner">
+    <div
+      v-for="item in bannerData.articles"
+      :key="item.id">
+      <img
+        :src="imageUrl+item.articleCoverImage"
+        alt="" class="banner">
+      <index-content
+        v-if="showContent"
+        :content="item"/>
+      <index-items
+        :itemsData="item"
+        v-if="showItems"/>
+    </div>
   </div>
 
 </template>
 <script>
+import { config } from 'util/config.js'
+import IndexContent from './IndexContent'
+import IndexItems from './IndexItems'
 export default {
   name: 'IndexNavBanner',
+  props: {
+    bannerData: {
+      type: Object,
+      default: function () {
+        return {
+          bannerData: {
+            name: '',
+            articles: [
+            ]
+          }
+        }
+      }
+    },
+    showMore: Boolean,
+    showContent: Boolean,
+    showItems: Boolean
+  },
   data () {
     return {
+      imageUrl: config.imageUrl
     }
+  },
+  mounted () {
+  },
+  components: {
+    IndexContent,
+    IndexItems
   }
 }
 </script>
@@ -31,5 +70,5 @@ export default {
       margin-top 60px
   .banner
     width 100%
-    margin-bottom 150px
+    // margin-bottom 150px
 </style>

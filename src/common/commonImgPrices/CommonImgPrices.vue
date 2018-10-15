@@ -1,21 +1,45 @@
 <template>
   <div class="commonImgPrices">
       <div class="imgContainer">
-        <img src="/static/images/index_swiper.jpg" alt="">
+        <img :src="imageUrl+pricesData.coverImage" alt="">
       </div>
       <p class="name">
-        竖条纹水晶花瓶竖条纹水晶花瓶
+        {{pricesData.name}}
       </p>
-      <p class="price">¥339</p>
-      <div class="promotion">
+      <p class="price">¥{{pricesData.minPrice}}</p>
+      <div class="promotion" v-if="pricesData.activityLabel.length>0">
         <span class="promotionItem active">限时特惠</span>
         <span class="promotionItem">满减</span>
       </div>
   </div>
 </template>
 <script>
+import { config } from 'util/config'
 export default {
-  name: 'CommonImgPrices'
+  name: 'CommonImgPrices',
+  props: {
+    pricesData: {
+      type: Object,
+      default () {
+        return {
+          pricesData: {
+            name: '',
+            minPrice: '',
+            activityLabel: [],
+            coverImage: ''
+          }
+        }
+      }
+    }
+  },
+  data () {
+    return {
+      imageUrl: config.imageUrl
+    }
+  },
+  mounted () {
+  }
+
 }
 </script>
 
@@ -37,8 +61,8 @@ export default {
       line-height 98px
       ellipsis()
     .price
-      height 40px
-      line-height 40px
+      height 50px
+      line-height 50px
       ellipsis()
 .promotion
   font-size 0

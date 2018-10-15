@@ -1,11 +1,10 @@
 <template>
-<div class="header clearfix">
-  <div class="scan fl">
+  <div class="header clearfix">
+    <div class="scan fl">
+    </div>
+    <div class="car fr">
+    </div>
   </div>
-  <div class="car fr">
-  </div>
-</div>
-
 </template>
 <script>
 export default {
@@ -17,6 +16,9 @@ export default {
 .header
   height 100px
   padding 0 50px
+  position fixed
+  width 100%
+  top 0
   .scan
     width 83px
     height 83px
