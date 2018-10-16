@@ -8,48 +8,76 @@
             <form id="loginInfoForm">
                 <div class="loginInput userName border-bottom">
                     <i class="loginIcon"></i>
-                    <input type="text" placeholder="手机号码" name="phone" maxlength="11" v-model="userInfo.username"/>
+                    <input type="text" placeholder="手机号码" name="phone" maxlength="11" v-model="username"/>
                 </div>
                 <div class="loginInput passWord">
                     <i class="loginIcon"></i>
-                    <input type="password" placeholder="密码" name="password" maxlength="12" v-model="userInfo.password"/>
+                    <input type="password" placeholder="密码" name="password" maxlength="12" v-model="password"/>
                     <router-link to="/remberPassword" class="passWordOper">忘记密码？</router-link>
                 </div>
             </form>
         </div>
-        <button class="loginBtn" @click="loginBtnClick()">登陆</button>
+        <button class="loginBtn" @click="loginBtnClick">登陆</button>
         <router-link to="/phoneCode" class="phoneCodeLogin">手机验证码登陆</router-link>
         <span class="loginTipText">未注册的手机号码验证后自动创建星品账户</span>
     </div>
 </template>
 
 <script type="text/javascript">
-// const axios = require('axios')
+import { Toast } from 'mint-ui'
+const axios = require('axios')
 export default {
   data () {
     return {
-      userInfo: {
-        username: 17688758824,
-        password: 123456,
-        type: 1,
-        userType: 1
-      }
+      username: '',
+      password: ''
     }
   },
   computed: {
     // 判断手机号码
     rightPhoneNumber: function () {
-      return /^1\d{10}$/gi.test(this.phoneNumber)
+      return /^1\d{10}$/gi.test(this.username)
+    },
+    // 密码验证
+    rightPassword: function () {
+      return /^1\d{10}$/gi.test(this.password)
     }
   },
   methods: {
     loginBtnClick: function () {
       console.log('点击')
       console.log(this.rightPhoneNumber)
+      axios.post('https://api.test.jdhoe.com/auth/token', {
+        username: this.username,
+        password: this.password,
+        type: 1,
+        userType: 1
+      })
+        .then((response) => {
+          console.log(response)
+          if (response.data.code !== 10002) {
+            Toast({
+              message: '登陆成功',
+              position: 'middle',
+              duration: 5000
+            })
+          } else {
+            Toast({
+              message: '账号和密码不匹配，请重新输入',
+              position: 'bottom',
+              duration: 5000
+            })
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     }
   },
   mounted: function () {
-
+    let json = JSON.parse('[{"fileName":"yyzz.jpg","fileUrl":"499998210471755776.jpg"}]')
+    // let newJson = JSON.parse(json)
+    console.log(json)
   }
 //   beforeCreate: function () {
 //     console.group('beforeCreate 创建前状态')
