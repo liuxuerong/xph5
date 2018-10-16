@@ -12,7 +12,7 @@
           <a href="#" class="swiperHref">
             <img :src="imageUrl+item.articleCoverImage" alt="">
           </a>
-          <router-link to="" class="routerTitle">{{item.title}}</router-link>
+          <router-link to="" v-if="isShowImgTitle" class="routerTitle">{{item.title}}</router-link>
         <index-content :content="item" v-if="showContent"/>
         </swiper-slide>
         <div class="swiper-pagination" slot="pagination"></div>
@@ -30,7 +30,8 @@ export default {
   name: 'IndexNavSwiper',
   props: {
     swiperData: Object,
-    showContent: Boolean
+    showContent: Boolean,
+    isShowImgTitle: Boolean
   },
   data () {
     return {
@@ -96,7 +97,7 @@ export default {
   .swiper-container
     overflow visible
   .swiper-pagination-fraction
-    top -180px
+    top -90px
     text-align right
     color #333333
     font-size 60px

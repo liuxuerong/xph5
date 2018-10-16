@@ -1,12 +1,12 @@
 <template>
   <div class="indexNav">
-    <div ref="wrapper" class="wrapper">
-        <mt-navbar v-model="selected" class="border-bottom">
+    <div ref="wrapper" class="indexNavWrapper">
+      <mt-tabbar v-model="selected" class="border-bottom indexNavTabBar" :fixed="tabbarIsFixed">
         <mt-tab-item id="recommond">星品推荐</mt-tab-item>
         <mt-tab-item id="supplies">酒店用品</mt-tab-item>
         <mt-tab-item id="products">居家优品</mt-tab-item>
         <mt-tab-item id="buy">限时购</mt-tab-item>
-      </mt-navbar>
+      </mt-tabbar>
     </div>
 
     <!-- tab-container -->
@@ -22,7 +22,8 @@
          <div class="indexNavItem">
           <index-nav-swiper
             :swiperData="indexRecomondData.newProducts"
-            v-if="recommendFlag"/>
+            v-if="recommendFlag"
+            :showContent="true"/>
         </div>
         <div class="indexNavItem">
           <index-nav-banner
@@ -52,12 +53,6 @@
         </div>
       </mt-tab-container-item>
       <mt-tab-container-item id="supplies">
-         <div class="indexNavItem">
-          <index-nav-swiper
-          :swiperData="indexProductsData.homeSelection"
-          :showContent="false"
-          v-if="productsFlag"/>
-        </div>
         <index-nav-banner
           :bannerData="indexSuppliesData.fiveStarQuality"
           :showMore="false"
@@ -75,6 +70,7 @@
           <index-nav-swiper
           :swiperData="indexProductsData.homeSelection"
           :showContent="false"
+          :isShowImgTitle="true"
           v-if="productsFlag"/>
         </div>
         <div class="goodsContainer">
@@ -93,6 +89,7 @@
           <index-nav-swiper
           :swiperData="indexProductsData.customized"
           :showContent="false"
+          :isShowImgTitle="true"
           v-if="productsFlag"/>
         </div>
 
@@ -131,18 +128,21 @@
   </div>
 </template>
 <script>
-import { Navbar, TabItem, TabContainer, TabContainerItem } from 'mint-ui'
+import { TabItem, TabContainer, TabContainerItem, Tabbar } from 'mint-ui'
 import BScroll from 'better-scroll'
 import IndexNavSwiper from './IndexNavSwiper'
 import IndexNavBanner from './IndexNavBanner'
 import IndexContent from './IndexContent'
 import CommonImgPrices from 'common/commonImgPrices/CommonImgPrices'
 import { recommend, hotel, houseGoods, timeLimit } from 'util/netApi'
-// import { recommend } from 'util/netApi'
 import { http } from 'util/request'
 import { config } from 'util/config.js'
+import { mapState } from 'vuex'
 export default {
   name: 'IndexNav',
+  computed: mapState({
+    tabbarIsFixed: state => state.home.tabbarIsFixed
+  }),
   data () {
     return {
       selected: 'recommond',
@@ -170,64 +170,92 @@ export default {
       scrollX: true,
       click: true
     })
-    this.getFindData()
+    this.getRecommendData()
   },
   methods: {
-    getFindData () {
-      // let url = recommend
-      http(recommend)
-        .then(res => {
-          for (let key in res.data.body) {
-            this.indexRecomondData[key] = res.data.body[key]
-          }
-          this.bestChoiceGoods = this.indexRecomondData.bestChoice.articles[0].goodsItems
-          this.recommendFlag = true
-        })
-        .catch(err => {
-          console.log(err)
-        })
-      http(hotel)
-        .then(res => {
-          for (let key in res.data.body) {
-            this.indexSuppliesData[key] = res.data.body[key]
-          }
-          this.suppliesFlag = true
-        })
-        .catch(err => {
-          console.log(err)
-        })
-      http(houseGoods)
-        .then(res => {
-          console.log(res)
-          for (let key in res.data.body) {
-            this.indexProductsData[key] = res.data.body[key]
-          }
-          this.productsFlag = true
-          this.homeSelection = this.indexProductsData.homeSelection.articles[0].goodsItems
-          this.customized = this.indexProductsData.customized.articles[0].goodsItems
-          this.hotSale = this.indexProductsData.hotSale.articles[0].goodsItems
-        })
-        .catch(err => {
-          console.log(err)
-        })
-      http(timeLimit)
-        .then(res => {
-          console.log(res)
-          for (let key in res.data.body) {
-            this.buyData[key] = res.data.body[key]
-          }
-          this.buyFlag = true
+    getRecommendData () {
+      if (!this.recommendFlag) {
+        http(recommend)
+          .then(res => {
+            for (let key in res.data.body) {
+              this.indexRecomondData[key] = res.data.body[key]
+            }
+            this.bestChoiceGoods = this.indexRecomondData.bestChoice.articles[0].goodsItems
+            this.recommendFlag = true
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+    },
+    getHotelData () {
+      if (!this.suppliesFlag) {
+        http(hotel)
+          .then(res => {
+            for (let key in res.data.body) {
+              this.indexSuppliesData[key] = res.data.body[key]
+            }
+            this.suppliesFlag = true
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+    },
+    getHouseGoodsData () {
+      if (!this.productsFlag) {
+        http(houseGoods)
+          .then(res => {
+            for (let key in res.data.body) {
+              this.indexProductsData[key] = res.data.body[key]
+            }
+            this.productsFlag = true
+            this.homeSelection = this.indexProductsData.homeSelection.articles[0].goodsItems
+            this.customized = this.indexProductsData.customized.articles[0].goodsItems
+            this.hotSale = this.indexProductsData.hotSale.articles[0].goodsItems
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+    },
+    gettimeLimitData () {
+      if (!this.buyFlag) {
+        http(timeLimit)
+          .then(res => {
+            for (let key in res.data.body) {
+              this.buyData[key] = res.data.body[key]
+            }
+            this.buyFlag = true
           // this.homeSelection = this.indexProductsData.homeSelection.articles[0].goodsItems
           // this.customized = this.indexProductsData.customized.articles[0].goodsItems
           // this.hotSale = this.indexProductsData.hotSale.articles[0].goodsItems
-        })
-        .catch(err => {
-          console.log(err)
-        })
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+    }
+  },
+  watch: {
+    selected (val) {
+      switch (val) {
+        case 'supplies':
+          this.getHotelData()
+          break
+        case 'products':
+          this.getHouseGoodsData()
+          break
+        case 'buy':
+          this.gettimeLimitData()
+          break
+        default:
+          break
+      }
     }
   },
   components: {
-    'mt-navbar': Navbar,
+    'mt-tabbar': Tabbar,
     'mt-tab-item': TabItem,
     'mt-tab-container': TabContainer,
     'mt-tab-container-item': TabContainerItem,
@@ -238,10 +266,19 @@ export default {
   }
 }
 </script>
-<style lang="stylus" >
+<style lang="stylus">
+.mint-tabbar.is-fixed.indexNavTabBar
+  top 136px
+  // padding 0 50px
+  // width 10.9rem
+</style>
+
+<style lang="stylus" scoped>
+.indexNav >>> .mint-tab-container
+  margin-bottom 1.315556rem
 .indexNav
   padding 0 50px
-  .wrapper
+  .indexNavWrapper
     overflow hidden
   .goodsContainer
     display flex
@@ -263,73 +300,20 @@ export default {
         margin 0 auto
         margin-top 157px
         padding-top 76px
-  .mint-navbar
-    height 219px
-    line-height 219px
-    text-align left
-    justify-content space-between
-    width 1100px
-  .mint-navbar .mint-tab-item
-    padding 0
-    padding-top 45px
-    flex none
-    .mint-tab-item-label
-      height 130px
-      line-height 130px
-      font-size 46px
-      color #333
-      font-weight 600
-      vertical-align top
-  .mint-navbar .mint-tab-item.is-selected
-    border 0
-    .mint-tab-item-label
-      display inline-block
-      position relative
-      font-size 76px
-    .mint-tab-item-label::before
-      content ''
-      position absolute
-      width 70%
-      height 8px
-      background-color #333
-      left 50%
-      transform translateX(-50%)
-      bottom 0
 .indexNavItem
   border-bottom 10px solid #F5F5F5
 .indexNavItem:last-child
   border-bottom none
 </style>
-<style lang="stylus" scoped>
+<style lang="stylus">
 .indexNav
-  padding 0 50px
-  .goodsContainer
-    display flex
-    justify-content space-around
-    flex-wrap wrap
-    .goodsItem
-      margin-bottom 140px
-    .moreGoods
-      width 382px
-      a
-        display block
-        width 252px
-        height 252px
-        border 4px solid #808080
-        font-size 40px
-        color #808080
-        line-height 56px
-        text-align center
-        margin 0 auto
-        margin-top 157px
-        padding-top 76px
-  .mint-navbar
+  .mint-tabbar
     height 219px
     line-height 219px
     text-align left
     justify-content space-between
     width 1100px
-  .mint-navbar .mint-tab-item
+  .mint-tabbar .mint-tab-item
     padding 0
     padding-top 45px
     flex none
@@ -340,7 +324,7 @@ export default {
       color #333
       font-weight 600
       vertical-align top
-  .mint-navbar .mint-tab-item.is-selected
+  .mint-tabbar .mint-tab-item.is-selected
     border 0
     .mint-tab-item-label
       display inline-block
@@ -355,8 +339,4 @@ export default {
       left 50%
       transform translateX(-50%)
       bottom 0
-.indexNavItem
-  border-bottom 10px solid #F5F5F5
-.indexNavItem:last-child
-  border-bottom none
 </style>

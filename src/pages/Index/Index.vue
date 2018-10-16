@@ -1,6 +1,15 @@
 <template>
-<div>
-  <div class="indexTabbar">
+<div class="index" :class="{searchTop:searchActive,swipperTop:tabbarIsFixed}" ref="index">
+  <div class="scrollTopTop" v-show="showScrollToTop" @click="scrollToTop">返回顶部</div>
+    <common-header/>
+     <h2 class="indexHeader" ref="indexHeader">
+        五星生活在等你哦~
+    </h2>
+    <common-search ref="commonSearchDom"/>
+    <keep-alive include="IndexSwiper">
+      <index-swiper ref="indexSwiper"/>
+    </keep-alive>
+  <div class="indexTabbar" >
     <mt-tabbar v-model="selected" class="border-top" fixed ref="mtTabbar">
       <mt-tab-item
         v-for="item of tabItemData"
@@ -14,8 +23,7 @@
     <div ref="wrapper" class="wrapper">
       <mt-tab-container  v-model="selected" >
         <mt-tab-container-item id="tabbar1" >
-         <index-home
-         :scroll="scroll"/>
+         <index-nav/>
         </mt-tab-container-item>
         <mt-tab-container-item id="tabbar2">
           2
@@ -37,8 +45,12 @@
 </template>
 <script>
 import { Tabbar, TabItem, TabContainer, TabContainerItem } from 'mint-ui'
-import BScroll from 'better-scroll'
-import IndexHome from './components/IndexHome'
+import { mapState, mapMutations } from 'vuex'
+// import BScroll from 'better-scroll'
+import CommonSearch from 'common/commonSearch/CommonSearch'
+import CommonHeader from 'common/commonHeader/CommonHeader'
+import IndexSwiper from './components/IndexSwiper'
+import IndexNav from './components/IndexNav'
 
 export default {
   name: 'IndexBottomTabbar',
@@ -85,8 +97,28 @@ export default {
       ]
     }
   },
+  computed: {
+    isShowScrollToTop: {
+      get () {
+        return this.showScrollToTop
+      },
+      set (v) {
+        this.showScrollToTop = v
+      }
+    },
+    ...mapState({
+      searchActive: state => state.home.searchActive,
+      tabbarIsFixed: state => state.home.tabbarIsFixed
+    })
+  },
+  methods: {
+    ...mapMutations(['changeSearchActive', 'changeTabbarFixed']),
+    scrollToTop () {
+      this.$refs.indexHeader.scrollIntoView()
+    }
+  },
   watch: {
-    selected: function (val) {
+    selected (val) {
       let num = val.charAt(val.length - 1)
       for (let i = 0; i < this.tabItemData.length; i++) {
         this.tabItemData[i].selected = false
@@ -95,32 +127,23 @@ export default {
     }
   },
   mounted () {
-    this.$refs.wrapper.style.height =
-      document.documentElement.clientHeight -
-      this.$refs.mtTabbar.$el.offsetHeight +
-      'px'
-    this.scroll = new BScroll(this.$refs.wrapper, {
-      bounce: {
-        top: true,
-        bottom: true
-      },
-      scrollY: true,
-      click: true,
-      probeType: 2
+    const searchTop = this.$refs.commonSearchDom.$el.offsetTop - this.$refs.commonSearchDom.$el.style.height
+    const swiperTop = this.$refs.indexSwiper.$el.offsetTop
+    let _this = this
+    window.addEventListener('scroll', function () {
+      const documentScrollTop = document.documentElement.scrollTop
+      const searchActive = !(searchTop > documentScrollTop)
+      _this.changeSearchActive(searchActive)
+      const tabbarIsFixed = !(swiperTop > documentScrollTop)
+      _this.isShowScrollToTop = documentScrollTop > 800
+      _this.changeTabbarFixed(tabbarIsFixed)
     })
-    this.scroll.on('scroll', function (pos) {
-      console.log(pos)
-    })
-  },
-  methods: {
-    // showScrollToTop () {
-    //   let top =
-    //   this.showScrollToTop = true
-    // }
   },
   components: {
-    IndexHome,
-    BScroll,
+    IndexNav,
+    CommonHeader,
+    CommonSearch,
+    IndexSwiper,
     'mt-tabbar': Tabbar,
     'mt-tab-item': TabItem,
     'mt-tab-container': TabContainer,
@@ -128,10 +151,38 @@ export default {
   }
 }
 </script>
+<style lang="stylus" scoped>
+.searchTop.index
+  padding-top 266px
+ .swipperTop.index
+  padding-top 355px
+.index
+  padding-top  136px
+.indexHeader
+  color #333
+  font-size 86px
+  height 168px
+  line-height 168px
+  padding 0 50px
+.scrollTopTop
+  height 80px
+  line-height 80px
+  width 260px
+  text-align center
+  border-radius 40px
+  position fixed
+  top 380px
+  left 50%
+  transform  translateX(-50%)
+  z-index 10000
+  color #EFEFEF
+  font-size 36px
+  background rgba(0,0,0,1)
+  opacity 0.5
+</style>
+
 <style lang="stylus" >
 .indexTabbar
-  .wrapper
-
   .mint-navbar
     height 219px
     line-height 219px

@@ -6,26 +6,6 @@
             <img :src="imageUrl+item.image" alt="">
           </a>
         </swiper-slide>
-        <!-- <swiper-slide>
-          <a href="#" class="swiperHref">
-            <img src="/static/images/index_swiper.jpg" alt="">
-          </a>
-        </swiper-slide>
-        <swiper-slide>
-          <a href="#" class="swiperHref">
-            <img src="/static/images/index_swiper.jpg" alt="">
-          </a>
-        </swiper-slide>
-        <swiper-slide>
-          <a href="#" class="swiperHref">
-            <img src="/static/images/index_swiper.jpg" alt="">
-          </a>
-        </swiper-slide>
-        <swiper-slide>
-          <a href="#" class="swiperHref">
-            <img src="/static/images/index_swiper.jpg" alt="">
-          </a>
-        </swiper-slide> -->
         <div class="swiper-pagination" slot="pagination"></div>
       </swiper>
   </div>

@@ -1,12 +1,20 @@
 <template>
-  <div class="search">
+  <div class="search" :class="{searchActive:searchActive}">
     <input type="text" placeholder="搜索">
     <div class="inputIcon"></div>
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 export default {
-  name: 'CommonSearch'
+  name: 'CommonSearch',
+  data () {
+    return {
+    }
+  },
+  computed: mapState({
+    searchActive: state => state.home.searchActive
+  })
 }
 </script>
 <style lang="stylus" scoped>
@@ -35,12 +43,16 @@ export default {
      bgImage("/static/icons/serch_icon")
      top 35px
      right 70px
-.search.top
+.search.searchActive
   height 100px
   line-height 100px
   width 820px
+  position fixed
+  top 18px
+  left 150px
+  z-index 9999
+
   input
-    width 91%
   .inputIcon
     top 24px
 </style>
