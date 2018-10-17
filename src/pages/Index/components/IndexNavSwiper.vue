@@ -28,6 +28,11 @@ import { config } from 'util/config.js'
 import IndexContent from './IndexContent'
 export default {
   name: 'IndexNavSwiper',
+  components: {
+    swiper,
+    swiperSlide,
+    IndexContent
+  },
   props: {
     swiperData: Object,
     showContent: Boolean,
@@ -46,13 +51,6 @@ export default {
       navSwiperData: {},
       imageUrl: config.imageUrl
     }
-  },
-  mounted () {
-  },
-  components: {
-    swiper,
-    swiperSlide,
-    IndexContent
   }
 }
 </script>

@@ -140,9 +140,16 @@ import { config } from 'util/config.js'
 import { mapState } from 'vuex'
 export default {
   name: 'IndexNav',
-  computed: mapState({
-    tabbarIsFixed: state => state.home.tabbarIsFixed
-  }),
+  components: {
+    'mt-tabbar': Tabbar,
+    'mt-tab-item': TabItem,
+    'mt-tab-container': TabContainer,
+    'mt-tab-container-item': TabContainerItem,
+    IndexNavSwiper,
+    CommonImgPrices,
+    IndexNavBanner,
+    IndexContent
+  },
   data () {
     return {
       selected: 'recommond',
@@ -159,6 +166,26 @@ export default {
       customized: [],
       hotSale: [],
       imageUrl: config.imageUrl
+    }
+  },
+  computed: mapState({
+    tabbarIsFixed: state => state.home.tabbarIsFixed
+  }),
+  watch: {
+    selected (val) {
+      switch (val) {
+        case 'supplies':
+          this.getHotelData()
+          break
+        case 'products':
+          this.getHouseGoodsData()
+          break
+        case 'buy':
+          this.gettimeLimitData()
+          break
+        default:
+          break
+      }
     }
   },
   mounted () {
@@ -236,34 +263,8 @@ export default {
           })
       }
     }
-  },
-  watch: {
-    selected (val) {
-      switch (val) {
-        case 'supplies':
-          this.getHotelData()
-          break
-        case 'products':
-          this.getHouseGoodsData()
-          break
-        case 'buy':
-          this.gettimeLimitData()
-          break
-        default:
-          break
-      }
-    }
-  },
-  components: {
-    'mt-tabbar': Tabbar,
-    'mt-tab-item': TabItem,
-    'mt-tab-container': TabContainer,
-    'mt-tab-container-item': TabContainerItem,
-    IndexNavSwiper,
-    CommonImgPrices,
-    IndexNavBanner,
-    IndexContent
   }
+
 }
 </script>
 <style lang="stylus">

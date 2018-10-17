@@ -1,5 +1,6 @@
 <template>
   <div class="commonImgPrices">
+    <router-link :to="'/details/'+pricesData.id">
       <div class="imgContainer">
         <img :src="imageUrl+pricesData.coverImage" alt="">
       </div>
@@ -11,6 +12,7 @@
         <span class="promotionItem active">限时特惠</span>
         <span class="promotionItem">满减</span>
       </div>
+    </router-link>
   </div>
 </template>
 <script>
@@ -60,10 +62,12 @@ export default {
       height 98px
       line-height 98px
       ellipsis()
+      color #333
     .price
       height 50px
       line-height 50px
       ellipsis()
+      color #333
 .promotion
   font-size 0
   text-align center

@@ -42,16 +42,14 @@ export default {
     showContent: Boolean,
     showItems: Boolean
   },
+  components: {
+    IndexContent,
+    IndexItems
+  },
   data () {
     return {
       imageUrl: config.imageUrl
     }
-  },
-  mounted () {
-  },
-  components: {
-    IndexContent,
-    IndexItems
   }
 }
 </script>

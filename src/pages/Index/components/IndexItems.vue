@@ -6,13 +6,15 @@
     </div>
     <div class="itemList">
       <div class="container" v-for="item in itemsData.goodsItems" :key="item.id">
-        <img :src="imageUrl+item.coverImage" alt="">
-        <p class="name">
-          {{item.name}}
-        </p>
-        <p class="price">
-          ¥{{item.minPrice}}
-        </p>
+        <router-link :to="'/details/'+item.id">
+          <img :src="imageUrl+item.coverImage" alt="">
+          <p class="name">
+            {{item.name}}
+          </p>
+          <p class="price">
+            ¥{{item.minPrice}}
+          </p>
+        </router-link>
       </div>
     </div>
   </div>
@@ -64,8 +66,10 @@ export default {
       font-weight 600
       line-height 50px
       ellipsis()
+      color #333
     .price
       margin-top 0px
       line-height 60px
       font-weight normal
+      color #333
 </style>

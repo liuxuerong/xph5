@@ -54,6 +54,16 @@ import IndexNav from './components/IndexNav'
 
 export default {
   name: 'IndexBottomTabbar',
+  components: {
+    IndexNav,
+    CommonHeader,
+    CommonSearch,
+    IndexSwiper,
+    'mt-tabbar': Tabbar,
+    'mt-tab-item': TabItem,
+    'mt-tab-container': TabContainer,
+    'mt-tab-container-item': TabContainerItem
+  },
   data () {
     return {
       showScrollToTop: false,
@@ -111,12 +121,6 @@ export default {
       tabbarIsFixed: state => state.home.tabbarIsFixed
     })
   },
-  methods: {
-    ...mapMutations(['changeSearchActive', 'changeTabbarFixed']),
-    scrollToTop () {
-      this.$refs.indexHeader.scrollIntoView()
-    }
-  },
   watch: {
     selected (val) {
       let num = val.charAt(val.length - 1)
@@ -124,6 +128,12 @@ export default {
         this.tabItemData[i].selected = false
       }
       this.tabItemData[num - 1].selected = true
+    }
+  },
+  methods: {
+    ...mapMutations(['changeSearchActive', 'changeTabbarFixed']),
+    scrollToTop () {
+      this.$refs.indexHeader.scrollIntoView()
     }
   },
   mounted () {
@@ -138,16 +148,6 @@ export default {
       _this.isShowScrollToTop = documentScrollTop > 800
       _this.changeTabbarFixed(tabbarIsFixed)
     })
-  },
-  components: {
-    IndexNav,
-    CommonHeader,
-    CommonSearch,
-    IndexSwiper,
-    'mt-tabbar': Tabbar,
-    'mt-tab-item': TabItem,
-    'mt-tab-container': TabContainer,
-    'mt-tab-container-item': TabContainerItem
   }
 }
 </script>
