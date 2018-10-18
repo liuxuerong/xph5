@@ -1,10 +1,14 @@
 <template>
-  <div class="xpDetails">
+  <div class="xpDetails" ref="xpDetails" :class="{noScroll:popupVisible}">
     <common-swiper :swiperData="swiperData" v-if="swiperData!=[]" />
     <details-des :goods="goods" :activityLabel="activityLabel" v-if="goods" />
     <div class="cutOffLine"></div>
     <details-cell :cellInfo="cellInfo[0]" @click.native="changePopupVisible(true)" />
-    <details-pop-up :sku="sku" v-if="sku"/>
+    <details-pop-up
+      :sku="sku"
+      v-if="sku"
+      :goods="goods"
+    />
     <div class="cutOffLine"></div>
     <details-service/>
     <div class="cutOffLine"></div>
@@ -15,15 +19,17 @@
 </template>
 
 <script>
+// import 'swiper/dist/css/swiper.css'
 import CommonSwiper from 'common/commonSwiper/CommonSwiper'
 import DetailsDes from './components/DetailsDes'
 import DetailsCell from './components/DetailsCell'
 import DetailsPopUp from './components/DetailsPopUp'
 import DetailsService from './components/DetailsService'
 import DetailsOperate from './components/DetailsOperate'
-import skuModule from './components/skuModule'
+// import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import {
-  mapMutations
+  mapMutations,
+  mapState
 } from 'vuex'
 import {
   goodsDetail
@@ -42,8 +48,7 @@ export default {
     DetailsCell,
     DetailsPopUp,
     DetailsService,
-    DetailsOperate,
-    skuModule
+    DetailsOperate
   },
   data () {
     return {
@@ -59,11 +64,22 @@ export default {
         value: ''
       }],
       sku: null
+      // swiperOption: {
+      //   direction: 'vertical',
+      //   slidesPerView: 1,
+      //   mousewheel: true,
+      //   autoHeight: true,
+      //   setWrapperSize: true
+      //   // height: window.innerHeight // 高度设置，占满设备高度
+      // }
     }
   },
+  computed: mapState({
+    popupVisible: state => state.details.popupVisible
+  }),
   methods: {
-    ...mapMutations(['changePopupVisible']),
-    pushKeys (arr) {
+    ...mapMutations(['changePopupVisible', 'changeNowPrice']),
+    pushKeys (arr) { // 处理返回数据
       let sku = {}
       sku.keys = []
       let temKeys = []
@@ -110,13 +126,16 @@ export default {
     }
   },
   mounted () {
+    this.changePopupVisible(false)
+    this.$refs.xpDetails.style.height = document.documentElement.clientHeight + 'px'
     // 商品详情
     http(goodsDetail, [this.$route.params.goodsId])
       .then(res => {
-        this.swiperData = res.data.body.goodsPic
         this.goods = res.data.body.goods
         this.keys = res.data.body.activityLabel
         this.sku = this.pushKeys(res.data.body.goodsItems)
+        this.swiperData = res.data.body.goodsPic
+        this.changeNowPrice(res.data.body.goods.minPrice)
       })
       .catch(err => {
         console.log(err)
@@ -124,10 +143,17 @@ export default {
   }
 }
 </script>
+<style lang="stylus">
+.swiper-slide
+  height auto !important
+</style>
 
 <style lang="stylus" scoped>
 .xpDetails
   padding-bottom 146px
+  overflow-y scroll
+.xpDetails.noScroll
+  overflow-y hidden
 .seeMore
   height 198px
   line-height 198px
