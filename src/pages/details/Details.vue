@@ -9,10 +9,10 @@
       <div class="cutOffLine"></div>
       <details-service/>
       <div class="cutOffLine"></div>
-      <details-cell :cellInfo="cellInfo[1]" />
+      <router-link :to="'/comment/'+goodsId" class="commentRouter"> <details-cell :cellInfo="cellInfo[1]" /></router-link>
       <details-comment-swiper/>
       <div class="seeMore">上拉查看更多详情</div>
-      <details-img-text class="isDetailsImgTextShow" ref="isDetailsImgTextShow" />
+      <details-img-text-desc class="isDetailsImgTextShow" ref="isDetailsImgTextShow" :desc="desc" v-if="desc.length"/>
     </div>
     <details-operate class="detailsOperate" />
     <details-pop-up :sku="sku" v-if="sku" :goods="goods" />
@@ -27,7 +27,7 @@ import DetailsCell from './components/DetailsCell'
 import DetailsPopUp from './components/DetailsPopUp'
 import DetailsService from './components/DetailsService'
 import DetailsOperate from './components/DetailsOperate'
-import DetailsImgText from './components/DetailsImgText'
+import DetailsImgTextDesc from './components/DetailsImgTextDesc'
 import DetailsCommentSwiper from './components/DetailsCommentSwiper'
 
 import BScroll from 'better-scroll'
@@ -45,6 +45,9 @@ import {
 import {
   config
 } from 'util/config.js'
+import {
+  storage
+} from 'util/storage.js'
 export default {
   name: 'Details',
   components: {
@@ -54,17 +57,18 @@ export default {
     DetailsPopUp,
     DetailsService,
     DetailsOperate,
-    DetailsImgText,
+    DetailsImgTextDesc,
     DetailsCommentSwiper,
     BScroll
   },
   data () {
     return {
       imageUrl: config.imageUrl,
+      goodsId: '',
       swiperData: [],
       goods: null,
       activityLabel: [],
-      DetailsImgText: '',
+      desc: '',
       cellInfo: [{
         title: '规格',
         value: '选择规格数量'
@@ -144,6 +148,7 @@ export default {
   },
   mounted () {
     const _this = this
+    this.goodsId = this.$route.params.goodsId
     this.scroll = new BScroll(this.$refs.xpDetails, {
       scrollY: true,
       click: true,
@@ -161,13 +166,17 @@ export default {
     this.changePopupVisible(false)
     this.$refs.xpDetails.style.height = document.documentElement.clientHeight + 'px'
     // 商品详情
-    http(goodsDetail, [this.$route.params.goodsId])
+    http(goodsDetail, [this.goodsId])
       .then(res => {
+        console.log(res)
         this.goods = res.data.body.goods
+        this.desc = res.data.body.goods.desc
         this.keys = res.data.body.activityLabel
         this.sku = this.pushKeys(res.data.body.goodsItems)
         this.swiperData = res.data.body.goodsPic
         this.changeNowPrice(res.data.body.goods.minPrice)
+        storage.setLocalStorage('commemt', res.data.body.goodsComments)
+        // this.changeComment(res.data.body.goodsComments)
         let totals = res.data.body.goodsComments.totals
         if (totals >= 999) {
           totals = '999+'
@@ -184,6 +193,7 @@ export default {
 <style lang="stylus" scoped>
 .xpDetailsScroll
   padding-bottom 146px
+  width 100%
 .xpDetails
   padding-bottom 146px
 .seeMore
@@ -201,5 +211,6 @@ export default {
   z-index 1998
 .isDetailsImgTextShow
   display none
-
+.commentRouter
+  color #262626
 </style>

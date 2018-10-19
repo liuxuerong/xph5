@@ -50,7 +50,9 @@
               <a href="#">查看<br>更多</a>
             </div> -->
           </div>
+          <divider>哎呀！底线到了</divider>
         </div>
+
       </mt-tab-container-item>
       <mt-tab-container-item id="supplies">
         <index-nav-banner
@@ -64,6 +66,7 @@
           :showContent="false"
           :showItems="true"
           v-if="suppliesFlag"/>
+          <divider>哎呀！底线到了</divider>
       </mt-tab-container-item>
       <mt-tab-container-item id="products">
         <div class="indexNavItem">
@@ -120,10 +123,12 @@
             v-if="productsFlag"/>
           <div class="emptyBox"></div>
         </div>
+        <divider>哎呀！底线到了</divider>
       </mt-tab-container-item>
       <mt-tab-container-item id="buy">
         限时购
       </mt-tab-container-item>
+
     </mt-tab-container>
   </div>
 </template>
@@ -138,6 +143,7 @@ import { recommend, hotel, houseGoods, timeLimit } from 'util/netApi'
 import { http } from 'util/request'
 import { config } from 'util/config.js'
 import { mapState } from 'vuex'
+import { Divider } from 'vux'
 export default {
   name: 'IndexNav',
   components: {
@@ -148,7 +154,8 @@ export default {
     IndexNavSwiper,
     CommonImgPrices,
     IndexNavBanner,
-    IndexContent
+    IndexContent,
+    Divider
   },
   data () {
     return {

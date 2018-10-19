@@ -59,3 +59,19 @@ em {
   height: 10px;
   background-color: #F5F5F5;
 }
+.vux-divider{
+  height: 100px !important;
+  line-height: 100px !important;
+  color: #E6E6E6 !important;
+  width: 100%;
+}
+.vux-divider:after, .vux-divider:before{
+  top: 0 !important;
+  width: 140px !important;
+}
+.vux-divider:before{
+  left: 24%;
+}
+.vux-divider:after{
+  right: 24%;
+}
