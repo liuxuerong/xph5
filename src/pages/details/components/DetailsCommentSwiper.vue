@@ -1,65 +1,112 @@
 <template>
-  <div class="xpSwiper">
-      <swiper :options="swiperOption">
-        <swiper-slide v-for="item in swiperData" :key="item.adId">
-          <router-link to="/">
-            <div class="imgText">
-              <div class="left">
-                <p class="name"></p>
-                <p class="commentText"></p>
-              </div>
-              <div class="commentImg">
-                <previewer ref="previewer" :list="previewerList" :options="options">
-                  <template slot="button-after">
-                    <span class="previewer-delete-icon-box">
-                      <img src="" width="22" height="22" class="previewer-delete-icon" @click.prevent.stop="removeImg">
-                    </span>
-                  </template>
-                </previewer>
+  <div class="detailsCommentSwiper">
+    <swiper :options="swiperOption">
+      <swiper-slide v-for="item in swiperData" :key="item.adId">
+        <div class="imgText">
+          <div class="left">
+            <p class="name">我就是昵称呀我就是昵称呀~</p>
+            <p class="commentText">行间距
+              内容这里是用户评论这里是这里是
+              用户评论这里是这里是用户评
+              这里是用户评论这里是论这行间距
+              内容这里是用户评论这里是这里是
+              用户评论这里是这里是用户评
+              这里是用户评论这里是论这
+            </p>
+          </div>
+          <div class="commentImg">
+            <div class="previewCon">
+              <img class="previewer-demo-img" v-for="(item, index) in list" :src="item.src" width="100" @click="show(index)" :key="index">
+              <div v-transfer-dom>
+                <previewer :list="list" ref="previewer" :options="options" @on-index-change="logIndexChange"></previewer>
               </div>
             </div>
-          </router-link>
-        </swiper-slide>
-        <div class="swiper-pagination" slot="pagination"></div>
-      </swiper>
+             <div class="commentImgNum">３张</div>
+          </div>
+        </div>
+      </swiper-slide>
+    </swiper>
   </div>
 </template>
+
 <script>
 import 'swiper/dist/css/swiper.css'
-import { swiper, swiperSlide } from 'vue-awesome-swiper'
-import { bannerList } from 'util/netApi'
-import { http } from 'util/request'
-import { config } from 'util/config.js'
-import { Previewer } from 'vux'
+import {
+  swiper,
+  swiperSlide
+} from 'vue-awesome-swiper'
+import {
+  bannerList
+} from 'util/netApi'
+import {
+  http
+} from 'util/request'
+import {
+  config
+} from 'util/config.js'
+import {
+  Previewer,
+  TransferDom
+} from 'vux'
 export default {
   name: 'DetailsCommentSwiper',
+  directives: {
+    TransferDom
+  },
   components: {
     swiper,
     swiperSlide,
     Previewer
+  },
+  methods: {
+    logIndexChange (arg) {
+      console.log(arg)
+    },
+    show (index) {
+      this.$refs.previewer[index].show(index)
+    }
   },
   data () {
     return {
       imageUrl: config.imageUrl,
       swiperOption: {
         spaceBetween: 12,
-        slidesPerView: 1.2,
-        pagination: {
-          el: '.swiper-pagination'
-        }
+        slidesPerView: 1.2
       },
+      list: [{
+        msrc: 'http://ww1.sinaimg.cn/thumbnail/663d3650gy1fplwu9ze86j20m80b40t2.jpg',
+        src: 'http://ww1.sinaimg.cn/large/663d3650gy1fplwu9ze86j20m80b40t2.jpg',
+        w: 800,
+        h: 400
+      },
+      {
+        msrc: 'http://ww1.sinaimg.cn/thumbnail/663d3650gy1fplwvqwuoaj20xc0p0t9s.jpg',
+        src: 'http://ww1.sinaimg.cn/large/663d3650gy1fplwvqwuoaj20xc0p0t9s.jpg',
+        w: 1200,
+        h: 900
+      }, {
+        msrc: 'http://ww1.sinaimg.cn/thumbnail/663d3650gy1fplwwcynw2j20p00b4js9.jpg',
+        src: 'http://ww1.sinaimg.cn/large/663d3650gy1fplwwcynw2j20p00b4js9.jpg'
+      }
+      ],
       options: {
-        isClickableElement: function (el) {
-          // return /previewer-delete-icon/.test(el.className)
-        },
-        list: [
-          {
-            src: 'https://placekitten.com/800/400'
-          },
-          {
-            src: 'https://placekitten.com/1200/900'
+        getThumbBoundsFn (index) {
+          // find thumbnail element
+          let thumbnail = document.querySelectorAll('.previewer-demo-img')[index]
+          // get window scroll Y
+          let pageYScroll = window.pageYOffset || document.documentElement.scrollTop
+          // optionally get horizontal scroll
+          // get position of element relative to viewport
+          let rect = thumbnail.getBoundingClientRect()
+          // w = width
+          return {
+            x: rect.left,
+            y: rect.top + pageYScroll,
+            w: rect.width
           }
-        ]
+          // Good guide on how to get element coordinates:
+          // http://javascript.info/tutorial/coordinates
+        }
       },
       swiperData: []
     }
@@ -75,31 +122,68 @@ export default {
   }
 }
 </script>
-<style lang="stylus" scoped>
-.xpSwiper
-  height 512px
-  margin-top 48px
-  padding 0 50px
-  margin-bottom 34px
-  .swiperHref
-    display block
-    width 100%
-    height 512px
-    img
-      width 100%
-      height 100%
-</style>
 <style lang="stylus">
-.xpSwiper
-  height 512px
-  margin-top 48px
-  padding 0 50px
-  margin-bottom 34px
-  .swiperHref
-    display block
+.detailsCommentSwiper
+  .swiper-slide
+    height 340px
+    background rgba(255,255,255,1);
+  .commentImg>.previewCon
     width 100%
-    height 512px
+    height 100%
+    overflow hidden
     img
       width 100%
       height 100%
+.pswp__button--close
+  display none !important
+.pswp__button--fs
+  display none !important
+.pswp
+  z-index 19998 !important
+</style>
+<style lang="stylus" scoped>
+@import "~styles/mixins.styl";
+.detailsCommentSwiper
+  height 360px
+  padding 0 50px
+  margin-bottom 34px
+
+ .imgText
+  display flex
+  padding 10px
+  box-shadow 0px 0px 18px rgba(78,78,78,0.15)
+  .left
+    flex 1
+  .commentImg
+    width 365px
+    height 320px
+    position relative
+    margin-left 45px
+  .name
+    font-size 40px
+    height 144px
+    line-height 144px
+    font-weight 600
+    color #262626
+    width 80%
+    ellipsis()
+  .commentText
+    color #262626
+    font-size 36px
+    line-height 60px
+    ellipsisM()
+    -webkit-line-clamp: 3
+.commentImgNum
+  position absolute
+  top 20px
+  right 20px
+  z-index 30
+  width 72px
+  height 38px
+  background rgba(0,0,0,0.5)
+  border-radius 18px
+  font-size 18px
+  line-height 38px
+  text-align center
+  color #fff
 </style>

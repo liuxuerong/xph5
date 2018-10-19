@@ -64,6 +64,7 @@ export default {
       swiperData: [],
       goods: null,
       activityLabel: [],
+      DetailsImgText: '',
       cellInfo: [{
         title: '规格',
         value: '选择规格数量'
@@ -72,14 +73,6 @@ export default {
         value: ''
       }],
       sku: null
-      // swiperOption: {
-      //   direction: 'vertical',
-      //   slidesPerView: 1,
-      //   mousewheel: true,
-      //   autoHeight: true,
-      //   setWrapperSize: true
-      //   // height: window.innerHeight // 高度设置，占满设备高度
-      // }
     }
   },
 

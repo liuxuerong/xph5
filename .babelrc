@@ -13,6 +13,8 @@
     {
       "libraryName": "mint-ui",
       "style": true
+    },{
+      name: 'vux-ui'
     }
   ]],"transform-vue-jsx", "transform-runtime"]
 }

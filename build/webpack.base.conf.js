@@ -6,7 +6,7 @@ const vueLoaderConfig = require('./vue-loader.conf')
 const vuxLoader = require('vux-loader')
 // const webpackConfig = originalConfig
 
-function resolve (dir) {
+function resolve(dir) {
   return path.join(__dirname, '..', dir)
 }
 
@@ -29,12 +29,12 @@ const webpackConfig = {
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
-    publicPath: process.env.NODE_ENV === 'production'
-      ? config.build.assetsPublicPath
-      : config.dev.assetsPublicPath
+    publicPath: process.env.NODE_ENV === 'production' ?
+      config.build.assetsPublicPath :
+      config.dev.assetsPublicPath
   },
   resolve: {
-    extensions: ['.js', '.vue', '.json'],
+    extensions: ['.js', '.vue', '.json', '.less'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),

@@ -60,7 +60,6 @@ export default {
     ...mapMutations(['changeNowPrice', 'changeMaxCount']),
     addCount () {
       this.cartCount++
-      console.log(this.maxCount)
       if (this.cartCount > this.maxCount) {
         this.cartCount = this.maxCount
       }
@@ -236,12 +235,10 @@ export default {
           }
         }
       }
-      console.log(haveChangedId)
+
       if (haveChangedId.length) {
         // 获得组合key价格及数量
         haveChangedId.sort(function (value1, value2) {
-          console.log(value1)
-          console.log(value2)
           return parseInt(value1) - parseInt(value2)
         })
         var len = haveChangedId.length
@@ -251,7 +248,6 @@ export default {
         if (this.cartCount > nowCount) {
           this.cartCount = nowCount
         }
-        console.log(this.SKUResult[haveChangedId.join(';')])
         var maxPrice = Math.max.apply(Math, prices)
         var minPrice = Math.min.apply(Math, prices)
         this.changeNowPrice(maxPrice > minPrice ? minPrice + '-' + maxPrice : maxPrice)
@@ -329,7 +325,6 @@ export default {
     this.queryDGoodsById()
   },
   mounted () {
-    console.log(this.sku)
   }
 }
 </script>
