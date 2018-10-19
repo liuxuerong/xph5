@@ -1,20 +1,21 @@
 <template>
-  <div class="xpDetails" ref="xpDetails" :class="{noScroll:popupVisible}">
-    <common-swiper :swiperData="swiperData" v-if="swiperData!=[]" />
-    <details-des :goods="goods" :activityLabel="activityLabel" v-if="goods" />
-    <div class="cutOffLine"></div>
-    <details-cell :cellInfo="cellInfo[0]" @click.native="changePopupVisible(true)" />
-    <details-pop-up
-      :sku="sku"
-      v-if="sku"
-      :goods="goods"
-    />
-    <div class="cutOffLine"></div>
-    <details-service/>
-    <div class="cutOffLine"></div>
-    <details-cell :cellInfo="cellInfo[1]" />
-    <div class="seeMore">上拉查看更多详情</div>
+  <div class="xpDetails" ref="xpDetails" >
+    <div class="xpDetailsScroll">
+      <common-swiper :swiperData="swiperData" v-if="swiperData!=[]" />
+      <details-des :goods="goods" :activityLabel="activityLabel" v-if="goods" />
+      <div class="cutOffLine"></div>
+      <details-cell :cellInfo="cellInfo[0]" @click.native="changePopupVisible(true)" />
+
+      <div class="cutOffLine"></div>
+      <details-service/>
+      <div class="cutOffLine"></div>
+      <details-cell :cellInfo="cellInfo[1]" />
+      <details-comment-swiper/>
+      <div class="seeMore">上拉查看更多详情</div>
+      <details-img-text class="isDetailsImgTextShow" ref="isDetailsImgTextShow" />
+    </div>
     <details-operate class="detailsOperate" />
+    <details-pop-up :sku="sku" v-if="sku" :goods="goods" />
   </div>
 </template>
 
@@ -26,6 +27,10 @@ import DetailsCell from './components/DetailsCell'
 import DetailsPopUp from './components/DetailsPopUp'
 import DetailsService from './components/DetailsService'
 import DetailsOperate from './components/DetailsOperate'
+import DetailsImgText from './components/DetailsImgText'
+import DetailsCommentSwiper from './components/DetailsCommentSwiper'
+
+import BScroll from 'better-scroll'
 // import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import {
   mapMutations,
@@ -48,7 +53,10 @@ export default {
     DetailsCell,
     DetailsPopUp,
     DetailsService,
-    DetailsOperate
+    DetailsOperate,
+    DetailsImgText,
+    DetailsCommentSwiper,
+    BScroll
   },
   data () {
     return {
@@ -60,7 +68,7 @@ export default {
         title: '规格',
         value: '选择规格数量'
       }, {
-        title: '商品评价(10)',
+        title: '10',
         value: ''
       }],
       sku: null
@@ -74,9 +82,21 @@ export default {
       // }
     }
   },
-  computed: mapState({
-    popupVisible: state => state.details.popupVisible
-  }),
+
+  computed: {
+    ...mapState({
+      popupVisible: state => state.details.popupVisible
+    })
+  },
+  watch: {
+    popupVisible: function (curval) {
+      if (curval) {
+        this.scroll.stop()
+      } else {
+        this.scroll.enable()
+      }
+    }
+  },
   methods: {
     ...mapMutations(['changePopupVisible', 'changeNowPrice']),
     pushKeys (arr) { // 处理返回数据
@@ -120,12 +140,31 @@ export default {
         }
       }
       for (let key in result) {
-        sku.keys.push({name: key, isActive: true, value: result[key]})
+        sku.keys.push({
+          name: key,
+          isActive: true,
+          value: result[key]
+        })
       }
       return sku
     }
   },
   mounted () {
+    const _this = this
+    this.scroll = new BScroll(this.$refs.xpDetails, {
+      scrollY: true,
+      click: true,
+      bounce: {
+        bottom: true
+      },
+      pullUpLoad: {
+        threshold: -30 // 当上拉距离超过30px时触发 pullingUp 事件
+      }
+    })
+    this.scroll.on('pullingUp', function () {
+      _this.$refs.isDetailsImgTextShow.$el.style.display = 'block'
+      _this.scroll.refresh()
+    })
     this.changePopupVisible(false)
     this.$refs.xpDetails.style.height = document.documentElement.clientHeight + 'px'
     // 商品详情
@@ -136,6 +175,11 @@ export default {
         this.sku = this.pushKeys(res.data.body.goodsItems)
         this.swiperData = res.data.body.goodsPic
         this.changeNowPrice(res.data.body.goods.minPrice)
+        let totals = res.data.body.goodsComments.totals
+        if (totals >= 999) {
+          totals = '999+'
+        }
+        this.cellInfo[1].title = '商品评价（' + totals + '）'
       })
       .catch(err => {
         console.log(err)
@@ -143,17 +187,12 @@ export default {
   }
 }
 </script>
-<style lang="stylus">
-.swiper-slide
-  height auto !important
-</style>
 
 <style lang="stylus" scoped>
+.xpDetailsScroll
+  padding-bottom 146px
 .xpDetails
   padding-bottom 146px
-  overflow-y scroll
-.xpDetails.noScroll
-  overflow-y hidden
 .seeMore
   height 198px
   line-height 198px
@@ -167,4 +206,7 @@ export default {
   bottom 0
   background-color #fff
   z-index 1998
+.isDetailsImgTextShow
+  display none
+
 </style>
