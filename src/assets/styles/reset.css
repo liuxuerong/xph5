@@ -38,3 +38,14 @@ color: #ccc;
 *{
   box-sizing: border-box;
 }
+	/*清除浮动*/
+  .clearfix:before, .clearfix:after {
+    content: "";
+    display: table;
+  }
+  .clearfix:after {
+    clear: both;
+  }
+  .clearfix {
+    *zoom: 1; /*IE/7/6*/  /*兼容IE6下的写法*/
+  }

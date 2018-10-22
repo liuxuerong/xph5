@@ -11,7 +11,7 @@ let baseUrl = config.baseUrl
 // 获取token;
 let getAccessToken = () => {
   let token = storage.getLocalStorage(accessToken)
-  return 'Bearer ' + token
+  return token
 }
 
 // 请求头设置
@@ -112,7 +112,8 @@ export const http = (opts, params) => {
     url: baseUrl + opts.version + opts.url,
     method: opts.method,
     data: Array.isArray(params) && opts.join ? {} : params,
-    header: headerOption(opts.method)
+    headers: headerOption(opts.method),
+    params: params
   }
 
   // 如果参数是连接在url后面的形式
