@@ -97,9 +97,6 @@ export const inforSpace = { url: '/experience/read/list', method: 'GET', version
 // 文件上传
 export const fileUpload = { url: '/file/upload/', version: '' }
 
-// 限时购
-export const timeLimit = { url: '/activity/api/activity/goods/list', method: 'GET', version: v1 }
-
 // 意见反馈
 export const feedback = { url: '/view/feedback/api', method: 'POST', version: v1 }
 
@@ -109,6 +106,8 @@ export const discoverTab = { url: '/article/api/outline', method: 'GET', version
 export const recommend = { url: '/article/api/find/recommend', method: 'GET', version: v1 } // 推荐
 export const hotel = { url: '/article/api/find/hotel', method: 'GET', version: v1 } // 酒店
 export const houseGoods = { url: '/article/api/find/householdGoods', method: 'GET', version: v1 } // 居家用品
+// 限时购
+export const timeLimit = { url: '/activity/api/activity/goods/list', method: 'GET', version: v1 }
 
 // 酒店详情接口
 export const hotelDetailList = { url: '/article/api/detail', method: 'GET', version: v1, join: true } // 分类

@@ -1,10 +1,8 @@
 <template>
-  <div class="xpSwiper">
+  <div class="xpSwiper" v-if="swiperData.length">
       <swiper :options="swiperOption">
-        <swiper-slide v-for="item in swiperData" :key="item.adId">
-          <a href="#" class="swiperHref">
-            <img :src="imageUrl+item.image" alt="">
-          </a>
+        <swiper-slide v-for="item in swiperData" :key="item.id">
+            <img :src="imageUrl+item.value" alt="">
         </swiper-slide>
         <div class="swiper-pagination" slot="pagination"></div>
       </swiper>
@@ -13,56 +11,50 @@
 <script>
 import 'swiper/dist/css/swiper.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
-import { bannerList } from 'util/netApi'
-import { http } from 'util/request'
 import { config } from 'util/config.js'
 export default {
-  name: 'IndexSwiper',
-  components: {
-    swiper,
-    swiperSlide
+  name: 'CommonSwiper',
+  props: {
+    swiperData: Array
+  },
+  mounted () {
   },
   data () {
     return {
       imageUrl: config.imageUrl,
       swiperOption: {
         loop: true,
-        autoplay: {
-          delay: 2500,
-          disableOnInteraction: false
-        },
+        // autoplay: {
+        //   delay: 2500,
+        //   disableOnInteraction: false
+        // },
         pagination: {
           el: '.swiper-pagination'
         }
-      },
-      swiperData: []
+      }
     }
   },
-  mounted () {
-    http(bannerList, ['find-banner']).then((res) => {
-      this.swiperData = res.data.body
-    }).catch((err) => {
-      console.log(err)
-    })
+  components: {
+    swiper,
+    swiperSlide
   }
 }
 </script>
 <style lang="stylus" scoped>
 .xpSwiper
-  height 512px
-  margin-top 48px
-  padding 0 50px
-  margin-bottom 34px
-  .swiperHref
-    display block
-    width 100%
-    height 512px
-    img
-      width 100%
-      height 100%
+  width 100%
+  height 1125px
+  margin-bottom 100px
 </style>
 <style lang="stylus">
 .xpSwiper
+  .swiper-container
+    width 100%
+    height 100%
+    .swiper-slide
+      img
+        width 100%
+        height 1125px
   .swiper-container-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet
     margin 10px
   .swiper-pagination-bullet
