@@ -1,6 +1,6 @@
 
 // 版本号
-const v1 = '/v1'
+const v1 = 'v1'
 /**
  * 接口文件，按需加载某个/多个接口
  * url     接口连接
@@ -13,6 +13,7 @@ export const getLogin = { url: '/auth/token', method: 'POST', version: '' } // �
 export const getOpenId = { url: '/auth/token', method: 'GET', version: '' } // 获取openid
 export const verifySms = { url: '/sms', method: 'GET', version: v1, join: true } // 短信验证
 export const restPassword = { url: '/member/api/rest/password', method: 'PUT', version: v1 } // 重置密码
+export const modifyPassword = { url: '/member/api/updateMemberPassword', method: 'PUT', version: v1 } // 修改密码
 
 // 收货地址
 export const addDelivery = { url: '/delivery/api', method: 'POST', version: v1 } // 新增地址
@@ -22,7 +23,8 @@ export const updateDelivery = { url: '/delivery/api', method: 'PUT', version: v1
 export const listDelivery = { url: '/delivery/api/page-list', method: 'GET', version: v1 } // 地址列表
 
 // 收藏
-export const collectionList = { url: '/member/collection/list', method: 'GET', version: v1 } // 列表
+export const goodscollectionList = { url: '/member/collection/list/1', method: 'GET', version: v1 } // 商品收藏
+export const articlecollectionlist = { url: '/member/collection/list/2', method: 'GET', version: v1 } // 文章收藏
 export const opCollection = { url: '/member/collection', method: 'POST', version: v1 } // 新增 / 取消
 export const isCollection = { url: '/member/collection/check', method: 'POST', version: v1 } // 是否收藏
 

@@ -7,11 +7,11 @@
         <div class="loginInfo">
             <form id="loginInfoForm">
                 <div class="loginInput userName border-bottom">
-                    <i class="loginIcon"></i>
+                    <i class="loginIcon phoneIcon"></i>
                     <input type="text" placeholder="手机号码" name="phone" maxlength="11" v-model="username"/>
                 </div>
                 <div class="loginInput passWord">
-                    <i class="loginIcon"></i>
+                    <i class="loginIcon passwordIcon"></i>
                     <input type="password" placeholder="密码" name="password" maxlength="12" v-model="password"/>
                     <router-link to="/remberPassword" class="passWordOper">忘记密码？</router-link>
                 </div>
@@ -24,8 +24,12 @@
 </template>
 
 <script type="text/javascript">
+import router from '@/router/index.js'
 import { Toast } from 'mint-ui'
-const axios = require('axios')
+import {getLogin} from 'util/netApi'
+import {http} from 'util/request'
+import {storage} from 'util/storage'
+import { accessToken } from 'util/const.js'
 export default {
   data () {
     return {
@@ -40,44 +44,41 @@ export default {
     },
     // 密码验证
     rightPassword: function () {
-      return /^1\d{10}$/gi.test(this.password)
+      return /[0-9A-Za-z]{6,12}/gi.test(this.password)
     }
   },
   methods: {
     loginBtnClick: function () {
-      console.log('点击')
-      console.log(this.rightPhoneNumber)
-      axios.post('https://api.test.jdhoe.com/auth/token', {
+      let param = {
         username: this.username,
         password: this.password,
         type: 1,
         userType: 1
+      }
+      http(getLogin, param).then((response) => {
+        console.log(response)
+        if (response.data.code === 0) {
+          console.log(response.data.body.access_token)
+          storage.setLocalStorage('userId', response.data.body.user_id)
+          storage.setLocalStorage(accessToken, 'Bearer ' + response.data.body.access_token)
+          Toast({
+            message: '登陆成功',
+            position: 'bottom',
+            duration: 5000
+          })
+          router.push('./')
+        } else {
+          Toast({
+            message: '账号和密码不匹配，请重新输入',
+            position: 'bottom',
+            duration: 5000
+          })
+        }
       })
-        .then((response) => {
-          console.log(response)
-          if (response.data.code !== 10002) {
-            Toast({
-              message: '登陆成功',
-              position: 'middle',
-              duration: 5000
-            })
-          } else {
-            Toast({
-              message: '账号和密码不匹配，请重新输入',
-              position: 'bottom',
-              duration: 5000
-            })
-          }
-        })
-        .catch((error) => {
-          console.log(error)
-        })
     }
   },
   mounted: function () {
-    let json = JSON.parse('[{"fileName":"yyzz.jpg","fileUrl":"499998210471755776.jpg"}]')
-    // let newJson = JSON.parse(json)
-    console.log(json)
+
   }
 //   beforeCreate: function () {
 //     console.group('beforeCreate 创建前状态')
@@ -104,6 +105,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+    @import "~styles/mixins.styl";
     body,html
         height 100%
         width 100%
@@ -114,7 +116,7 @@ export default {
         left 0
         width 100%
         height 100%
-        background gray
+        bgImage('/static/images/loginBg')
         overflow hidden
         box-sizing border-box
         padding-top 180px
@@ -147,7 +149,12 @@ export default {
                 height 60px
                 background red
                 margin-right 56px
+                margin-left 30px
                 vertical-align middle
+            .phoneIcon
+               bgImage('/static/icons/userName')
+            .passwordIcon
+                bgImage('/static/icons/password')
             input
                 width 62%
                 height 100px
@@ -186,4 +193,16 @@ export default {
         color #E6E6E6
         position absolute
         bottom 8%
+    ::-webkit-input-placeholder {
+        color: #fff;
+    }
+    ::-moz-placeholder {
+        color: #fff;
+    }
+    :-ms-input-placeholder {
+        color: #fff;
+    }
+    :-moz-placeholder {
+        color: #fff;
+    }
 </style>

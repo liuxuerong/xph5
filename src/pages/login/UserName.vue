@@ -1,21 +1,61 @@
 <template>
     <div class="wrapper">
         <div class="userTop">
-
+            <span class="prevOper" @click="prevOperBtn">&lt;</span>
+            <span class="usernameNext" @click="setUserNameNext">下一步</span>
         </div>
         <div class="userContent">
             <h3>给自取个名字吧</h3>
             <span>昵称可以是中英文和数字的任意组合(限10位以内)</span>
             <div class="border-bottom userNameInput">
-                <input type="text" name="" id="">
+                <input type="text" name="" id="" maxlength="10" v-model="name">
             </div>
         </div>
         <router-link to="/" class="nextOper">跳过</router-link>
     </div>
 </template>
-<script>
+<script type="text/javascript">
+import router from '@/router/index.js'
+import { Toast } from 'mint-ui'
+import { setMemberData } from 'util/netApi'
+import { http } from 'util/request'
 export default {
-
+  data () {
+    return {
+      name: ''
+    }
+  },
+  computed: {
+    rigthUserName: function () {
+      return !/[@#$%^&*]+/gi.test(this.usernaem)
+    }
+  },
+  methods: {
+    setUserNameNext: function () {
+      // 下一步
+      if (this.rigthUserName) {
+        console.log(this.usernaem)
+        var params = {
+          name: this.name
+        }
+        http(setMemberData, params).then((response) => {
+          console.log(response)
+          if (response.data.code === 0) {
+            router.push('./')
+          }
+        })
+      } else {
+        Toast({
+          message: '昵称不能含有非法字符',
+          position: 'bottom',
+          duration: 5000
+        })
+      }
+    },
+    prevOperBtn: function () {
+      this.$router.back(-1)
+    }
+  }
 }
 </script>
 
@@ -37,7 +77,20 @@ export default {
         width 100%
         height 52px
         line-height 52px
-        background green
+        .prevOper
+            float left
+            width 10%
+            font-size 60px
+            font-weight 600
+            color #282828
+            text-align center
+        .usernameNext
+            float right
+            width 18%
+            font-size 40px
+            color #808080
+            text-align center
+            line-height 52px
     .userContent
         width 100%
         box-sizing border-box

@@ -17,9 +17,10 @@ const notice = {
       }
     })
   },
-  errorModal: (title) => {
+  errorModal: (title, hideFn) => {
     return Vue.$vux.alert.show({
-      title: title
+      title: title,
+      onHide: hideFn
     })
   },
   loading: (text = 'loading') => {
@@ -27,6 +28,9 @@ const notice = {
       text: text,
       position: 'absolute'
     })
+  },
+  loadingHide: () => {
+    return Vue.$vux.loading.hide()
   }
 }
 
