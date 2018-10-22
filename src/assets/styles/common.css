@@ -75,3 +75,17 @@ em {
 .vux-divider:after{
   right: 24%;
 }
+.weui-icon_toast.weui-loading{
+  width: 1rem !important;
+  height: 1rem !important;
+  margin-top: 80px !important;
+}
+.weui-toast{
+  width: 300px !important;
+  height: 300px !important;
+  top: 50% !important;
+  margin-top: -3.8em !important;
+}
+.vux-loading .weui-toast{
+  z-index:999999 !important;
+}

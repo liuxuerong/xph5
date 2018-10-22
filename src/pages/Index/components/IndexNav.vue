@@ -196,6 +196,9 @@ export default {
     }
   },
   mounted () {
+    // this.$vux.loading.show({
+    //   // text: 'Loading'
+    // })
     this.scroll = new BScroll(this.$refs.wrapper, {
       bounce: {
         left: true,
@@ -211,11 +214,15 @@ export default {
       if (!this.recommendFlag) {
         http(recommend)
           .then(res => {
+            if (res.data.code === 0) {
+              this.$vux.loading.hide()
+            }
             for (let key in res.data.body) {
               this.indexRecomondData[key] = res.data.body[key]
             }
             this.bestChoiceGoods = this.indexRecomondData.bestChoice.articles[0].goodsItems
             this.recommendFlag = true
+            this.$vux.loading.hide()
           })
           .catch(err => {
             console.log(err)
@@ -226,6 +233,9 @@ export default {
       if (!this.suppliesFlag) {
         http(hotel)
           .then(res => {
+            if (res.data.code === 0) {
+              this.$vux.loading.hide()
+            }
             for (let key in res.data.body) {
               this.indexSuppliesData[key] = res.data.body[key]
             }
@@ -240,6 +250,9 @@ export default {
       if (!this.productsFlag) {
         http(houseGoods)
           .then(res => {
+            if (res.data.code === 0) {
+              this.$vux.loading.hide()
+            }
             for (let key in res.data.body) {
               this.indexProductsData[key] = res.data.body[key]
             }
@@ -257,6 +270,9 @@ export default {
       if (!this.buyFlag) {
         http(timeLimit)
           .then(res => {
+            if (res.data.code === 0) {
+              this.$vux.loading.hide()
+            }
             for (let key in res.data.body) {
               this.buyData[key] = res.data.body[key]
             }
