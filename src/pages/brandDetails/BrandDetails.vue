@@ -1,16 +1,20 @@
 <template>
+<div class="brandDetailsContent">
+   <common-nav-header :title="details.title" v-if="details"/>
   <div class="brandDetails" ref="brandDetails">
     <div>
       <div class="topBgImg">
         <img :src="imageUrl+details.articleCoverImage" alt="" class="articleCoverImage">
       </div>
       <details-header v-if="details" :details="details" />
-      <common-content v-if="details" :goodsItems="goodsItems" :details="details" />
+      <common-content v-if="details&&goodsItems.length" :goodsItems="goodsItems" :details="details" />
       <div class="cutOffLine30"></div>
       <h2>热文推荐</h2>
       <common-article-rec v-if="details" :articleRecommends="details.articleRecommends" :linkTo="linkTo"/>
     </div>
   </div>
+</div>
+
 </template>
 
 <script>
@@ -26,13 +30,15 @@ import {
 import BScroll from 'better-scroll'
 import DetailsHeader from './components/DetailsHeader'
 import CommonContent from '@/common/commonContent/CommonContent'
+import CommonNavHeader from '@/common/commonHeader/CommonNavHeader'
 import CommonArticleRec from '@/common/commonArticleRec/CommonArticleRec'
 export default {
   name: 'BrandDetails',
   components: {
     DetailsHeader,
     CommonContent,
-    CommonArticleRec
+    CommonArticleRec,
+    CommonNavHeader
   },
   data () {
     return {
@@ -83,6 +89,9 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.brandDetailsContent
+  height 100%
+  padding-top 120px
 .brandDetails
   height 100%
   .topBgImg

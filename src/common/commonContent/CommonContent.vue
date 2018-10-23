@@ -65,7 +65,6 @@ export default {
         }
       }
       this.content = newArr.join('')
-      console.log(this.content)
     }
   },
   mounted () {

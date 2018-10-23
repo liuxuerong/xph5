@@ -1,10 +1,13 @@
 <template>
-  <div class="storyDetails" ref="storyDetails">
-    <div>
-      <story-details-header v-if="details" :details="details" />
-      <common-content v-if="details" :goodsItems="goodsItems" :details="details" />
-      <h2>热文推荐</h2>
-      <common-article-rec v-if="details" :articleRecommends="details.articleRecommends" :linkTo="linkTo"/>
+  <div class="storyDetails">
+    <common-nav-header :title="details.title" v-if="details"/>
+    <div class="storyDetailsContent" ref="storyDetailsContent">
+      <div>
+        <story-details-header v-if="details" :details="details" />
+        <common-content v-if="details&&goodsItems.length" :goodsItems="goodsItems" :details="details" />
+        <h2>热文推荐</h2>
+        <common-article-rec v-if="details" :articleRecommends="details.articleRecommends" :linkTo="linkTo" />
+      </div>
     </div>
   </div>
 </template>
@@ -16,19 +19,18 @@ import {
 import {
   hotelDetailList
 } from 'util/netApi'
-  // import {
-  //   config
-  // } from 'util/config.js'
 import BScroll from 'better-scroll'
 import CommonContent from '@/common/commonContent/CommonContent'
 import StoryDetailsHeader from './components/StoryDetailsHeader'
+import CommonNavHeader from '@/common/commonHeader/CommonNavHeader'
 import CommonArticleRec from '@/common/commonArticleRec/CommonArticleRec'
 export default {
   name: 'StoryDetails',
   components: {
     StoryDetailsHeader,
     CommonContent,
-    CommonArticleRec
+    CommonArticleRec,
+    CommonNavHeader
   },
   data () {
     return {
@@ -38,11 +40,8 @@ export default {
       linkTo: '/storyDetails/'
     }
   },
-  computed: {
-
-  },
   watch: {
-    '$route' (to, from) {
+    $route (to, from) {
       this.$router.go(0)
     }
   },
@@ -54,7 +53,6 @@ export default {
           console.log(res)
           this.details = res.data.body
           this.goodsItems = res.data.body.goodsItems
-          console.log(this.goodsItems)
           this.scrollInit()
           this.scroll.scrollTo(0, 0, 0)
         })
@@ -63,7 +61,7 @@ export default {
         })
     },
     scrollInit () {
-      return (this.scroll = new BScroll(this.$refs.storyDetails, {
+      return (this.scroll = new BScroll(this.$refs.storyDetailsContent, {
         scrollY: true,
         click: true,
         bounce: {
@@ -76,12 +74,14 @@ export default {
   mounted () {
     this.getStoryDetails()
   }
-
 }
 </script>
 
 <style lang="stylus" scoped>
 .storyDetails
+  height 100%
+  padding-top 120px
+.storyDetailsContent
   height 100%
   h2
     font-size 66px
