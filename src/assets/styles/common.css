@@ -2,8 +2,9 @@ body {
   line-height: 1;
   font-family: "PingFang SC", simSun, "Lucida Grande", "Lucida Sans Unicode",
     Arial;
-  color:#333;
+  color: #333;
 }
+
 i {
   font-style: normal;
 }
@@ -11,6 +12,10 @@ i {
 em {
   font-weight: normal;
 }
+body,html,#app{
+  height: 100%;
+}
+
 ::-moz-placeholder {
   font-size: 0.408889rem;
   color: #4D4D4D;
@@ -30,6 +35,7 @@ em {
   font-size: 0.408889rem;
   color: #4D4D4D;
 }
+
 .fl {
   float: left;
 }
@@ -47,45 +53,99 @@ em {
   clear: both;
   visibility: hidden;
 }
-.emptyBox{
+
+.emptyBox {
   width: 0;
   height: 0;
   margin: 0;
   padding: 0;
   opacity: 0;
 }
-.cutOffLine{
+
+.cutOffLine {
   width: 100%;
   height: 10px;
   background-color: #F5F5F5;
 }
-.vux-divider{
+.cutOffLine30 {
+  width: 100%;
+  height: 30px;
+  background-color: #F5F5F5;
+}
+
+.vux-divider {
   height: 100px !important;
   line-height: 100px !important;
   color: #E6E6E6 !important;
   width: 100%;
 }
-.vux-divider:after, .vux-divider:before{
+
+.vux-divider:after,
+.vux-divider:before {
   top: 0 !important;
   width: 140px !important;
 }
-.vux-divider:before{
+
+.vux-divider:before {
   left: 24%;
 }
-.vux-divider:after{
+
+.vux-divider:after {
   right: 24%;
 }
-.weui-icon_toast.weui-loading{
+
+.weui-icon_toast.weui-loading {
   width: 1rem !important;
   height: 1rem !important;
   margin-top: 80px !important;
 }
-.weui-toast{
+
+.weui-toast {
   width: 300px !important;
   height: 300px !important;
   top: 50% !important;
   margin-top: -3.8em !important;
 }
-.vux-loading .weui-toast{
-  z-index:999999 !important;
+
+.vux-loading .weui-toast {
+  z-index: 999999 !important;
+}
+
+.weui-dialog {
+  width: 620px !important;
+  height: 320px !important;
+  max-width: 100% !important;
+  border-radius: 20px !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.weui-dialog .weui-dialog__title {
+  color: #262626;
+  font-size: 34px;
+  font-weight: 600;
+}
+
+.weui-dialog__ft {
+  height: 88px !important;
+  position: absolute !important;
+  bottom: 0;
+  width: 100%;
+}
+
+.weui-dialog__btn_primary {
+  color: #BA825A !important;
+  font-size: 34px !important;
+  height: 88px !important;
+  line-height: 88px !important;
+}
+
+.weui-dialog__ft:after {
+  border-top: 0.008889rem solid #cccccc !important;
+  color: #cccccc !important;
+}
+.weui-dialog__bd>div{
+    color: #262626;
+    font-size: 28px;
 }

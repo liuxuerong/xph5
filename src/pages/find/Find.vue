@@ -7,104 +7,40 @@
     </h2>
     <common-search ref="commonSearchDom"/>
     <keep-alive include="IndexSwiper">
-      <index-swiper ref="indexSwiper"/>
+      <index-swiper ref="indexSwiper" v-if="IndexSwiperShow"/>
     </keep-alive>
   <div class="indexTabbar" >
-    <mt-tabbar v-model="selected" class="border-top" fixed ref="mtTabbar">
-      <mt-tab-item
-        v-for="item of tabItemData"
-        :key="item.id"
-        :id="item.id">
-        <img slot="icon" :src="item.selected?item.imgSrcSelect:item.imgSrc">
-        {{item.text}}
-      </mt-tab-item>
-    </mt-tabbar>
     <!-- tab-container -->
     <div ref="wrapper" class="wrapper">
-      <mt-tab-container  v-model="selected" >
-        <mt-tab-container-item id="tabbar1" >
-         <index-nav/>
-        </mt-tab-container-item>
-        <mt-tab-container-item id="tabbar2">
-          2
-        </mt-tab-container-item>
-        <mt-tab-container-item id="tabbar3">
-        3
-        </mt-tab-container-item>
-        <mt-tab-container-item id="tabbar4">
-          4
-        </mt-tab-container-item>
-        <mt-tab-container-item id="tabbar5">
-          5
-        </mt-tab-container-item>
-      </mt-tab-container>
+      <keep-alive>
+        <index-nav/>
+      </keep-alive>
     </div>
 
   </div>
 </div>
 </template>
 <script>
-import { Tabbar, TabItem, TabContainer, TabContainerItem } from 'mint-ui'
 import { mapState, mapMutations } from 'vuex'
 // import BScroll from 'better-scroll'
 import CommonSearch from 'common/commonSearch/CommonSearch'
 import CommonHeader from 'common/commonHeader/CommonHeader'
 import IndexSwiper from './components/IndexSwiper'
 import IndexNav from './components/IndexNav'
-
+import Brand from '@/pages/brand/Brand'
 export default {
-  name: 'IndexBottomTabbar',
+  name: 'Find',
   components: {
     IndexNav,
     CommonHeader,
     CommonSearch,
     IndexSwiper,
-    'mt-tabbar': Tabbar,
-    'mt-tab-item': TabItem,
-    'mt-tab-container': TabContainer,
-    'mt-tab-container-item': TabContainerItem
+    Brand
   },
   data () {
     return {
       showScrollToTop: false,
-      selected: 'tabbar1',
-      tabItemData: [
-        {
-          id: 'tabbar1',
-          imgSrc: '/static/icons/find_icon_Tabbar@2x.png',
-          imgSrcSelect: '/static/icons/find_icon_Tabbar_active@2x.png',
-          text: '发现',
-          selected: true
-        },
-        {
-          id: 'tabbar2',
-          imgSrc: '/static/icons/story_icon_Tabbar@2x.png',
-          imgSrcSelect: '/static/icons/story_icon_Tabbar_active@2x.png',
-          text: '国际品牌',
-          selected: false
-        },
-        {
-          id: 'tabbar3',
-          imgSrc: '/static/icons/logo@2x.png',
-          imgSrcSelect: '/static/icons/logo_active@2x.png',
-          text: '',
-          selected: false
-        },
-        {
-          id: 'tabbar4',
-          imgSrc: '/static/icons/story_icon_Tabbar@2x.png',
-          imgSrcSelect: '/static/icons/story_icon_Tabbar_active@2x.png',
-          text: '故事',
-          selected: false
-        },
-        {
-          id: 'tabbar5',
-          imgSrc: '/static/icons/person_icon_Tabbar@2x.png',
-          imgSrcSelect: '/static/icons/person_icon_Tabbar_active@2x.png',
-          text: '我',
-          selected: false
-        }
-      ]
+      IndexSwiperShow: true
     }
   },
   computed: {
@@ -120,15 +56,6 @@ export default {
       searchActive: state => state.home.searchActive,
       tabbarIsFixed: state => state.home.tabbarIsFixed
     })
-  },
-  watch: {
-    selected (val) {
-      let num = val.charAt(val.length - 1)
-      for (let i = 0; i < this.tabItemData.length; i++) {
-        this.tabItemData[i].selected = false
-      }
-      this.tabItemData[num - 1].selected = true
-    }
   },
   methods: {
     ...mapMutations(['changeSearchActive', 'changeTabbarFixed']),

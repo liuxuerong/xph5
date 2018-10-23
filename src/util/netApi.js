@@ -84,6 +84,7 @@ export const orderSearch = { url: '/order/member/search', method: 'GET', version
 
 // 国际品牌
 export const brandList = { url: '/article/api/brand/info', method: 'GET', version: v1 } // 列表
+export const brandDetail = {url: '/international/brand/api', method: 'GET', version: v1, join: true} // 详情
 
 // 故事
 export const storyTabs = { url: '/article/api/child', method: 'GET', version: v1, join: true } // tab
