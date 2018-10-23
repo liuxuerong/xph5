@@ -21,12 +21,6 @@ export default {
       articles: []
     }
   },
-  computed: {
-
-  },
-  watch: {
-
-  },
   methods: {
     getBrandList () {
       const parmas = {

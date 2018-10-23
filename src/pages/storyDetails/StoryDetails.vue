@@ -1,12 +1,8 @@
 <template>
-  <div class="brandDetails" ref="brandDetails">
+  <div class="storyDetails" ref="storyDetails">
     <div>
-      <div class="topBgImg">
-        <img :src="imageUrl+details.articleCoverImage" alt="" class="articleCoverImage">
-      </div>
-      <details-header v-if="details" :details="details" />
+      <story-details-header v-if="details" :details="details" />
       <common-content v-if="details" :goodsItems="goodsItems" :details="details" />
-      <div class="cutOffLine30"></div>
       <h2>热文推荐</h2>
       <common-article-rec v-if="details" :articleRecommends="details.articleRecommends" :linkTo="linkTo"/>
     </div>
@@ -20,43 +16,45 @@ import {
 import {
   hotelDetailList
 } from 'util/netApi'
-import {
-  config
-} from 'util/config.js'
+  // import {
+  //   config
+  // } from 'util/config.js'
 import BScroll from 'better-scroll'
-import DetailsHeader from './components/DetailsHeader'
 import CommonContent from '@/common/commonContent/CommonContent'
+import StoryDetailsHeader from './components/StoryDetailsHeader'
 import CommonArticleRec from '@/common/commonArticleRec/CommonArticleRec'
 export default {
-  name: 'BrandDetails',
+  name: 'StoryDetails',
   components: {
-    DetailsHeader,
+    StoryDetailsHeader,
     CommonContent,
     CommonArticleRec
   },
   data () {
     return {
       id: '',
-      imageUrl: config.imageUrl,
-      details: null, // 详情
+      details: null,
       goodsItems: [],
-      linkTo: '/brandDetails/'
-
+      linkTo: '/storyDetails/'
     }
   },
-  computed: {},
+  computed: {
+
+  },
   watch: {
     '$route' (to, from) {
       this.$router.go(0)
     }
   },
   methods: {
-    getBrandDetail () {
+    getStoryDetails () {
       const id = this.$route.params.id
       http(hotelDetailList, [id])
         .then(res => {
+          console.log(res)
           this.details = res.data.body
           this.goodsItems = res.data.body.goodsItems
+          console.log(this.goodsItems)
           this.scrollInit()
           this.scroll.scrollTo(0, 0, 0)
         })
@@ -65,7 +63,7 @@ export default {
         })
     },
     scrollInit () {
-      return (this.scroll = new BScroll(this.$refs.brandDetails, {
+      return (this.scroll = new BScroll(this.$refs.storyDetails, {
         scrollY: true,
         click: true,
         bounce: {
@@ -74,23 +72,17 @@ export default {
         }
       }))
     }
-
   },
   mounted () {
-    this.getBrandDetail()
+    this.getStoryDetails()
   }
+
 }
 </script>
 
 <style lang="stylus" scoped>
-.brandDetails
+.storyDetails
   height 100%
-  .topBgImg
-    width 100%
-    height 400px
-    img
-      width 100%
-      height 100%
   h2
     font-size 66px
     font-weight 600

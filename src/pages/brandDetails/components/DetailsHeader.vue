@@ -5,9 +5,7 @@
     <div class="title">
       {{details.title}}|{{details.subTitle}}
     </div>
-    <div class="selected">
-      <img src="" alt="">
-    </div>
+     <common-collection class="collection"/>
     </div>
     <div class="desc">详细介绍详细介绍详细介绍详细介绍详细介绍详细介绍详 详详细介绍详细介绍详细介绍详细介绍详细介
     </div>
@@ -18,9 +16,12 @@
 import {
   config
 } from 'util/config.js'
+import CommonCollection from '@/common/commonCollection/CommonCollection'
 export default {
   name: 'DetailsHeader',
-  components: {},
+  components: {
+    CommonCollection
+  },
   data () {
     return {
       imageUrl: config.imageUrl
@@ -59,13 +60,6 @@ export default {
       line-height 80px
       flex 1
       padding 0 24px
-    .selected
-      width 52px
-      height 52px
-      margin-top 20px
-      bgImage("/static/icons/Collection_icon")
-      &.active
-         bgImage("/static/icons/Collection_icon_click")
   .desc
     line-height 70px
     padding-top 40px

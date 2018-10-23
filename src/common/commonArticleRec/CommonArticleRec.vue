@@ -1,12 +1,13 @@
 <template>
   <div class="commonArticleRec">
-    <h2>热文推荐</h2>
     <ul>
       <li v-for="item in articleRecommends" :key="item.id">
-        <img :src="imageUrl+item.articleCoverImage" alt="">
-        <p class="title">{{item.title}}|{{item.subTitle}}</p>
+        <router-link :to="linkTo+item.id">
+          <img :src="imageUrl+item.articleCoverImage" alt="">
+        <p class="title">{{item.title}} <em v-if="item.subTitle">|</em> {{item.subTitle}}</p>
         <dir class="summary">{{item.summary}}详细介绍详细介绍详细介绍详细介绍详细介绍详细介绍详细介绍
 详细介绍详细介绍详细介绍详细介绍详细介绍</dir>
+        </router-link>
       </li>
     </ul>
   </div>
@@ -17,26 +18,19 @@ import {
 } from 'util/config.js'
 export default {
   name: 'CommonArticleRec',
-  components: {},
+  props: {
+    linkTo: String,
+    articleRecommends: Array
+  },
   data () {
     return {
       imageUrl: config.imageUrl
     }
-  },
-  props: {
-    articleRecommends: Array
   }
 }
 </script>
 <style lang="stylus" scoped>
 .commonArticleRec
-  h2
-    font-size 66px
-    font-weight 600
-    padding-top 50px
-    height 160px
-    line-height 160px
-    padding-left 50px
   li
     img
       width 100%
@@ -47,6 +41,7 @@ export default {
       font-weight 600
       line-height 100px
       padding 0 50px
+      color:#333
     .summary
       color #808080
       font-size 36px

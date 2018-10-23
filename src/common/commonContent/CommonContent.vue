@@ -10,15 +10,13 @@
               <span>￥{{item.minPrice}}</span>
               <del>￥{{item.marketPrice}}</del>
             </div>
-            <router-link :to="'/'+item.id">查看详情</router-link>
+            <router-link :to="'/details/'+item.id">查看详情</router-link>
           </div>
         </div>
       </div>
     </div>
     <div class="detailsContent" v-html="content" v-if="content!==''">
-
     </div>
-
   </div>
 </template>
 
@@ -67,7 +65,11 @@ export default {
         }
       }
       this.content = newArr.join('')
+      console.log(this.content)
     }
+  },
+  mounted () {
+    this.updateContent()
   },
   updated () {
     this.updateContent()

@@ -53,7 +53,6 @@ export default {
 .brandImgName
   width 100%
   padding 0 50px
-
   height calc(100% - (400px))
   ul
     padding-top 184px

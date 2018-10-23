@@ -6,6 +6,7 @@ import Brand from '@/pages/brand/Brand'
 import BrandDetails from '@/pages/brandDetails/BrandDetails'
 import Hall from '@/pages/hall/Hall'
 import Story from '@/pages/story/Story'
+import StoryDetails from '@/pages/StoryDetails/StoryDetails'
 import Details from '@/pages/details/Details'
 import Comment from '@/pages/comment/Comment'
 import Login from '@/pages/login/Login'
@@ -49,6 +50,11 @@ export default new Router({
       path: '/brandDetails/:id',
       name: 'BrandDetails',
       component: BrandDetails
+    },
+    {
+      path: '/storyDetails/:id',
+      name: 'StoryDetails',
+      component: StoryDetails
     },
     {
       path: '/login',
