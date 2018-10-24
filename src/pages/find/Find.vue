@@ -69,6 +69,7 @@ export default {
     let _this = this
     window.addEventListener('scroll', function () {
       const documentScrollTop = document.documentElement.scrollTop
+      // alert(documentScrollTop)
       const searchActive = !(searchTop > documentScrollTop)
       _this.changeSearchActive(searchActive)
       const tabbarIsFixed = !(swiperTop > documentScrollTop)

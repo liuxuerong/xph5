@@ -57,7 +57,7 @@ let headerOption = method => {
 let state = (res, noLoading) => {
   if (!noLoading || noLoading === 'undefined') {
     // Loading隐藏
-    notice.loadingHide()
+    // notice.loadingHide()
   }
   if (res.errMsg === 'request:fail timeout') {
     notice.errorModal('连接超时')
@@ -72,7 +72,9 @@ let state = (res, noLoading) => {
       break
     case 401:
       notice.errorModal('未授权，请重新登录', function () {
-        Vue.$router.push({name: '/login'})
+        Vue.$router.push({
+          name: '/login'
+        })
       })
       break
     case 403:
@@ -115,12 +117,21 @@ export const http = (opts, params, noLoading) => {
     // }, 300)
   }
   // 请求默认配置
-  let httpDefaultOptions = {
-    url: baseUrl + opts.version + opts.url,
-    method: opts.method,
-    data: Array.isArray(params) && opts.join ? {} : params,
-    headers: headerOption(opts.method),
-    params: params
+  let httpDefaultOptions = {}
+  if (opts.method === 'GET') {
+    httpDefaultOptions = {
+      url: baseUrl + opts.version + opts.url,
+      method: opts.method,
+      headers: headerOption(opts.method),
+      params: Array.isArray(params) && opts.join ? {} : params
+    }
+  } else {
+    httpDefaultOptions = {
+      url: baseUrl + opts.version + opts.url,
+      method: opts.method,
+      headers: headerOption(opts.method),
+      data: Array.isArray(params) && opts.join ? {} : params
+    }
   }
 
   // 如果参数是连接在url后面的形式
@@ -132,7 +143,7 @@ export const http = (opts, params, noLoading) => {
 
   // 响应拦截器即异常处理
   axios.interceptors.request.use(data => {
-    notice.loadingHide()
+    // notice.loadingHide()
     return data
   }, err => {
     return Promise.resolve(err)
@@ -142,6 +153,7 @@ export const http = (opts, params, noLoading) => {
       state(response.data)
       return
     }
+    notice.loadingHide()
     return response
   }, err => {
     state(err, '')

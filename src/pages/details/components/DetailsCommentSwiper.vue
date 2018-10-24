@@ -125,15 +125,16 @@ export default {
 <style lang="stylus">
 .detailsCommentSwiper
   .swiper-slide
-    height 340px
+    height 400px
     background rgba(255,255,255,1);
+    padding 20px
   .commentImg>.previewCon
     width 100%
     height 100%
     overflow hidden
     img
-      width 100%
       height 100%
+      width 320px
 .pswp__button--close
   display none !important
 .pswp__button--fs
@@ -147,22 +148,20 @@ export default {
   height 360px
   padding 0 50px
   margin-bottom 34px
-
  .imgText
   display flex
-  padding 10px
   box-shadow 0px 0px 18px rgba(78,78,78,0.15)
+  height 320px
   .left
+    padding-left 30px
     flex 1
   .commentImg
-    width 365px
     height 320px
     position relative
-    margin-left 45px
   .name
     font-size 40px
-    height 144px
-    line-height 144px
+    height 124px
+    line-height 124px
     font-weight 600
     color #262626
     width 80%

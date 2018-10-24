@@ -3,18 +3,16 @@
     <common-header :isScan="false" ref="commonHeader">
       <h1 class="title fl">故事</h1>
     </common-header>
-      <div class="top">
-          <tab>
-            <tab-item selected @on-item-click="onItemClick">发现好物</tab-item>
-            <tab-item @on-item-click="onItemClick">五星标准</tab-item>
-            <tab-item @on-item-click="onItemClick">生活指南</tab-item>
-          </tab>
-        </div>
+    <div class="top">
+      <tab v-if="tabbar.length">
+        <tab-item :selected="index===0" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.id" >{{item.name}}</tab-item>
+      </tab>
+    </div>
     <div ref="xpStoryContent" class="xpStoryContent">
       <div>
-        <common-article-rec v-if="storyKnow.length&&storyKnowFlag" :articleRecommends="storyKnow" :linkTo="linkTo"/>
-        <common-article-rec v-if="storyWord.length&&storyWordFlag" :articleRecommends="storyWord" :linkTo="linkTo"/>
-        <common-article-rec v-if="storySub.length&&storySubFlag" :articleRecommends="storySub" :linkTo="linkTo"/>
+        <common-article-rec v-if="storyKnow.length&&storyKnowFlag" :articleRecommends="storyKnow" :linkTo="linkTo" />
+        <common-article-rec v-if="storyWord.length&&storyWordFlag" :articleRecommends="storyWord" :linkTo="linkTo" />
+        <common-article-rec v-if="storySub.length&&storySubFlag" :articleRecommends="storySub" :linkTo="linkTo" />
       </div>
     </div>
   </div>
@@ -22,10 +20,25 @@
 
 <script>
 import CommonHeader from 'common/commonHeader/CommonHeader'
-import { Tab, TabItem } from 'vux'
-import { http } from 'util/request'
-import { storyKnow, storyWord, storySub } from 'util/netApi'
-import { config } from 'util/config.js'
+import {
+  Tab,
+  TabItem
+} from 'vux'
+import {
+  http
+} from 'util/request'
+import {
+  storyKnow,
+  storyWord,
+  storySub,
+  storyTabs
+} from 'util/netApi'
+import {
+  mainEnum
+} from 'util/enum.js'
+import {
+  config
+} from 'util/config.js'
 import BScroll from 'better-scroll'
 import CommonArticleRec from '@/common/commonArticleRec/CommonArticleRec'
 export default {
@@ -46,7 +59,8 @@ export default {
       storyKnowFlag: true,
       storyWordFlag: false,
       storySubFlag: false,
-      linkTo: '/storyDetails/'
+      linkTo: '/storyDetails/',
+      tabbar: []
     }
   },
   computed: {},
@@ -56,18 +70,24 @@ export default {
   //   }
   // },
   methods: {
+    getTabbar () {
+      let _this = this
+      http(storyTabs, [mainEnum[0]]).then(res => {
+        console.log(res)
+        for (let i = 0; i < res.data.body.length; i++) {
+          _this.tabbar.push(res.data.body[i])
+        }
+      })
+    },
     onItemClick (index) {
+      this.storyKnowFlag = false
+      this.storyWordFlag = false
+      this.storySubFlag = false
       if (index === 0) {
         this.storyKnowFlag = true
-        this.storyWordFlag = false
-        this.storySubFlag = false
       } else if (index === 1) {
-        this.storyKnowFlag = false
         this.storyWordFlag = true
-        this.storySubFlag = false
       } else if (index === 2) {
-        this.storyKnowFlag = false
-        this.storyWordFlag = false
         this.storySubFlag = true
       }
       this.scroll.refresh()
@@ -113,6 +133,7 @@ export default {
     }
   },
   mounted () {
+    this.getTabbar()
     this.getStoryKnow()
     this.getStorySub()
     this.getStoryWord()
@@ -125,8 +146,16 @@ export default {
     color #333333
     border-bottom 8px solid #262626
 .top>>>.vux-tab-ink-bar
-    background-color #262626
-    // width 200px
+    background transparent
+.top>>>.vux-tab-ink-bar::before
+  content ""
+  position absolute
+  top 0
+  left 50%
+  transform translateX(-50%)
+  width 88px
+  background-color #262626
+  height 100%
 .top>>>.vux-tab-container
     height 106px
 .top>>>.vux-tab

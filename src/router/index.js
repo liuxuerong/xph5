@@ -9,6 +9,8 @@ import Story from '@/pages/story/Story'
 import StoryDetails from '@/pages/StoryDetails/StoryDetails'
 import Details from '@/pages/details/Details'
 import Comment from '@/pages/comment/Comment'
+import Goods from '@/pages/goods/Goods'
+import Search from '@/pages/search/Search'
 import Login from '@/pages/login/Login'
 import PhoneCode from '@/pages/login/PhoneCode'
 import RemberPassword from '@/pages/login/RemberPassword'
@@ -55,6 +57,16 @@ export default new Router({
       path: '/storyDetails/:id',
       name: 'StoryDetails',
       component: StoryDetails
+    },
+    {
+      path: '/goods',
+      name: 'Goods',
+      component: Goods
+    },
+    {
+      path: '/search',
+      name: 'Search',
+      component: Search
     },
     {
       path: '/login',
