@@ -21,6 +21,10 @@ import PerUserInfoSet from '@/pages/person/UserDataSet'
 import GoodsAddress from '@/pages/person/GoodsAddress'
 import AddressAdmind from '@/pages/person/AddressAdmin'
 import ToolCenter from '@/pages/person/ToolCenter'
+import AboutMember from '@/pages/person/AboutMember'
+import OrderIndex from '@/pages/order/OrderIndex'
+import OrderList from '@/pages/order/OrderList'
+import OrderDetails from '@/pages/order/OrderDetails'
 
 Vue.use(Router)
 
@@ -117,6 +121,25 @@ export default new Router({
       path: '/toolCenter',
       name: 'toolCenter',
       component: ToolCenter
+    },
+    {
+      path: '/aboutMember',
+      name: 'aboutMember',
+      component: AboutMember
+    }, {
+      path: '/orderIndex',
+      name: 'orderIndex',
+      component: OrderIndex
+    },
+    {
+      path: '/orderList/:type',
+      name: 'orderList',
+      component: OrderList
+    },
+    {
+      path: '/orderDetails/:orderCode',
+      name: 'orderDetails',
+      component: OrderDetails
     }
   ]
 })
