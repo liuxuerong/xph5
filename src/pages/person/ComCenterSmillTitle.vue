@@ -1,10 +1,11 @@
 <template>
   <div class="centerTitle">
     <h3 class="bgFontTitle">{{content}}</h3>
-    <span class="seeMore" v-show="moreShow">查看全部<i class="moreIcon"></i></span>
+    <span class="seeMore" v-show="moreShow" @click="seeMoreData">查看全部<i class="moreIcon"></i></span>
   </div>
 </template>
 <script>
+import router from '@/router/index.js'
 export default {
   data () {
     return {
@@ -14,6 +15,15 @@ export default {
   props: {
     content: '',
     moreShow: Boolean
+  },
+  methods: {
+    seeMoreData () {
+      if (this.content === '我的订单') {
+        router.push('./orderIndex')
+      } else if (this.content === '我的地址') {
+        router.push('./addressAdmind')
+      }
+    }
   },
   computed: {
 

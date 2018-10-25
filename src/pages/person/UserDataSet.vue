@@ -66,7 +66,6 @@ export default {
   methods: {
     // 获取页面资料信息
     getUserInfo: function () {
-      console.log(4444)
       http(memberData).then((response) => {
         console.log(response)
         let data = response.data.body

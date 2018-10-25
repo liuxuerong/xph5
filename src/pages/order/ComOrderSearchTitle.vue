@@ -1,16 +1,15 @@
 <template>
-    <div class="userInfoTop border-bottom" @scroll="titleScroll">
+    <div class="userInfoTop border-bottom">
 		<span class="prevOper" @click="backPrevOper"></span>
 		<h3 class="userInfoTitle">{{title}}</h3>
-		<span class="completeOper" @click="perCompleteOper">{{oper}}</span>
+		<span class="comOperSearch"></span>
 	</div>
 </template>
 <script>
 export default {
   // 接受父级数据
   props: {
-    title: '',
-    oper: ''
+    title: ''
   },
   methods: {
     // 返回上一步
@@ -19,9 +18,6 @@ export default {
     },
     perCompleteOper: function () {
       this.$emit('operComplete')
-    },
-    titleScroll () {
-
     }
   },
   mounted: function () {
@@ -64,10 +60,10 @@ export default {
 		bottom 0
 		right 0
 		margin auto
-	.completeOper
+	.comOperSearch
 		float right
-		font-size 36px
-		color #808080
-		height 130px
-		line-height 130px
+		width 60px
+		height 60px
+		background red
+		margin-top 30px
 </style>

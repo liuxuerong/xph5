@@ -7,29 +7,8 @@
       </div>
     </div>
     <div class="perOrder">
-      <person-title content="我的订单" :moreShow="true"></person-title>
-      <div class="orderBox">
-        <router-link class="orderItem" to="/">
-        <i class="orderIcon orderIcon01"></i>
-        待付款
-        </router-link>
-        <router-link class="orderItem" to="/">
-        <i class="orderIcon orderIcon02"></i>
-        待发货
-        </router-link>
-        <router-link class="orderItem" to="/">
-        <i class="orderIcon orderIcon03"></i>
-        待收货
-        </router-link>
-        <router-link class="orderItem" to="/">
-        <i class="orderIcon orderIcon04"></i>
-        待评价
-        </router-link>
-        <router-link class="orderItem" to="/">
-        <i class="orderIcon orderIcon05"></i>
-        退款/售后
-        </router-link>
-      </div>
+      <!-- 我的订单 -->
+      <order-index :orderNum="orderNum" v-if="orderNum"></order-index>
       <person-title content="我的地址" :moreShow="hasAddress"></person-title>
       <div class="addressBox" v-if="!hasAddress">
         <router-link to="./GoodsAddress" class="goToAdd">去添加</router-link>
@@ -92,9 +71,10 @@
 import router from '@/router/index.js'
 import {storage} from 'util/storage'
 import { accessToken } from 'util/const.js'
-import {memberData, listDelivery, goodscollectionList} from 'util/netApi'
+import {memberCenter, listDelivery, goodscollectionList} from 'util/netApi'
 import {http} from 'util/request'
 import PersonTitle from './ComCenterSmillTitle'
+import OrderIndex from '../order/OrderIndex'
 import { config } from 'util/config'
 export default {
   data () {
@@ -109,12 +89,14 @@ export default {
       goodsCollArr: [],
       goodsCollNum: 0,
       articleCollNum: 0,
-      footprintNum: 0
+      footprintNum: 0,
+      orderNum: null// 订单数量
     }
   },
   created () {},
   components: {
-    PersonTitle
+    PersonTitle,
+    OrderIndex
   },
   computed: {
 
@@ -122,10 +104,12 @@ export default {
   methods: {
     // 基础信息加载
     getUserInfo () {
-      http(memberData).then((response) => {
+      http(memberCenter).then((response) => {
         // console.log(response)
         let data = response.data.body
-        this.name = data.name
+        console.log(data.orderCount)
+        this.name = data.memberName
+        this.orderNum = data.orderCount
       })
     },
     // 基础资料设置
@@ -139,7 +123,7 @@ export default {
         page: 1
       }
       http(listDelivery, params).then((response) => {
-        console.log(response)
+        // console.log(response)
         let data = response.data.body
         if (data.list.length > 1) {
           this.hasAddress = true
@@ -182,6 +166,10 @@ export default {
         }
       })
     },
+    // 我的订单 查看更多
+    handleOrderMore () {
+      console.log('查看更多')
+    },
     // 必备工具跳转
     toolSpecific (type) {
       if (type === 1) {
@@ -196,7 +184,7 @@ export default {
     }
   },
 
-  mounted: function () {
+  mounted () {
     // 判断账号是够登陆
     if (!storage.getLocalStorage(accessToken)) {
       // 还未登陆
@@ -209,6 +197,9 @@ export default {
       // 我的收藏
       this.goodsCollent()
     }
+  },
+  updated () {
+    // console.log(this.orderNum)
   }
 
 }
@@ -253,32 +244,7 @@ export default {
   .perOrder
     width 100%
     box-sizing border-box
-    padding 0 50px
-  .orderBox
-    display flex
-    width 100%
-    box-sizing border-box
-    padding 30px 0 50px 0
-    .orderItem
-      flex 1
-      text-align center
-      font-size 36px
-      color #333333
-      .orderIcon
-        display block
-        width 71px
-        height 68px
-        margin 0 auto 30px
-      .orderIcon01
-        bgImage('/static/icons/orderItem01')
-      .orderIcon02
-        bgImage('/static/icons/orderItem02')
-      .orderIcon03
-        bgImage('/static/icons/orderItem03')
-      .orderIcon04
-        bgImage('/static/icons/orderItem04')
-      .orderIcon05
-        bgImage('/static/icons/orderItem05')
+    padding 0 50px 150px
   .addressBox,.collectBox
     width 100%
     height auto
