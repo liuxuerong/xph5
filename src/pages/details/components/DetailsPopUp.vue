@@ -1,12 +1,13 @@
 <template>
   <div class="detailsPopUp">
-    <mt-popup v-model="details.popupVisible" position="bottom">
-      <span id="price">{{nowPrice}}</span>
+    <mt-popup v-model="details.popupVisible" position="bottom"  @touchmove.prevent>
+      <DetailsImgPrice :goods="goods" />
+      <div class="cutOffLine"></div>
       <div id="goodsinfo">
         <div class="num">
-          <span class="sub fl">_</span>
-          <input type="text" class="fl" value="1">
-          <span class="add fr">+</span>
+          <span class="sub fl" @click="subCount">_</span>
+          <input type="text" class="fl" v-model="cartCount">
+          <span class="add fr" @click="addCount">+</span>
         </div>
         <div v-for="(item,index) in sku.keys" :key="index">
           <div class="tabContent">
@@ -14,6 +15,12 @@
             <input type="button" class="skuItem" @click="tabInfoChange(index,cindex,citem.id,$event)" v-for="(citem,cindex) in item.value" :class="{notClick:citem.notClick,active:citem.isActiveC}" :attr_id="citem.id" :value="citem.cname" :key="cindex" />
           </div>
         </div>
+      </div>
+      <div class="goodsInfoBottm border-top">
+        <router-link class="buy" to="/">立即购买</router-link>
+        <span class="addCart">
+          加入购物车
+        </span>
       </div>
     </mt-popup>
   </div>
@@ -24,28 +31,45 @@ import {
   Popup
 } from 'mint-ui'
 import {
-  mapState
+  mapState,
+  mapMutations
 } from 'vuex'
+import DetailsImgPrice from './DetailsImgPrice'
 export default {
   name: 'DetailsPopUp',
   components: {
-    'mt-popup': Popup
+    'mt-popup': Popup,
+    DetailsImgPrice
   },
   props: {
-    sku: Object
+    sku: Object,
+    goods: Object
   },
   data () {
     return {
-
       SKUResult: {},
-      nowPrice: '--'
+      cartCount: 1
     }
   },
   computed: mapState({
-    details: state => state.details
+    details: state => state.details,
+    maxCount: state => state.details.maxCount
   }),
   watch: {},
   methods: {
+    ...mapMutations(['changeNowPrice', 'changeMaxCount']),
+    addCount () {
+      this.cartCount++
+      if (this.cartCount > this.maxCount) {
+        this.cartCount = this.maxCount
+      }
+    },
+    subCount () {
+      this.cartCount--
+      if (this.cartCount < 2) {
+        this.cartCount = 1
+      }
+    },
     /* 商品详情数据 */
     queryDGoodsById () {
       this.initSKU() // 初始化，得到SKUResult
@@ -211,17 +235,24 @@ export default {
           }
         }
       }
+
       if (haveChangedId.length) {
-        // 获得组合key价格
+        // 获得组合key价格及数量
         haveChangedId.sort(function (value1, value2) {
           return parseInt(value1) - parseInt(value2)
         })
         var len = haveChangedId.length
         var prices = this.SKUResult[haveChangedId.join(';')].prices
+        const nowCount = this.SKUResult[haveChangedId.join(';')].count
+        this.changeMaxCount(nowCount)
+        if (this.cartCount > nowCount) {
+          this.cartCount = nowCount
+        }
         var maxPrice = Math.max.apply(Math, prices)
         var minPrice = Math.min.apply(Math, prices)
-        this.nowPrice =
-            maxPrice > minPrice ? minPrice + '-' + maxPrice : maxPrice /* 筛选价格 */
+        this.changeNowPrice(maxPrice > minPrice ? minPrice + '-' + maxPrice : maxPrice)
+        // this.nowPrice =
+        //     maxPrice > minPrice ? minPrice + '-' + maxPrice : maxPrice /* 筛选价格 */
 
         // 用已选中的节点验证待测试节点
         let daiceshi = [] // 待测试节点
@@ -276,8 +307,6 @@ export default {
           }
         }
       } else {
-        // 设置默认价格
-        this.nowPrice = '--'
         // 设置属性状态
         for (let i = 0; i < this.sku.keys.length; i++) {
           for (let j = 0; j < this.sku.keys[i].value.length; j++) {
@@ -296,7 +325,6 @@ export default {
     this.queryDGoodsById()
   },
   mounted () {
-    console.log(this.sku)
   }
 }
 </script>
@@ -304,6 +332,9 @@ export default {
 <style lang="stylus" scoped>
 #goodsinfo
   padding 50px
+  height 1283px
+  overflow-y scroll
+  padding-bottom 145px
   .num
     height 100px
     line-height 100px
@@ -353,9 +384,34 @@ export default {
 .skuItem.notClick
   border 1px dotted #CCCCCC
   color #CCCCCC
+.goodsInfoBottm
+  height 145px
+  display flex
+  font-size 46px
+  position absolute
+  bottom 0
+  width 100%
+  z-index 99999
+  .buy
+    display inline-block
+    flex 1
+    text-align center
+    line-height 145px
+    height 145px
+    color #BA825A
+    vertical-align top
+  .addCart
+    flex 1
+    display inline-block
+    text-align center
+    line-height 145px
+    height 145px
+    color #BA825A
+    background-color #F0F0F0
 </style>
 <style lang="stylus">
+.detailsPopUp
   .mint-popup
-    height 1572px
     width 100%
+    height 1528px
 </style>

@@ -1,14 +1,23 @@
 <template>
-  <div class="header clearfix">
-    <div class="scan fl">
+  <div class="header border-bottom">
+    <div class="scan" v-if="isScan">
     </div>
-    <div class="car fr">
+    <div class="search " v-else>
+    </div>
+    <slot></slot>
+    <div class="car">
     </div>
   </div>
 </template>
 <script>
 export default {
-  name: 'CommonHeader'
+  name: 'CommonHeader',
+  props: {
+    isScan: {
+      type: Boolean,
+      default: true
+    }
+  }
 }
 </script>
 <style lang="stylus" scoped>
@@ -21,6 +30,8 @@ export default {
   background-color #fff
   z-index 9999
   top 0
+  display flex
+  justify-content space-between
   .scan
     width 83px
     height 83px
@@ -28,6 +39,13 @@ export default {
     margin-right 40px
     vertical-align middle
     margin-top 10px
+  .search
+    width 60px
+    height 60px
+    bgImage("/static/icons/search_black")
+    margin-right 40px
+    vertical-align middle
+    margin-top 20px
   .car
     width 83px
     height 83px

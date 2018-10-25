@@ -3,15 +3,19 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-// import fastClick from 'fastclick'
+import fastClick from 'fastclick'
 import store from './store'
+
 import 'lib-flexible/flexible'
 import 'styles/reset.css'
 import 'styles/common.css'
 import 'styles/border.css'
-
+import {AlertPlugin, LoadingPlugin, Confirm} from 'vux'
+Vue.use(AlertPlugin)
+Vue.use(LoadingPlugin)
+Vue.use(Confirm)
 Vue.config.productionTip = false
-// fastClick.attach(document.body)
+fastClick.attach(document.body)
 
 /* eslint-disable no-new */
 new Vue({

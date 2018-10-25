@@ -1,6 +1,7 @@
 <template>
   <div class="detailsCell">
-    <mt-cell :title="cellInfo.title" :value="cellInfo.value" is-link ></mt-cell>
+    <mt-cell :title="cellInfo.title" :value="cellInfo.value" is-link >
+    </mt-cell>
   </div>
 </template>
 

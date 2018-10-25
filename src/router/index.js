@@ -1,8 +1,17 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Index from '@/pages/index/Index'
-import Login from '@/pages/login/Login'
+import Index from '@/pages/index'
+import Find from '@/pages/find/Find'
+import Brand from '@/pages/brand/Brand'
+import BrandDetails from '@/pages/brandDetails/BrandDetails'
+import Hall from '@/pages/hall/Hall'
+import Story from '@/pages/story/Story'
+import StoryDetails from '@/pages/StoryDetails/StoryDetails'
 import Details from '@/pages/details/Details'
+import Comment from '@/pages/comment/Comment'
+import Goods from '@/pages/goods/Goods'
+import Search from '@/pages/search/Search'
+import Login from '@/pages/login/Login'
 import PhoneCode from '@/pages/login/PhoneCode'
 import RemberPassword from '@/pages/login/RemberPassword'
 import UserName from '@/pages/login/UserName'
@@ -23,13 +32,45 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Index',
-      component: Index
+      redirect: '/hall',
+      component: Index,
+      children: [
+        {name: 'Find', path: '/find', component: Find},
+        {name: 'Brand', path: '/brand', component: Brand},
+        {name: 'Hall', path: '/hall', component: Hall},
+        {name: 'Story', path: '/story', component: Story},
+        {name: 'PersonCenter', path: '/personCenter', component: PersonCenter}
+      ]
     },
     {
       path: '/details/:goodsId',
       name: 'Details',
       component: Details
+    },
+    {
+      path: '/comment/:goodsId',
+      name: 'Comment',
+      component: Comment
+    },
+    {
+      path: '/brandDetails/:id',
+      name: 'BrandDetails',
+      component: BrandDetails
+    },
+    {
+      path: '/storyDetails/:id',
+      name: 'StoryDetails',
+      component: StoryDetails
+    },
+    {
+      path: '/goods',
+      name: 'Goods',
+      component: Goods
+    },
+    {
+      path: '/search',
+      name: 'Search',
+      component: Search
     },
     {
       path: '/login',

@@ -1,11 +1,18 @@
 /**
  * 网络相关Api
  */
-import { config } from './config.js'
-import { storage } from './storage.js'
-import { accessToken } from './const.js'
+import {
+  config
+} from './config.js'
+import {
+  storage
+} from './storage.js'
+import {
+  accessToken
+} from './const.js'
 import axios from 'axios'
-
+import notice from './notice'
+import Vue from 'vue'
 let baseUrl = config.baseUrl
 
 // 获取token;
@@ -15,113 +22,143 @@ let getAccessToken = () => {
 }
 
 // 请求头设置
-let headerOption = (method) => {
-  let _accessToken = { 'Authorization': getAccessToken() }
+let headerOption = method => {
+  let _accessToken = {
+    Authorization: getAccessToken()
+  }
   switch (method) {
     case 'GET':
-      return Object.assign({ 'content-type': 'application/json;' }, _accessToken)
+      return Object.assign({
+        'content-type': 'application/json;'
+      },
+      _accessToken
+      )
     case 'POST':
-      return Object.assign({ 'content-type': 'application/json;' }, _accessToken)
+      return Object.assign({
+        'content-type': 'application/json;'
+      },
+      _accessToken
+      )
     case 'DELETE':
-      return Object.assign({ 'content-type': 'application/json;' }, _accessToken)
+      return Object.assign({
+        'content-type': 'application/json;'
+      },
+      _accessToken
+      )
     case 'PUT':
-      return Object.assign({ 'content-type': 'application/json;' }, _accessToken)
+      return Object.assign({
+        'content-type': 'application/json;'
+      },
+      _accessToken
+      )
   }
 }
 // http返回码状态判断
-// let state = (res, callback, noLoading) => {
-//   // if (!noLoading || noLoading === 'undefined') {
-//   //   // Loading隐藏
-//   //   // wx.hideLoading()
-//   // }
-//   // if (res.errMsg === 'request:fail timeout') {
-//   //   // errorModal({ content: '连接超时' })
-//   //   return
-//   // }
-//   // switch (res.statusCode) {
-//   //   case 200:
-//   //     // code判断
-//   //     code(res, callback)
-//   //     break
-//   //   case 302:
-//   //     // errorModal({ content: '302' })
-//   //     break
-//   //   case 500:
-//   //     // errorModal({ content: '500' })
-//   //     break
-//   //   case 502:
-//   //     // errorModal({ content: '服务器异常' })
-//   //     break
-//   //   case 505:
-//   //     // errorModal({ content: '505' })
-//   //     break
-//   //   case 404:
-//   //     // errorModal({ content: '404' })
-//   //     break
-//   //   case 400:
-//   //     // errorModal({ content: '400' })
-//   //     break
-//   //   case 400:
-//   //     // errorModal({ content: '400' })
-//   //     break
-//   // }
-// }
-// code判断
-// let code = (res, callback) => {
-//   switch (res.data.code) {
-//     case 0:
-//       callback(res.data)
-//       break
-//     case 10003:
-//       callback(res.data)
-//       // errorModal({ content: res.data.message })
-//       break
-//     case 404:
-//       // callback(res.data);
-//       // errorModal({ content: res.data.message })
-//       break
-//     case 12007:
-//       // 支付失败
-//       callback(res.data)
-//       break
-//     case 13001:
-//       // 快递查询异常
-//       callback(res.data)
-//       break
-//     case 10002:
-//       // token失效
-//       // let _memberAuth = storage.getStorageSync(memberAuth)
-//       // 删除可能存在的memberAuth
-//       storage.delLocalStorage(accessToken)
-//       // wx.navigateTo({
-//       //   url: '../login/login'
-//       // })
-//       break
-//     default:
-//       // errorModal({ content: res.data.message ? res.data.message : '意外错误' })
-//   }
-// }
+let state = (res, noLoading) => {
+  if (!noLoading || noLoading === 'undefined') {
+    // Loading隐藏
+    // notice.loadingHide()
+  }
+  if (res.errMsg === 'request:fail timeout') {
+    notice.errorModal('连接超时')
+    return
+  }
+  switch (res.code) {
+    case 302:
+      notice.errorModal('302')
+      break
+    case 400:
+      notice.errorModal('错误请求')
+      break
+    case 401:
+      notice.errorModal('未授权，请重新登录', function () {
+        Vue.$router.push({
+          name: '/login'
+        })
+      })
+      break
+    case 403:
+      notice.errorModal('拒绝访问')
+      break
+    case 404:
+      notice.errorModal('请求错误,未找到该资源')
+      break
+    case 405:
+      notice.errorModal('请求方法未允许')
+      break
+    case 408:
+      notice.errorModal('请求超时')
+      break
+    case 500:
+      notice.errorModal('服务器端错误')
+      break
+    case 502:
+      notice.errorModal('服务器异常')
+      break
+    case 505:
+      notice.errorModal('http版本不支持该请求')
+      break
+  }
+}
 
+// storage.delLocalStorage(accessToken)
+// this.navigateTo({
+//   url: '../login/login'
+// })
 /**
  * opts 包含url和method的对象
  * params 请求的参数
  */
-export const http = (opts, params) => {
+export const http = (opts, params, noLoading) => {
+  if (!noLoading || noLoading === 'undefined') {
+    notice.loading()
+    // setTimeout(function () {
+    //   notice.loading()
+    // }, 300)
+  }
   // 请求默认配置
-  let httpDefaultOptions = {
-    url: baseUrl + opts.version + opts.url,
-    method: opts.method,
-    data: Array.isArray(params) && opts.join ? {} : params,
-    headers: headerOption(opts.method),
-    params: params
+  let httpDefaultOptions = {}
+  if (opts.method === 'GET') {
+    httpDefaultOptions = {
+      url: baseUrl + opts.version + opts.url,
+      method: opts.method,
+      headers: headerOption(opts.method),
+      params: Array.isArray(params) && opts.join ? {} : params
+    }
+  } else {
+    httpDefaultOptions = {
+      url: baseUrl + opts.version + opts.url,
+      method: opts.method,
+      headers: headerOption(opts.method),
+      data: Array.isArray(params) && opts.join ? {} : params
+    }
   }
 
   // 如果参数是连接在url后面的形式
   if (opts.join && Array.isArray(params)) {
-    params.forEach((c) => {
+    params.forEach(c => {
       httpDefaultOptions.url += '/' + c
     })
   }
+
+  // 响应拦截器即异常处理
+  axios.interceptors.request.use(data => {
+    // notice.loadingHide()
+    return data
+  }, err => {
+    return Promise.resolve(err)
+  })
+  axios.interceptors.response.use(response => {
+    if (response.status && response.status === 200 && response.data.code === 500) {
+      state(response.data)
+      return
+    }
+    notice.loadingHide()
+    return response
+  }, err => {
+    state(err, '')
+    return Promise.resolve(err.response)
+  })
 
   return axios(httpDefaultOptions)
 }
