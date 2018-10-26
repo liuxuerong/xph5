@@ -1,6 +1,7 @@
 <template>
   <div class="search" :class="{searchActive:searchActive}">
-    <input type="text" placeholder="搜索">
+    <router-link to="/search">
+    <input type="text" placeholder="搜索"></router-link>
     <div class="inputIcon"></div>
   </div>
 </template>

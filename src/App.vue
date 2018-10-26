@@ -1,7 +1,8 @@
 <template>
   <div id="app">
     <keep-alive>
-       <router-view/>
+      <router-view/>
+      <lg-preview></lg-preview>
     </keep-alive>
   </div>
 </template>

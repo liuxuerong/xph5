@@ -1,10 +1,13 @@
 import Vue from 'vue'
+import notice from '../util/notice'
 import Router from 'vue-router'
 import Index from '@/pages/index'
 import Find from '@/pages/find/Find'
 import Brand from '@/pages/brand/Brand'
 import BrandDetails from '@/pages/brandDetails/BrandDetails'
 import Hall from '@/pages/hall/Hall'
+import HallDetails from '@/pages/hall/HallDetails'
+import HallAtlas from '@/pages/hall/HallAtlas'
 import Story from '@/pages/story/Story'
 import StoryDetails from '@/pages/StoryDetails/StoryDetails'
 import Details from '@/pages/details/Details'
@@ -31,7 +34,7 @@ import ApplyRefund from '@/pages/order/ApplyRefund'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
@@ -44,6 +47,16 @@ export default new Router({
         {name: 'Story', path: '/story', component: Story},
         {name: 'PersonCenter', path: '/personCenter', component: PersonCenter}
       ]
+    },
+    {
+      path: '/hallDetails/:index',
+      name: 'HallDetails',
+      component: HallDetails
+    },
+    {
+      path: '/hallAtlas/:index',
+      name: 'HallAtlas',
+      component: HallAtlas
     },
     {
       path: '/details/:goodsId',
@@ -161,3 +174,35 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(res => res.meta.requireLogin)) {
+    // 判断是否需要登录权限
+    if (window.localStorage.getItem('loginUserBaseInfo')) {
+      // 判断是否登录
+      let lifeTime =
+        JSON.parse(window.localStorage.getItem('loginUserBaseInfo')).lifeTime *
+        1000
+      let nowTime = (new Date()).getTime() // 当前时间的时间戳
+      if (nowTime < lifeTime) {
+        next()
+      } else {
+        notice.errorModal('未授权，请重新登录', function () {
+          router.push({path: '/login'})
+        })
+        next({
+          path: '/login'
+        })
+      }
+    } else {
+      // 没登录则跳转到登录界面
+      next({
+        path: '/login'
+      })
+    }
+  } else {
+    next()
+  }
+})
+
+export default router

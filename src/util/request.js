@@ -12,7 +12,7 @@ import {
 } from './const.js'
 import axios from 'axios'
 import notice from './notice'
-import Vue from 'vue'
+import router from '../router'
 let baseUrl = config.baseUrl
 
 // 获取token;
@@ -68,13 +68,10 @@ let state = (res, noLoading) => {
       notice.errorModal('302')
       break
     case 400:
-      notice.errorModal('错误请求')
+      notice.errorModal('请求参数错误')
       break
     case 401:
       notice.errorModal('未授权，请重新登录', function () {
-        Vue.$router.push({
-          name: '/login'
-        })
       })
       break
     case 403:
@@ -97,6 +94,14 @@ let state = (res, noLoading) => {
       break
     case 505:
       notice.errorModal('http版本不支持该请求')
+      break
+    case 12000:
+      notice.errorModal('参数错误')
+      break
+    case 10002:
+      notice.errorModal('未授权，请重新登录', function () {
+        router.push({path: '/login'})
+      })
       break
   }
 }
@@ -149,9 +154,8 @@ export const http = (opts, params, noLoading) => {
     return Promise.resolve(err)
   })
   axios.interceptors.response.use(response => {
-    if (response.status && response.status === 200 && response.data.code === 500) {
+    if (response.status && response.status === 200) {
       state(response.data)
-      return
     }
     notice.loadingHide()
     return response

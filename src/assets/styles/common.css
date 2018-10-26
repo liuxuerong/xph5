@@ -149,3 +149,9 @@ body,html,#app{
     color: #262626;
     font-size: 28px;
 }
+.weui-mask{
+  z-index: 9999998 !important;
+}
+.weui-dialog{
+  z-index: 9999999 !important;
+}

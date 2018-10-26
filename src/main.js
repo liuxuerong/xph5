@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import fastClick from 'fastclick'
+import VueLazyLoad from 'vue-lazyload'
 import store from './store'
 
 import 'lib-flexible/flexible'
@@ -16,6 +17,10 @@ Vue.use(LoadingPlugin)
 Vue.use(Confirm)
 Vue.use(ConfirmPlugin)
 Vue.use(ToastPlugin)
+Vue.use(VueLazyLoad, {
+  error: '/static/images/defaultImg.png',
+  loading: '/static/images/defaultImg.png'
+})
 Vue.config.productionTip = false
 fastClick.attach(document.body)
 

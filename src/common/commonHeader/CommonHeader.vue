@@ -2,8 +2,10 @@
   <div class="header border-bottom">
     <div class="scan" v-if="isScan">
     </div>
-    <div class="search " v-else>
+    <router-link to="/search"  v-else>
+    <div class="search ">
     </div>
+    </router-link>
     <slot></slot>
     <div class="car">
     </div>

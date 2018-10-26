@@ -2,7 +2,7 @@
   <div class="commonImgPrices">
     <router-link :to="'/details/'+pricesData.id">
       <div class="imgContainer">
-        <img :src="imageUrl+pricesData.coverImage" alt="">
+        <img v-lazy="imageUrl+pricesData.coverImage"  alt="">
       </div>
       <p class="name">
         {{pricesData.name}}
