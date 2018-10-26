@@ -48,7 +48,6 @@
         </div>
         <div class="goodsContainer">
           <common-img-prices class="goodsItem" v-for="(item,index) in homeSelection" :key="item.id" :pricesData="item" v-if="productsFlag&&index<3" />
-          <div class="emptyBox"></div>
           <div class="moreGoods">
             <router-link to="/goods">查看<br>更多</router-link>
           </div>
@@ -328,6 +327,8 @@ export default {
   border-bottom 10px solid #F5F5F5
 .indexNavItem:last-child
   border-bottom none
+.emptyBox
+  width 3.395556rem !important
 </style>
 
 <style lang="stylus">

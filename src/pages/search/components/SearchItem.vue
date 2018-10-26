@@ -1,13 +1,13 @@
 <template>
-      <div class="SearchItem">
-        <ul class="goodsContainer" v-if="goodsList.length">
-          <li v-for="item in goodsList" v-if="goodsList.length" :key="item.id">
-            <common-img-prices :pricesData="item" />
-          </li>
-          <li class="emptyBox"></li>
-        </ul>
-        <common-empty v-else :emptyObj="emptyObj" class="commonEmpty"/>
-      </div>
+  <div class="SearchItem">
+    <ul class="goodsContainer" v-if="goodsList.length">
+      <li v-for="item in goodsList" v-if="goodsList.length" :key="item.id">
+        <common-img-prices :pricesData="item" />
+      </li>
+      <li class="emptyBox"></li>
+    </ul>
+    <common-empty v-else :emptyObj="emptyObj" class="commonEmpty" />
+  </div>
 </template>
 
 <script>
@@ -137,4 +137,7 @@ export default {
   z-index 9999
 .commonEmpty
   background-color #fff!important
+.emptyBox
+  margin 0 !important
+  width 3.9rem
 </style>

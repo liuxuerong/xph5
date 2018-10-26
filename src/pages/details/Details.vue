@@ -86,6 +86,9 @@ export default {
     })
   },
   watch: {
+    '$route' (to, from) {
+      this.$router.go(0)
+    },
     popupVisible: function (curval) {
       if (curval) {
         this.scroll.stop()
@@ -168,7 +171,7 @@ export default {
     // 商品详情
     http(goodsDetail, [this.goodsId])
       .then(res => {
-        console.log(res)
+        // console.log(res)
         this.goods = res.data.body.goods
         this.desc = res.data.body.goods.desc
         this.keys = res.data.body.activityLabel

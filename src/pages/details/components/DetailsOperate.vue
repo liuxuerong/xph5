@@ -2,7 +2,7 @@
   <div class="detailsOperate">
     <div class="operateLeft">
       <span class="udesk"></span>
-      <span class="collect"></span>
+      <span class="collect" :class="{active:collect}" @click="doCollection(params)"></span>
       <span class="cart"></span>
     </div>
     <ul class="operateRight">
@@ -11,13 +11,34 @@
     </ul>
   </div>
 </template>
+
 <script>
+// import {
+//   http
+// } from 'util/request'
+// import {
+//   isCollection,
+//   opCollection
+// } from 'util/netApi'
+// import {
+//   storage
+// } from 'util/storage.js'
+// import {
+//   accessToken
+// } from 'util/const.js'
+// import notice from 'util/notice.js'
+import {
+  hasCollection,
+  doCollection
+} from '@/func/collection'
 export default {
   name: 'DetailsOperate',
   components: {},
   data () {
     return {
-
+      collect: false,
+      id: '',
+      params: null
     }
   },
   computed: {
@@ -27,10 +48,33 @@ export default {
 
   },
   methods: {
-
+    hasCollection (params) {
+      hasCollection(params).then(res => {
+        this.collect = res.data.body
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    doCollection (params) {
+      doCollection(params).then(res => {
+        this.hasCollection(params)
+      }).catch(err => {
+        console.log(err)
+      })
+    }
+  },
+  created () {
+    this.params = {
+      collectionType: 1,
+      collectionDataId: this.$route.params.goodsId
+    }
+  },
+  mounted () {
+    this.hasCollection(this.params)
   }
 }
 </script>
+
 <style lang="stylus" scoped>
 .detailsOperate
   height 146px
