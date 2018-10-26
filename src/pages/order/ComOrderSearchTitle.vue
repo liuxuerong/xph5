@@ -2,14 +2,15 @@
     <div class="userInfoTop border-bottom">
 		<span class="prevOper" @click="backPrevOper"></span>
 		<h3 class="userInfoTitle">{{title}}</h3>
-		<span class="comOperSearch"></span>
+		<span v-show="oper" class="comOperSearch"></span>
 	</div>
 </template>
 <script>
 export default {
   // 接受父级数据
   props: {
-    title: ''
+    title: '',
+    oper: Boolean
   },
   methods: {
     // 返回上一步
@@ -33,8 +34,11 @@ export default {
 	height 130px
 	box-sizing border-box
 	padding 0 50px
-	position relative
+	position fixed
+	left 0
+	top 0
 	background #fff
+	z-index 999
 	.prevOper
 		display block
 		width 32px

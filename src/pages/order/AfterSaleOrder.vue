@@ -23,23 +23,21 @@
             </div>
             <span class="goodsPrice">￥ {{item.price}}</span>
             <span class="goodsNum">×{{item.num}}</span>
-
           </div>
         </div>
       </div>
-      <div class="orderTotal">
+      <div class="orderTotal" v-for="(item,index) in list.memberOrderGoods" :key="index">
         <div class="orderCount border-bottom">
-          <span class="goodsCount">商品金额<p>￥ {{list.totalAmount}}</p></span>
+          <span class="goodsCount">商品金额<p>￥ {{item.actualPrice}}</p></span>
           <span class="goodsDiscount">优惠金额<p>￥ {{list.offerAmount}}</p></span>
         </div>
         <div class="orderTotalPrice">
-          实付：￥{{list.totalAmount}}
+          实付：￥{{item.actualPrice*item.num}}
         </div>
       </div>
       <ul class="orderOther">
         <li v-if="list.shippingMethod === '1'">配送方式：上门自提</li>
         <li v-if="list.shippingMethod === '2'">配送方式：快递配送</li>
-        <!-- <li>下单时间：{{list.createTime.split('T')[0]}}&nbsp;&nbsp;{{list.createTime.split('T')[1]}}</li> -->
         <li>下单时间：{{list.createTime}}</li>
         <li v-if="list.invoiceDesc === undefined || list.invoiceDesc === ''">发票：无发票</li>
         <li v-else>发票：{{list.invoiceDesc}}</li>
@@ -47,74 +45,45 @@
         <li v-else>备注：{{list.desc}}</li>
       </ul>
     </div>
-    <div class="orderOperBtn orderOperBtn8 border-top" v-if="orderStatus == '8'">支付超时</div>
-    <div class="orderOperBtn orderOperBtn8 border-top" v-if="orderStatus == '6'">交易关闭</div>
-    <div class="orderOperBtn orderOperBtn11 border-top" v-if="orderStatus == '11'">
-      <span @click="unGoodsapplyRefund(list.orderId)">申请退款</span>
-      <span>已付款</span>
-    </div>
+    <div class="orderOperBtn orderOperBtn8 border-top" v-if="orderStatus === 6">交易关闭</div>
   </div>
 </template>
 <script>
-import router from '@/router/index.js'
-import { subOrderDetail } from 'util/netApi'
+import { refundOrderDetail } from 'util/netApi'
 import { http } from 'util/request'
 import SearchTitle from './ComOrderSearchTitle'
 import { config } from 'util/config' // 图片路径
 export default {
   data () {
     return {
-      title: '',
+      title: '退款订单',
       list: [],
       imageUrl: config.imageUrl,
       orderStatus: Number
-      // 1 立即支付
-      // 7 查看详情 --- 交易关闭
     }
   },
   components: {
     SearchTitle
   },
   methods: {
-    orderDetailRender () {
-      let orderCode = this.$route.params.orderCode
-      http(subOrderDetail, [orderCode]).then((response) => {
-        let data = response.data.body
-        console.log(data)
-        this.list = data
-        let memberOrderGoods = data.memberOrderGoods[0]
-        console.log(memberOrderGoods)
-        if (data.status === 2) {
-          this.title = '待发货订单'
-        } else if (data.status === 3 || data.status === 7) {
-          this.title = '交易关闭'
-        } else if (data.status === 8) {
-          this.title = '支付超时'
-        } else if (data.status === 4) {
-          this.title = '待评价订单'
-        }
-        if (memberOrderGoods.orderItemStatus === undefined && data.status === 8) {
-          this.orderStatus = 8 // 交易关闭
-        } else if (memberOrderGoods.orderItemStatus === 11) {
-          this.orderStatus = 11 // 未发货退款
-        } else if (memberOrderGoods.orderItemStatus === 6) {
-          this.orderStatus = 6 // 交易关闭
+    // 页面初始化数据
+    afterSaleRender () {
+      let orderId = this.$route.params.orderId
+      console.log(orderId)
+      http(refundOrderDetail, [orderId]).then((response) => {
+        console.log(response)
+        if (response.data.code === 0) {
+          this.list = response.data.body
+          let memberOrderGoods = response.data.body.memberOrderGoods[0]
+          if (memberOrderGoods.orderItemStatus === 6) {
+            this.orderStatus = 6 // 交易关闭
+          }
         }
       })
-    },
-    // 商品详情页面
-    goodsDetails (goodsId) {
-      router.push('../../details/' + goodsId)
-    },
-    // 申请退款
-    unGoodsapplyRefund (orderId) {
-      console.log(666)
-      // type 1   未发货退款
-      router.push('../../applyRefund/1/' + orderId)
     }
   },
   mounted () {
-    this.orderDetailRender()
+    this.afterSaleRender()
   }
 }
 </script>
@@ -125,7 +94,8 @@ export default {
   .wrapper
     width 100%
     box-sizing border-box
-    padding-top 132px
+    padding-top 130px
+    background #F5F5F5
   .orderDetatilCon
     width 100%
     box-sizing border-box
@@ -171,6 +141,7 @@ export default {
         width 286px
         height 286px
         margin-right 50px
+        background #000
       .orderText
         float left
         width calc(100% - 336px)
@@ -256,19 +227,6 @@ export default {
     font-size 46px
     color #999999
     background #F0F0F0
-  .orderOperBtn11
-    font-size 36px
-    color #808080
-    span
-      float left
-    span:first-child
-      background #fff
-      width 24%
-      text-align center
-    span:last-child
-      width 76%
-      text-align center
-      background #F0F0F0
   .goodsSpecWrapper
     width 100%
     margin-bottom 30px

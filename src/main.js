@@ -10,10 +10,12 @@ import 'lib-flexible/flexible'
 import 'styles/reset.css'
 import 'styles/common.css'
 import 'styles/border.css'
-import {AlertPlugin, LoadingPlugin, Confirm} from 'vux'
+import {AlertPlugin, LoadingPlugin, Confirm, ConfirmPlugin, ToastPlugin} from 'vux'
 Vue.use(AlertPlugin)
 Vue.use(LoadingPlugin)
 Vue.use(Confirm)
+Vue.use(ConfirmPlugin)
+Vue.use(ToastPlugin)
 Vue.config.productionTip = false
 fastClick.attach(document.body)
 
