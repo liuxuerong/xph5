@@ -142,7 +142,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-  .top>>>.vux-tab .vux-tab-item.vux-tab-selected
+.top>>>.vux-tab .vux-tab-item.vux-tab-selected
     color #333333
     border-bottom 8px solid #262626
 .top>>>.vux-tab-ink-bar

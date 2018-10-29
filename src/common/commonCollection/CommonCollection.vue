@@ -1,12 +1,15 @@
 <template>
-  <div class="commonCollection">
+  <div class="commonCollection" :class="{active:collect}" @click.stop="doCollection(params)">
   </div>
 </template>
 
 <script>
+import {
+  hasCollection,
+  doCollection
+} from '@/func/collection'
 export default {
   name: 'CommonCollection',
-  components: {},
   props: {
     collectionType: {
       type: Number,
@@ -15,7 +18,9 @@ export default {
   },
   data () {
     return {
-      id: ''
+      id: '',
+      collect: false,
+      params: null
     }
   },
   computed: {
@@ -25,10 +30,33 @@ export default {
 
   },
   methods: {
+    hasCollection (params) {
+      var fnType = Object.prototype.toString.call(hasCollection(params)).slice(8, -1)
+      if (fnType) {
+        hasCollection(params).then(res => {
+          this.collect = res.data.body
+        }).catch(err => {
+          console.log(err)
+        })
+      }
+    },
+    doCollection (params) {
+      doCollection(params).then(res => {
+        this.hasCollection(params)
+      }).catch(err => {
+        console.log(err)
+      })
+    }
 
   },
+  created () {
+    this.params = {
+      collectionType: this.collectionType,
+      collectionDataId: this.$route.params.id
+    }
+  },
   mounted () {
-    this.id = this.$route.params.id
+    this.hasCollection(this.params)
   }
 }
 </script>

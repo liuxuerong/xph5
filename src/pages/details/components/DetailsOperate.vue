@@ -13,47 +13,28 @@
 </template>
 
 <script>
-// import {
-//   http
-// } from 'util/request'
-// import {
-//   isCollection,
-//   opCollection
-// } from 'util/netApi'
-// import {
-//   storage
-// } from 'util/storage.js'
-// import {
-//   accessToken
-// } from 'util/const.js'
-// import notice from 'util/notice.js'
 import {
   hasCollection,
   doCollection
 } from '@/func/collection'
 export default {
   name: 'DetailsOperate',
-  components: {},
   data () {
     return {
       collect: false,
-      id: '',
       params: null
     }
   },
-  computed: {
-
-  },
-  watch: {
-
-  },
   methods: {
     hasCollection (params) {
-      hasCollection(params).then(res => {
-        this.collect = res.data.body
-      }).catch(err => {
-        console.log(err)
-      })
+      var fnType = Object.prototype.toString.call(hasCollection(params)).slice(8, -1)
+      if (fnType) {
+        hasCollection(params).then(res => {
+          this.collect = res.data.body
+        }).catch(err => {
+          console.log(err)
+        })
+      }
     },
     doCollection (params) {
       doCollection(params).then(res => {

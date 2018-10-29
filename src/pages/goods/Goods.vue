@@ -122,7 +122,7 @@ export default {
         }
       })
       this.scroll.on('pullingUp', () => {
-        this.getGoodsList(471617244065955840, this.page++)
+        this.getGoodsList(this.categoryId, this.page++)
         this.scroll.refresh()
         // this.finishPullUp()
       })

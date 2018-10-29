@@ -1,9 +1,9 @@
 <template>
 <div class="brandDetailsContent">
    <common-nav-header :title="details.title" v-if="details"/>
-  <div class="brandDetails" ref="brandDetails">
+  <div class="brandDetails" ref="brandDetails" >
     <div>
-      <div class="topBgImg">
+      <div class="topBgImg" v-if="details">
         <img :src="imageUrl+details.articleCoverImage" alt="" class="articleCoverImage">
       </div>
       <details-header v-if="details" :details="details" />
