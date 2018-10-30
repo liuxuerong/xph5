@@ -11,14 +11,12 @@ import 'lib-flexible/flexible'
 import 'styles/reset.css'
 import 'styles/common.css'
 import 'styles/border.css'
-import {AlertPlugin, LoadingPlugin, Confirm} from 'vux'
-
-// defalut install
-
-// with parameters install
+import {AlertPlugin, LoadingPlugin, Confirm, ConfirmPlugin, ToastPlugin} from 'vux'
 Vue.use(AlertPlugin)
 Vue.use(LoadingPlugin)
 Vue.use(Confirm)
+Vue.use(ConfirmPlugin)
+Vue.use(ToastPlugin)
 Vue.use(VueLazyLoad, {
   error: '/static/images/defaultImg.png',
   loading: '/static/images/defaultImg.png'

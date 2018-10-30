@@ -2,7 +2,7 @@
   <div class="wrapper">
     <div class="perTopbg">
       <div class="perHeader">
-        <img src="" class="headerImg" alt="" @click="userDataSet">
+        <img :src="imageUrl+memberHead" class="headerImg" alt="" @click="userDataSet">
         <h2 class="headerName" @click="userDataSet">{{name}}</h2>
       </div>
     </div>
@@ -81,6 +81,8 @@ export default {
     return {
       name: '',
       hasAddress: false,
+      imageUrl: config.imageUrl, // 图片路径
+      memberHead: '',
       addName: '',
       phone: '',
       address: '',
@@ -105,11 +107,12 @@ export default {
     // 基础信息加载
     getUserInfo () {
       http(memberCenter).then((response) => {
-        // console.log(response)
+        console.log(response)
         let data = response.data.body
         console.log(data.orderCount)
         this.name = data.memberName
         this.orderNum = data.orderCount
+        this.memberHead = data.memberHead
       })
     },
     // 基础资料设置
@@ -229,7 +232,6 @@ export default {
           display block
           width 254px
           height 254px
-          background red
           position absolute
           left 80px
           bottom 112px

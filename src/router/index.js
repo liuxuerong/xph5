@@ -28,6 +28,9 @@ import AboutMember from '@/pages/person/AboutMember'
 import OrderIndex from '@/pages/order/OrderIndex'
 import OrderList from '@/pages/order/OrderList'
 import OrderDetails from '@/pages/order/OrderDetails'
+import ImmedPayment from '@/pages/order/ImmedPayment'
+import AfterSaleOrder from '@/pages/order/AfterSaleOrder'
+import ApplyRefund from '@/pages/order/ApplyRefund'
 
 Vue.use(Router)
 
@@ -153,6 +156,21 @@ const router = new Router({
       path: '/orderDetails/:orderCode',
       name: 'orderDetails',
       component: OrderDetails
+    },
+    {
+      path: '/immedPayment/:orderCode',
+      name: 'immedPayment',
+      component: ImmedPayment
+    },
+    {
+      path: '/afterSaleOrder/:orderId',
+      name: 'afterSaleOrder',
+      component: AfterSaleOrder
+    },
+    {
+      path: '/applyRefund/:type/:orderId',
+      name: 'applyRefund',
+      component: ApplyRefund
     }
   ]
 })
