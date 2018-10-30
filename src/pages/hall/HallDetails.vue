@@ -1,25 +1,27 @@
 <template>
   <div class="hallDetailsContainer">
     <common-nav-header :title="experienceObj.categoryName" v-if="experienceObj" />
-    <div ref="hallDetails" class="hallDetails">
+    <div ref="hallDetails" class="hallDetails" v-if="experienceObj">
       <img :src="imageUrl+experienceObj.experienceCoverImage" alt="" ref="zoomImg">
-      <div class="tag" v-for="(item,index) in experienceObj.experienceGoods" :key="item.goodsId" :style="{left:item.left,top:item.top}" @click="showDetails(index)">
+      <div class="tag" ref="tag" v-for="(item,index) in experienceObj.experienceGoods" :key="item.goodsId" :style="{left:item.left,top:item.top}" @click="showDetails(index)">
         <img src="/static/icons/hall_tag_icon.png" alt="">
       </div>
     </div>
     <div v-transfer-dom>
       <popup v-model="show">
-        <div class="details" v-if="itemObj">
-          <img :src="imageUrl+itemObj.goodCoverImage" alt="">
-          <div class="text">
-            <span class="name">{{itemObj.goodName}}</span>
-            <span class="price">￥{{itemObj.minPrice}}起</span>
-            <p>{{itemObj.summary}}</p>
+        <router-link :to="'/details/'+itemObj.goodId" v-if="itemObj">
+          <div class="details">
+            <img :src="imageUrl+itemObj.goodCoverImage" alt="">
+            <div class="text">
+              <span class="name">{{itemObj.goodName}}</span>
+              <span class="price">￥{{itemObj.minPrice}}起</span>
+              <p>{{itemObj.summary}}</p>
+            </div>
           </div>
-        </div>
+        </router-link>
       </popup>
     </div>
-   <router-link :to="'/hallAtlas/3'" class="morePic"> <i class="arrow"></i>更多图片 </router-link>
+    <router-link :to="'/hallAtlas/'+(parseInt(index)+1)" class="morePic"> <i class="arrow"></i>更多图片 </router-link>
   </div>
 </template>
 
@@ -39,6 +41,7 @@ import {
 import {
   storage
 } from 'util/storage.js'
+import notice from 'util/notice'
 export default {
   name: 'HallDetails',
   directives: {
@@ -84,12 +87,22 @@ export default {
     },
     showDetails (index) {
       this.show = true
+      console.log(this.$refs.tag[index])
+      this.$refs.tag[index].classList.add('active')
       this.itemObj = this.experienceObj.experienceGoods[index]
     }
   },
   watch: {
     '$route' (to, from) {
       this.$router.go(0)
+    },
+    show: function (val) {
+      if (!val) {
+        let tag = this.$refs.tag
+        for (let i = 0; i < tag.length; i++) {
+          tag[i].classList.remove('active')
+        }
+      }
     },
     experienceObj: function () {
       this.zoomInit()
@@ -98,10 +111,16 @@ export default {
   },
   created () {
     this.index = this.$route.params.index
-    this.experienceObj = storage.getLocalStorage(experience)[this.index]
+    const _this = this
+    if (!storage.getLocalStorage(experience)) {
+      notice.errorModal('未授权，请重新登录', function () {
+        _this.$router.push({path: '/login'})
+      })
+    } else {
+      this.experienceObj = storage.getLocalStorage(experience)[this.index]
+    }
   },
   mounted () {
-    console.log(this.experienceObj)
   }
 }
 </script>
@@ -139,6 +158,7 @@ export default {
     height 300px
     position absolute
     transform translateX(-50%)
+    transition all 0.5s
     img
       width 134px
       height 274px
@@ -147,7 +167,6 @@ export default {
       border 4px solid #fff
       background rgba(248,249,251,0.25)
       border-radius 50%
-      transition all 1s
   .details
     padding 30px
     display flex
@@ -155,6 +174,7 @@ export default {
     background-color #fff
     .text
       flex 1
+      color #333
       .name
         display inline-block
         height 166px

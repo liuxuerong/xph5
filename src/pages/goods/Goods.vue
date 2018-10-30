@@ -76,9 +76,7 @@ export default {
   // },
   methods: {
     getTabbar () {
-      // let _this = this
       http(category).then(res => {
-        console.log(res)
         for (let i = 0; i < res.data.body.length; i++) {
           this.tabbar.push(res.data.body[i])
           this.categoryId = this.tabbar[0].id
@@ -88,7 +86,6 @@ export default {
     },
     onItemClick (index) {
       this.categoryId = this.$refs.tabItem[index].$el.id
-      console.log(this.categoryId)
       this.page = 1
       this.getGoodsList(this.categoryId, this.page)
       this.scroll.refresh()
@@ -142,10 +139,6 @@ export default {
   },
   mounted () {
     this.getTabbar()
-
-    // this.getStoryKnow()
-    // this.getStorySub()
-    // this.getStoryWord()
   }
 }
 </script>
@@ -155,17 +148,18 @@ export default {
     color #333333
     border-bottom 8px solid #262626
     font-weight: 600;
+    position relative
+  .xpGoodsTop>>>.vux-tab .vux-tab-item.vux-tab-selected::before
+    content ""
+    position absolute
+    bottom 0
+    left 50%
+    transform translateX(-50%)
+    width 88px
+    background-color #262626
+    height 8px
 .xpGoodsTop>>>.vux-tab-ink-bar
-    background transparent
-.xpGoodsTop>>>.vux-tab-ink-bar::before
-  content ""
-  position absolute
-  top 0
-  left 50%
-  transform translateX(-50%)
-  width 88px
-  background-color #262626
-  height 100%
+    display none !important
 .xpGoodsTop>>>.vux-tab-container
     height 106px
 .xpGoodsTop>>>.vux-tab

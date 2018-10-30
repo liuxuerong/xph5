@@ -4,7 +4,9 @@
     <div class="xpAtlasTop border-bottom" ref="xpAtlasTop">
       <div class="xpAtlasTopContent" ref="xpAtlasTopContent">
         <tab v-if="hallAtlasData.length>1">
-          <tab-item v-for="(item,i) in hallAtlasData" :selected="i==index" @on-item-click="onItemClick" :key="i" :id="i" ref="tabItem">{{item.name}}</tab-item>
+          <tab-item v-for="(item,i) in hallAtlasData" :selected="i==index" @on-item-click="onItemClick" :key="i" :id="i" ref="tabItem">{{item.name}}
+          </tab-item>
+          <tab-item></tab-item>
         </tab>
       </div>
     </div>
@@ -38,7 +40,7 @@ import {
   Tab,
   TabItem
 } from 'vux'
-import BScroll from 'better-scroll'
+import notice from 'util/notice'
 export default {
   name: 'HallAtlas',
   components: {
@@ -58,12 +60,6 @@ export default {
       }],
       index: 0
     }
-  },
-  computed: {
-
-  },
-  watch: {
-
   },
   methods: {
     initHallAtlasData (index) {
@@ -104,58 +100,48 @@ export default {
     },
     getImgsList (i) {
       this.imgsList = this.hallAtlasData[i].list
-    },
-    scrollInitTopBar () {
-      console.log(this.$refs.xpAtlasTop)
-      console.log(this.$refs.xpAtlasTopContent.getElementsByClassName('vux-tab-erap')[0])
-      return (this.scrollTopBar = new BScroll(this.$refs.xpAtlasTop, {
-        scrollX: true,
-        scrollY: false,
-        click: true,
-        bounce: {
-          left: true,
-          right: true
-        }
-      }))
     }
   },
   created () {
     this.index = this.$route.params.index
-    this.experience = storage.getLocalStorage(experience)
-    console.log(this.index)
-    this.initHallAtlasData(this.index)
-  },
-  updated () {
-    console.log(this.$refs.xpAtlasTopContent.getElementsByClassName('vux-tab-erap')[0])
+    const _this = this
+    if (!storage.getLocalStorage(experience)) {
+      notice.errorModal('未授权，请重新登录', function () {
+        _this.$router.push({path: '/login'})
+      })
+    } else {
+      this.experience = storage.getLocalStorage(experience)
+    }
   },
   mounted () {
-    this.scrollInitTopBar()
+    this.initHallAtlasData(this.index)
   }
 }
 </script>
 
 <style lang="stylus" scoped>
+  .vux-tab-wrap
+    height 106px
   .xpAtlasTop>>>.vux-tab .vux-tab-item.vux-tab-selected
     color #333333
     border-bottom 8px solid #262626
-    font-weight: 600;
+    font-weight 600
+    position relative
+  .xpAtlasTop>>>.vux-tab .vux-tab-item.vux-tab-selected::before
+    content ""
+    position absolute
+    bottom 0
+    left 50%
+    transform translateX(-50%)
+    width 88px
+    background-color #262626
+    height 8px
 .xpAtlasTop>>>.vux-tab-ink-bar
-    background transparent
-.xpAtlasTop>>>.vux-tab-ink-bar::before
-  content ""
-  position absolute
-  top 0
-  left 50%
-  transform translateX(-50%)
-  width 88px
-  background-color #262626
-  height 100%
+    display none !important
 .xpAtlasTop>>>.vux-tab-container
-    height 106px
-    display block
+    height 108px
 .xpAtlasTop>>>.vux-tab
-    height 106px
-    display: block
+    height 108px
 .xpAtlasTop>>>.vux-tab .vux-tab-item
     height 106px
     line-height 106px
