@@ -17,8 +17,8 @@
                 </div>
             </form>
         </div>
-        <button class="loginBtn" @click="loginBtnClick">登陆</button>
-        <router-link to="/phoneCode" class="phoneCodeLogin">手机验证码登陆</router-link>
+        <button class="loginBtn" @click="loginBtnClick">登录</button>
+        <router-link to="/phoneCode" class="phoneCodeLogin">手机验证码登录</router-link>
         <span class="loginTipText">未注册的手机号码验证后自动创建星品账户</span>
     </div>
 </template>
@@ -62,7 +62,7 @@ export default {
           storage.setLocalStorage('userId', response.data.body.user_id)
           storage.setLocalStorage(accessToken, 'Bearer ' + response.data.body.access_token)
           Toast({
-            message: '登陆成功',
+            message: '登录成功',
             position: 'bottom',
             duration: 5000
           })
