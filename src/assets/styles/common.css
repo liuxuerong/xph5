@@ -155,3 +155,6 @@ body,html,#app{
 .weui-dialog{
   z-index: 9999999 !important;
 }
+.mint-toast{
+  z-index: 999999 !important;
+}

@@ -32,7 +32,7 @@ export default {
   methods: {
     hasCollection (params) {
       var fnType = Object.prototype.toString.call(hasCollection(params)).slice(8, -1)
-      if (fnType) {
+      if (fnType === 'Promise') {
         hasCollection(params).then(res => {
           this.collect = res.data.body
         }).catch(err => {

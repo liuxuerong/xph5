@@ -1,11 +1,11 @@
 <template>
   <div class="storyDetails">
-    <common-nav-header :title="details.title" v-if="details"/>
+    <common-nav-header :title="details.title" v-if="details" />
     <div class="storyDetailsContent" ref="storyDetailsContent">
       <div>
         <story-details-header v-if="details" :details="details" />
         <common-content v-if="details&&goodsItems.length" :goodsItems="goodsItems" :details="details" />
-        <h2>热文推荐</h2>
+        <h2 v-if="details&&details.articleRecommends.length">热文推荐</h2>
         <common-article-rec v-if="details" :articleRecommends="details.articleRecommends" :linkTo="linkTo" />
       </div>
     </div>
@@ -53,8 +53,10 @@ export default {
           console.log(res)
           this.details = res.data.body
           this.goodsItems = res.data.body.goodsItems
-          this.scrollInit()
-          this.scroll.scrollTo(0, 0, 0)
+          setTimeout(() => {
+            this.scrollInit()
+            this.scroll.scrollTo(0, 0, 0)
+          }, 16)
         })
         .catch(err => {
           console.log(err)
@@ -73,6 +75,21 @@ export default {
   },
   mounted () {
     this.getStoryDetails()
+  },
+  updated () {
+    let img = this.$refs.storyDetailsContent.getElementsByTagName('img')
+    let count = 0
+    let length = img.length
+    if (length) {
+      let timer = setInterval(() => {
+        if (count === length) {
+          this.scroll.refresh()
+          clearInterval(timer)
+        } else if (img[count].complete) {
+          count++
+        }
+      }, 100)
+    }
   }
 }
 </script>

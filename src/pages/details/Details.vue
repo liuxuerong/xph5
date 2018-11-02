@@ -1,20 +1,21 @@
 <template>
-  <div class="xpDetails" ref="xpDetails" >
+  <div class="xpDetails" ref="xpDetails">
     <div class="xpDetailsScroll">
       <common-swiper :swiperData="swiperData" v-if="swiperData!=[]" />
       <details-des :goods="goods" :activityLabel="activityLabel" v-if="goods" />
       <div class="cutOffLine"></div>
-      <details-cell :cellInfo="cellInfo[0]" @click.native="changePopupVisible(true)" />
-
+      <details-cell :cellInfo="cellInfo[0]" @click.native="changePopupVisible(true), changeFrom(1)" />
       <div class="cutOffLine"></div>
       <details-service/>
       <div class="cutOffLine"></div>
-      <router-link :to="'/comment/'+goodsId" class="commentRouter"> <details-cell :cellInfo="cellInfo[1]" /></router-link>
+      <router-link :to="'/comment/'+goodsId" class="commentRouter">
+        <details-cell :cellInfo="cellInfo[1]" />
+      </router-link>
       <details-comment-swiper/>
       <div class="seeMore">上拉查看更多详情</div>
-      <details-img-text-desc class="isDetailsImgTextShow" ref="isDetailsImgTextShow" :desc="desc" v-if="desc.length"/>
+      <details-img-text-desc class="isDetailsImgTextShow" ref="isDetailsImgTextShow" :desc="desc" v-if="desc.length" />
     </div>
-    <details-operate class="detailsOperate" />
+    <details-operate class="detailsOperate" :goodsItems="goodsItems"/>
     <details-pop-up :sku="sku" v-if="sku" :goods="goods" />
   </div>
 </template>
@@ -72,11 +73,14 @@ export default {
       cellInfo: [{
         title: '规格',
         value: '选择规格数量'
-      }, {
+      },
+      {
         title: '10',
         value: ''
-      }],
-      sku: null
+      }
+      ],
+      sku: null,
+      goodsItems: []
     }
   },
 
@@ -86,7 +90,7 @@ export default {
     })
   },
   watch: {
-    '$route' (to, from) {
+    $route (to, from) {
       this.$router.go(0)
     },
     popupVisible: function (curval) {
@@ -98,8 +102,10 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['changePopupVisible', 'changeNowPrice']),
-    pushKeys (arr) { // 处理返回数据
+    ...mapMutations(['changePopupVisible', 'changeNowPrice', 'changeFrom']),
+    pushKeys (arr) {
+      console.log(arr)
+      // 处理返回数据
       let sku = {}
       sku.keys = []
       let temKeys = []
@@ -109,26 +115,50 @@ export default {
         let dataKey = ''
         let temKeysObj = {}
         for (let j = 0; j < spec.length; j++) {
+          let xx = i + '' + j
+
+          spec[j].id = xx
+          let flag = true
+
+          if (temKeys.length > 1) {
+            for (let k = 0; k < temKeys.length; k++) {
+              if (temKeys[k].name === spec[j].key) {
+                for (let h = 0; h < temKeys[k].value.length; h++) {
+                  if (spec[j].value === temKeys[k].value[h].cname) {
+                    xx = temKeys[k].value[h].id
+                    flag = false
+                    break
+                  }
+                }
+              }
+            }
+          }
           if (dataKey === '') {
-            dataKey = spec[j].value
+            dataKey = xx
           } else {
-            dataKey += ';' + spec[j].value
+            dataKey += ';' + xx
+          }
+          if (!flag) {
+            continue
           }
           temKeysObj = {
             name: spec[j].key,
             isActive: true,
             value: [{
-              id: spec[j].value,
+              id: xx,
               cname: spec[j].value,
               isActiveC: false,
-              notClick: false
+              notClick: false,
+              pic: arr[i].pic
             }]
           }
+
           temKeys.push(temKeysObj)
         }
         sku.data[dataKey] = {
           price: arr[i].price,
-          count: arr[i].stock
+          count: arr[i].stock,
+          goodsItemsId: arr[i].id
         }
       }
       let result = {}
@@ -146,6 +176,7 @@ export default {
           value: result[key]
         })
       }
+      console.log(sku)
       return sku
     }
   },
@@ -167,14 +198,16 @@ export default {
       _this.scroll.refresh()
     })
     this.changePopupVisible(false)
-    this.$refs.xpDetails.style.height = document.documentElement.clientHeight + 'px'
+    this.$refs.xpDetails.style.height =
+        document.documentElement.clientHeight + 'px'
     // 商品详情
     http(goodsDetail, [this.goodsId])
       .then(res => {
-        // console.log(res)
+        console.log(res)
         this.goods = res.data.body.goods
         this.desc = res.data.body.goods.desc
         this.keys = res.data.body.activityLabel
+        this.goodsItems = res.data.body.goodsItems
         this.sku = this.pushKeys(res.data.body.goodsItems)
         this.swiperData = res.data.body.goodsPic
         this.changeNowPrice(res.data.body.goods.minPrice)

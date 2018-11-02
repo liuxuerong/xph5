@@ -1,6 +1,6 @@
 <template>
   <div class="detailsPopUp">
-    <mt-popup v-model="details.popupVisible" position="bottom"  @touchmove.prevent>
+    <mt-popup v-model="details.popupVisible" position="bottom" @touchmove.prevent>
       <DetailsImgPrice :goods="goods" />
       <div class="cutOffLine"></div>
       <div id="goodsinfo">
@@ -16,11 +16,14 @@
           </div>
         </div>
       </div>
-      <div class="goodsInfoBottm border-top">
+      <div class="goodsInfoBottm border-top" v-if="from==1">
         <router-link class="buy" to="/">立即购买</router-link>
-        <span class="addCart">
-          加入购物车
-        </span>
+        <span class="addCart"  @click="addCart()">
+            加入购物车
+          </span>
+      </div>
+      <div class="goodsInfoBottm border-top" v-else>
+        <div class="addSure" @click="addCart()">确认加入</div>
       </div>
     </mt-popup>
   </div>
@@ -28,12 +31,19 @@
 
 <script>
 import {
-  Popup
+  Popup,
+  Toast
 } from 'mint-ui'
 import {
   mapState,
   mapMutations
 } from 'vuex'
+import {
+  addCart
+} from 'util/netApi'
+import {
+  http
+} from 'util/request'
 import DetailsImgPrice from './DetailsImgPrice'
 export default {
   name: 'DetailsPopUp',
@@ -48,14 +58,16 @@ export default {
   data () {
     return {
       SKUResult: {},
-      cartCount: 1
+      cartCount: 1,
+      type: 1,
+      goodsItemsId: ''
     }
   },
   computed: mapState({
     details: state => state.details,
-    maxCount: state => state.details.maxCount
+    maxCount: state => state.details.maxCount,
+    from: state => state.cart.from
   }),
-  watch: {},
   methods: {
     ...mapMutations(['changeNowPrice', 'changeMaxCount']),
     addCount () {
@@ -64,11 +76,39 @@ export default {
         this.cartCount = this.maxCount
       }
     },
+
     subCount () {
       this.cartCount--
       if (this.cartCount < 2) {
         this.cartCount = 1
       }
+    },
+    //     getCartNum () {
+    //   http(cartNum).then(res => {
+    //     console.log(res)
+    //     this.changeCartNum(res.data.body)
+    //   }).catch(err => {
+    //     console.log(err)
+    //   })
+    // },
+    addCart () {
+      const params = {
+        goodsItemId: this.goodsItemsId,
+        num: this.cartCount
+      }
+      http(addCart, params).then(res => {
+        console.log(res)
+        if (res.data.code === 0) {
+          Toast({
+            message: '添加购物车成功',
+            position: 'bottom',
+            duration: 500
+          })
+          // this.getCartNum()
+        }
+      }).catch(err => {
+        console.log(err)
+      })
     },
     /* 商品详情数据 */
     queryDGoodsById () {
@@ -101,10 +141,12 @@ export default {
         // SKU信息key属性·
         this.SKUResult[key].count += sku.count
         this.SKUResult[key].prices.push(sku.price)
+        this.SKUResult[key].goodsItemsId = sku.goodsItemsId
       } else {
         this.SKUResult[key] = {
           count: sku.count,
-          prices: [sku.price]
+          prices: [sku.price],
+          goodsItemsId: sku.goodsItemsId
         }
       }
     },
@@ -131,7 +173,8 @@ export default {
         // 结果集接放入SKUResult
         this.SKUResult[skuKeyAttrs.join(';')] = {
           count: sku.count,
-          prices: [sku.price]
+          prices: [sku.price],
+          goodsItemsId: sku.goodsItemsId
         }
       }
     },
@@ -231,6 +274,7 @@ export default {
       for (let i = 0; i < this.sku.keys.length; i++) {
         for (let j = 0; j < this.sku.keys[i].value.length; j++) {
           if (this.sku.keys[i].value[j].isActiveC === true) {
+            this.goods.coverImage = this.sku.keys[i].value[j].pic
             haveChangedId.push(this.sku.keys[i].value[j].id)
           }
         }
@@ -244,6 +288,8 @@ export default {
         var len = haveChangedId.length
         var prices = this.SKUResult[haveChangedId.join(';')].prices
         const nowCount = this.SKUResult[haveChangedId.join(';')].count
+        this.goodsItemsId = this.SKUResult[haveChangedId.join(';')].goodsItemsId
+
         this.changeMaxCount(nowCount)
         if (this.cartCount > nowCount) {
           this.cartCount = nowCount
@@ -272,7 +318,7 @@ export default {
           }
         }
         for (let i = 0; i < haveChangedId.length; i++) {
-          var indexs = daiceshiId.indexOf(haveChangedId[i])
+          let indexs = daiceshiId.indexOf(haveChangedId[i])
           if (indexs > -1) {
             daiceshi.splice(indexs, 1)
           }
@@ -324,17 +370,17 @@ export default {
   created () {
     this.queryDGoodsById()
   },
-  mounted () {
-  }
+  mounted () {}
 }
 </script>
 
 <style lang="stylus" scoped>
 #goodsinfo
-  padding 50px
-  height 1283px
+  padding 50px 50px 145px 50px
+  // padding-bottom 145px
+  // height 1283px
+  box-sizing border-box
   overflow-y scroll
-  padding-bottom 145px
   .num
     height 100px
     line-height 100px
@@ -408,7 +454,17 @@ export default {
     height 145px
     color #BA825A
     background-color #F0F0F0
+.goodsInfoBottm
+  .addSure
+    width 100%
+    height 145px
+    line-height 145px
+    background-color #F0F0F0
+    text-align center
+    color #BA825A
+    font-size 46px
 </style>
+
 <style lang="stylus">
 .detailsPopUp
   .mint-popup

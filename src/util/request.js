@@ -55,13 +55,14 @@ let headerOption = method => {
 }
 // http返回码状态判断
 let state = (res, noLoading) => {
-  if (!noLoading || noLoading === 'undefined') {
+  if (noLoading) {
     // Loading隐藏
-    // notice.loadingHide()
+    notice.loadingHide()
   }
-  if (res.errMsg === 'request:fail timeout') {
-    notice.errorModal('连接超时')
-    return
+  if (res.code === undefined) {
+    notice.errorModal('网络错误', function () {
+      notice.loadingHide()
+    })
   }
   switch (res.code) {
     case 302:
@@ -128,6 +129,7 @@ export const http = (opts, params, noLoading) => {
       url: baseUrl + opts.version + opts.url,
       method: opts.method,
       headers: headerOption(opts.method),
+      timeout: 30000,
       params: Array.isArray(params) && opts.join ? {} : params
     }
   } else {
@@ -135,6 +137,7 @@ export const http = (opts, params, noLoading) => {
       url: baseUrl + opts.version + opts.url,
       method: opts.method,
       headers: headerOption(opts.method),
+      timeout: 30000,
       data: Array.isArray(params) && opts.join ? {} : params
     }
   }

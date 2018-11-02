@@ -1,7 +1,8 @@
 <template>
-  <div class="commonNavHeader">
+  <div class="commonNavHeader border-bottom">
     <div class="back" @click="goBack"></div>
     {{title}}
+    <slot></slot>
   </div>
 </template>
 <script>

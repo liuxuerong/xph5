@@ -183,7 +183,7 @@ export default {
     padding 0 50px
     background-color #fff
   .xpStoryContent
-    height calc(100% )
+    height 100%
   h1.title
     font-size 56px
   .topBgImg

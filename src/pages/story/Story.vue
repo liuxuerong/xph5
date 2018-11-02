@@ -166,7 +166,7 @@ export default {
     font-size 46px
 .xpStory
   height 100%
-  padding-top 202px
+  padding-top 242px
   padding-bottom 148px
   .top
     height 106px
@@ -177,7 +177,7 @@ export default {
     top 136px
     z-index 9999999
   .xpStoryContent
-    height calc(100% - 400px)
+    height 100%
   h1.title
     font-size 56px
   .topBgImg
