@@ -1,24 +1,27 @@
 <template>
   <div class="xpGoods">
-    <common-nav-search />
-    <div class="xpGoodsTop border-bottom" ref="xpGoodsTop">
-      <div class="xpGoodsTopContent">
-        <tab v-if="tabbar.length">
-          <tab-item :selected="index===0" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.id" :id="item.id" ref="tabItem">{{item.catName}}</tab-item>
-        </tab>
-      </div>
-    </div>
-    <div ref="xpStoryContent" class="xpStoryContent">
+    <keep-alive>
       <div>
-        <ul class="goodsContainer" v-if="goodsList.length">
-          <li v-for="item in goodsList" v-if="goodsList.length" :key="item.id">
-            <common-img-prices :pricesData="item" />
-          </li>
-        </ul>
-        <common-empty v-else :emptyObj="emptyObj" />
+        <common-nav-search />
+        <div class="xpGoodsTop border-bottom" ref="xpGoodsTop">
+          <div class="xpGoodsTopContent">
+            <tab v-if="tabbar.length">
+              <tab-item :selected="index===0" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.id" :id="item.id" ref="tabItem">{{item.catName}}</tab-item>
+            </tab>
+          </div>
+        </div>
+        <div ref="xpStoryContent" class="xpStoryContent">
+          <div>
+            <ul class="goodsContainer" v-if="goodsList.length">
+              <li v-for="item in goodsList" v-if="goodsList.length" :key="item.id">
+                <common-img-prices :pricesData="item" />
+              </li>
+            </ul>
+            <common-empty v-else :emptyObj="emptyObj" />
+          </div>
+        </div>
       </div>
-    </div>
-
+    </keep-alive>
   </div>
 </template>
 

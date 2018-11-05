@@ -16,7 +16,7 @@
               <div class="bottom clearfix">
                 <span class="tag fl" v-if="goodsItem.status!=1">已失效</span>
                 <span class="modify" v-show="showModify">
-                  <x-number :min="0" :max="goodsItem.stock" v-model="goodsItem.num"></x-number>
+                  <x-number :min="1" :max="goodsItem.stock" v-model="goodsItem.num"></x-number>
                 </span>
                 <i class="price fr">￥{{goodsItem.price}}</i>
               </div>
@@ -27,6 +27,10 @@
 </template>
 
 <script>
+import {
+  http
+} from 'util/request'
+import { updateCart } from 'util/netApi'
 import {
   CheckIcon,
   XNumber
@@ -61,16 +65,13 @@ export default {
   watch: {
     goodsItem: {
       handler (newVal, oldVal) {
+        this.doUpdateCart()
         if (this.clearNum.length > 0) {
-          //   this.changeIsAllSelect(false)
           let index = this.clearNum.indexOf(this.goodsItem)
-          console.log(index)
-
           if (newVal.value) {
             if (index !== -1) {
               this.clearNum[index] = this.goodsItem
             } else {
-              console.log(123)
               this.clearNum.push(this.goodsItem)
             }
           } else {
@@ -86,7 +87,6 @@ export default {
             this.clearNum.push(this.goodsItem)
           }
         }
-        console.log(this.clearNum)
       },
       deep: true,
       immediate: true
@@ -99,6 +99,18 @@ export default {
       for (let i in specs) {
         this.specs.push(specs[i].value)
       }
+    },
+    doUpdateCart () {
+      updateCart.url = '/cart'
+      updateCart.url = updateCart.url + '/' + this.goodsItem.id
+      let params = {
+        cartId: this.goodsItem.id,
+        request: this.goodsItem.num
+      }
+      http(updateCart, params, 'noloading').then(res => {
+      }).catch(err => {
+        console.log(err)
+      })
     }
   },
   mounted () {
@@ -155,6 +167,8 @@ export default {
             text-align center
           .modify
             display inline-block
+            line-height 100px
+            height 100px
 .disabled .checkIcon>>>.vux-check-icon
   display none
 .disabled.goodsItem .goodsItemMain .info .name
@@ -169,7 +183,7 @@ export default {
   .checkIcon .vux-check-icon
     line-height 46px
     position absolute
-    // top 0
+    // top 40px
   .checkIcon .weui-icon-circle
     font-size 46px
   .checkIcon .weui-icon-success
@@ -177,4 +191,29 @@ export default {
     font-size 46px
   .checkIcon .vux-check-icon > .weui-icon-success:before, .vux-check-icon > .weui-icon-success-circle:before
     color #BA825A
+  .vux-cell-primary
+    div
+      height 100px
+      line-height 100px
+.vux-cell-primary .vux-number-selector
+  display inline-block
+  font-size 46px
+  height 100px
+  padding 0
+  width 100px
+  border 2px solid #CCCCCC
+  position relative
+  svg
+    fill #CCCCCC
+    position absolute
+    top 50%
+    left 50%
+    transform translate(-50%,-50%)
+.vux-cell-primary .vux-number-input
+  width 140px !important
+  height 100px
+  font-size 46px
+  color #262626
+  border-top 2px solid #ccc
+  border-bottom 2px solid #ccc
 </style>

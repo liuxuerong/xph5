@@ -10,7 +10,7 @@
       <swiper :options="swiperOption">
         <swiper-slide v-for="item in swiperData.articles" :key="item.id">
           <a href="#" class="swiperHref">
-            <img :src="imageUrl+item.articleCoverImage" alt="">
+            <img v-lazy="imageUrl+item.articleCoverImage" alt="">
           </a>
           <router-link to="" v-if="isShowImgTitle" class="routerTitle">{{item.title}}</router-link>
         <index-content :content="item" v-if="showContent"/>

@@ -1,15 +1,24 @@
 <template>
   <div class="cartOperate border-top">
-    <div class="checkIcon"><check-icon :value.sync="check" @click.native="test"> </check-icon></div>
+    <div class="checkIcon"><check-icon :value.sync="check" @click.native="checkAll"> </check-icon></div>
     <span class="all" >全选</span>
-    <span class="price">￥{{price}}</span>
-    <span class="btn" :class="{active:clearBtn}">去结算</span>
+    <span class="price" v-if="!showModify">￥{{price}}</span>
+    <span class="btn" :class="{active:clearBtn}" v-if="!showModify">去结算</span>
+    <span class="btn delBtn" :class="{active:clearBtn}" v-else @click="delCheck">删除所选</span>
+     <toast v-model="show5" :time="1000">删除成功</toast>
   </div>
 </template>
 
 <script>
 import {
-  CheckIcon
+  http
+} from 'util/request'
+import {
+  delCart
+} from 'util/netApi'
+import {
+  CheckIcon,
+  Toast
 } from 'vux'
 import {
   mapState,
@@ -17,14 +26,19 @@ import {
 } from 'vuex'
 export default {
   name: 'CartOperate',
+  props: {
+    showModify: Boolean
+  },
   components: {
-    CheckIcon
+    CheckIcon,
+    Toast
   },
   data () {
     return {
       check: false,
       price: 0,
-      clearBtn: false
+      clearBtn: false,
+      show5: false
     }
   },
   computed: mapState({
@@ -62,7 +76,7 @@ export default {
   },
   methods: {
     ...mapMutations(['changeGoodsList', 'changeIsAllSelect']),
-    test () {
+    checkAll () {
       let goodsList = this.goodsList
       for (let i in goodsList) {
         if (this.check) {
@@ -74,7 +88,32 @@ export default {
         }
       }
       this.changeGoodsList(goodsList)
+    },
+    delCheck () {
+      let checkGoodsList = []
+      let notCheckGoodsList = []
+      let id = ''
+      for (let i = 0; i < this.goodsList.length; i++) {
+        if (this.goodsList[i].value) {
+          id += (',' + this.goodsList[i].id)
+          checkGoodsList.push(this.goodsList[i])
+        } else {
+          notCheckGoodsList.push(this.goodsList[i])
+        }
+      }
+      id = id.substring(1, id.length)
+      if (checkGoodsList.length) {
+        http(delCart, [id]).then(res => {
+          if (res.data.code === 0) {
+            this.show5 = true
+            this.changeGoodsList(notCheckGoodsList)
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+      }
     }
+
   }
 }
 </script>
@@ -88,7 +127,6 @@ export default {
   background-color #fff
   z-index 9999
   width 100%
-  display flex
   align-items center
   padding-left 60px
   color #262626
@@ -97,11 +135,15 @@ export default {
   .checkIcon
     width 70px
     height 50px
+    float left
+    margin-top 40px
   .all
     width 230px
+    float left
   .price
     width 300px
     text-align right
+    float left
   .btn
     width 340px
     height 148px
@@ -109,6 +151,10 @@ export default {
     background-color #F0F0F0
     text-align center
     color #999999
+    float right
     &.active
       color #ba825a
+  .delBtn
+    &.active
+      color #D54B4B
 </style>

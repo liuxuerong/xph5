@@ -9,8 +9,8 @@
           <input type="text" class="fl" v-model="cartCount">
           <span class="add fr" @click="addCount">+</span>
         </div>
-        <div v-for="(item,index) in sku.keys" :key="index">
-          <div class="tabContent">
+        <div ref="tabWrap">
+          <div class="tabContent" v-for="(item,index) in sku.keys" :key="index">
             <div class="tabContentName">{{item.name}}</div>
             <input type="button" class="skuItem" @click="tabInfoChange(index,cindex,citem.id,$event)" v-for="(citem,cindex) in item.value" :class="{notClick:citem.notClick,active:citem.isActiveC}" :attr_id="citem.id" :value="citem.cname" :key="cindex" />
           </div>
@@ -18,9 +18,9 @@
       </div>
       <div class="goodsInfoBottm border-top" v-if="from==1">
         <router-link class="buy" to="/">立即购买</router-link>
-        <span class="addCart"  @click="addCart()">
-            加入购物车
-          </span>
+        <span class="addCart" @click="addCart()">
+              加入购物车
+            </span>
       </div>
       <div class="goodsInfoBottm border-top" v-else>
         <div class="addSure" @click="addCart()">确认加入</div>
@@ -92,23 +92,78 @@ export default {
     //   })
     // },
     addCart () {
-      const params = {
-        goodsItemId: this.goodsItemsId,
-        num: this.cartCount
-      }
-      http(addCart, params).then(res => {
-        console.log(res)
-        if (res.data.code === 0) {
-          Toast({
-            message: '添加购物车成功',
-            position: 'bottom',
-            duration: 500
-          })
-          // this.getCartNum()
+      const tabWrapChild = this.$refs.tabWrap.childNodes
+
+      let allFlag = true
+      for (let i = 0; i < tabWrapChild.length; i++) {
+        let input = this.children(tabWrapChild[i], 'input')
+        let flag = false
+        for (let j = 0; j < input.length; j++) {
+          if (input[j].classList.contains('active')) {
+            flag = true
+            break
+          }
         }
-      }).catch(err => {
-        console.log(err)
-      })
+        if (!flag) {
+          allFlag = false
+          break
+        }
+      }
+      if (!allFlag) {
+        Toast({
+          message: '请选择商品属性',
+          position: 'bottom',
+          duration: 500
+        })
+      } else {
+        if (!tabWrapChild.length) {
+          this.goodsItemsId = this.sku.data[''].goodsItemsId
+        }
+        const params = {
+          goodsItemId: this.goodsItemsId,
+          num: this.cartCount
+        }
+        http(addCart, params).then(res => {
+          console.log(res)
+          if (res.data.code === 0) {
+            Toast({
+              message: '添加购物车成功',
+              position: 'bottom',
+              duration: 500
+            })
+          // this.getCartNum()
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+      }
+    },
+    children (curEle, tagName) {
+      let nodeList = curEle.childNodes
+      let ary = []
+      if (/MSIE(6|7|8)/.test(navigator.userAgent)) {
+        for (let i = 0; i < nodeList.length; i++) {
+          let curNode = nodeList[i]
+          if (curNode.nodeType === 1) {
+            ary[ary.length] = curNode
+          }
+        }
+      } else {
+        ary = Array.prototype.slice.call(curEle.children)
+      }
+
+      // 获取指定子元素
+      if (typeof tagName === 'string') {
+        for (let k = 0; k < ary.length; k++) {
+          let curTag = ary[k]
+          if (curTag.nodeName.toLowerCase() !== tagName.toLowerCase()) {
+            ary.splice(k, 1)
+            k--
+          }
+        }
+      }
+
+      return ary
     },
     /* 商品详情数据 */
     queryDGoodsById () {
@@ -125,8 +180,8 @@ export default {
     // 获得对象的key
     getObjKeys (obj) {
       if (obj !== Object(obj)) throw new TypeError('Invalid object')
-      var keys = []
-      for (var key in obj) {
+      let keys = []
+      for (let key in obj) {
         if (Object.prototype.hasOwnProperty.call(obj, key)) {
           keys[keys.length] = key
         }
@@ -136,7 +191,7 @@ export default {
 
     // 把组合的key放入结果集SKUResult
     add2SKUResult (combArrItem, sku) {
-      var key = combArrItem.join(';')
+      let key = combArrItem.join(';')
       if (this.SKUResult[key]) {
         // SKU信息key属性·
         this.SKUResult[key].count += sku.count
@@ -153,19 +208,19 @@ export default {
 
     // 初始化得到结果集
     initSKU () {
-      var i = this.getObjKeys(this.sku.data)
-      var j = this.getObjKeys(this.sku.data)
-      var skuKeys = this.getObjKeys(this.sku.data)
+      let i = this.getObjKeys(this.sku.data)
+      let j = this.getObjKeys(this.sku.data)
+      let skuKeys = this.getObjKeys(this.sku.data)
       for (i = 0; i < skuKeys.length; i++) {
-        var skuKey = skuKeys[i] // 一条SKU信息key
-        var sku = this.sku.data[skuKey] // 一条SKU信息value
-        var skuKeyAttrs = skuKey.split(';') // SKU信息key属性值数组
+        let skuKey = skuKeys[i] // 一条SKU信息key
+        let sku = this.sku.data[skuKey] // 一条SKU信息value
+        let skuKeyAttrs = skuKey.split(';') // SKU信息key属性值数组
         skuKeyAttrs.sort(function (value1, value2) {
           return parseInt(value1) - parseInt(value2)
         })
 
         // 对每个SKU信息key属性值进行拆分组合
-        var combArr = this.combInArray(skuKeyAttrs)
+        let combArr = this.combInArray(skuKeyAttrs)
         for (j = 0; j < combArr.length; j++) {
           this.add2SKUResult(combArr[j], sku)
         }
@@ -188,15 +243,15 @@ export default {
         return []
       }
 
-      var len = aData.length
-      var aResult = []
+      let len = aData.length
+      let aResult = []
 
-      for (var n = 1; n < len; n++) {
-        var aaFlags = this.getCombFlags(len, n)
+      for (let n = 1; n < len; n++) {
+        let aaFlags = this.getCombFlags(len, n)
         while (aaFlags.length) {
-          var aFlag = aaFlags.shift()
-          var aComb = []
-          for (var i = 0; i < len; i++) {
+          let aFlag = aaFlags.shift()
+          let aComb = []
+          for (let i = 0; i < len; i++) {
             aFlag[i] && aComb.push(aData[i])
           }
           aResult.push(aComb)
@@ -215,10 +270,10 @@ export default {
         return []
       }
 
-      var aResult = []
-      var aFlag = []
-      var bNext = true
-      var i, j, iCnt1
+      let aResult = []
+      let aFlag = []
+      let bNext = true
+      let i, j, iCnt1
 
       for (i = 0; i < m; i++) {
         aFlag[i] = i < n ? 1 : 0
@@ -235,7 +290,7 @@ export default {
             }
             aFlag[i] = 0
             aFlag[i + 1] = 1
-            var aTmp = aFlag.concat()
+            let aTmp = aFlag.concat()
             aResult.push(aTmp)
             if (
               aTmp
@@ -285,7 +340,7 @@ export default {
         haveChangedId.sort(function (value1, value2) {
           return parseInt(value1) - parseInt(value2)
         })
-        var len = haveChangedId.length
+        let len = haveChangedId.length
         var prices = this.SKUResult[haveChangedId.join(';')].prices
         const nowCount = this.SKUResult[haveChangedId.join(';')].count
         this.goodsItemsId = this.SKUResult[haveChangedId.join(';')].goodsItemsId
@@ -377,8 +432,6 @@ export default {
 <style lang="stylus" scoped>
 #goodsinfo
   padding 50px 50px 145px 50px
-  // padding-bottom 145px
-  // height 1283px
   box-sizing border-box
   overflow-y scroll
   .num

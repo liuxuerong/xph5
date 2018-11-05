@@ -48,8 +48,8 @@
         </div>
         <div class="goodsContainer">
           <common-img-prices class="goodsItem" v-for="(item,index) in homeSelection" :key="item.id" :pricesData="item" v-if="productsFlag&&index<3" />
-          <div class="moreGoods">
-            <router-link to="/goods">查看<br>更多</router-link>
+          <div class="moreGoods" v-if="homeSelection.length">
+            <router-link to="/goods" v-if="homeSelection.length">查看<br>更多</router-link>
           </div>
         </div>
         <div class="indexNavItem">
@@ -59,7 +59,7 @@
         <div class="goodsContainer">
           <common-img-prices class="goodsItem" v-for="(item,index) in customized" :key="item.id" :pricesData="item" v-if="productsFlag&&index<3" />
           <div class="moreGoods">
-            <router-link to="/goods">查看<br>更多</router-link>
+            <router-link to="/goods" v-if="customized.length">查看<br>更多</router-link>
           </div>
         </div>
         <div class="indexNavItem">
@@ -74,7 +74,6 @@
       <mt-tab-container-item id="buy">
         限时购
       </mt-tab-container-item>
-
     </mt-tab-container>
   </div>
 </template>

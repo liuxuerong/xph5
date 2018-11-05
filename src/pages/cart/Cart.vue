@@ -1,8 +1,8 @@
 <template>
   <div class="xpCart">
     <common-nav-header :title="title">
-      <div class="edit"  v-if="goodsList.length" @click=" changeShowModify ()">
-        编辑
+      <div class="edit"  v-if="goodsList.length" @click.prevent="changeShowModify()">
+        {{text}}
       </div>
     </common-nav-header>
     <div class="goodsWrap" ref="goodsWrap">
@@ -16,7 +16,7 @@
         </div>
       </div>
     </div>
-    <cart-operate  v-if="goodsList.length"/>
+    <cart-operate  v-if="goodsList.length" :showModify="showModify"/>
     <common-empty v-if="goodsList.length<1" :emptyObj="emptyObj"/>
   </div>
 </template>
@@ -58,7 +58,8 @@ export default {
       },
       cartList: [],
       disabledCartList: [],
-      showModify: false
+      showModify: false,
+      text: '编辑'
     }
   },
   computed: mapState({
@@ -105,6 +106,15 @@ export default {
     },
     changeShowModify () {
       this.showModify = !this.showModify
+
+      if (this.showModify) {
+        this.text = '完成'
+
+        // 修改购物车数量
+      } else {
+        console.log(88888)
+        this.text = '编辑'
+      }
     }
   },
   mounted () {

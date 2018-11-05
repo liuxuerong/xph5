@@ -12,17 +12,6 @@ export default {
   props: {
     title: String
   },
-  data () {
-    return {
-
-    }
-  },
-  computed: {
-
-  },
-  watch: {
-
-  },
   methods: {
     goBack () {
       this.$router.back(-1)

@@ -2,7 +2,7 @@
   <div class="xpSwiper" v-if="swiperData.length">
       <swiper :options="swiperOption">
         <swiper-slide v-for="item in swiperData" :key="item.id">
-            <img :src="imageUrl+item.value" alt="">
+            <img v-lazy="imageUrl+item.value" alt="">
         </swiper-slide>
         <div class="swiper-pagination" slot="pagination"></div>
       </swiper>
