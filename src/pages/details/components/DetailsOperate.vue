@@ -51,6 +51,11 @@ export default {
 
   }),
   watch: {
+    $route (to, from) {
+      if (to.name === 'Details') {
+        this.$router.go(0)
+      }
+    },
     popupVisible: function (curval) {
       if (storage.getLocalStorage(accessToken)) {
         this.getCartNum()
@@ -60,7 +65,7 @@ export default {
   methods: {
     ...mapMutations(['changePopupVisible', 'changeCartNum', 'changeFrom']),
     hasCollection (params) {
-      var fnType = Object.prototype.toString.call(hasCollection(params)).slice(8, -1)
+      let fnType = Object.prototype.toString.call(hasCollection(params)).slice(8, -1)
       if (fnType === 'Promise') {
         hasCollection(params).then(res => {
           this.collect = res.data.body

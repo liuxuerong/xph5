@@ -122,14 +122,17 @@ export default {
         })
     },
     scrollInit () {
-      return (this.scroll = new BScroll(this.$refs.xpStoryContent, {
-        scrollY: true,
-        click: true,
-        bounce: {
-          top: false,
-          bottom: true
-        }
-      }))
+      if (!this.scroll) {
+        this.scroll = new BScroll(this.$refs.xpStoryContent, {
+          scrollY: true,
+          bounce: {
+            top: true,
+            bottom: true
+          }
+        })
+      } else {
+        this.scroll.refresh()
+      }
     }
   },
   mounted () {

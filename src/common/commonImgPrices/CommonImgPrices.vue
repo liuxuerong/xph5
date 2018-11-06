@@ -8,7 +8,7 @@
         {{pricesData.name}}
       </p>
       <p class="price">¥{{pricesData.minPrice}}</p>
-      <div class="promotion" v-if="pricesData.activityLabel.length>0">
+      <div class="promotion" v-if="pricesData.activityLabel&&pricesData.activityLabel.length>0">
         <span class="promotionItem active">限时特惠</span>
         <span class="promotionItem">满减</span>
       </div>

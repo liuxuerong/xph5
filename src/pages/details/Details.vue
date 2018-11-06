@@ -1,8 +1,8 @@
 <template>
   <div class="xpDetails">
     <common-nav-header>
-        <router-link to="/" class="icon home"></router-link>
-        <span class="icon share"></span>
+      <router-link to="/" class="icon home"></router-link>
+      <span class="icon share"></span>
     </common-nav-header>
     <div class="xpDetailsWrap" ref="xpDetailsWrap">
       <div class="xpDetailsScroll">
@@ -115,7 +115,6 @@ export default {
   methods: {
     ...mapMutations(['changePopupVisible', 'changeNowPrice', 'changeFrom']),
     pushKeys (arr) {
-      console.log(arr)
       // 处理返回数据
       let sku = {}
       sku.keys = []
@@ -166,10 +165,12 @@ export default {
 
           temKeys.push(temKeysObj)
         }
-        sku.data[dataKey] = {
-          price: arr[i].price,
-          count: arr[i].stock,
-          goodsItemsId: arr[i].id
+        if (arr[i].stock !== 0) {
+          sku.data[dataKey] = {
+            price: arr[i].price,
+            count: arr[i].stock,
+            goodsItemsId: arr[i].id
+          }
         }
       }
       let result = {}
@@ -187,6 +188,7 @@ export default {
           value: result[key]
         })
       }
+      sku.SKUResult = {}
       return sku
     },
     initDeatils () {

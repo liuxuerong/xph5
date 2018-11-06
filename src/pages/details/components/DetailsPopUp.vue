@@ -60,7 +60,8 @@ export default {
       SKUResult: {},
       cartCount: 1,
       type: 1,
-      goodsItemsId: ''
+      goodsItemsId: '',
+      coverImage: ''
     }
   },
   computed: mapState({
@@ -93,7 +94,6 @@ export default {
     // },
     addCart () {
       const tabWrapChild = this.$refs.tabWrap.childNodes
-
       let allFlag = true
       for (let i = 0; i < tabWrapChild.length; i++) {
         let input = this.children(tabWrapChild[i], 'input')
@@ -124,7 +124,6 @@ export default {
           num: this.cartCount
         }
         http(addCart, params).then(res => {
-          console.log(res)
           if (res.data.code === 0) {
             Toast({
               message: '添加购物车成功',
@@ -329,7 +328,11 @@ export default {
       for (let i = 0; i < this.sku.keys.length; i++) {
         for (let j = 0; j < this.sku.keys[i].value.length; j++) {
           if (this.sku.keys[i].value[j].isActiveC === true) {
-            this.goods.coverImage = this.sku.keys[i].value[j].pic
+            if (this.sku.keys[i].value[j].pic !== '') {
+              this.goods.coverImage = this.sku.keys[i].value[j].pic
+            } else {
+              this.goods.coverImage = this.coverImage
+            }
             haveChangedId.push(this.sku.keys[i].value[j].id)
           }
         }
@@ -425,7 +428,9 @@ export default {
   created () {
     this.queryDGoodsById()
   },
-  mounted () {}
+  mounted () {
+    this.coverImage = this.goods.coverImage
+  }
 }
 </script>
 
