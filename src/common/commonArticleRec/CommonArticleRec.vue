@@ -5,8 +5,8 @@
         <router-link :to="linkTo+item.id">
           <img :src="imageUrl+item.articleCoverImage" alt="">
         <p class="title">{{item.title}} <em v-if="item.subTitle">|</em> {{item.subTitle}}</p>
-        <dir class="summary">{{item.summary}}详细介绍详细介绍详细介绍详细介绍详细介绍详细介绍详细介绍
-详细介绍详细介绍详细介绍详细介绍详细介绍</dir>
+        <div class="summary">{{item.summary}}详细介绍详细介绍详细介绍详细介绍详细介绍详细介绍详细介绍
+详细介绍详细介绍详细介绍详细介绍详细介绍</div>
         </router-link>
       </li>
     </ul>
@@ -32,6 +32,7 @@ export default {
 <style lang="stylus" scoped>
 .commonArticleRec
   li
+    padding-bottom 100px
     img
       width 100%
       height 600px
@@ -46,6 +47,5 @@ export default {
       color #808080
       font-size 36px
       line-height 50px
-      margin-bottom 100px
       padding 0 50px
 </style>

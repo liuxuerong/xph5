@@ -1,35 +1,48 @@
 <template>
-    <div class="loginWrapper">
-        <div class="loginTop">
-            <span>欢迎回来</span>
-            <router-link to="/" class="backIndex">回到首页</router-link>
-        </div>
-        <div class="loginInfo">
-            <form id="loginInfoForm">
-                <div class="loginInput userName border-bottom">
-                    <i class="loginIcon phoneIcon"></i>
-                    <input type="text" placeholder="手机号码" name="phone" maxlength="11" v-model="username"/>
-                </div>
-                <div class="loginInput passWord">
-                    <i class="loginIcon passwordIcon"></i>
-                    <input type="password" placeholder="密码" name="password" maxlength="12" v-model="password"/>
-                    <router-link to="/remberPassword" class="passWordOper">忘记密码？</router-link>
-                </div>
-            </form>
-        </div>
-        <button class="loginBtn" @click="loginBtnClick">登录</button>
-        <router-link to="/phoneCode" class="phoneCodeLogin">手机验证码登录</router-link>
-        <span class="loginTipText">未注册的手机号码验证后自动创建星品账户</span>
+  <div class="loginWrapper">
+    <div class="loginTop">
+      <span>欢迎回来</span>
+      <router-link to="/" class="backIndex">回到首页</router-link>
     </div>
+    <div class="loginInfo">
+      <form id="loginInfoForm">
+        <div class="loginInput userName border-bottom">
+          <i class="loginIcon phoneIcon"></i>
+          <input type="text" placeholder="手机号码" name="phone" maxlength="11" v-model="username" />
+        </div>
+        <div class="loginInput passWord">
+          <i class="loginIcon passwordIcon"></i>
+          <input type="password" placeholder="密码" name="password" maxlength="12" v-model="password" />
+          <router-link to="/remberPassword" class="passWordOper">忘记密码？</router-link>
+        </div>
+        <!-- <button class="loginBtn" @click="loginBtnClick">登录</button>
+        <router-link to="/phoneCode" class="phoneCodeLogin">手机验证码登录</router-link>
+        <span class="loginTipText">未注册的手机号码验证后自动创建星品账户</span> -->
+      </form>
+    </div>
+    <button class="loginBtn" @click="loginBtnClick">登录</button>
+    <router-link to="/phoneCode" class="phoneCodeLogin">手机验证码登录</router-link>
+    <span class="loginTipText">未注册的手机号码验证后自动创建星品账户</span>
+  </div>
 </template>
 
 <script type="text/javascript">
 import router from '@/router/index.js'
-import { Toast } from 'mint-ui'
-import {getLogin} from 'util/netApi'
-import {http} from 'util/request'
-import {storage} from 'util/storage'
-import { accessToken } from 'util/const.js'
+import {
+  Toast
+} from 'mint-ui'
+import {
+  getLogin
+} from 'util/netApi'
+import {
+  http
+} from 'util/request'
+import {
+  storage
+} from 'util/storage'
+import {
+  accessToken
+} from 'util/const.js'
 export default {
   data () {
     return {
@@ -78,29 +91,28 @@ export default {
     }
   },
   mounted: function () {
-
   }
-//   beforeCreate: function () {
-//     console.group('beforeCreate 创建前状态')
-//   },
-//   created: function () {
-//     console.group('created 创建完毕状态')
-//   }
-//   beforeMount: function () {
-//     console.group('beforeMount 挂载前状态===============》')
-//   },
-//   beforeUpdate: function () {
-//     console.group('beforeUpdate 更新前状态===============》')
-//   },
-//   updated: function () {
-//     console.group('updated 更新完成状态===============》')
-//   },
-// beforeDestroy: function () {
-//     console.group('beforeDestroy 销毁前状态===============》')
-//   },
-// destroyed: function () {
-//     console.group('destroyed 销毁完成状态===============》')
-//   }
+  //   beforeCreate: function () {
+  //     console.group('beforeCreate 创建前状态')
+  //   },
+  //   created: function () {
+  //     console.group('created 创建完毕状态')
+  //   }
+  //   beforeMount: function () {
+  //     console.group('beforeMount 挂载前状态===============》')
+  //   },
+  //   beforeUpdate: function () {
+  //     console.group('beforeUpdate 更新前状态===============》')
+  //   },
+  //   updated: function () {
+  //     console.group('updated 更新完成状态===============》')
+  //   },
+  // beforeDestroy: function () {
+  //     console.group('beforeDestroy 销毁前状态===============》')
+  //   },
+  // destroyed: function () {
+  //     console.group('destroyed 销毁完成状态===============》')
+  //   }
 }
 </script>
 

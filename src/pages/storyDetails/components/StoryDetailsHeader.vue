@@ -5,7 +5,7 @@
       <p class="title">{{details.title}} <em v-if="details.subTitle !==''">|</em> {{details.subTitle}}</p>
       <common-collection class="collection"/>
     </div>
-    <dir class="summary">{{details.summary}}详细介绍详细介绍详细介绍详细介绍详细介绍详细介绍详细介绍 详细介绍详细介绍详细介绍详细介绍详细介绍
+    <dir class="summary">{{details.summary}}
     </dir>
   </div>
 </template>

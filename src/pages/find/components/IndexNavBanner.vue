@@ -7,7 +7,7 @@
       v-for="item in bannerData.articles"
       :key="item.id">
       <img
-        :src="imageUrl+item.articleCoverImage"
+        v-lazy="imageUrl+item.articleCoverImage"
         alt="" class="banner">
       <index-content
         v-if="showContent"

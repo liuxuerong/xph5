@@ -1,24 +1,27 @@
 <template>
   <div class="xpGoods">
-    <common-nav-search />
-    <div class="xpGoodsTop border-bottom" ref="xpGoodsTop">
-      <div class="xpGoodsTopContent">
-        <tab v-if="tabbar.length">
-          <tab-item :selected="index===0" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.id" :id="item.id" ref="tabItem">{{item.catName}}</tab-item>
-        </tab>
-      </div>
-    </div>
-    <div ref="xpStoryContent" class="xpStoryContent">
+    <keep-alive>
       <div>
-        <ul class="goodsContainer" v-if="goodsList.length">
-          <li v-for="item in goodsList" v-if="goodsList.length" :key="item.id">
-            <common-img-prices :pricesData="item" />
-          </li>
-        </ul>
-        <common-empty v-else :emptyObj="emptyObj" />
+        <common-nav-search />
+        <div class="xpGoodsTop border-bottom" ref="xpGoodsTop">
+          <div class="xpGoodsTopContent">
+            <tab v-if="tabbar.length">
+              <tab-item :selected="index===0" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.id" :id="item.id" ref="tabItem">{{item.catName}}</tab-item>
+            </tab>
+          </div>
+        </div>
+        <div ref="xpStoryContent" class="xpStoryContent">
+          <div>
+            <ul class="goodsContainer" v-if="goodsList.length">
+              <li v-for="item in goodsList" v-if="goodsList.length" :key="item.id">
+                <common-img-prices :pricesData="item" />
+              </li>
+            </ul>
+            <common-empty v-else :emptyObj="emptyObj" />
+          </div>
+        </div>
       </div>
-    </div>
-
+    </keep-alive>
   </div>
 </template>
 
@@ -76,9 +79,7 @@ export default {
   // },
   methods: {
     getTabbar () {
-      // let _this = this
       http(category).then(res => {
-        console.log(res)
         for (let i = 0; i < res.data.body.length; i++) {
           this.tabbar.push(res.data.body[i])
           this.categoryId = this.tabbar[0].id
@@ -88,7 +89,6 @@ export default {
     },
     onItemClick (index) {
       this.categoryId = this.$refs.tabItem[index].$el.id
-      console.log(this.categoryId)
       this.page = 1
       this.getGoodsList(this.categoryId, this.page)
       this.scroll.refresh()
@@ -122,7 +122,7 @@ export default {
         }
       })
       this.scroll.on('pullingUp', () => {
-        this.getGoodsList(471617244065955840, this.page++)
+        this.getGoodsList(this.categoryId, this.page++)
         this.scroll.refresh()
         // this.finishPullUp()
       })
@@ -142,10 +142,6 @@ export default {
   },
   mounted () {
     this.getTabbar()
-
-    // this.getStoryKnow()
-    // this.getStorySub()
-    // this.getStoryWord()
   }
 }
 </script>
@@ -155,17 +151,18 @@ export default {
     color #333333
     border-bottom 8px solid #262626
     font-weight: 600;
+    position relative
+  .xpGoodsTop>>>.vux-tab .vux-tab-item.vux-tab-selected::before
+    content ""
+    position absolute
+    bottom 0
+    left 50%
+    transform translateX(-50%)
+    width 88px
+    background-color #262626
+    height 8px
 .xpGoodsTop>>>.vux-tab-ink-bar
-    background transparent
-.xpGoodsTop>>>.vux-tab-ink-bar::before
-  content ""
-  position absolute
-  top 0
-  left 50%
-  transform translateX(-50%)
-  width 88px
-  background-color #262626
-  height 100%
+    display none !important
 .xpGoodsTop>>>.vux-tab-container
     height 106px
 .xpGoodsTop>>>.vux-tab
@@ -189,7 +186,7 @@ export default {
     padding 0 50px
     background-color #fff
   .xpStoryContent
-    height calc(100% )
+    height 100%
   h1.title
     font-size 56px
   .topBgImg

@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import notice from '../util/notice'
 import Router from 'vue-router'
 import Index from '@/pages/index'
 import Find from '@/pages/find/Find'
@@ -11,8 +10,15 @@ import HallAtlas from '@/pages/hall/HallAtlas'
 import Story from '@/pages/story/Story'
 import StoryDetails from '@/pages/StoryDetails/StoryDetails'
 import Details from '@/pages/details/Details'
+import Instructions from '@/pages/invoice/Instructions'
+import Invoice from '@/pages/invoice/Invoice'
+import Cart from '@/pages/cart/Cart'
+import Collect from '@/pages/collect/Collect'
 import Comment from '@/pages/comment/Comment'
 import Goods from '@/pages/goods/Goods'
+import CreateOrder from '@/pages/createOrder/CreateOrder'
+import SendWay from '@/pages/createOrder/SendWay'
+import StoreAddress from '@/pages/createOrder/StoreAddress'
 import Search from '@/pages/search/Search'
 import Login from '@/pages/login/Login'
 import PhoneCode from '@/pages/login/PhoneCode'
@@ -41,6 +47,9 @@ import IntegralDetails from '@/pages/person/IntegralDetails'
 import IntegralRule from '@/pages/person/IntegralRule'
 import CardVoucher from '@/pages/person/CardVoucher'
 import CardDetails from '@/pages/person/CardDetails'
+import { accessToken } from 'util/const'
+import { storage } from 'util/storage'
+// meta: { requireLogin: true }
 Vue.use(Router)
 
 const router = new Router({
@@ -93,9 +102,48 @@ const router = new Router({
       component: Goods
     },
     {
+      path: '/createOrder',
+      name: 'CreateOrder',
+      meta: { requireLogin: true },
+      component: CreateOrder
+    },
+    {
+      path: '/sendWay',
+      name: 'SendWay',
+      meta: { requireLogin: true },
+      component: SendWay
+    },
+    {
+      path: '/storeAddress',
+      name: 'StoreAddress',
+      meta: { requireLogin: true },
+      component: StoreAddress
+    },
+    {
       path: '/search',
       name: 'Search',
       component: Search
+    },
+    {
+      path: '/invoice',
+      name: 'Invoice',
+      component: Invoice
+    },
+    {
+      path: '/instructions',
+      name: 'Instructions',
+      component: Instructions
+    },
+    {
+      path: '/cart',
+      name: 'Cart',
+      component: Cart
+    },
+    {
+      path: '/collect',
+      name: 'Collect',
+      meta: { requireLogin: true },
+      component: Collect
     },
     {
       path: '/login',
@@ -237,27 +285,16 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   if (to.matched.some(res => res.meta.requireLogin)) {
     // 判断是否需要登录权限
-    if (window.localStorage.getItem('loginUserBaseInfo')) {
-      // 判断是否登录
-      let lifeTime =
-        JSON.parse(window.localStorage.getItem('loginUserBaseInfo')).lifeTime *
-        1000
-      let nowTime = (new Date()).getTime() // 当前时间的时间戳
-      if (nowTime < lifeTime) {
-        next()
-      } else {
-        notice.errorModal('未授权，请重新登录', function () {
-          router.push({path: '/login'})
-        })
-        next({
-          path: '/login'
-        })
-      }
-    } else {
-      // 没登录则跳转到登录界面
+    if (!storage.getLocalStorage(accessToken)) {
+      // notice.errorModal('未授权，请重新登录', function () {
+      //   router.push({path: '/login'})
+      // })
       next({
         path: '/login'
       })
+    } else {
+      // 没登录则跳转到登录界面
+      next()
     }
   } else {
     next()

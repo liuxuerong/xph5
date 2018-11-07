@@ -1,7 +1,8 @@
 <template>
-  <div class="commonNavHeader">
+  <div class="commonNavHeader border-bottom">
     <div class="back" @click="goBack"></div>
     {{title}}
+    <slot></slot>
   </div>
 </template>
 <script>
@@ -10,17 +11,6 @@ export default {
   components: {},
   props: {
     title: String
-  },
-  data () {
-    return {
-
-    }
-  },
-  computed: {
-
-  },
-  watch: {
-
   },
   methods: {
     goBack () {

@@ -7,17 +7,45 @@
     </div>
     </router-link>
     <slot></slot>
-    <div class="car">
-    </div>
+    <router-link to="/cart" class="car">
+      <span class="num" v-if="count">{{count}}</span>
+    </router-link>
   </div>
 </template>
 <script>
+import {
+  http
+} from 'util/request'
+import {
+  cartNum
+} from 'util/netApi'
+import {storage} from 'util/storage'
+import {accessToken} from 'util/const'
 export default {
   name: 'CommonHeader',
   props: {
     isScan: {
       type: Boolean,
       default: true
+    }
+  },
+  data () {
+    return {
+      count: 0
+    }
+  },
+  methods: {
+    getCartNum () {
+      http(cartNum).then(res => {
+        this.count = res.data.body
+      }).catch(err => {
+        console.log(err)
+      })
+    }
+  },
+  mounted () {
+    if (storage.getLocalStorage(accessToken)) {
+      this.getCartNum()
     }
   }
 }
@@ -53,4 +81,17 @@ export default {
     height 83px
     bgImage("/static/icons/car")
     margin-top 13px
+    position relative
+    .num
+      position absolute
+      width 46px
+      height 46px
+      line-height 46px
+      text-align center
+      border-radius 50%
+      background-color #D54B4B
+      color #fff
+      top 0
+      transform translate(50%,-25%)
+      right 0
 </style>

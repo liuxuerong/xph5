@@ -1,20 +1,19 @@
 <template>
-<div class="brandDetailsContent">
-   <common-nav-header :title="details.title" v-if="details"/>
-  <div class="brandDetails" ref="brandDetails">
-    <div>
-      <div class="topBgImg">
-        <img :src="imageUrl+details.articleCoverImage" alt="" class="articleCoverImage">
+  <div class="brandDetailsContent">
+    <common-nav-header :title="details.title" v-if="details" />
+    <div class="brandDetails" ref="brandDetails">
+      <div>
+        <div class="topBgImg" v-if="details">
+          <img :src="imageUrl+details.articleCoverImage" alt="" class="articleCoverImage">
+        </div>
+        <details-header v-if="details" :details="details" />
+        <common-content v-if="details&&goodsItems.length" :goodsItems="goodsItems" :details="details" />
+        <div class="cutOffLine30"></div>
+        <h2>热文推荐</h2>
+        <common-article-rec v-if="details" :articleRecommends="details.articleRecommends" :linkTo="linkTo" />
       </div>
-      <details-header v-if="details" :details="details" />
-      <common-content v-if="details&&goodsItems.length" :goodsItems="goodsItems" :details="details" />
-      <div class="cutOffLine30"></div>
-      <h2>热文推荐</h2>
-      <common-article-rec v-if="details" :articleRecommends="details.articleRecommends" :linkTo="linkTo"/>
     </div>
   </div>
-</div>
-
 </template>
 
 <script>
@@ -71,14 +70,17 @@ export default {
         })
     },
     scrollInit () {
-      return (this.scroll = new BScroll(this.$refs.brandDetails, {
-        scrollY: true,
-        click: true,
-        bounce: {
-          top: true,
-          bottom: true
-        }
-      }))
+      if (!this.scroll) {
+        this.scroll = new BScroll(this.$refs.brandDetails, {
+          scrollY: true,
+          bounce: {
+            top: true,
+            bottom: true
+          }
+        })
+      } else {
+        this.scroll.refresh()
+      }
     }
 
   },

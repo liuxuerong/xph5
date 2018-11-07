@@ -25,8 +25,8 @@ const notice = {
   },
   loading: (text = 'loading') => {
     return Vue.$vux.loading.show({
-      text: text,
-      position: 'absolute'
+      text: text
+      // position: 'absolute'
     })
   },
   loadingHide: () => {

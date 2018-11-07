@@ -1,35 +1,49 @@
 <template>
-    <div class="loginWrapper">
-        <div class="loginTop">
-            <span>欢迎回来</span>
-            <router-link to="/" class="backIndex">回到首页</router-link>
-        </div>
-        <div class="loginInfo">
-            <form id="loginInfoForm">
-                <div class="loginInput userName border-bottom">
-                    <i class="loginIcon phoneIcon"></i>
-                    <input type="text" placeholder="手机号码" name="" id="" v-model="request"/>
-                </div>
-                <div class="loginInput passWord">
-                    <i class="loginIcon passwordIcon"></i>
-                    <input type="text" placeholder="验证码" name="" id="" v-model="code"/>
-                    <span class="obtainCode" @click="obtainCodeBtn" v-show="!computedTime">获取验证码</span>
-                    <span class="obtainCode" v-show="computedTime">已发送 {{computedTime}} s</span>
-                </div>
-            </form>
-        </div>
-        <button class="loginBtn" @click="loginPhoneCode">登录</button>
-        <router-link to="/login" class="phoneCodeLogin">账号密码登录</router-link>
-        <span class="loginTipText">未注册的手机号码验证后自动创建星品账户</span>
+  <div class="loginWrapper">
+    <div class="loginTop">
+      <span>欢迎回来</span>
+      <router-link to="/" class="backIndex">回到首页</router-link>
     </div>
+    <div class="loginInfo">
+      <form id="loginInfoForm">
+        <div class="loginInput userName border-bottom">
+          <i class="loginIcon phoneIcon"></i>
+          <input type="text" placeholder="手机号码" name="" id="" v-model="request" />
+        </div>
+        <div class="loginInput passWord">
+          <i class="loginIcon passwordIcon"></i>
+          <input type="text" placeholder="验证码" name="" id="" v-model="code" />
+          <span class="obtainCode" @click="obtainCodeBtn" v-show="!computedTime">获取验证码</span>
+          <span class="obtainCode" v-show="computedTime">已发送 {{computedTime}} s</span>
+        </div>
+        <!-- <button class="loginBtn" @click="loginPhoneCode">登录</button>
+        <router-link to="/login" class="phoneCodeLogin">账号密码登录</router-link>
+        <span class="loginTipText">未注册的手机号码验证后自动创建星品账户</span> -->
+      </form>
+    </div>
+    <button class="loginBtn" @click="loginPhoneCode">登录</button>
+    <router-link to="/login" class="phoneCodeLogin">账号密码登录</router-link>
+    <span class="loginTipText">未注册的手机号码验证后自动创建星品账户</span>
+  </div>
 </template>
 
 <script type="text/javascript">
-import { Toast } from 'mint-ui'
-import { getVerifyCode, getLogin } from 'util/netApi'
-import { http } from 'util/request'
-import {storage} from 'util/storage'
-import { accessToken } from 'util/const.js'
+import {
+  Toast
+} from 'mint-ui'
+import {
+  getVerifyCode,
+  getLogin
+} from 'util/netApi'
+import {
+  http
+} from 'util/request'
+import {
+  storage
+} from 'util/storage'
+import {
+  accessToken
+} from 'util/const.js'
 import router from '@/router/index.js'
 // const axios = require('axios')
 export default {
@@ -91,7 +105,7 @@ export default {
             storage.setLocalStorage('userId', response.data.body.user_id)
             storage.setLocalStorage(accessToken, 'Bearer ' + response.data.body.access_token)
             if (response.data.body.create) {
-              console.log('已拥有账号')// 跳转首页
+              console.log('已拥有账号') // 跳转首页
               router.push('/')
             } else {
               console.log('新注册用户')

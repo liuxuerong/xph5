@@ -56,10 +56,10 @@ body, html, #app{
 
 .emptyBox {
   width: 0;
-  height: 0;
-  margin: 0;
-  padding: 0;
-  opacity: 0;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  opacity: 0 !important;
 }
 
 .cutOffLine {
@@ -154,4 +154,7 @@ body, html, #app{
 }
 .weui-dialog{
   z-index: 9999999 !important;
+}
+.mint-toast{
+  z-index: 999999 !important;
 }

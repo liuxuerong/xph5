@@ -1,59 +1,78 @@
 <template>
-  <div class="detailsOperate">
+  <div class="detailsOperate border-top">
     <div class="operateLeft">
       <span class="udesk"></span>
       <span class="collect" :class="{active:collect}" @click="doCollection(params)"></span>
-      <span class="cart"></span>
+      <router-link to="/cart" class="cart">
+        <i class="num" v-show="cartNum">{{cartNum}}</i>
+      </router-link>
     </div>
     <ul class="operateRight">
-      <li class="border-left">立即购买</li>
-      <li class="border-left active">加入购物车</li>
+      <li class="border-left" @click="popUpShowBuy">立即购买</li>
+      <li class="border-left active" @click="popUpShow">加入购物车</li>
     </ul>
   </div>
 </template>
 
 <script>
-// import {
-//   http
-// } from 'util/request'
-// import {
-//   isCollection,
-//   opCollection
-// } from 'util/netApi'
-// import {
-//   storage
-// } from 'util/storage.js'
-// import {
-//   accessToken
-// } from 'util/const.js'
-// import notice from 'util/notice.js'
 import {
   hasCollection,
   doCollection
 } from '@/func/collection'
+import {
+  mapState,
+  mapMutations
+} from 'vuex'
+
+import {
+  http
+} from 'util/request'
+import {
+  cartNum
+} from 'util/netApi'
+import {storage} from 'util/storage'
+import {accessToken} from 'util/const'
 export default {
   name: 'DetailsOperate',
-  components: {},
   data () {
     return {
       collect: false,
-      id: '',
       params: null
     }
   },
-  computed: {
-
+  props: {
+    goodsItems: Array
   },
-  watch: {
+  computed: mapState({
+    details: state => state.details,
+    maxCount: state => state.details.maxCount,
+    cartNum: state => state.cart.cartNum,
+    popupVisible: state => state.details.popupVisible
 
+  }),
+  watch: {
+    $route (to, from) {
+      if (to.name === 'Details') {
+        this.$router.go(0)
+      }
+    },
+    popupVisible: function (curval) {
+      if (storage.getLocalStorage(accessToken)) {
+        this.getCartNum()
+      }
+    }
   },
   methods: {
+    ...mapMutations(['changePopupVisible', 'changeCartNum', 'changeFrom']),
     hasCollection (params) {
-      hasCollection(params).then(res => {
-        this.collect = res.data.body
-      }).catch(err => {
-        console.log(err)
-      })
+      let fnType = Object.prototype.toString.call(hasCollection(params)).slice(8, -1)
+      if (fnType === 'Promise') {
+        hasCollection(params).then(res => {
+          this.collect = res.data.body
+        }).catch(err => {
+          console.log(err)
+        })
+      }
     },
     doCollection (params) {
       doCollection(params).then(res => {
@@ -61,7 +80,23 @@ export default {
       }).catch(err => {
         console.log(err)
       })
+    },
+    getCartNum () {
+      http(cartNum).then(res => {
+        this.changeCartNum(res.data.body)
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    popUpShow () {
+      this.changeFrom(2)
+      this.changePopupVisible(true)
+    },
+    popUpShowBuy () {
+      this.changeFrom(3)
+      this.changePopupVisible(true)
     }
+
   },
   created () {
     this.params = {
@@ -71,6 +106,9 @@ export default {
   },
   mounted () {
     this.hasCollection(this.params)
+    if (storage.getLocalStorage(accessToken)) {
+      this.getCartNum()
+    }
   }
 }
 </script>
@@ -83,14 +121,28 @@ export default {
   .operateLeft
     display flex
     width 485px
-    span
-      flex 1
     .udesk
+      flex 1
       background: url('/static/icons/udesk_icon.png') no-repeat center center/40% 40%
     .collect
+      flex 1
       background: url('/static/icons/collection_icon.png') no-repeat center center/40% 40%
     .cart
+      flex 1
       background: url('/static/icons/cart_icon.png') no-repeat center center/40% 40%
+      position relative
+      .num
+        position absolute
+        width 46px
+        height 46px
+        line-height 46px
+        text-align center
+        border-radius 50%
+        background-color #D54B4B
+        color #fff
+        top 0
+        transform translate(-50%,50%)
+        right 0
     .collect.active
       background: url('/static/icons/collection_icon_active.png') no-repeat center center/40% 40%
   .operateRight

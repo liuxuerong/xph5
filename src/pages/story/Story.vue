@@ -122,14 +122,17 @@ export default {
         })
     },
     scrollInit () {
-      return (this.scroll = new BScroll(this.$refs.xpStoryContent, {
-        scrollY: true,
-        click: true,
-        bounce: {
-          top: false,
-          bottom: true
-        }
-      }))
+      if (!this.scroll) {
+        this.scroll = new BScroll(this.$refs.xpStoryContent, {
+          scrollY: true,
+          bounce: {
+            top: true,
+            bottom: true
+          }
+        })
+      } else {
+        this.scroll.refresh()
+      }
     }
   },
   mounted () {
@@ -142,7 +145,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-  .top>>>.vux-tab .vux-tab-item.vux-tab-selected
+.top>>>.vux-tab .vux-tab-item.vux-tab-selected
     color #333333
     border-bottom 8px solid #262626
 .top>>>.vux-tab-ink-bar
@@ -166,7 +169,7 @@ export default {
     font-size 46px
 .xpStory
   height 100%
-  padding-top 202px
+  padding-top 242px
   padding-bottom 148px
   .top
     height 106px
@@ -177,7 +180,7 @@ export default {
     top 136px
     z-index 9999999
   .xpStoryContent
-    height calc(100% - 400px)
+    height 100%
   h1.title
     font-size 56px
   .topBgImg

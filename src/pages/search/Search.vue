@@ -57,14 +57,17 @@ export default {
       this.$router.back(-1)
     },
     scrollInit () {
-      return (this.scroll = new BScroll(this.$refs.mainSearch, {
-        scrollY: true,
-        click: true,
-        bounce: {
-          top: false,
-          bottom: true
-        }
-      }))
+      if (!this.scroll) {
+        this.scroll = new BScroll(this.$refs.mainSearch, {
+          scrollY: true,
+          bounce: {
+            top: true,
+            bottom: true
+          }
+        })
+      } else {
+        this.scroll.refresh()
+      }
     },
     // 获取input的value
     getSearchVal () {

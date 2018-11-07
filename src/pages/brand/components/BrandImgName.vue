@@ -32,16 +32,18 @@ export default {
   watch: {},
   methods: {
     scrollInit () {
-      return (this.scroll = new BScroll(this.$refs.brandImgName, {
-        scrollY: true,
-        click: true,
-        bounce: {
-          top: true,
-          bottom: true
-        }
-      }))
+      if (!this.scroll) {
+        this.scroll = new BScroll(this.$refs.brandImgName, {
+          scrollY: true,
+          bounce: {
+            top: true,
+            bottom: true
+          }
+        })
+      } else {
+        this.scroll.refresh()
+      }
     }
-
   },
   mounted () {
     this.scrollInit()
