@@ -9,7 +9,7 @@
           <input type="text" class="fl" v-model="cartCount">
           <span class="add fr" @click="addCount">+</span>
         </div>
-        <div ref="tabWrap">
+        <div ref="tabWrap" class="tabWrap">
           <div class="tabContent" v-for="(item,index) in sku.keys" :key="index">
             <div class="tabContentName">{{item.name}}</div>
             <input type="button" class="skuItem" @click="tabInfoChange(index,cindex,citem.id,$event)" v-for="(citem,cindex) in item.value" :class="{notClick:citem.notClick,active:citem.isActiveC}" :attr_id="citem.id" :value="citem.cname" :key="cindex" />
@@ -17,19 +17,28 @@
         </div>
       </div>
       <div class="goodsInfoBottm border-top" v-if="from==1">
-        <router-link class="buy" to="/">立即购买</router-link>
+        <span class="buy" to="/createOrder" @click="buy()">立即购买</span>
         <span class="addCart" @click="addCart()">
-              加入购物车
-            </span>
+            加入购物车
+          </span>
+      </div>
+      <div class="goodsInfoBottm border-top" v-else-if="from==2">
+        <div class="addSure" @click="addCart()">确认加入</div>
       </div>
       <div class="goodsInfoBottm border-top" v-else>
-        <div class="addSure" @click="addCart()">确认加入</div>
+        <span class="addSure" @click="buy()">确认下单</span>
       </div>
     </mt-popup>
   </div>
 </template>
 
 <script>
+import {
+  storage
+} from 'util/storage'
+import {
+  goodsInfo
+} from 'util/const.js'
 import {
   Popup,
   Toast
@@ -61,7 +70,9 @@ export default {
       cartCount: 1,
       type: 1,
       goodsItemsId: '',
-      coverImage: ''
+      coverImage: '',
+      name: '',
+      goodsId: ''
     }
   },
   computed: mapState({
@@ -84,15 +95,7 @@ export default {
         this.cartCount = 1
       }
     },
-    //     getCartNum () {
-    //   http(cartNum).then(res => {
-    //     console.log(res)
-    //     this.changeCartNum(res.data.body)
-    //   }).catch(err => {
-    //     console.log(err)
-    //   })
-    // },
-    addCart () {
+    isAllCheck () {
       const tabWrapChild = this.$refs.tabWrap.childNodes
       let allFlag = true
       for (let i = 0; i < tabWrapChild.length; i++) {
@@ -119,23 +122,69 @@ export default {
         if (!tabWrapChild.length) {
           this.goodsItemsId = this.sku.data[''].goodsItemsId
         }
-        const params = {
-          goodsItemId: this.goodsItemsId,
-          num: this.cartCount
-        }
-        http(addCart, params).then(res => {
-          if (res.data.code === 0) {
-            Toast({
-              message: '添加购物车成功',
-              position: 'bottom',
-              duration: 500
-            })
-          // this.getCartNum()
-          }
-        }).catch(err => {
-          console.log(err)
-        })
       }
+    },
+    buy () {
+      this.isAllCheck()
+      let goodsObj = {
+        key: '',
+        shippingMethod: '',
+        favorableId: ''
+      }
+      goodsObj.goodsItems = []
+      goodsObj.goodsItems[0] = {
+        goodsId: this.goodsId,
+        goodsItemId: this.goodsItemsId,
+        num: this.cartCount
+      }
+      storage.setLocalStorage(goodsInfo, goodsObj)
+      this.$router.push('/createOrder')
+    },
+    addCart () {
+      this.isAllCheck()
+
+      // const tabWrapChild = this.$refs.tabWrap.childNodes
+      // let allFlag = true
+      // for (let i = 0; i < tabWrapChild.length; i++) {
+      //   let input = this.children(tabWrapChild[i], 'input')
+      //   let flag = false
+      //   for (let j = 0; j < input.length; j++) {
+      //     if (input[j].classList.contains('active')) {
+      //       flag = true
+      //       break
+      //     }
+      //   }
+      //   if (!flag) {
+      //     allFlag = false
+      //     break
+      //   }
+      // }
+      // if (!allFlag) {
+      //   Toast({
+      //     message: '请选择商品属性',
+      //     position: 'bottom',
+      //     duration: 500
+      //   })
+      // } else {
+      //   if (!tabWrapChild.length) {
+      //     this.goodsItemsId = this.sku.data[''].goodsItemsId
+      //   }
+      const params = {
+        goodsItemId: this.goodsItemsId,
+        num: this.cartCount
+      }
+      http(addCart, params).then(res => {
+        if (res.data.code === 0) {
+          Toast({
+            message: '添加购物车成功',
+            position: 'bottom',
+            duration: 500
+          })
+          // this.getCartNum()
+        }
+      }).catch(err => {
+        console.log(err)
+      })
     },
     children (curEle, tagName) {
       let nodeList = curEle.childNodes
@@ -196,11 +245,15 @@ export default {
         this.SKUResult[key].count += sku.count
         this.SKUResult[key].prices.push(sku.price)
         this.SKUResult[key].goodsItemsId = sku.goodsItemsId
+        this.SKUResult[key].pic = sku.pic
+        this.SKUResult[key].name = sku.name
       } else {
         this.SKUResult[key] = {
           count: sku.count,
           prices: [sku.price],
-          goodsItemsId: sku.goodsItemsId
+          goodsItemsId: sku.goodsItemsId,
+          pic: sku.pic,
+          name: sku.namepic
         }
       }
     },
@@ -213,6 +266,7 @@ export default {
       for (i = 0; i < skuKeys.length; i++) {
         let skuKey = skuKeys[i] // 一条SKU信息key
         let sku = this.sku.data[skuKey] // 一条SKU信息value
+        console.log(sku)
         let skuKeyAttrs = skuKey.split(';') // SKU信息key属性值数组
         skuKeyAttrs.sort(function (value1, value2) {
           return parseInt(value1) - parseInt(value2)
@@ -228,7 +282,9 @@ export default {
         this.SKUResult[skuKeyAttrs.join(';')] = {
           count: sku.count,
           prices: [sku.price],
-          goodsItemsId: sku.goodsItemsId
+          goodsItemsId: sku.goodsItemsId,
+          pic: sku.pic,
+          name: sku.name
         }
       }
     },
@@ -308,6 +364,7 @@ export default {
     },
     /* 商品条件筛选 */
     tabInfoChange (index, cindex, cid, e) {
+      console.log()
       // let orderInfo = this.keys /* 所有规格 */
       let orderInfoChild = this.sku.keys[index]
         .value /* 当前点击的规格的所有子属性内容 */
@@ -328,11 +385,13 @@ export default {
       for (let i = 0; i < this.sku.keys.length; i++) {
         for (let j = 0; j < this.sku.keys[i].value.length; j++) {
           if (this.sku.keys[i].value[j].isActiveC === true) {
-            if (this.sku.keys[i].value[j].pic !== '') {
-              this.goods.coverImage = this.sku.keys[i].value[j].pic
-            } else {
-              this.goods.coverImage = this.coverImage
-            }
+            // this.goods.name = this.sku.keys[i].value[j].name
+            // console.log(this.sku.keys[i].value[j].name)
+            // if (this.sku.keys[i].value[j].pic !== '') {
+            //   this.goods.coverImage = this.sku.keys[i].value[j].pic
+            // } else {
+            //   this.goods.coverImage = this.coverImage
+            // }
             haveChangedId.push(this.sku.keys[i].value[j].id)
           }
         }
@@ -344,7 +403,12 @@ export default {
           return parseInt(value1) - parseInt(value2)
         })
         let len = haveChangedId.length
-        var prices = this.SKUResult[haveChangedId.join(';')].prices
+        let prices = this.SKUResult[haveChangedId.join(';')].prices
+        let name = this.SKUResult[haveChangedId.join(';')].name
+        let pic = this.SKUResult[haveChangedId.join(';')].pic
+        if (!name) {
+          name = this.name
+        }
         const nowCount = this.SKUResult[haveChangedId.join(';')].count
         this.goodsItemsId = this.SKUResult[haveChangedId.join(';')].goodsItemsId
 
@@ -355,6 +419,8 @@ export default {
         var maxPrice = Math.max.apply(Math, prices)
         var minPrice = Math.min.apply(Math, prices)
         this.changeNowPrice(maxPrice > minPrice ? minPrice + '-' + maxPrice : maxPrice)
+        this.goods.name = name
+        this.goods.coverImage = pic
         // this.nowPrice =
         //     maxPrice > minPrice ? minPrice + '-' + maxPrice : maxPrice /* 筛选价格 */
 
@@ -430,15 +496,19 @@ export default {
   },
   mounted () {
     this.coverImage = this.goods.coverImage
+    this.name = this.goods.name
+    this.goodsId = this.goods.id
   }
 }
 </script>
 
 <style lang="stylus" scoped>
 #goodsinfo
-  padding 50px 50px 145px 50px
   box-sizing border-box
-  overflow-y scroll
+  padding 50px 0px 150px 50px
+  .tabWrap
+    overflow-y scroll
+    height 700px
   .num
     height 100px
     line-height 100px
@@ -527,5 +597,5 @@ export default {
 .detailsPopUp
   .mint-popup
     width 100%
-    height 1528px
+    // height 1528px
 </style>

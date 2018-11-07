@@ -8,7 +8,7 @@
       </router-link>
     </div>
     <ul class="operateRight">
-      <li class="border-left">立即购买</li>
+      <li class="border-left" @click="popUpShowBuy">立即购买</li>
       <li class="border-left active" @click="popUpShow">加入购物车</li>
     </ul>
   </div>
@@ -90,6 +90,10 @@ export default {
     },
     popUpShow () {
       this.changeFrom(2)
+      this.changePopupVisible(true)
+    },
+    popUpShowBuy () {
+      this.changeFrom(3)
       this.changePopupVisible(true)
     }
 

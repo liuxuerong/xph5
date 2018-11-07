@@ -3,13 +3,19 @@
     <div class="checkIcon"><check-icon :value.sync="check" @click.native="checkAll"> </check-icon></div>
     <span class="all" >全选</span>
     <span class="price" v-if="!showModify">￥{{price}}</span>
-    <span class="btn" :class="{active:clearBtn}" v-if="!showModify">去结算</span>
+    <span class="btn" :class="{active:clearBtn}" v-if="!showModify" @click="buy">去结算</span>
     <span class="btn delBtn" :class="{active:clearBtn}" v-else @click="delCheck">删除所选</span>
      <toast v-model="show5" :time="1000">删除成功</toast>
   </div>
 </template>
 
 <script>
+import {
+  storage
+} from 'util/storage'
+import {
+  goodsInfo
+} from 'util/const.js'
 import {
   http
 } from 'util/request'
@@ -112,8 +118,27 @@ export default {
           console.log(err)
         })
       }
+    },
+    buy () {
+      let goodsObj = {
+        key: '',
+        shippingMethod: '',
+        favorableId: '',
+        fromCart: true
+      }
+      goodsObj.goodsItems = []
+      for (let i = 0; i < this.goodsList.length; i++) {
+        if (this.goodsList[i].value) {
+          goodsObj.goodsItems.push({
+            goodsId: this.goodsList[i].goodsId,
+            goodsItemId: this.goodsList[i].goodsItemId,
+            num: this.goodsList[i].num
+          })
+        }
+      }
+      storage.setLocalStorage(goodsInfo, goodsObj)
+      this.$router.push('/createOrder')
     }
-
   }
 }
 </script>

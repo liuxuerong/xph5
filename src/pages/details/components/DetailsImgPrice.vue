@@ -4,8 +4,8 @@
     <div class="right">
       <div class="name">{{goods.name}}</div>
       <div class="price">
-        <span class="minPrice">{{nowPrice}}</span>
-        <del class="marketPrice">市场价{{goods.marketPrice}}</del>
+        <span class="minPrice">￥{{nowPrice}}</span>
+        <del class="marketPrice">市场价￥{{goods.marketPrice}}</del>
       </div>
     </div>
   </div>

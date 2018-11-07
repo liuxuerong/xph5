@@ -1,31 +1,32 @@
 <template>
   <div class="xpInvoice">
     <common-nav-header :title="title">
-      <div class="btnSure">
+      <div class="btnSure" @click="submit">
         确定
       </div>
     </common-nav-header>
     <div class="xpInvoiceWrap">
-      <group title="发票信息" ref="info">
-        <radio :options="radio001" @on-change="changeRadio001" v-model="radio001Value"></radio>
+
+        <group title="发票信息" ref="info">
+        <radio :options="invoiceType" @on-change="changeInvoiceType" v-model="inputForm.invoiceTypeValue"></radio>
       </group>
       <group title="发票类型" >
-        <radio :options="radio002" @on-change="changeRadio002" v-model="radio002Value"></radio>
+        <radio :options="invoiceStatus" @on-change="changeInvoiceStatus" v-model="inputForm.invoiceStatusValue"></radio>
       </group>
       <group>
-        <radio :options="radio003" @on-change="change" v-model="radio003Value"></radio>
+        <radio :options="invoiceStyle"  v-model="inputForm.invoiceStyleValue"></radio>
       </group>
       <group title="发票抬头" v-show="headeShow">
-        <x-input  placeholder="发票抬头" ref="input02" @click.native="getValid2"></x-input>
+        <x-input  placeholder="发票抬头" v-model="inputForm.remark"></x-input>
       </group>
       <group title="企业信息" v-show="infoAllShow">
-        <x-input placeholder="公司名称" ref="input02" @click.native="getValid2"></x-input>
-        <x-input placeholder="纳税人识别号" ref="input02" @click.native="getValid2"></x-input>
+        <x-input placeholder="公司名称" v-model="inputForm.name"></x-input>
+        <x-input placeholder="纳税人识别号"  v-model="inputForm.idCode"></x-input>
         <div v-show="infoShow">
-          <x-input placeholder="公司地址" ref="input02" @click.native="getValid2"></x-input>
-          <x-input placeholder="联系电话" ref="input02" @click.native="getValid2"></x-input>
-          <x-input placeholder="开户地" ref="input02" @click.native="getValid2"></x-input>
-          <x-input placeholder="开户账号" ref="input02" @click.native="getValid2"></x-input>
+          <x-input placeholder="公司地址" v-model="inputForm.companyAddress"></x-input>
+          <x-input placeholder="联系电话" v-model="inputForm.phone"></x-input>
+          <x-input placeholder="开户地" v-model="inputForm.bank"></x-input>
+          <x-input placeholder="开户账号" v-model="inputForm.accountNumber"></x-input>
         </div>
       </group>
       <group title="附件">
@@ -58,16 +59,25 @@ export default {
   data () {
     return {
       valid2: false,
-      radio001Value: '个人',
-      radio002Value: '增值税普票',
-      radio003Value: '纸质发票',
       headeShow: true,
       infoShow: false,
       infoAllShow: false,
       title: '开具发票',
-      radio001: ['个人', '企业'],
-      radio002: ['增值税普票'],
-      radio003: ['纸质发票', '电子发票']
+      invoiceType: ['个人', '企业'],
+      invoiceStatus: ['增值税普票'],
+      invoiceStyle: ['纸质发票', '电子发票'],
+      inputForm: {
+        invoiceTypeValue: '个人',
+        invoiceStatusValue: '增值税普票',
+        invoiceStyleValue: '纸质发票',
+        name: '',
+        idCode: '',
+        companyAddress: '',
+        phone: '',
+        bank: '',
+        accountNumber: '',
+        remark: ''
+      }
     }
   },
   computed: {
@@ -77,34 +87,50 @@ export default {
 
   },
   methods: {
-    changeRadio001 (value) {
+    submit: function () {
+      console.log(this.inputForm)
+      // invoiceStatusValue: '增值税普票'
+      // invoiceStyleValue: '纸质发票'
+      // invoiceTypeValue: '企业'
+      if (this.inputForm.invoiceStatusValue === '增值税普票') {
+        this.inputForm.invoiceStatus = 1
+      } else {
+        this.inputForm.invoiceStatus = 2
+      }
+      if (this.inputForm.invoiceStyleValue === '纸质发票') {
+        this.inputForm.invoiceStyle = 2
+      } else {
+        this.inputForm.invoiceStatus = 1
+      }
+      if (this.inputForm.invoiceTypeValue === '企业') {
+        this.inputForm.invoiceType = 2
+      } else {
+        this.inputForm.invoiceType = 1
+      }
+    },
+
+    changeInvoiceType (value) {
       if (value === '个人') {
-        this.radio002 = ['增值税普票']
-        this.radio002Value = '增值税普票'
-        this.radio003 = ['纸质发票', '电子发票']
+        this.invoiceStatus = ['增值税普票']
+        this.inputForm.invoiceStatusValue = '增值税普票'
+        this.invoiceStyle = ['纸质发票', '电子发票']
         this.headeShow = true
         this.infoAllShow = false
       } else {
-        this.radio002 = ['增值税普票', '增值税专票']
+        this.invoiceStatus = ['增值税普票', '增值税专票']
         this.headeShow = false
         this.infoAllShow = true
       }
     },
-    changeRadio002 (value) {
+    changeInvoiceStatus (value) {
       if (value === '增值税专票') {
-        this.radio003 = ['纸质发票']
-        this.radio003Value = '纸质发票'
+        this.invoiceStyle = ['纸质发票']
+        this.inputForm.invoiceStyleValue = '纸质发票'
         this.infoShow = true
       } else {
-        this.radio003 = ['纸质发票', '电子发票']
+        this.invoiceStyle = ['纸质发票', '电子发票']
         this.infoShow = false
       }
-    },
-    change () {
-
-    },
-    getValid2 () {
-      this.valid2 = this.$refs.input02.valid
     }
   }
 }

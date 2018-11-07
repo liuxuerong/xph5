@@ -115,6 +115,7 @@ export default {
   methods: {
     ...mapMutations(['changePopupVisible', 'changeNowPrice', 'changeFrom']),
     pushKeys (arr) {
+      console.log(arr)
       // 处理返回数据
       let sku = {}
       sku.keys = []
@@ -158,18 +159,22 @@ export default {
               id: xx,
               cname: spec[j].value,
               isActiveC: false,
-              notClick: false,
-              pic: arr[i].pic
+              notClick: false
             }]
           }
 
           temKeys.push(temKeysObj)
         }
+        if (arr[i].pic === '') {
+          arr[i].pic = this.goods.coverImage
+        }
         if (arr[i].stock !== 0) {
           sku.data[dataKey] = {
             price: arr[i].price,
             count: arr[i].stock,
-            goodsItemsId: arr[i].id
+            goodsItemsId: arr[i].id,
+            name: arr[i].name,
+            pic: arr[i].pic
           }
         }
       }

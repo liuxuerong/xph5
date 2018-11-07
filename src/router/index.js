@@ -17,6 +17,8 @@ import Collect from '@/pages/collect/Collect'
 import Comment from '@/pages/comment/Comment'
 import Goods from '@/pages/goods/Goods'
 import CreateOrder from '@/pages/createOrder/CreateOrder'
+import SendWay from '@/pages/createOrder/SendWay'
+import StoreAddress from '@/pages/createOrder/StoreAddress'
 import Search from '@/pages/search/Search'
 import Login from '@/pages/login/Login'
 import PhoneCode from '@/pages/login/PhoneCode'
@@ -94,6 +96,18 @@ const router = new Router({
       name: 'CreateOrder',
       meta: { requireLogin: true },
       component: CreateOrder
+    },
+    {
+      path: '/sendWay',
+      name: 'SendWay',
+      meta: { requireLogin: true },
+      component: SendWay
+    },
+    {
+      path: '/storeAddress',
+      name: 'StoreAddress',
+      meta: { requireLogin: true },
+      component: StoreAddress
     },
     {
       path: '/search',
