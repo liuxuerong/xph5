@@ -42,6 +42,12 @@
 <script>
 import CommonNavHeader from 'common/commonHeader/CommonNavHeader'
 import {
+  http
+} from 'util/request'
+import {
+  addInvoice
+} from 'util/netApi'
+import {
   Radio,
   Group,
   XInput,
@@ -76,7 +82,8 @@ export default {
         phone: '',
         bank: '',
         accountNumber: '',
-        remark: ''
+        remark: '',
+        invoiceEnclosureList: []
       }
     }
   },
@@ -88,10 +95,6 @@ export default {
   },
   methods: {
     submit: function () {
-      console.log(this.inputForm)
-      // invoiceStatusValue: '增值税普票'
-      // invoiceStyleValue: '纸质发票'
-      // invoiceTypeValue: '企业'
       if (this.inputForm.invoiceStatusValue === '增值税普票') {
         this.inputForm.invoiceStatus = 1
       } else {
@@ -107,6 +110,11 @@ export default {
       } else {
         this.inputForm.invoiceType = 1
       }
+      http(addInvoice, this.inputForm).then(res => {
+        console.log(res)
+      }).catch(err => {
+        console.log(err)
+      })
     },
 
     changeInvoiceType (value) {
