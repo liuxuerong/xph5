@@ -12,7 +12,7 @@
             <div class="bottom">{{item.province}}{{item.city}}{{item.area}}{{item.detailedAddr}}</div>
           </div>
           <div class="rigth">
-            <span class="modifyAdd"  ></span>
+            <span class="modifyAdd" @click="modifyAddress(item.id)"></span>
           </div>
         </div>
       </div>
@@ -20,6 +20,7 @@
   </div>
 </template>
 <script>
+import router from '@/router/index.js'
 import UserinfoHeader from './ComUserSetHeader'
 import { listDelivery } from 'util/netApi'
 import {http} from 'util/request'
@@ -58,8 +59,13 @@ export default {
       })
     },
     // 新增地址
-    onOperComplete () {
-
+    onOperComplete (id) {
+      console.log(99999)
+      router.push('./goodsAddress/1/id')
+    },
+    // 修改地址
+    modifyAddress (id) {
+      router.push('./goodsAddress/2/' + id)
     }
   },
   mounted () {
@@ -72,6 +78,8 @@ export default {
   @import "~styles/mixins.styl";
   .wrapper
     width 100%
+    box-sizing border-box
+    padding-top 132px
   .addressItem
     width 100%
     box-sizing border-box

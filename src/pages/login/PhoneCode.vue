@@ -16,6 +16,9 @@
           <span class="obtainCode" @click="obtainCodeBtn" v-show="!computedTime">获取验证码</span>
           <span class="obtainCode" v-show="computedTime">已发送 {{computedTime}} s</span>
         </div>
+        <!-- <button class="loginBtn" @click="loginPhoneCode">登录</button>
+        <router-link to="/login" class="phoneCodeLogin">账号密码登录</router-link>
+        <span class="loginTipText">未注册的手机号码验证后自动创建星品账户</span> -->
       </form>
     </div>
     <button class="loginBtn" @click="loginPhoneCode">登录</button>

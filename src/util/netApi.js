@@ -65,6 +65,13 @@ export const checkPhone = { url: '/member/api/check', method: 'GET', version: v1
 // 修改会员手机号
 export const updateMemberPhone = { url: '/member/api/updateMemberPhone', method: 'PUT', version: v1 }
 
+// 积分明细
+export const getMemberIntegral = {url: '/integral/getMemberIntegral', method: 'GET', version: v1}
+
+// 优惠券
+export const coupon = {url: '/coupon/page', method: 'GET', version: v1} // 列表
+export const getDetailById = {url: '/memberCouponRecord/getDetailById', method: 'GET', version: v1}
+
 // 发票
 export const addInvoice = { url: '/invoice/api', method: 'POST', version: v1 } // 新增
 export const updateInvoice = { url: '/invoice/api', method: 'PUT', version: v1 } // 修改

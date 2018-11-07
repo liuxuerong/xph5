@@ -19,6 +19,7 @@
           <div class="totalPrice" v-if="item.memberOrderGoods">
             <span class="totalPayment" v-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===undefined"><p >待付</p>:￥ {{item.totalAmount}}</span>
             <span class="totalPayment" v-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===6"><p >退款</p>:￥ {{item.totalAmount}}</span>
+            <!-- <span class="totalPayment" v-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===6"><p >退款</p>:￥ {{item.totalAmount}}</span> -->
             <span class="totalPayment" v-if="item.status=='2' || item.status=='3' || item.status=='4' || item.status=='5'"><p >已付</p>:￥ {{item.totalAmount}}</span>
             <span class="totalPayment" v-if="item.status=='6' || item.status=='7' || item.status=='8'"><p >未付</p>:￥ {{item.totalAmount}}</span>
             <span class="operState" v-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===undefined">待付款</span>
@@ -41,7 +42,7 @@
           </div>
           <span class="operbtn immedPayment" v-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===undefined" @click="immedPayment(item.orderSn,item.totalAmount)">立即支付</span>
           <!-- <router-link :to="{ name: 'orderDetails', params: { orderCode: item.orderSn }}" class="operbtn checkDetails" v-show="item.status =='2'" @click="orderDetails">查看详情1</router-link> -->
-          <span class="operbtn confirmGoods" v-if="item.memberOrderGoods[0].orderItemStatus == '5'">立即评价</span>
+          <span class="operbtn confirmGoods" v-if="item.memberOrderGoods[0].orderItemStatus == '5'" @click="immedEvaluate(item.orderSn)">立即评价</span>
           {{item.status}}
           <!-- <span class="operbtn checkDetails" v-if="(item.memberOrderGoods[0].orderItemStatus !== undefined && item.memberOrderGoods[0].orderItemStatus != '3') || (item.memberOrderGoods[0].orderItemStatus != undefined && list.status !='1')" @click="orderDetails(item.orderSn,item.memberOrderGoods[0].orderItemStatus,item.memberOrderGoods[0].orderItemId)">查看详情</span> -->
           <span class="operbtn checkDetails" v-if="(item.memberOrderGoods[0].orderItemStatus != undefined && item.status !='1') || item.status == '8' || item.status == '7' || (item.memberOrderGoods[0].orderItemStatus == '6' && item.status =='1')" @click="orderDetails(item.orderSn,item.memberOrderGoods[0].orderItemStatus,item.memberOrderGoods[0].orderItemId)">查看详情</span>
@@ -53,14 +54,13 @@
         </div>
       </div>
     </div>
-    <div v-else>
-      暂无订单
-    </div>
+    <common-empty v-else :emptyObj="emptyObj"/>
   </div>
 </template>
 <script>
 import router from '@/router/index.js'
 import SearchTitle from './ComOrderSearchTitle'
+import CommonEmpty from 'common/commonEmpty/CommonEmpty'
 import { OrderList, confirmGoods } from 'util/netApi'
 import { http } from 'util/request'
 import { config } from 'util/config' // 图片路径
@@ -73,11 +73,19 @@ export default {
       type: '',
       imageUrl: config.imageUrl,
       orderState: '',
-      otrderStateArr: []
+      otrderStateArr: [],
+      emptyObj: {
+        emptyImg: '/static/images/orderEmpty.png',
+        emptyBold: '暂无订单',
+        emptyP: '您还没有购买的订单',
+        buttonText: null,
+        buttonRouter: null
+      }
     }
   },
   components: {
-    SearchTitle
+    SearchTitle,
+    CommonEmpty
   },
   methods: {
     // 页面初始化渲染
@@ -142,9 +150,14 @@ export default {
       console.log(orderCode)
       let paymentInfo = orderCode + '&' + totalMoney
       router.push('../../immedPayment/' + paymentInfo)
+    },
+    // 立即评价
+    immedEvaluate (orderCode) {
+      router.push('../../immedEvaluate/' + orderCode)
     }
   },
   watch: {
+    // 监测路由发生变化  则刷新页面
     '$route' (to, from) {
       this.$router.go(0)
     }

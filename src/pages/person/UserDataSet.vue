@@ -2,20 +2,24 @@
   <div class="wrapper">
     <!-- 个人资料设置头部 -->
     <userinfo-header title="个人资料" oper="完成" @operComplete="onOperComplete"></userinfo-header>
-
     <div class="userInfoSetCon">
       <!-- 头像设置 -->
-      <!-- <div class="headerSet">
+      <div class="headerSet">
         <span class="setProperty">头像</span>
-        <img src="/static/images/personalHeader@3x.png" class="headerImg" alt="" @click="headerUpfile">
-      </div> -->
-      <header-upload></header-upload>
-      <!-- <cropper-header  :headerImage="headerImage"  @getHeaderImage="newHeaderImage"></cropper-header> -->
+        <div class="headerImg">
+          <img v-if="headImage === ''" src="/static/images/personalHeader.png">
+          <img v-else :src="imageUrl+headImage">
+          <input type="file" name="" class="headerImgFile" @change="headerUpfile($event)">
+        </div>
+      </div>
       <!-- 基础设置 -->
-      <userinfo-popset setPro="昵称" :inputShow="nameShow" :inputData="name" @sendNameToParent="sendNameToParent"></userinfo-popset>
-      <userinfo-popset setPro="绑定手机号" :inputShow="phoneShow" :inputData="phone"></userinfo-popset>
-      <userinfo-popset setPro="性别" :inputShow="sexShow" :inputData="sex" @click.native="sexChangeShow"></userinfo-popset>
-      <userinfo-popset setPro="年龄段" :inputShow="ageShow" :inputData="age" @click.native="ageChangeShow"></userinfo-popset>
+       <div class="setItemPop border-bottom">
+        <span class="setProperty">昵称</span>
+        <input type="text" class="setInfoInput" v-model="name">
+      </div>
+      <userinfo-popset setPro="绑定手机号" :inputData="phone"></userinfo-popset>
+      <userinfo-popset setPro="性别" :inputData="sex" @click.native="sexChangeShow"></userinfo-popset>
+      <userinfo-popset setPro="年龄段" :inputData="age" @click.native="ageChangeShow"></userinfo-popset>
       <mt-popup
        class="sexPopWrapper"
         v-model="popupVisible"
@@ -32,24 +36,26 @@
 import UserinfoHeader from './ComUserSetHeader'
 import UserinfoPopset from './ComSetInfoPop'
 import ChangeItem from './ComChangeItem'
-import HeaderUpload from './ComHeaderUpload'
 import CropperHeader from './ComCropperHeader'
 import { setMemberData, memberData } from 'util/netApi'
 import { http } from 'util/request'
 import { Popup } from 'mint-ui'
+import notice from 'util/notice.js'
+import { config } from 'util/config' // 图片路径
+// import { storage } from 'util/storage.js'
+// import { accessToken } from 'util/const.js'
+import axios from 'axios'
+import {uploadPic} from '@/func/upload'
 export default {
   data () {
     return {
-      headImage: '',
       name: '',
+      imageUrl: config.imageUrl,
+      headImage: '',
       sexIndex: '',
+      phone: '',
       sex: '', // 1、男 2、女 3、保密
       age: '',
-      phone: '',
-      nameShow: true,
-      phoneShow: true,
-      sexShow: true,
-      ageShow: true,
       popupVisible: false,
       popType: 0,
       popData: []
@@ -60,18 +66,16 @@ export default {
     UserinfoHeader,
     UserinfoPopset,
     'change-item': ChangeItem,
-    HeaderUpload,
     CropperHeader
   },
   methods: {
     // 获取页面资料信息
     getUserInfo: function () {
       http(memberData).then((response) => {
-        console.log(response)
         let data = response.data.body
-        if (data.name !== '' && data.name != null) {
-          this.nameShow = true
-          this.name = data.name
+        this.name = data.name
+        if (data.headImage !== '' && data.headImage != null) {
+          this.headImage = data.headImage
         }
         if (data.phone !== '' && data.phone != null) {
           this.phoneShow = true
@@ -82,18 +86,38 @@ export default {
           this.age = data.ageGroup
         }
         if (data.sex !== '' && data.sex != null) {
-          this.sexShow = true
+          this.sexIndex = data.sex
           let sexArr = ['男', '女', '保密']
           this.sex = sexArr[data.sex - 1]
         }
       })
     },
-    // 头像上传
-    headerUpfile () {
+    headerUpfile (e) {
+      let fileKey = uploadPic(e, axios.post)
+      let key = ''
+      fileKey.then(res => {
+        key = res.data.body.key
+        this.headImage = key
+      })
 
-    },
-    newHeaderImage (newImg) {
-      this.headerImage = newImg
+      // this.headImage = fileKey.data.key
+      // console.log(fileKey)
+      // let ss = e.target.files
+      // let formData = new FormData()
+      // formData.append('file', ss[0])
+      // let cf = {
+      //   headers: {
+      //     'Content-Type': 'multipart/form-data',
+      //     'Authorization': storage.getLocalStorage(accessToken)
+      //   }
+      // }
+      // axios.post(config.baseUrl + 'file/upload', formData, cf).then((response) => {
+      //   if (response.data.code === 0) {
+      //     this.headImage = response.data.body.key
+      //   }
+      // }).catch((err) => {
+      //   console.log(err)
+      // })
     },
     // 性别选择
     sexChangeShow () {
@@ -121,22 +145,18 @@ export default {
       }
       this.popupVisible = val3
     },
-    // 获取属性名
-    sendNameToParent (val) {
-      console.log(val)
-      this.name = val
-    },
     // 完善资料信心  完成点击事件
-    onOperComplete: function () {
+    onOperComplete () {
       let param = {
         headImage: this.headImage,
         name: this.name,
         sex: this.sexIndex,
         ageGroup: this.age
       }
-      console.log(param)
       http(setMemberData, param).then((response) => {
-        console.log(response)
+        if (response.data.code === 0) {
+          notice.toast('设置成功', '2000', 'success')
+        }
       })
     }
   },
@@ -146,7 +166,6 @@ export default {
       handler: function (val, oldVal) {
         if (this.sex !== '' && this.sex != null) {
           this.sexShow = true
-          console.log('sex改变了')
         }
       }
     },
@@ -154,7 +173,6 @@ export default {
       handler: function (val, oldVal) {
         if (this.age !== '' && this.age != null) {
           this.ageShow = true
-          console.log('age改变了')
         }
       }
     }
@@ -162,7 +180,6 @@ export default {
   },
   mounted: function () {
     this.getUserInfo()
-    // console.log(this.p)
   },
   // 计算属性
   computed: {
@@ -174,7 +191,55 @@ export default {
   }
 }
 </script>
+
+<style lang="stylus">
+  @import "~styles/mixins.styl";
+  .setItemPop
+    width 100%
+    height 148px
+    line-height 148px
+    background #fff
+    box-sizing border-box
+    padding 0 70px 0 50px
+  .setProperty
+    width auto
+    height 148px
+    line-height 148px
+    font-size 46px
+    color #262626
+  .setIcon
+    float right
+    width 24px
+    height 45px
+    bgImage('/static/icons/enterNextGray')
+    margin-top 51px
+  .setInfoInput
+    width auto
+    height 146px
+    line-height 140px
+    font-size 46px
+    color #808080
+    float right
+    text-align right
+  ::-webkit-input-placeholder {
+      color: #CCCCCC;
+  }
+  ::-moz-placeholder {
+      color: #CCCCCC;
+  }
+  :-ms-input-placeholder {
+      color: #CCCCCC;
+  }
+  :-moz-placeholder {
+      color: #CCCCCC;
+  }
+</style>
 <style lang="stylus" scoped>
+.wrapper
+  width 100%
+  box-sizing border-box
+  padding-top 132px
+  background #fff
 .userInfoSetCon
   width 100%
   background #F5F5F5
@@ -191,6 +256,19 @@ export default {
     height 200px
     float right
     margin-top 50px
+    position relative
+    overflow hidden
+    .headerImgFile
+      position absolute
+      left 0
+      top 0
+      width 100%
+      height 100%
+      opacity 0
+    img
+      display block
+      width 100%
+      height 100%
   span
     height 300px
     line-height 300px

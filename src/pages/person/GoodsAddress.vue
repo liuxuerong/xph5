@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <userinfo-header title="新增地址" oper=""></userinfo-header>
+    <userinfo-header :title="title" oper=""></userinfo-header>
     <div class="addressConter">
       <div class="addressItem border-bottom">
         <span>联系人</span>
@@ -20,7 +20,7 @@
       </div>
       <div class="addressItem border-bottom">
         <span>设为默认</span>
-        <input type="checkbox" v-model="idDefault">
+        <em class="checkboxInput" :class="{active:idDefault}"><input type="checkbox" v-model="idDefault"></em>
       </div>
       <button class="addressSubmit" @click="addressSubmit">确定</button>
       <mt-popup
@@ -35,12 +35,15 @@
 <script>
 import UserinfoHeader from './ComUserSetHeader'
 import { Picker, Popup, Toast } from 'mint-ui'
-import { addDelivery } from 'util/netApi'
+import { addDelivery, updateDelivery, idDelivery } from 'util/netApi'
 import { http } from 'util/request'
+import router from '@/router/index.js'
+import notice from 'util/notice.js'
 const cityJson = require('./address.json')
 export default {
   data () {
     return {
+      title: '',
       receiverName: '',
       province: '',
       city: '',
@@ -51,6 +54,7 @@ export default {
       idDefault: '',
       postalCode: '',
       popupVisible: false,
+      type: Number,
       addressSlots: [
         {
           flex: 1,
@@ -106,28 +110,93 @@ export default {
     'mt-popup': Popup
   },
   methods: {
+    // 修改地址渲染
+    addressRender () {
+      let id = this.$route.params.id
+      http(idDelivery, [id]).then((response) => {
+        console.log(response)
+        if (response.data.code === 0) {
+          let data = response.data.body
+          this.receiverName = data.receiverName
+          this.phone = data.phone
+          this.addressName = data.province + ' / ' + data.city + ' / ' + data.area
+          this.detailedAddr = data.detailedAddr
+          if (data.idDefault === 1) {
+            this.idDefault = true
+          } else {
+            this.idDefault = false
+          }
+        }
+      })
+    },
+    // 地址提交
     addressSubmit () {
-      let param = {
-        receiverName: this.receiverName,
-        province: this.province,
-        city: this.city,
-        area: this.area,
-        detailedAddr: this.detailedAddr,
-        addressName: this.addressName,
-        phone: this.phone,
-        idDefault: this.idDefault ? 1 : 0,
-        postalCode: this.postalCode
-      }
-      if (this.rigthData && this.rigthNull) {
-        http(addDelivery, param).then((response) => {
-          console.log(response)
-        })
+      let type = this.$route.params.type
+      // 1  新增加地址
+      // 2  修改地址
+      if (type === 1) {
+        let param = {
+          receiverName: this.receiverName,
+          province: this.province,
+          city: this.city,
+          area: this.area,
+          detailedAddr: this.detailedAddr,
+          addressName: this.addressName,
+          phone: this.phone,
+          idDefault: this.idDefault ? 1 : 0,
+          postalCode: this.postalCode
+        }
+        if (this.rigthData && this.rigthNull) {
+          http(addDelivery, param).then((response) => {
+            console.log(response)
+            if (response.data.code === 0) {
+              notice.toast('添加地址成功', '2000', 'success', function () {
+                router.pash('./personCenter')
+              })
+            }
+          }).catch((err) => {
+            console.log(err)
+          })
+        } else {
+          Toast({
+            message: '请确认填写信息是否正确',
+            position: 'bottom',
+            duration: 5000
+          })
+        }
       } else {
-        Toast({
-          message: '请确认填写信息是否正确',
-          position: 'bottom',
-          duration: 5000
-        })
+        let id = this.$route.params.id
+        let params = {
+          receiverName: this.receiverName,
+          province: this.province,
+          city: this.city,
+          area: this.area,
+          detailedAddr: this.detailedAddr,
+          addressName: this.addressName,
+          phone: this.phone,
+          idDefault: this.idDefault ? 1 : 0,
+          id: id,
+          postalCode: this.postalCode
+
+        }
+        if (this.rigthData && this.rigthNull) {
+          http(updateDelivery, params).then((response) => {
+            console.log(response)
+            if (response.data.code === 0) {
+              notice.toast('修改地址成功', '2000', 'success', function () {
+                router.pash('./personCenter')
+              })
+            }
+          }).catch((err) => {
+            console.log(err)
+          })
+        } else {
+          Toast({
+            message: '请确认填写信息是否正确',
+            position: 'bottom',
+            duration: 5000
+          })
+        }
       }
     },
     // 添加地址
@@ -153,12 +222,22 @@ export default {
         let street = this.xianObj[this.area]
         this.streetSlots[0].values = street
       }
+    },
+    // 监测路由发生变化  则刷新页面
+    '$route' (to, from) {
+      this.$router.go(0)
     }
   },
-  created () {
-
-  },
   mounted () {
+    console.log(9999)
+    let type = this.$route.params.type
+    if (type === '1') {
+      this.title = '新增地址'
+    } else if (type === '2') {
+      this.title = '修改地址'
+      this.type = 2
+      this.addressRender()
+    }
     // this.$nextTick(() => {
     //   setTimeout(() => { // 这个是一个初始化默认值的一个技巧
     //     this.addressSlots[0].defaultIndex = 0
@@ -168,8 +247,11 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
+  @import "~styles/mixins.styl";
   .wrapper
     background #F5F5F5
+    box-sizing border-box
+    padding-top 100px
   .addressConter
     width 100%
     background #ffffff
@@ -209,6 +291,21 @@ export default {
     background #F0F0F0
   .addressBox
     width 100%
+  .checkboxInput
+    float right
+    width 50px
+    height 50px
+    line-height 50px
+    margin-top 42px
+    bgImage('/static/icons/payUnchecked')
+    input
+      display block
+      width 100%
+      height 100%
+      opacity 0
+  .checkboxInput.active
+    bgImage('/static/icons/paySelect')
+
   ::-webkit-input-placeholder {
     color: #ccc;
     font-size 40px

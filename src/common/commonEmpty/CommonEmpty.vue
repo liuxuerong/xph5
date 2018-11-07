@@ -56,6 +56,7 @@ export default {
       padding 0 60px
       border-radius 4px
       background #F5F5F5
+      margin-top 92px
 </style>
 <style lang="stylus">
   body,html,#app

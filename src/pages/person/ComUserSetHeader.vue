@@ -37,7 +37,10 @@ export default {
 	height 130px
 	box-sizing border-box
 	padding 0 50px
-	position relative
+	position fixed
+	left 0
+	top 0
+	z-index 99
 	background #fff
 	.prevOper
 		display block

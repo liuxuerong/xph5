@@ -2,7 +2,9 @@
     <div class="userInfoTop border-bottom">
 		<span class="prevOper" @click="backPrevOper"></span>
 		<h3 class="userInfoTitle">{{title}}</h3>
-		<span v-show="oper" class="comOperSearch"></span>
+		<span v-if="oper == 1" :class="oper == 1 ? 'comOperSearch' : ''"></span>
+		<!-- 评论完成提交 -->
+		<span v-if="oper == 3" :class="oper == 3 ? 'commentSubmit' : ''" @click="commentSubmit">完成</span>
 	</div>
 </template>
 <script>
@@ -10,15 +12,16 @@ export default {
   // 接受父级数据
   props: {
     title: '',
-    oper: Boolean
+    oper: Number
   },
   methods: {
     // 返回上一步
     backPrevOper: function () {
       this.$router.back(-1)
     },
-    perCompleteOper: function () {
-      this.$emit('operComplete')
+    // 评论提交
+    commentSubmit: function () {
+      this.$emit('commentSubmit')
     }
   },
   mounted: function () {
@@ -69,5 +72,12 @@ export default {
 		width 60px
 		height 60px
 		background red
+		margin-top 30px
+	.commentSubmit
+		float right
+		width auto
+		height 60px
+		font-size 40px
+		color #808080
 		margin-top 30px
 </style>

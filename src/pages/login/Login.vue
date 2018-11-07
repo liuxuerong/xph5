@@ -15,6 +15,9 @@
           <input type="password" placeholder="密码" name="password" maxlength="12" v-model="password" />
           <router-link to="/remberPassword" class="passWordOper">忘记密码？</router-link>
         </div>
+        <!-- <button class="loginBtn" @click="loginBtnClick">登录</button>
+        <router-link to="/phoneCode" class="phoneCodeLogin">手机验证码登录</router-link>
+        <span class="loginTipText">未注册的手机号码验证后自动创建星品账户</span> -->
       </form>
     </div>
     <button class="loginBtn" @click="loginBtnClick">登录</button>

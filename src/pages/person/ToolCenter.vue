@@ -350,14 +350,14 @@ export default {
           width 116px
           height 128px
           margin 0 auto
-         .memberGradeIcon01
-            bgImage('/static/icons/menberGrade01')
-          .memberGradeIcon02
-            bgImage('/static/icons/menberGrade02')
-          .memberGradeIcon03
-            bgImage('/static/icons/menberGrade03')
-          .memberGradeIcon04
-            bgImage('/static/icons/menberGrade04')
+        .memberGradeIcon01
+          bgImage('/static/icons/menberGrade01')
+        .memberGradeIcon02
+          bgImage('/static/icons/menberGrade02')
+        .memberGradeIcon03
+          bgImage('/static/icons/menberGrade03')
+        .memberGradeIcon04
+          bgImage('/static/icons/menberGrade04')
         span
           width 100%
           height 40px
