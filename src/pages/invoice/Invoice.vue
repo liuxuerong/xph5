@@ -5,28 +5,27 @@
         确定
       </div>
     </common-nav-header>
-    <div class="xpInvoiceWrap">
-
-        <group title="发票信息" ref="info">
+    <div class="xpInvoiceWrap" ref="xpInvoiceWrap">
+      <group title="发票信息" ref="info">
         <radio :options="invoiceType" @on-change="changeInvoiceType" v-model="inputForm.invoiceTypeValue"></radio>
       </group>
-      <group title="发票类型" >
+      <group title="发票类型">
         <radio :options="invoiceStatus" @on-change="changeInvoiceStatus" v-model="inputForm.invoiceStatusValue"></radio>
       </group>
       <group>
-        <radio :options="invoiceStyle"  v-model="inputForm.invoiceStyleValue"></radio>
+        <radio :options="invoiceStyle" v-model="inputForm.invoiceStyleValue"></radio>
       </group>
-      <group title="发票抬头" v-show="headeShow">
-        <x-input  placeholder="发票抬头" v-model="inputForm.remark"></x-input>
+      <group title="发票抬头" v-if="headeShow">
+        <x-input placeholder="发票抬头" v-model.trim="inputForm.remark" v-validate="'required'" @blur="$v.inputForm.remark.$touch()" required></x-input>
       </group>
-      <group title="企业信息" v-show="infoAllShow">
-        <x-input placeholder="公司名称" v-model="inputForm.name"></x-input>
-        <x-input placeholder="纳税人识别号"  v-model="inputForm.idCode"></x-input>
-        <div v-show="infoShow">
-          <x-input placeholder="公司地址" v-model="inputForm.companyAddress"></x-input>
-          <x-input placeholder="联系电话" v-model="inputForm.phone"></x-input>
-          <x-input placeholder="开户地" v-model="inputForm.bank"></x-input>
-          <x-input placeholder="开户账号" v-model="inputForm.accountNumber"></x-input>
+      <group title="企业信息" v-if="infoAllShow">
+        <x-input placeholder="公司名称" v-model.trim="inputForm.name"></x-input>
+        <x-input placeholder="纳税人识别号" v-model.trim="inputForm.idCode"></x-input>
+        <div v-if="infoShow">
+          <x-input placeholder="公司地址" v-model.trim="inputForm.companyAddress"></x-input>
+          <x-input placeholder="联系电话" v-model.trim="inputForm.phone"></x-input>
+          <x-input placeholder="开户地" v-model.trim="inputForm.bank"></x-input>
+          <x-input placeholder="开户账号" v-model.trim="inputForm.accountNumber"></x-input>
         </div>
       </group>
       <group title="附件">
@@ -47,6 +46,9 @@ import {
 import {
   addInvoice
 } from 'util/netApi'
+import {
+  Toast
+} from 'mint-ui'
 import {
   Radio,
   Group,
@@ -90,11 +92,26 @@ export default {
   computed: {
 
   },
-  watch: {
-
-  },
   methods: {
+    toastShow (text) {
+      Toast({
+        message: text,
+        position: 'center',
+        duration: 1000
+      })
+    },
     submit: function () {
+      let input = document.getElementsByTagName('input')
+      for (var i = 0; i < input.length; i++) {
+        if (input[i].type === 'text') {
+          if (input[i].placeholder !== '其他') {
+            if (input[i].value.trim() === '') {
+              this.toastShow(input[i].placeholder + '不能为空')
+              return
+            }
+          }
+        }
+      }
       if (this.inputForm.invoiceStatusValue === '增值税普票') {
         this.inputForm.invoiceStatus = 1
       } else {
@@ -140,6 +157,8 @@ export default {
         this.infoShow = false
       }
     }
+  },
+  created () {
   }
 }
 </script>
