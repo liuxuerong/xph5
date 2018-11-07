@@ -45,7 +45,7 @@
         <li v-else>备注：{{list.desc}}</li>
       </ul>
     </div>
-    <div class="orderOperBtn orderOperBtn8 border-top" v-if="orderStatus === 6">交易关闭</div>
+    <div class="orderOperBtn orderOperBtn8 border-top" v-if="orderStatus === 6">审核中</div>
   </div>
 </template>
 <script>

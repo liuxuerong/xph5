@@ -23,7 +23,6 @@
             </div>
             <span class="goodsPrice">￥ {{item.price}}</span>
             <span class="goodsNum">×{{item.num}}</span>
-
           </div>
         </div>
       </div>
@@ -49,7 +48,13 @@
     </div>
     <div class="orderOperBtn orderOperBtn8 border-top" v-if="orderStatus == '8'">支付超时</div>
     <div class="orderOperBtn orderOperBtn8 border-top" v-if="orderStatus == '6'">交易关闭</div>
-    <div class="orderOperBtn orderOperBtn11 border-top" v-if="orderStatus == '11'">
+    <!-- 未发货退款 -->
+    <div class="orderOperBtn orderOperBtn11 border-top" v-if="orderStatus == '11' || orderStatus == '1'">
+      <span @click="unGoodsapplyRefund(list.orderSn)">申请退款</span>
+      <span>已付款</span>
+    </div>
+    <!-- 已发货，分单退款 -->
+    <div class="orderOperBtn orderOperBtn11 border-top" v-if="orderStatus == '9' || orderStatus == '10'">
       <span @click="unGoodsapplyRefund(list.orderId)">申请退款</span>
       <span>已付款</span>
     </div>
@@ -86,12 +91,14 @@ export default {
         console.log(memberOrderGoods)
         if (data.status === 2) {
           this.title = '待发货订单'
-        } else if (data.status === 3 || data.status === 7) {
+        } else if (data.status === 7) {
           this.title = '交易关闭'
         } else if (data.status === 8) {
           this.title = '支付超时'
         } else if (data.status === 4) {
           this.title = '待评价订单'
+        } else if (memberOrderGoods.orderItemStatus === 1) {
+          this.title = '待发货订单'
         }
         if (memberOrderGoods.orderItemStatus === undefined && data.status === 8) {
           this.orderStatus = 8 // 交易关闭
@@ -99,6 +106,8 @@ export default {
           this.orderStatus = 11 // 未发货退款
         } else if (memberOrderGoods.orderItemStatus === 6) {
           this.orderStatus = 6 // 交易关闭
+        } else if (memberOrderGoods.orderItemStatus === 1) {
+          this.orderStatus = 1
         }
       })
     },

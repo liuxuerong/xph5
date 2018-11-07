@@ -31,7 +31,16 @@ import OrderDetails from '@/pages/order/OrderDetails'
 import ImmedPayment from '@/pages/order/ImmedPayment'
 import AfterSaleOrder from '@/pages/order/AfterSaleOrder'
 import ApplyRefund from '@/pages/order/ApplyRefund'
-
+import ImmedEvaluate from '@/pages/order/ImmedEvaluate'
+import SoftwareSeting from '@/pages/person/SoftwareSeting'
+import Agreement from '@/pages/person/Agreement'
+import FeedBack from '@/pages/person/FeedBack'
+import AboutUs from '@/pages/person/AboutUs'
+import MemberCode from '@/pages/person/MemberCode'
+import IntegralDetails from '@/pages/person/IntegralDetails'
+import IntegralRule from '@/pages/person/IntegralRule'
+import CardVoucher from '@/pages/person/CardVoucher'
+import CardDetails from '@/pages/person/CardDetails'
 Vue.use(Router)
 
 const router = new Router({
@@ -124,7 +133,7 @@ const router = new Router({
       component: PerUserInfoSet
     },
     {
-      path: '/goodsAddress',
+      path: '/goodsAddress/:type/:id',
       name: 'goodsAddress',
       component: GoodsAddress
     },
@@ -171,6 +180,56 @@ const router = new Router({
       path: '/applyRefund/:type/:orderId',
       name: 'applyRefund',
       component: ApplyRefund
+    },
+    {
+      path: '/immedEvaluate/:orderCode',
+      name: 'immedEvaluate',
+      component: ImmedEvaluate
+    },
+    {
+      path: '/softwareSeting',
+      name: 'softwareSeting',
+      component: SoftwareSeting
+    },
+    {
+      path: '/agreement',
+      name: 'agreement',
+      component: Agreement
+    },
+    {
+      path: '/feedBack',
+      name: 'feedBack',
+      component: FeedBack
+    },
+    {
+      path: '/aboutUs',
+      name: 'aboutUs',
+      component: AboutUs
+    },
+    {
+      path: '/memberCode',
+      name: 'memberCode',
+      component: MemberCode
+    },
+    {
+      path: '/integralDetails',
+      name: 'integralDetails',
+      component: IntegralDetails
+    },
+    {
+      path: '/integralRule',
+      name: 'integralRule',
+      component: IntegralRule
+    },
+    {
+      path: '/cardVoucher',
+      name: 'cardVoucher',
+      component: CardVoucher
+    },
+    {
+      path: '/cardDetails/:type/:id',
+      name: 'cardDetails',
+      component: CardDetails
     }
   ]
 })
