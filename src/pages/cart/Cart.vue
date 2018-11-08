@@ -15,9 +15,9 @@
           <goods-item  v-for="item in disabledCartList" :key="item.id" :goodsItem="item"></goods-item>
         </div>
       </div>
+      <common-empty v-if="goodsList.length<1" :emptyObj="emptyObj"/>
     </div>
     <cart-operate  v-if="goodsList.length" :showModify="showModify"/>
-    <common-empty v-if="goodsList.length<1" :emptyObj="emptyObj"/>
   </div>
 </template>
 
@@ -54,7 +54,7 @@ export default {
         emptyBold: '购物车是空的',
         emptyP: '好多新上架的商品在等着您哟~',
         buttonText: '去购物',
-        buttonRouter: null
+        buttonRouter: '/goods'
       },
       cartList: [],
       disabledCartList: [],
@@ -137,6 +137,8 @@ export default {
       top 0
     .goodsWrap
       height 100%
+    .commonEmpty
+      background-color #fff
 .disabledWrap
   .empty
     height 138px

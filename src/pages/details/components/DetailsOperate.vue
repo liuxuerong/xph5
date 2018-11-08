@@ -4,7 +4,7 @@
       <span class="udesk"></span>
       <span class="collect" :class="{active:collect}" @click="doCollection(params)"></span>
       <router-link to="/cart" class="cart">
-        <i class="num" v-show="cartNum">{{cartNum}}</i>
+        <i class="num" v-show="cartNum != 0">{{cartNum}}</i>
       </router-link>
     </div>
     <ul class="operateRight">
