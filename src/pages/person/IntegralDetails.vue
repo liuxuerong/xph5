@@ -8,15 +8,23 @@
     <div class="integralCon">
       <div class="integralConTitle">积分明细</div>
       <div class="integralDataShow" v-if="emptyShow">
-        <div class="integralItem border-bottom" v-for="(item,index) in list" :key="index">
+        <div class="integralItem border-bottom" v-for="item in list" :key="item.id">
           <div class="top">
             <div class="left">
-              <img src="" alt="">
+              <img v-if="item.image !== undefined || item.image !== ''" :src="imageUrl+item.image" alt="">
               <h3>东莞旗舰店购物东莞旗舰店最多二十四哟我也个字是...</h3>
             </div>
-            <div class="right"></div>
+            <div class="right" :class="item.type=='1'||item.type=='5'?'active':''">{{item.integral}}.0</div>
           </div>
-          <div class="bottom"><span>购物送积分</span><span>2018-09-25  16:00:00</span></div>
+          <div class="bottom">
+            <span v-if="item.type=='1'">购物送积分</span>
+            <span v-if="item.type=='2'">积分商城扣除</span>
+            <span v-if="item.type=='3'">线下活动扣除</span>
+            <span v-if="item.type=='4'">过期清除</span>
+            <span v-if="item.type=='5'">活动送积分</span>
+            <span v-if="item.type=='6'">活动扣积分</span>
+            <span>{{item.createTime.split('T')[0]}}&nbsp;&nbsp;{{item.createTime.split('T')[1]}}</span>
+          </div>
         </div>
       </div>
       <common-empty v-else :emptyObj="emptyObj"/>
@@ -29,12 +37,14 @@ import UserinfoHeader from './ComUserSetHeader'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
 import {getMemberIntegral} from 'util/netApi'
 import {http} from 'util/request'
+import { config } from 'util/config'
 export default {
   data () {
     return {
       list: [],
       totalIntegral: '',
       emptyShow: false,
+      imageUrl: config.imageUrl, // 图片路径
       emptyObj: {
         emptyImg: '/static/images/emptyIntegral.png',
         emptyBold: '暂无积分',
@@ -74,6 +84,8 @@ export default {
 }
 </script>
 <style lang="stylus">
+  html,body
+    background #F5F5F5
   .commonEmpty
     background-color #fff!important
     padding-top 400px!important
@@ -86,7 +98,6 @@ export default {
     width 100%
     box-sizing border-box
     padding-top 132px
-    background #F5F5F5
   .integralHeader
     width 100%
     height 520px
@@ -110,6 +121,7 @@ export default {
       color #552F1A
   .integralCon
     width calc(100% - 100px)
+    min-height 1600px
     margin 0 auto
     position relative
     top -140px
@@ -151,20 +163,31 @@ export default {
             margin-right 32px
           h3
             float left
+            width 80%
+            height 100px
+            line-height 50px
             font-size 40px
             font-weight bold
             color #262626
+            overflow: hidden;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
         .right
           float right
           height 100px
           line-height 100px
           font-size 46px
+          box-sizing border-box
+          padding-right 50px
           font-weight bold
+          color #999999
+        .right.active
           color #BA825A
       .bottom
         width 100%
-        line-height 30px
+        line-height 60px
         span
           font-size 30px
           color #999
+          margin-right 50px
 </style>

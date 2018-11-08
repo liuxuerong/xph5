@@ -186,8 +186,8 @@ const router = new Router({
       component: GoodsAddress
     },
     {
-      path: '/addressAdmind',
-      name: 'addressAdmind',
+      path: '/addressAdmin',
+      name: 'addressAdmin',
       component: AddressAdmind
     },
     {

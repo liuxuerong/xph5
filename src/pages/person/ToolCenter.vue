@@ -6,14 +6,15 @@
         <h3 class="userInfoTitle">个人中心</h3>
       </div>
       <div class="centerHeaderBot">
-        <img src="../../../static/images/memberHeader@3x.png" alt="">
+        <img v-if="headImage === undefined" src="/static/images/memberHeader.png" class="headerImg">
+        <img v-else :src="imageUrl+headImage" class="headerImg">
         <div class="headerInfoText">
           <h3>{{name}}</h3>
           <span class="memberGrade">
-            <i class="memberGradeIcon memberGradeIcon01" v-if="memberLevelName === '普卡会员'"></i>
-            <i class="memberGradeIcon memberGradeIcon02" v-else-if="memberLevelName === '银卡会员'"></i>
-            <i class="memberGradeIcon memberGradeIcon03" v-else-if="memberLevelName === '金卡会员'"></i>
-            <i class="memberGradeIcon memberGradeIcon04" v-else-if="memberLevelName === '钻卡会员'"></i>
+            <i class="memberGradeIcon memberGradeIcon01" v-if="memberLevelName === '普卡'"></i>
+            <i class="memberGradeIcon memberGradeIcon02" v-else-if="memberLevelName === '银卡'"></i>
+            <i class="memberGradeIcon memberGradeIcon03" v-else-if="memberLevelName === '金卡'"></i>
+            <i class="memberGradeIcon memberGradeIcon04" v-else-if="memberLevelName === '钻卡'"></i>
             {{memberLevelName}}
           </span>
           <div class="stopTimeTips">
@@ -23,16 +24,16 @@
         </div>
       </div>
     </div>
-    <div class="gradeTips">您距离下一年延续 {{memberLevelName}} 还有<span>{{protectMemberLevel}} 元</span>的距离</div>
+    <div class="gradeTips">您距离下一年延续 {{memberLevelName}}会员 还有<span>{{protectMemberLevel}} 元</span>的距离</div>
     <div class="toolCon">
       <person-title content="我的会员成长" :moreShow="moreShow"></person-title>
       <div class="inteShow">累计消费<span>{{integral}}</span>,还剩<span> {{upgradeIntegral}} </span>可升为 {{nextMemberLevelName}}</div>
       <div ref="memberGrade" class="indexNavWrapper">
         <ul class="memberGradeScroll">
-          <li :class="memberLevelName === '普卡会员'?'active':''"><i class="memberGradeIcon01"></i><span>普卡</span></li>
-          <li :class="memberLevelName === '银卡会员'?'active':''"><i class="memberGradeIcon02"></i><span>银卡</span></li>
-          <li :class="memberLevelName === '金卡会员'?'active':''"><i class="memberGradeIcon03"></i><span>金卡</span></li>
-          <li :class="memberLevelName === '钻卡会员'?'active':''"><i class="memberGradeIcon04"></i><span>钻卡</span></li>
+          <li :class="memberLevelName === '普卡'?'active':''"><i class="memberGradeIcon01"></i><span>普卡</span></li>
+          <li :class="memberLevelName === '银卡'?'active':''"><i class="memberGradeIcon02"></i><span>银卡</span></li>
+          <li :class="memberLevelName === '金卡'?'active':''"><i class="memberGradeIcon03"></i><span>金卡</span></li>
+          <li :class="memberLevelName === '钻卡'?'active':''"><i class="memberGradeIcon04"></i><span>钻卡</span></li>
         </ul>
       </div>
       <person-title content="会员福利及权益" :moreShow="moreShow"></person-title>
@@ -74,6 +75,7 @@ import PersonTitle from './ComCenterSmillTitle'
 import BScroll from 'better-scroll'
 import {memberData} from 'util/netApi'
 import {http} from 'util/request'
+import { config } from 'util/config'
 export default {
   data () {
     return {
@@ -83,8 +85,10 @@ export default {
       memberLevelName: '', // 会员等级
       nextMemberLevelName: '', // 下一个等级
       protectMemberLevel: Number, // 保级积分
-      upgradeIntegral: Number, // 升级积分
-      active: '1'
+      upgradeIntegral: 0, // 升级积分
+      active: '1',
+      imageUrl: config.imageUrl, // 图片路径
+      headImage: ''
     }
   },
   components: {
@@ -101,17 +105,18 @@ export default {
         console.log(response)
         let data = response.data.body
         this.name = data.name
+        this.headImage = data.headImage
         this.integral = data.integral
         this.memberLevelName = data.memberLevelName
-        if (data.memberLevelName === '普卡会员') {
+        if (data.memberLevelName === '普卡') {
           this.nextMemberLevelName = '银卡会员'
-          this.upgradeIntegral = 2000 - data.integral
+          this.upgradeIntegral = (2000 - data.integral)
           this.protectMemberLevel = 0
-        } else if (data.memberLevelName === '银卡会员') {
+        } else if (data.memberLevelName === '银卡') {
           this.nextMemberLevelName = '金卡会员'
           this.upgradeIntegral = 5000 - data.integral
           this.protectMemberLevel = 1000 - data.integral
-        } else if (data.memberLevelName === '金卡会员') {
+        } else if (data.memberLevelName === '金卡') {
           this.nextMemberLevelName = '钻石会员'
           this.upgradeIntegral = 10000 - data.integral
           this.protectMemberLevel = 3000 - data.integral

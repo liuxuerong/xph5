@@ -32,7 +32,7 @@
           <span class="goodsDiscount">优惠金额<p>￥ {{list.offerAmount}}</p></span>
         </div>
         <div class="orderTotalPrice">
-          实付：￥{{list.totalAmount}}
+          实付：￥{{list.actualPrice}}
         </div>
       </div>
       <ul class="orderOther">

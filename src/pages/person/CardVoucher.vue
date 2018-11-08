@@ -8,7 +8,7 @@
         </div>
       </div>
       <div class="cardVoucherPage" v-if="index === 0 && list.length > 0">
-        <div class="cardVouItem" v-for="(item,index) in list" :key="index" @click="cardDetailsPages(item.applyType,item.id)">
+        <div class="cardVouItem" v-for="(item,index) in list" :key="index" @click="cardDetailsPages(item.useStatus,item.id,item)">
           <div class="top">
             <div class="left">
               <span v-if="item.type == '1' || item.type == '3'">￥<i>{{item.subMoney}}</i></span>
@@ -64,6 +64,11 @@ import UserinfoHeader from './ComUserSetHeader'
 import { Tab, TabItem } from 'vux'
 import {coupon} from 'util/netApi'
 import {http} from 'util/request'
+import {storage} from 'util/storage'
+import {
+  mapMutations,
+  mapState
+} from 'vuex'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
 export default {
   data () {
@@ -87,6 +92,7 @@ export default {
     CommonEmpty
   },
   methods: {
+    ...mapMutations(['changeListObj']),
     // 卡券页面渲染
     cardVoucherRender () {
 
@@ -125,13 +131,21 @@ export default {
       }
     },
     // 卡券详情
-    cardDetailsPages (type, id) {
-      router.push('./cardDetails/' + type + '/' + id)
+    cardDetailsPages (type, id, item) {
+      if (type === 2) {
+        router.push('./cardDetails/' + type + '/' + id)
+      } else {
+        storage.setLocalStorage('card', item)
+        router.push('./cardDetails/' + type + '/' + id)
+      }
     }
   },
   mounted () {
     this.headleTabsChange(0)
   },
+  computed: mapState({
+    listObj: state => state.card.listObj
+  }),
   watch: {
     '$route' (to, from) {
       this.$router.go(0)

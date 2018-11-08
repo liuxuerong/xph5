@@ -32,7 +32,7 @@
     <div class="perOrder">
       <!-- 我的订单 -->
       <order-index :orderNum="orderNum" v-if="orderNum"></order-index>
-      <person-title content="我的地址" :moreShow="hasAddress"></person-title>
+      <!-- <person-title content="我的地址" :moreShow="hasAddress"></person-title>
       <div class="addressBox" v-if="!hasAddress">
         <router-link to="./goodsAddress/1" class="goToAdd">去添加</router-link>
         <span class="buttonTips">您还没有添加地址</span>
@@ -43,13 +43,13 @@
           <span>{{phone}}</span>
         </div>
         <div class="addressText">{{address}}</div>
-      </div>
-      <person-title content="我的收藏" :moreShow="hasGoodsColl"></person-title>
-      <div class="collectBox" v-if="!hasGoodsColl">
+      </div> -->
+      <person-title content="我的收藏" :moreShow="collNum.goodsCount > 0"></person-title>
+      <div class="collectBox" v-if="collNum.goodsCount < 1">
         <router-link to="/find" class="goToAdd">去逛逛</router-link>
         <span class="buttonTips">您还没有商品收藏</span>
       </div>
-      <div class="collectBox" v-else-if="hasGoodsColl">
+      <div class="collectBox" v-else>
         <!-- 有收藏商品 -->
         <div class="goodsCollImg">
           <img :src="item" alt="" v-for="(item , index) in goodsCollArr" :key="index">
@@ -57,14 +57,54 @@
       </div>
       <div class="collectNumber">
         <div class="collectNumItem left">
-          <p>商品收藏</p><span>{{goodsCollNum}}</span>
+          <p>商品收藏</p><span>{{collNum.goodsCount}}</span>
         </div>
         <div class="collectNumItem list">
-          <p>内容收藏</p><span>{{articleCollNum}}</span>
+          <p>内容收藏</p><span>{{collNum.contentCount}}</span>
         </div>
       </div>
       <person-title content="优惠卡券" :moreShow="moreShow"></person-title>
-      <div class="emptyDiscountBg"></div>
+      <div ref="memberGrade" class="emptyDiscountBg">
+        <!-- @click="cardVoucher" -->
+        <ul class="memberGradeScroll clearfix" ref="cardScrollWidth" >
+          <li class="cardVolItem" v-for="item in coupons" :key="item.id" @click="cardVoucher">
+            <div class="left">
+              <span v-if="item.type == '1' || item.type == '3'">￥<i>{{item.subMoney}}</i></span>
+              <span v-else-if="item.type == '2'"><i>{{item.discount.toString().split('.')[1]}}</i> 折</span>
+              <p v-if="item.applyType == '1'">通用券</p>
+              <p v-if="item.applyType == '2'">app专享</p>
+              <p v-if="item.applyType == '3'">门店专享</p>
+            </div>
+            <div class="right">
+              <h3>{{item.name}}</h3>
+              <div class="displayBtn">
+                <div v-if="item.condMoney != '0'" class="fullSub">
+                  <span v-if="item.range == '1'">满{{item.condMoney}}.0可用(限指定商品)</span>
+                  <span v-if="item.range == '2'">满{{item.condMoney}}.0可用(限指定门店)</span>
+                  <span v-if="item.range == '3'">满{{item.condMoney}}.0可用(限指定分类)</span>
+                  <span v-if="item.range == '4'">满{{item.condMoney}}.0可用</span>
+                </div>
+                <div v-else class="fullSub">
+                  <span>无门槛</span>
+                </div>
+                <router-link to="/" class="operBtn newReceive" v-if="item.useStatus == '1'">立即领取</router-link>
+                <router-link to="/" class="operBtn newUse" v-if="item.useStatus == '2'">立即使用</router-link>
+                <router-link to="/" class="operBtn noReceive" v-if="item.useStatus == '3'">领光了</router-link>
+              </div>
+              <div class="activityTime">
+                <!-- 立即领取 可以领取-->
+                <span v-if="item.useStatus == '1'" class="activityTime">领取时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
+                <!-- 立即使用  到达使用时间-->
+                <span v-else-if="item.useStatus == '2' && item.display=='2'" class="countDown">{{item.invalidDay}}天后过期</span>
+                <!-- 立即使用 未到达使用时间 -->
+                <span v-else-if="item.useStatus == '2' && item.display=='1'">使用时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
+                <!-- 领光了 -->
+                <span v-if="item.useStatus == '3'" class="activityTime">领取时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
       <person-title content="可能感兴趣的活动" :moreShow="moreShow"></person-title>
       <div class="emptyAmusingBg"></div>
       <person-title content="必备工具" :moreShow="moreShow"></person-title>
@@ -98,6 +138,7 @@ import {http} from 'util/request'
 import PersonTitle from './ComCenterSmillTitle'
 import OrderIndex from '../order/OrderIndex'
 import { config } from 'util/config'
+import BScroll from 'better-scroll'
 export default {
   data () {
     return {
@@ -106,13 +147,13 @@ export default {
       hasAddress: false,
       imageUrl: config.imageUrl, // 图片路径
       memberHead: '',
+      collNum: [], // shangp收藏数量
+      coupons: [], // 卡券
       addName: '',
       phone: '',
       address: '',
       moreShow: false,
-      hasGoodsColl: false,
       goodsCollArr: [],
-      goodsCollNum: 0,
       articleCollNum: 0,
       footprintNum: 0,
       orderNum: null// 订单数量
@@ -130,13 +171,30 @@ export default {
     // 基础信息加载
     getUserInfo () {
       http(memberCenter).then((response) => {
-        console.log(response)
+        // console.log(response)
         let data = response.data.body
-        console.log(data)
+        this.coupons = data.coupons
+        this.$refs.cardScrollWidth.style.width = (this.coupons.length * 970 - 50) / 112.5 + 'rem'
+
         this.list = response.data.body
         this.name = data.memberName
         this.orderNum = data.orderCount
         this.memberHead = data.memberHead
+        // 商品收藏
+        this.collNum = data.collections.collectionCounts
+        console.log(data.collections.collectionCounts)
+        let goodsArr = data.collections.collectionGoods
+        if (goodsArr.length > 0) {
+          if (goodsArr.length > 3) {
+            for (let i = 0; i < 3; i++) {
+              this.goodsCollArr.push(config.imageUrl + goodsArr[i].goodsPics[0].value)
+            }
+          } else {
+            for (let i = 0; i < goodsArr.length; i++) {
+              this.goodsCollArr.push(config.imageUrl + goodsArr[i].goodsPics[0].value)
+            }
+          }
+        }
       })
     },
     // 基础资料设置
@@ -175,12 +233,9 @@ export default {
         page: 1
       }
       http(goodscollectionList, params).then((response) => {
-        // console.log(response)
         let data = response.data.body
         if (data.list.length > 1) {
-          this.hasGoodsColl = true
-          this.goodsCollNum = data.list.length
-          if (data.list.length > 3) {
+          if (data.collections.collectionGoods.length > 3) {
             for (let i = 0; i < 3; i++) {
               this.goodsCollArr.push(config.imageUrl + data.list[i].goodsImage)
             }
@@ -207,6 +262,10 @@ export default {
       } else {
         router.push('./ToolCusser')
       }
+    },
+    // 优惠卡券
+    cardVoucher () {
+      router.push('./cardVoucher')
     }
   },
 
@@ -218,11 +277,19 @@ export default {
     } else {
       // 基础信息加载
       this.getUserInfo()
-      // 我的地址
-      this.goodsAddress()
       // 我的收藏
-      this.goodsCollent()
+      // this.goodsCollent()
     }
+    this.scroll = new BScroll(this.$refs.memberGrade, {
+      bounce: {
+        left: true,
+        right: true
+      },
+      scrollY: false,
+      scrollX: true,
+      click: true,
+      startX: 0
+    })
   },
   updated () {
     // console.log(this.orderNum)
@@ -438,13 +505,100 @@ export default {
         color #333333
         text-align center
   .emptyDiscountBg
-    width 100%
-    height 260px
-    bgImage('/static/images/emptyDiscount')
+    height 320px
     margin-bottom 50px
+    overflow hidden
+    .memberGradeScroll
+      width 980px
+      height 320px
+      .cardVolItem
+        float left
+        width 920px
+        height 320px
+        margin-right 50px
+        bgImage('/static/images/newCardVouItemBg')
+        .left
+          float left
+          width 260px
+          height 320px
+          box-sizing border-box
+          padding-top 60px
+          span
+            display block
+            width 100%
+            height 80px
+            line-height 80px
+            font-size 40px
+            font-weight bold
+            text-align center
+            color #fff
+            i
+              display inline-block
+              font-size 80px
+              color #fff
+              font-weight bold
+          p
+            display block
+            width 180px
+            height 56px
+            text-align center
+            font-size 30px
+            margin 30px auto 0
+            color #FFFFFF
+            border 1px solid #fff
+        .right
+          float left
+          width 70%
+          box-sizing border-box
+          padding 40px 24px 0
+          h3
+            width 100%
+            font-size 40px
+            font-weight bold
+            color #333333
+          .displayBtn
+            width 100%
+            div
+              display inline-block
+      .cardVolItem:last-child
+        margin-right 0
+  .operBtn
+    float right
+    width 160px
+    height 60px
+    text-align center
+    line-height 60px
+    font-size 30px
+    border-radius 30px
+  .newUse
+    color #fff
+    background linear-gradient(-45deg,rgba(172,124,98,1),rgba(220,166,116,1))
+    box-shadow 0px 16px 24px 0px rgba(207,154,111,0.66)
+  .newReceive
+    color #BA825A
+    border 1px solid #BA825A
+  .noReceive
+    color #fff
+    background #E6E6E6
+  .activityTime
+    width 100%
+    margin-top 30px
+    font-size 30px
+    color #999999
+  .countDown
+    color #D54B4B
+  .fullSub
+    font-size 36px
+    color #BA825A
+  .cardDetails
+    float right
+    background #fff
+    font-size 30px
+    color #666666
   .emptyAmusingBg
     width 100%
     height 325px
     bgImage('/static/images/amusingActive')
     margin-bottom 50px
+
 </style>
