@@ -42,6 +42,7 @@ export default {
     font-weight 600
     display flex
     .title
+      color #333
       ellipsis()
       flex 1
       display inline-block

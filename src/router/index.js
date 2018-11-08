@@ -102,7 +102,7 @@ const router = new Router({
       component: Goods
     },
     {
-      path: '/createOrder',
+      path: '/createOrder/:info?',
       name: 'CreateOrder',
       meta: { requireLogin: true },
       component: CreateOrder
@@ -127,6 +127,7 @@ const router = new Router({
     {
       path: '/invoice',
       name: 'Invoice',
+      meta: { requireLogin: true },
       component: Invoice
     },
     {

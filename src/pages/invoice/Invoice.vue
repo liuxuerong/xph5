@@ -16,7 +16,7 @@
         <radio :options="invoiceStyle" v-model="inputForm.invoiceStyleValue"></radio>
       </group>
       <group title="发票抬头" v-if="headeShow">
-        <x-input placeholder="发票抬头" v-model.trim="inputForm.remark" v-validate="'required'" @blur="$v.inputForm.remark.$touch()" required></x-input>
+        <x-input placeholder="发票抬头" v-model.trim="inputForm.remark"></x-input>
       </group>
       <group title="企业信息" v-if="infoAllShow">
         <x-input placeholder="公司名称" v-model.trim="inputForm.name"></x-input>
@@ -28,10 +28,53 @@
           <x-input placeholder="开户账号" v-model.trim="inputForm.accountNumber"></x-input>
         </div>
       </group>
-      <group title="附件">
-        <div><input type="file"></div>
-        <div><input type="file"></div>
-        <div><input type="file"></div>
+      <group title="附件" v-if="!infoShow&&infoAllShow">
+        <div class="upWrap">
+          <div v-if="certificate===''">
+            <input type="hidden" :value="certificate">
+            <input type="file" accept="image/*" @change="headerUpfile(0)">
+            <span class="info">
+              <img src="/static/icons/invoice_carmer.png" alt="">
+              <p>公司营业执照<br>（非必填）</p>
+            </span>
+          </div>
+          <img v-lazy="imageUrl+certificate" alt="" class="upImg" v-else>
+        </div>
+      </group>
+      <group title="附件" v-if="infoShow&&infoAllShow">
+        <div class="upWrap">
+          <div v-show="certificate===''">
+            <input type="hidden" :value="certificate" name="need" placeholder="公司营业执照">
+            <input type="file" accept="image/*" @change="headerUpfile(1)">
+            <span class="info">
+              <img src="/static/icons/invoice_carmer.png" alt="">
+              <p>公司营业执照</p>
+              </span>
+          </div>
+          <img v-lazy="imageUrl+certificate" alt="" class="upImg" v-show="certificate!==''">
+        </div>
+        <div class="upWrap">
+          <div v-show="advice===''">
+            <input type="hidden" :value="advice" name="need" placeholder="一般纳税人认定通知书">
+            <input type="file" accept="image/*" @change="headerUpfile(2)">
+            <span class="info">
+              <img src="/static/icons/invoice_carmer.png" alt="">
+              <p>一般纳税人认定通知书</p>
+            </span>
+          </div>
+          <img v-lazy="imageUrl+advice" alt="" class="upImg" v-show="advice!==''">
+        </div>
+        <div class="upWrap">
+          <div v-show="license===''">
+            <input type="hidden" :value="license" name="need" placeholder="开户许可证">
+            <input type="file" accept="image/*" @change="headerUpfile(3)">
+            <span class="info">
+              <img src="/static/icons/invoice_carmer.png" alt="">
+              <p>开户许可证</p>
+            </span>
+          </div>
+          <img v-lazy="imageUrl+license" alt="" class="upImg" v-show="license!==''">
+        </div>
       </group>
       <router-link to="/instructions" tag="div" class="instructions">发票须知</router-link>
     </div>
@@ -41,10 +84,24 @@
 <script>
 import CommonNavHeader from 'common/commonHeader/CommonNavHeader'
 import {
+  config
+} from 'util/config.js'
+import {
+  storage
+} from 'util/storage'
+import {
+  orderInfo
+} from 'util/const.js'
+import {
+  uploadPic
+} from '@/func/upload'
+import axios from 'axios'
+import {
   http
 } from 'util/request'
 import {
-  addInvoice
+  addInvoice,
+  updateInvoice
 } from 'util/netApi'
 import {
   Toast
@@ -66,7 +123,7 @@ export default {
   },
   data () {
     return {
-      valid2: false,
+      imageUrl: config.imageUrl,
       headeShow: true,
       infoShow: false,
       infoAllShow: false,
@@ -74,6 +131,9 @@ export default {
       invoiceType: ['个人', '企业'],
       invoiceStatus: ['增值税普票'],
       invoiceStyle: ['纸质发票', '电子发票'],
+      certificate: '',
+      advice: '',
+      license: '',
       inputForm: {
         invoiceTypeValue: '个人',
         invoiceStatusValue: '增值税普票',
@@ -111,6 +171,15 @@ export default {
             }
           }
         }
+        if (input[i].type === 'hidden') {
+          if (input[i].name.indexOf('need') !== -1) {
+            console.log(input[i])
+            if (input[i].value.trim() === '') {
+              this.toastShow(input[i].placeholder + '不能为空')
+              return
+            }
+          }
+        }
       }
       if (this.inputForm.invoiceStatusValue === '增值税普票') {
         this.inputForm.invoiceStatus = 1
@@ -127,13 +196,51 @@ export default {
       } else {
         this.inputForm.invoiceType = 1
       }
-      http(addInvoice, this.inputForm).then(res => {
-        console.log(res)
-      }).catch(err => {
-        console.log(err)
-      })
+      if ((this.infoShow && !this.infoAllShow) || (this.infoAllShow && !this.infoShow)) {
+        if (this.certificate !== '') {
+          this.inputForm.invoiceEnclosureList.push({
+            content: this.certificate
+          })
+        }
+      } else if (this.infoShow && this.infoAllShow) {
+        this.inputForm.invoiceEnclosureList.push({
+          content: this.certificate
+        })
+        this.inputForm.invoiceEnclosureList.push({
+          content: this.advice
+        })
+        this.inputForm.invoiceEnclosureList.push({
+          content: this.license
+        })
+      }
+      let info = storage.getLocalStorage(orderInfo) || {}
+      if (info.invoiceId) {
+        this.inputForm.id = info.invoiceId
+        http(updateInvoice, this.inputForm).then(res => {
+          if (res.data.code === 0) {
+            info.invoicingId = res.data.body.id
+            info.invoiceStyleValue = this.inputForm.invoiceStyleValue
+            info.invoiceTypeValue = this.inputForm.invoiceTypeValue
+            info.shippingMethod = 1
+            storage.setLocalStorage(orderInfo, info)
+            this.$router.push({path: '/createOrder/1'})
+          }
+        })
+      } else {
+        http(addInvoice, this.inputForm).then(res => {
+          if (res.data.code === 0) {
+            info.invoicingId = res.data.body.id
+            info.invoiceStyleValue = this.inputForm.invoiceStyleValue
+            info.invoiceTypeValue = this.inputForm.invoiceTypeValue
+            info.shippingMethod = 1
+            storage.setLocalStorage(orderInfo, info)
+            this.$router.push({path: '/createOrder/1'})
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+      }
     },
-
     changeInvoiceType (value) {
       if (value === '个人') {
         this.invoiceStatus = ['增值税普票']
@@ -156,9 +263,48 @@ export default {
         this.invoiceStyle = ['纸质发票', '电子发票']
         this.infoShow = false
       }
+    },
+    headerUpfile (num) {
+      let fileKey = uploadPic(event, axios.post)
+      let key = ''
+      fileKey.then(res => {
+        key = res.data.body.key
+        switch (num) {
+          case 0:
+            this.certificate = key
+            break
+          case 1:
+            this.certificate = key
+            break
+          case 2:
+            this.advice = key
+            break
+          case 3:
+            this.license = key
+            break
+        }
+      })
+    },
+    getInvoiceList () {
+
     }
-  },
-  created () {
+    // updateInvoiceInfo () {
+    //    let info = storage.getLocalStorage(orderInfo)
+    //   this.inputForm.id = this.
+    //   http(updateInvoice, this.inputForm).then(res => {
+    //     console.log(res.data.body)
+    //     if (res.data.code === 0) {
+    //       let info = storage.getLocalStorage(orderInfo) || {}
+    //       info.invoiceId = res.data.body.id
+    //       info.invoiceStyleValue = this.inputForm.invoiceStyleValue
+    //       info.invoiceTypeValue = this.inputForm.invoiceTypeValue
+    //       storage.setLocalStorage(orderInfo, info)
+    //       // this.$router.push({path: '/createOrder/1'})
+    //     }
+    //   }).catch(err => {
+    //     console.log(err)
+    //   })
+    // }
   }
 }
 </script>
@@ -240,5 +386,45 @@ export default {
     font-size 40px
     text-align center
     margin 50px auto
-
+.upWrap
+    width 264px
+    height 264px
+    border 2px solid #E8E8E8
+    margin 48px 0 48px 48px
+    display inline-block
+    vertical-align top
+    div
+      position relative
+      width 100%
+      height 100%
+    .upImg
+      width 100%
+      height 100%
+      vertical-align top
+  input
+    position absolute
+    width 100%
+    height 100%
+    opacity 0
+    z-index 1
+    top 0
+    left 0
+  span
+    position absolute
+    width 100%
+    height 100%
+    top 0
+    left 0
+    padding-top 64px
+    img
+      width 96px
+      height 85px
+      margin 0 auto 10px
+      display block
+    p
+      line-height 49px
+      padding 0 40px
+      text-align center
+      color #CCCCCC
+      font-size 30px
 </style>

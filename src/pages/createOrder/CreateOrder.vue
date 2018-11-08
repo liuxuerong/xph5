@@ -22,7 +22,7 @@
       <div class="title">商品与配送</div>
       <div class="cutOffLine30"></div>
       <router-link class="cellLink" to="/sendWay">
-        <div class="text">配送方式</div>
+        <div class="text">配送方式<span class="fr" v-if="info&&info.addressType">{{info.addressType}}</span></div>
       </router-link>
       <div class="cutOffLine30"></div>
       <div class="goodsItem">
@@ -37,7 +37,7 @@
         <div class="text border-bottom">使用优惠券</div>
       </router-link>
       <router-link class="cellLink" to="/invoice">
-        <div class="text">发票</div>
+        <div class="text">发票<span class="fr" v-if="info&&info.addressType">{{info.invoiceTypeValue}}&nbsp;&nbsp;{{info.invoiceStyleValue}}</span></div>
       </router-link>
       <div class="cutOffLine30"></div>
       <div class="priceInfo">
@@ -55,7 +55,7 @@
     </div>
     <div class="bottom">
       <div class="price">￥2357</div>
-      <router-link to="/" class="pay">立即支付</router-link>
+      <span to="/" class="pay" @click="createOrder">立即支付</span>
     </div>
   </div>
 </template>
@@ -64,6 +64,9 @@
 import CommonNavHeader from 'common/commonHeader/CommonNavHeader'
 import OrderItem from './components/OrderItem'
 import {
+  Toast
+} from 'mint-ui'
+import {
   Popover
 } from 'vux'
 import {
@@ -71,12 +74,14 @@ import {
 } from 'util/request'
 import {
   goodOrderData
+  // createOrderData
 } from 'util/netApi'
 import {
   storage
 } from 'util/storage'
 import {
-  goodsInfo
+  goodsInfo,
+  orderInfo
 } from 'util/const.js'
 export default {
   name: 'CreateOrder',
@@ -92,14 +97,28 @@ export default {
       goodsItemId: '',
       num: '',
       pricesData: [],
-      desc: 123
+      desc: '',
+      info: null,
+      params: {
+        favorableId: '',
+        key: '',
+        goodsItems: [],
+        nvoicingId: ''
+      }
+
     }
   },
   computed: {
 
   },
   watch: {
-
+    '$route' (to, from) {
+      if (to.path === '/createOrder/1') {
+        this.info = storage.getLocalStorage(orderInfo)
+      } else if (to.path === '/createOrder') {
+        storage.setLocalStorage(orderInfo, {})
+      }
+    }
   },
   methods: {
     getDetails () {
@@ -121,10 +140,50 @@ export default {
       }).catch(err => {
         console.log(err)
       })
+    },
+    getOrderInfo () {
+      // console.log(this.$route.params)
+      if (this.$route.path === '/createOrder/1') {
+        this.info = storage.getLocalStorage(orderInfo)
+      } else if (this.$route.path === '/createOrder') {
+        storage.setLocalStorage(orderInfo, {})
+      }
+    },
+    createOrder () {
+      let params = {}
+      const info = storage.getLocalStorage(goodsInfo)
+      const orderInfoData = storage.getLocalStorage(orderInfo)
+      params.fromCart = info.fromCart || false
+      params.deliveryId = orderInfoData.addressId
+      params.invoicingId = orderInfoData.invoicingId
+      params.shippingMethod = orderInfoData.shippingMethod
+      params.favorableId = this.favorableId
+      // params.fromCart = this.goodsInfo.fromCart
+      console.log(params)
+      if (!params.deliveryId) {
+        this.toastShow('请选择配送方式！')
+        return false
+      }
+
+      // http(createOrderData, params).then(res => {
+      //   console.log(res)
+      // }).catch(err => {
+      //   console.log(err)
+      // })
+    },
+    toastShow (text) {
+      Toast({
+        message: text,
+        position: 'center',
+        duration: 1000
+      })
     }
   },
   created () {
     this.getDetails()
+  },
+  mounted () {
+    this.getOrderInfo()
   }
 }
 </script>
@@ -176,6 +235,10 @@ export default {
         width 100%
         font-size 40px
         color #262626
+        span
+          position absolute
+          right 60px
+          color #999999
       .text::after
         content ''
         position absolute

@@ -98,6 +98,7 @@ export default {
     isAllCheck () {
       const tabWrapChild = this.$refs.tabWrap.childNodes
       let allFlag = true
+
       for (let i = 0; i < tabWrapChild.length; i++) {
         let input = this.children(tabWrapChild[i], 'input')
         let flag = false
@@ -118,73 +119,51 @@ export default {
           position: 'bottom',
           duration: 500
         })
+        return false
       } else {
         if (!tabWrapChild.length) {
           this.goodsItemsId = this.sku.data[''].goodsItemsId
         }
+        return true
       }
     },
     buy () {
-      this.isAllCheck()
-      let goodsObj = {
-        key: '',
-        shippingMethod: '',
-        favorableId: ''
+      if (this.isAllCheck()) {
+        let goodsObj = {
+          key: '',
+          shippingMethod: '',
+          favorableId: ''
+        }
+        goodsObj.goodsItems = []
+        goodsObj.goodsItems[0] = {
+          goodsId: this.goodsId,
+          goodsItemId: this.goodsItemsId,
+          num: this.cartCount
+        }
+        storage.setLocalStorage(goodsInfo, goodsObj)
+        this.$router.push('/createOrder')
       }
-      goodsObj.goodsItems = []
-      goodsObj.goodsItems[0] = {
-        goodsId: this.goodsId,
-        goodsItemId: this.goodsItemsId,
-        num: this.cartCount
-      }
-      storage.setLocalStorage(goodsInfo, goodsObj)
-      this.$router.push('/createOrder')
     },
     addCart () {
-      this.isAllCheck()
-
-      // const tabWrapChild = this.$refs.tabWrap.childNodes
-      // let allFlag = true
-      // for (let i = 0; i < tabWrapChild.length; i++) {
-      //   let input = this.children(tabWrapChild[i], 'input')
-      //   let flag = false
-      //   for (let j = 0; j < input.length; j++) {
-      //     if (input[j].classList.contains('active')) {
-      //       flag = true
-      //       break
-      //     }
-      //   }
-      //   if (!flag) {
-      //     allFlag = false
-      //     break
-      //   }
-      // }
-      // if (!allFlag) {
-      //   Toast({
-      //     message: '请选择商品属性',
-      //     position: 'bottom',
-      //     duration: 500
-      //   })
-      // } else {
-      //   if (!tabWrapChild.length) {
-      //     this.goodsItemsId = this.sku.data[''].goodsItemsId
-      //   }
-      const params = {
-        goodsItemId: this.goodsItemsId,
-        num: this.cartCount
-      }
-      http(addCart, params).then(res => {
-        if (res.data.code === 0) {
-          Toast({
-            message: '添加购物车成功',
-            position: 'bottom',
-            duration: 500
-          })
-          // this.getCartNum()
+      if (this.isAllCheck()) {
+        const params = {
+          goodsItemId: this.goodsItemsId,
+          num: this.cartCount
         }
-      }).catch(err => {
-        console.log(err)
-      })
+        http(addCart, params).then(res => {
+          console.log(res.data.code)
+          if (res.data.code === 0) {
+            Toast({
+              message: '添加购物车成功',
+              position: 'bottom',
+              duration: 500
+            })
+          // this.getCartNum()
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+      }
     },
     children (curEle, tagName) {
       let nodeList = curEle.childNodes

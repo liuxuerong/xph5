@@ -8,7 +8,7 @@
     </router-link>
     <slot></slot>
     <router-link to="/cart" class="car">
-      <span class="num" v-if="count">{{count}}</span>
+      <span class="num" v-if="count!=0">{{count}}</span>
     </router-link>
   </div>
 </template>

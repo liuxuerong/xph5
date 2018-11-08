@@ -4,7 +4,7 @@
       <span class="udesk"></span>
       <span class="collect" :class="{active:collect}" @click="doCollection(params)"></span>
       <router-link to="/cart" class="cart">
-        <i class="num" v-show="cartNum">{{cartNum}}</i>
+        <i class="num" v-show="cartNum != 0">{{cartNum}}</i>
       </router-link>
     </div>
     <ul class="operateRight">
@@ -68,6 +68,7 @@ export default {
       let fnType = Object.prototype.toString.call(hasCollection(params)).slice(8, -1)
       if (fnType === 'Promise') {
         hasCollection(params).then(res => {
+          // console.log(res.data.body)
           this.collect = res.data.body
         }).catch(err => {
           console.log(err)
