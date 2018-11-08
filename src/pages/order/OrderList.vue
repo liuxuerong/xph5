@@ -40,7 +40,7 @@
             <span class="operState" v-if="item.status=='8'">订单失效</span>
             <span class="operState" v-if="item.status=='7'">订单取消</span>
           </div>
-          <span class="operbtn immedPayment" v-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===undefined" @click="immedPayment(item.orderSn,item.totalAmount)">立即支付</span>
+          <span class="operbtn immedPayment" v-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===undefined" @click="immedPayment(item.orderSn)">立即支付</span>
           <!-- <router-link :to="{ name: 'orderDetails', params: { orderCode: item.orderSn }}" class="operbtn checkDetails" v-show="item.status =='2'" @click="orderDetails">查看详情1</router-link> -->
           <span class="operbtn confirmGoods" v-if="item.memberOrderGoods[0].orderItemStatus == '5'" @click="immedEvaluate(item.orderSn)">立即评价</span>
           {{item.status}}
@@ -146,10 +146,8 @@ export default {
       })
     },
     // 立即支付
-    immedPayment (orderCode, totalMoney) {
-      console.log(orderCode)
-      let paymentInfo = orderCode + '&' + totalMoney
-      router.push('../../immedPayment/' + paymentInfo)
+    immedPayment (orderSn) {
+      router.push('../../immedPayment/' + orderSn)
     },
     // 立即评价
     immedEvaluate (orderCode) {

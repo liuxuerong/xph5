@@ -4,8 +4,8 @@
     <div class="paymentCon">
       <div class="paymentTitle">支付中心</div>
       <div class="paymentOrder">
-        <span>订单编号：{{orderCode}}</span>
-        <span>付款总额：￥ {{totalNum}}</span>
+        <span>订单编号：{{list.orderSn}}</span>
+        <span>付款总额：￥ {{list.totalAmount}}</span>
       </div>
       <div class="paymentTitle">请选择支付方式</div>
       <div class="paymentWay">
@@ -28,7 +28,7 @@
 </template>
 <script>
 import SearchTitle from './ComOrderSearchTitle'
-import {payMoney} from 'util/netApi'
+import {payMoney, subOrderDetail} from 'util/netApi'
 import {http} from 'util/request'
 // import axios from 'axios'
 import notice from 'util/notice'
@@ -36,8 +36,7 @@ export default {
   data () {
     return {
       title: '支付方式',
-      totalNum: Number,
-      orderCode: '',
+      list: [],
       readioActive: ''
     }
   },
@@ -47,10 +46,14 @@ export default {
   methods: {
     // 支付页面渲染
     paymentRender () {
-      let orderCode = this.$route.params.orderCode.split('&')
-      console.log(orderCode)
-      this.orderCode = orderCode[0]
-      this.totalNum = orderCode[1]
+      let orderSn = this.$route.params.orderCode
+      console.log(orderSn)
+      http(subOrderDetail, [orderSn]).then((response) => {
+        console.log(response)
+        this.list = response.data.body
+      }).catch((err) => {
+        console.log(err)
+      })
     },
     // 选择支付方式
     redioSelect (paymentWay) {

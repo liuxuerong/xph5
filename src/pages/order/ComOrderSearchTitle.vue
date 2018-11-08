@@ -12,7 +12,7 @@ export default {
   // 接受父级数据
   props: {
     title: '',
-    oper: Number
+    oper: ''
   },
   methods: {
     // 返回上一步

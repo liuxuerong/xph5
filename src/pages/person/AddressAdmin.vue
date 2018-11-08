@@ -68,7 +68,7 @@ export default {
     },
     // 选择地址
     selectGoodsAddress () {
-      
+
     }
   },
   mounted () {
