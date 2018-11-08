@@ -181,7 +181,7 @@ const router = new Router({
       component: PerUserInfoSet
     },
     {
-      path: '/goodsAddress/:type/:id',
+      path: '/goodsAddress/:type/:id?',
       name: 'goodsAddress',
       component: GoodsAddress
     },

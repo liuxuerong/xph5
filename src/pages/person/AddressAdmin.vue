@@ -2,7 +2,7 @@
   <div class="wrapper">
     <userinfo-header title="我的地址" oper="新增地址" @operComplete="onOperComplete"></userinfo-header>
     <div class="addressCon">
-      <div class="addressItem border-bottom" v-for="item in addList" :key="item.id">
+      <div class="addressItem border-bottom" v-for="item in addList" :key="item.id" @click="selectGoodsAddress">
         <div class="addressInfo clearfix">
           <div class="left">
             <div class="top clearfix">
@@ -60,12 +60,15 @@ export default {
     },
     // 新增地址
     onOperComplete (id) {
-      console.log(99999)
-      router.push('./goodsAddress/1/id')
+      router.push('./goodsAddress/1')
     },
     // 修改地址
     modifyAddress (id) {
       router.push('./goodsAddress/2/' + id)
+    },
+    // 选择地址
+    selectGoodsAddress () {
+      
     }
   },
   mounted () {
@@ -74,6 +77,10 @@ export default {
   }
 }
 </script>
+<style lang="stylus">
+  html,body
+    background #fff
+</style>
 <style lang="stylus" scoped>
   @import "~styles/mixins.styl";
   .wrapper

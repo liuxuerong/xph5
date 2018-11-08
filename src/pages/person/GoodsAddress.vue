@@ -12,7 +12,12 @@
       </div>
       <div class="addressItem border-bottom">
         <span>地址</span>
-        <input type="text" placeholder="选择收货地址" readonly @click="addAddress" v-model="addressName">
+        <group class="changeAddress" v-if="type=='1'">
+          <x-address @on-hide="logHide" title="" @on-show="logShow" v-model="value" :list="addressData" @on-shadow-change="onShadowChange" placeholder="地址" :show.sync="showAddress"></x-address>
+        </group>
+        <group class="changeAddress" v-else>
+          <x-address @on-hide="logHide" title="" @on-show="logShow" v-model="value" :list="addressData" @on-shadow-change="onShadowChange" :inline-desc="placeholder" :show.sync="showAddress"></x-address>
+        </group>
       </div>
       <div class="addressItem border-bottom">
         <span>详细地址</span>
@@ -22,83 +27,50 @@
         <span>设为默认</span>
         <em class="checkboxInput" :class="{active:idDefault}"><input type="checkbox" v-model="idDefault"></em>
       </div>
+
       <button class="addressSubmit" @click="addressSubmit">确定</button>
-      <mt-popup
-        v-model="popupVisible"
-        class="addressBox"
-        position="bottom">
-        <mt-picker :slots="addressSlots" class="picker" @change="onAddressChange" :visible-item-count="5" ></mt-picker >
-      </mt-popup>
     </div>
   </div>
 </template>
 <script>
 import UserinfoHeader from './ComUserSetHeader'
-import { Picker, Popup, Toast } from 'mint-ui'
+import { Toast } from 'mint-ui'
 import { addDelivery, updateDelivery, idDelivery } from 'util/netApi'
 import { http } from 'util/request'
 import router from '@/router/index.js'
 import notice from 'util/notice.js'
-const cityJson = require('./address.json')
+import { Group, XAddress, ChinaAddressV4Data, XButton, Cell, Value2nameFilter as value2name } from 'vux'
 export default {
   data () {
     return {
       title: '',
       receiverName: '',
-      province: '',
-      city: '',
-      area: Object,
       detailedAddr: '',
-      addressName: '',
       phone: '',
       idDefault: '',
       postalCode: '',
+      placeholder: '',
       popupVisible: false,
-      type: Number,
-      addressSlots: [
-        {
-          flex: 1,
-          defaultIndex: 1,
-          values: Object.keys(cityJson),
-          className: 'slot1',
-          textAlign: 'center'
-        }, {
-          divider: true,
-          content: '-',
-          className: 'slot2'
-        }, {
-          flex: 1,
-          values: [],
-          className: 'slot3',
-          textAlign: 'center'
-        }, {
-          divider: true,
-          content: '-',
-          className: 'slot4'
-        }, {
-          flex: 1,
-          values: [],
-          className: 'slot5',
-          textAlign: 'center'
-        }
-      ],
-      streetSlots: [
-        {
-          flex: 1,
-          values: [],
-          className: 'slot1',
-          textAlign: 'center'
-        }
-      ]
+      type: '',
+      value_0_1: [],
+      names: [],
+      value: [],
+      title2: '',
+      value2: ['天津市', '市辖区', '和平区'],
+      value3: ['广东省', '中山市', '--'],
+      addressData: ChinaAddressV4Data,
+      value4: [],
+      value5: ['广东省', '深圳市', '南山区'],
+      showAddress: false
     }
   },
   computed: {
     rigthData: function () {
       let phone = /^1\d{10}$/gi.test(this.phone)
-      let addressName = !/[@#$%^&*]+/gi.test(this.province)
+      // let addressName = !/[@#$%^&*]+/gi.test(this.province)
       let receiverName = !/[@#$%^&*]+/gi.test(this.receiverName)
       let detailedAddr = !/[@#$%^&*]+/gi.test(this.detailedAddr)
-      return phone && addressName && receiverName && detailedAddr
+      return phone && receiverName && detailedAddr
     },
     rigthNull: function () {
       return this.phone !== '' && this.province !== '' && this.receiverName !== '' && this.detailedAddr !== ''
@@ -106,20 +78,24 @@ export default {
   },
   components: {
     UserinfoHeader,
-    'mt-picker': Picker,
-    'mt-popup': Popup
+    Group,
+    XAddress,
+    XButton,
+    Cell
   },
   methods: {
     // 修改地址渲染
     addressRender () {
       let id = this.$route.params.id
       http(idDelivery, [id]).then((response) => {
-        console.log(response)
         if (response.data.code === 0) {
           let data = response.data.body
           this.receiverName = data.receiverName
           this.phone = data.phone
-          this.addressName = data.province + ' / ' + data.city + ' / ' + data.area
+          this.placeholder = data.province + '  ' + data.city + '  ' + data.area
+          this.names[0] = data.province
+          this.names[1] = data.city
+          this.names[2] = data.area
           this.detailedAddr = data.detailedAddr
           if (data.idDefault === 1) {
             this.idDefault = true
@@ -129,29 +105,56 @@ export default {
         }
       })
     },
+    // 地址选择
+    doShowAddress () {
+      this.showAddress = true
+      setTimeout(() => {
+        this.showAddress = false
+      }, 2000)
+    },
+    onShadowChange (ids, names) {
+      this.names = names
+    },
+    changeData () {
+      this.value2 = ['430000', '430400', '430407']
+    },
+    changeDataByLabels () {
+      this.value2 = ['广东省', '广州市', '天河区']
+    },
+    changeDataByLabels2 () {
+      this.value2 = ['广东省', '中山市', '--']
+    },
+    getName (value) {
+      return value2name(value, ChinaAddressV4Data)
+    },
+    logHide (str) {
+      console.log('on-hide', str)
+    },
+    logShow (str) {
+      this.placeholder = ''
+    },
     // 地址提交
     addressSubmit () {
       let type = this.$route.params.type
       // 1  新增加地址
       // 2  修改地址
-      if (type === 1) {
-        let param = {
+      if (type === '1') {
+        let params = {
           receiverName: this.receiverName,
-          province: this.province,
-          city: this.city,
-          area: this.area,
+          province: this.names[0],
+          city: this.names[1],
+          area: this.names[2],
           detailedAddr: this.detailedAddr,
-          addressName: this.addressName,
+          addressName: '',
           phone: this.phone,
           idDefault: this.idDefault ? 1 : 0,
           postalCode: this.postalCode
         }
         if (this.rigthData && this.rigthNull) {
-          http(addDelivery, param).then((response) => {
-            console.log(response)
+          http(addDelivery, params).then((response) => {
             if (response.data.code === 0) {
               notice.toast('添加地址成功', '2000', 'success', function () {
-                router.pash('./personCenter')
+                router.push('../../addressAdmin')
               })
             }
           }).catch((err) => {
@@ -168,11 +171,11 @@ export default {
         let id = this.$route.params.id
         let params = {
           receiverName: this.receiverName,
-          province: this.province,
-          city: this.city,
-          area: this.area,
+          province: this.names[0],
+          city: this.names[1],
+          area: this.names[2],
           detailedAddr: this.detailedAddr,
-          addressName: this.addressName,
+          addressName: '',
           phone: this.phone,
           idDefault: this.idDefault ? 1 : 0,
           id: id,
@@ -181,10 +184,9 @@ export default {
         }
         if (this.rigthData && this.rigthNull) {
           http(updateDelivery, params).then((response) => {
-            console.log(response)
             if (response.data.code === 0) {
               notice.toast('修改地址成功', '2000', 'success', function () {
-                router.pash('./personCenter')
+                router.push('../../addressAdmin')
               })
             }
           }).catch((err) => {
@@ -202,18 +204,6 @@ export default {
     // 添加地址
     addAddress () {
       this.popupVisible = true
-    },
-    onAddressChange (picker, values) {
-      let shi = Object.keys(cityJson[values[0]])
-      let index = shi.indexOf(values[1])
-      let xian = cityJson[values[0]][shi[index]]
-      this.xianObj = xian
-      picker.setSlotValues(1, shi)
-      this.province = values[0]
-      this.city = values[1]
-      this.area = values[2]
-      picker.setSlotValues(2, Object.keys(xian))
-      this.addressName = this.province + ' / ' + this.city + ' / ' + this.area
     }
   },
   watch: {
@@ -229,23 +219,43 @@ export default {
     }
   },
   mounted () {
-    console.log(9999)
     let type = this.$route.params.type
     if (type === '1') {
+      this.type = 1
       this.title = '新增地址'
     } else if (type === '2') {
       this.title = '修改地址'
       this.type = 2
       this.addressRender()
     }
-    // this.$nextTick(() => {
-    //   setTimeout(() => { // 这个是一个初始化默认值的一个技巧
-    //     this.addressSlots[0].defaultIndex = 0
-    //   }, 100)
-    // })
   }
 }
 </script>
+<style lang="stylus">
+  html,body
+    background #fff
+  .vux-popup-picker-placeholder
+    float left!important
+    color #ccc!important
+    font-size 40px!important
+  .weui-cell_access
+    height 134px!important
+    padding 0!important
+  .weui-cells:after,.weui-cell_access .weui-cell__ft:after,.weui-cells:before
+    display none!important
+  .vux-no-group-title
+    margin-top 0!important
+  .vux-popup-header
+    height 130px!important
+    line-height 130px!important
+    font-size 40px!important
+  .vux-popup-header-right
+    color #ba825a!important
+  .vux-popup-picker-value
+    float left!important
+    color #808080!important
+    font-size 40px!important
+</style>
 <style lang="stylus" scoped>
   @import "~styles/mixins.styl";
   .wrapper
@@ -322,4 +332,13 @@ export default {
     color: #ccc;
     font-size 40px
   }
+  .changeAddress
+    float left
+    width 75%
+    font-size 40px
+    color #808080
+    height 134px
+    line-height 134px
+    border none
+    background red
 </style>
