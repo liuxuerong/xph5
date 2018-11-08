@@ -21,7 +21,7 @@ export default {
       if (this.content === '我的订单') {
         router.push('./orderIndex')
       } else if (this.content === '我的地址') {
-        router.push('./addressAdmind')
+        router.push('./addressAdmin')
       }
     }
   },

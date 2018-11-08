@@ -4,20 +4,25 @@
     <userinfo-header title="个人资料" oper="完成" @operComplete="onOperComplete"></userinfo-header>
     <div class="userInfoSetCon">
       <!-- 头像设置 -->
-      <div class="headerSet">
-        <span class="setProperty">头像</span>
-        <div class="headerImg">
-          <img v-if="headImage === ''" src="/static/images/personalHeader.png">
-          <img v-else :src="imageUrl+headImage">
-          <input type="file" name="" class="headerImgFile" @change="headerUpfile($event)">
+      <div class="headerCon">
+        <div class="headerSet border-bottom">
+          <span class="setProperty">头像</span>
+          <div class="headerImg">
+            <img v-if="headImage === ''" src="/static/images/personalHeader.png">
+            <img v-else :src="imageUrl+headImage">
+            <input type="file" name="" class="headerImgFile" @change="headerUpfile($event)">
+          </div>
         </div>
+        <userinfo-popset setPro="会员等级" :inputData="memberLevelName+'会员'"></userinfo-popset>
+        <userinfo-popset setPro="我的收获地址" @click.native="addressAdmin"></userinfo-popset>
       </div>
+
       <!-- 基础设置 -->
-       <div class="setItemPop border-bottom">
+      <userinfo-popset setPro="绑定手机号" :inputData="phone"></userinfo-popset>
+      <div class="setItemPop border-bottom">
         <span class="setProperty">昵称</span>
         <input type="text" class="setInfoInput" v-model="name">
       </div>
-      <userinfo-popset setPro="绑定手机号" :inputData="phone"></userinfo-popset>
       <userinfo-popset setPro="性别" :inputData="sex" @click.native="sexChangeShow"></userinfo-popset>
       <userinfo-popset setPro="年龄段" :inputData="age" @click.native="ageChangeShow"></userinfo-popset>
       <mt-popup
@@ -33,6 +38,7 @@
   </div>
 </template>
 <script>
+import router from '@/router/index.js'
 import UserinfoHeader from './ComUserSetHeader'
 import UserinfoPopset from './ComSetInfoPop'
 import ChangeItem from './ComChangeItem'
@@ -58,7 +64,8 @@ export default {
       age: '',
       popupVisible: false,
       popType: 0,
-      popData: []
+      popData: [],
+      memberLevelName: ''
     }
   },
   components: {
@@ -73,6 +80,8 @@ export default {
     getUserInfo: function () {
       http(memberData).then((response) => {
         let data = response.data.body
+        this.memberLevelName = data.memberLevelName
+        console.log(data)
         this.name = data.name
         if (data.headImage !== '' && data.headImage != null) {
           this.headImage = data.headImage
@@ -134,7 +143,10 @@ export default {
       // 改变数据
       this.popData = ['10后', '00后', '90后', '80后', '70后', '60后']
     },
-
+    // 收货地址
+    addressAdmin () {
+      router.push('./addressAdmin')
+    },
     // 获取弹窗子组件数据选择
     getValueFromChild (val1, val2, val3) {
       if (this.popType === 1) {
@@ -201,6 +213,7 @@ export default {
     background #fff
     box-sizing border-box
     padding 0 70px 0 50px
+    margin-top 1px
   .setProperty
     width auto
     height 148px
@@ -243,11 +256,13 @@ export default {
 .userInfoSetCon
   width 100%
   background #F5F5F5
+.headerCon
+  width 100%
+  margin-bottom 30px
+  background #fff
 .headerSet
   width 100%
   height 300px
-  margin-bottom 30px
-  background #fff
   box-sizing border-box
   padding 0 70px 0 50px
   .headerImg

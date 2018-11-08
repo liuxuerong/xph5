@@ -2,7 +2,37 @@
   <div class="wrapper">
     <userinfo-header title="卡券中心"></userinfo-header>
     <div class="cardVoucherCon">
-      <div class="cardInfo" :class="list.status != '1'?'gray':''">
+      <div v-if="type !== '2'" class="cardInfo">
+        <div class="top border-bottom">
+          <div class="left border-right" v-if="pastList">
+            <span>￥<i>{{pastList.subMoney}}</i></span>
+            <!-- <i v-else-if="list.type == '2'"><i>{{list.discount.toString().split('.')[1]}}</i> 折</i> -->
+            <p v-if="pastList.applyType == '1'">通用券</p>
+            <p v-if="pastList.applyType == '2'">app专享</p>
+            <p v-if="pastList.applyType == '3'">门店专享</p>
+          </div>
+          <div class="right">
+            <h3>{{pastList.name}}</h3>
+            <div v-if="list.condMoney != '0'" class="fullSub">
+              <span v-if="pastList.range == '1'">满{{pastList.condMoney}}.0可用</span>
+              <span v-if="pastList.range == '2'">满{{pastList.condMoney}}.0可用</span>
+              <span v-if="pastList.range == '3'">满{{pastList.condMoney}}.0可用</span>
+              <span v-if="pastList.range == '4'">满{{pastList.condMoney}}.0可用</span>
+              <!-- 领取状态(1-未领取 2-已领取 3-领光了) -->
+              <!-- 未使用 -->
+              <span class="activityTime">{{pastList.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{pastList.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
+              <!-- 已使用  已过期-->
+              <!-- <span v-else class="activityTime">{{pastList.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{pastList.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span> -->
+            </div>
+          </div>
+        </div>
+        <div class="bottom">
+          <div class="operBtn" v-if="type == '2'">立即使用</div>
+          <div class="operBtn gray" v-if="type == '3'">抢光了</div>
+        </div>
+        <div class="cardIntroduce" ref="sentence" v-html="pastList.content"></div>
+      </div>
+      <div v-else class="cardInfo" :class="list.status != '1'?'gray':''">
         <div class="top border-bottom">
           <div class="left border-right" v-if="list">
             <span v-if="list.type == '1' || list.type == '3'">￥<i>{{list.subMoney}}</i></span>
@@ -19,44 +49,50 @@
               <span v-if="list.range == '3'">满{{list.condMoney}}.0可用</span>
               <span v-if="list.range == '4'">满{{list.condMoney}}.0可用</span>
               <!-- 未使用 -->
-              <span v-if="useStatus == '1'" class="activityTime">{{list.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{list.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
+              <span v-if="status == '1'" class="activityTime">{{list.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{list.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
               <!-- 已使用  已过期-->
-              <span v-else class="activityTime">{{list.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{list.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
+              <!-- <span v-else class="activityTime">{{list.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{list.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span> -->
             </div>
           </div>
         </div>
         <div class="bottom">
-          <div class="operBtn">立即使用</div>
+          <div class="operBtn" v-if="status == '1'">立即使用</div>
         </div>
-      </div>
-      <div v-if="list.applyType == '1' && list.type == '1'" class="cardCodeCon">
-        <div class="tipText" v-if="useStatus == '1'">使用时请向服务人员出示此二维码</div>
-        <div class="tipText" v-else>当前优惠券不能使用</div>
-        <div class="cardCodeImg">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <i class="cardNum">{{cardNo}}</i>
-          <qrcode class="Scavenging"  :value="cardNo" type="img"></qrcode>
+        <div v-if="list.applyType == '1' && list.type == '1'" class="cardCodeCon">
+          <div class="tipText" v-if="status == '1'">使用时请向服务人员出示此二维码</div>
+          <div class="tipText" v-else>当前优惠券不能使用</div>
+          <div class="cardCodeImg">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <i class="cardNum">{{cardNo}}</i>
+            <qrcode class="Scavenging"  :value="cardNo" type="img"></qrcode>
+          </div>
         </div>
+        <div class="cardIntroduce" ref="sentence" v-html="list.content"></div>
       </div>
-      <div class="cardIntroduce" ref="sentence" v-html="list.content"></div>
     </div>
   </div>
 </template>
 <script>
 import UserinfoHeader from './ComUserSetHeader'
-import {getDetailById, coupon} from 'util/netApi'
+import {getDetailById} from 'util/netApi'
 import {http} from 'util/request'
 import { Qrcode } from 'vux'
+import {
+  mapState
+} from 'vuex'
+import {storage} from 'util/storage'
 export default {
   data () {
     return {
       list: [],
-      useStatus: '',
+      status: '',
       cardNo: '',
-      type: ''
+      type: '',
+      id: '',
+      pastList: []
     }
   },
   components: {
@@ -68,48 +104,45 @@ export default {
     cardDetailsRender () {
       let type = this.$route.params.type
       let id = this.$route.params.id
+      // console.log(JSON.stringify(id))
       this.type = type
       console.log(type)
-      if (type === '2' || type === '1') {
+      if (type === '2') {
         let params = {
           couponId: id
         }
-        http(getDetailById, params).then((res) => {
-          console.log(res.data.body)
-          if (res.data.code === 0) {
-            this.list = res.data.body.coupon
-            this.useStatus = res.data.body.status
-            this.cardNo = res.data.body.couponNo
+        http(getDetailById, params).then((response) => {
+          console.log(response.data.body)
+          if (response.data.code === 0) {
+            console.log(response)
+            this.list = response.data.body.coupon
+            this.status = response.data.body.status
+            this.cardNo = response.data.body.couponNo
           }
         }).catch((err) => {
           console.log(err)
         })
-      } else if (type === '3') {
-        alert(999)
-        let params = {
-          status: 1,
-          page: 1,
-          rows: 100
-        }
-        http(coupon, params).then((result) => {
-          console.log(result)
-          this.list = result.data.body.list
-        }).catch((err) => {
-          console.log(err)
-        })
+      } else {
+        let newList = storage.getLocalStorage('card')
+        this.pastList = newList
+        console.log(this.pastList)
+        console.log(this.pastList.activityEnd)
       }
     }
   },
   mounted () {
     this.cardDetailsRender()
-  }
+  },
+  computed: mapState({
+    listObj: state => state.card.listObj
+  })
 }
 </script>
 <style lang="stylus">
   html,body
     background #f5f5f5
     .cardIntroduce
-      width calc(100% - 100px)
+      width 100%
       background #fff
       margin 50px auto
       overflow hidden
@@ -223,13 +256,16 @@ export default {
         margin 46px auto 0
         text-align center
         border-radius 68px
+      .operBtn.gray
+        background #E6E6E6
+        box-shadow 0 0 0 0 #fff
     .cardInfo.gray
       width calc(100% - 100px)
       height 560px
       background #fff
       margin 0 auto
   .cardIntroduce
-    width calc(100% - 100px)
+    width 100%
     background #fff
     margin 50px auto
     overflow hidden
@@ -240,7 +276,7 @@ export default {
       line-height 60px!important
       color #262626!important
   .cardCodeCon
-    width calc(100% - 100px)
+    width 100%
     margin 50px auto
   .tipText
     width 100%
