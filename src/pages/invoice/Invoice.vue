@@ -218,9 +218,10 @@ export default {
         this.inputForm.id = info.invoiceId
         http(updateInvoice, this.inputForm).then(res => {
           if (res.data.code === 0) {
-            info.invoiceId = res.data.body.id
+            info.invoicingId = res.data.body.id
             info.invoiceStyleValue = this.inputForm.invoiceStyleValue
             info.invoiceTypeValue = this.inputForm.invoiceTypeValue
+            info.shippingMethod = 1
             storage.setLocalStorage(orderInfo, info)
             this.$router.push({path: '/createOrder/1'})
           }
@@ -228,9 +229,10 @@ export default {
       } else {
         http(addInvoice, this.inputForm).then(res => {
           if (res.data.code === 0) {
-            info.invoiceId = res.data.body.id
+            info.invoicingId = res.data.body.id
             info.invoiceStyleValue = this.inputForm.invoiceStyleValue
             info.invoiceTypeValue = this.inputForm.invoiceTypeValue
+            info.shippingMethod = 1
             storage.setLocalStorage(orderInfo, info)
             this.$router.push({path: '/createOrder/1'})
           }

@@ -6,15 +6,18 @@
     <div
       v-for="item in bannerData.articles"
       :key="item.id">
+      <router-link :to="'/storyDetails/'+item.id">
       <img
         v-lazy="imageUrl+item.articleCoverImage"
         alt="" class="banner">
       <index-content
         v-if="showContent"
         :content="item"/>
+        </router-link>
       <index-items
         :itemsData="item"
         v-if="showItems"/>
+
     </div>
   </div>
 

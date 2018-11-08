@@ -2,9 +2,9 @@
   <div class="xpSwiper">
       <swiper :options="swiperOption">
         <swiper-slide v-for="item in swiperData" :key="item.adId">
-          <a href="#" class="swiperHref">
+          <router-link :to="'/details/'+item.linkId" class="swiperHref">
             <img v-lazy="imageUrl+item.image" alt="">
-          </a>
+          </router-link>
         </swiper-slide>
         <div class="swiper-pagination" slot="pagination"></div>
       </swiper>
@@ -41,6 +41,7 @@ export default {
   mounted () {
     http(bannerList, ['find-banner']).then((res) => {
       this.swiperData = res.data.body
+      console.log(res.data.body)
     }).catch((err) => {
       console.log(err)
     })

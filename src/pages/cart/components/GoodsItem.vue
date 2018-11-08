@@ -6,7 +6,9 @@
             </check-icon>
           </div>
           <div class="goodsItemMain">
+            <router-link :to="'/details/'+goodsItem.goodsId" class="linkDetails">
             <img v-lazy="imageUrl+goodsItem.goodsItemPic" alt="">
+             </router-link>
             <div class="info">
               <div class="name">{{goodsItem.goodsItemName}}</div>
               <div class="describe">
@@ -16,11 +18,12 @@
               <div class="bottom clearfix">
                 <span class="tag fl" v-if="goodsItem.status!=1">已失效</span>
                 <span class="modify" v-show="showModify">
-                  <x-number :min="1" :max="goodsItem.stock" v-model="goodsItem.num"></x-number>
+                  <x-number :min="1" :max="goodsItem.stock" v-model="goodsItem.num" @click.stop.prevent fillable="true"></x-number>
                 </span>
                 <i class="price fr">￥{{goodsItem.price}}</i>
               </div>
             </div>
+
         </div>
       </label>
   </div>
@@ -135,10 +138,13 @@ export default {
       flex 1
       display flex
       padding 90px 0
-      img
+      .linkDetails
         width 286px
         height 286px
         margin-right 30px
+        img
+          width 100%
+          height 100%
       .info
         flex 1
         .name

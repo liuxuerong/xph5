@@ -83,12 +83,6 @@ export default {
       }
     }
   },
-  computed: {
-
-  },
-  watch: {
-
-  },
   methods: {
     onItemClick (index) {
       this.showWhich = index

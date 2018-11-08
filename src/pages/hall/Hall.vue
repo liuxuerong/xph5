@@ -61,12 +61,6 @@ export default {
     swiper,
     swiperSlide
   },
-  computed: {
-
-  },
-  watch: {
-
-  },
   methods: {
     getHallData () {
       http(inforSpace).then(res => {
