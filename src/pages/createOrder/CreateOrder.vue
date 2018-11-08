@@ -42,15 +42,15 @@
       <div class="cutOffLine30"></div>
       <div class="priceInfo">
         <ul class="border-bottom">
-          <li><span class="name">商品金额：</span><span class="item">￥2577</span></li>
-          <li><span class="name">居家商品满2000减200</span><span class="item">-￥200</span></li>
+          <li v-if="totalPric!==''"><span class="name">商品金额：</span><span class="item">￥{{totalPric}}</span></li>
+          <!-- <li><span class="name">居家商品满2000减200</span><span class="item">-￥200</span></li> -->
         </ul>
         <div class="total">
           实付：￥2357
         </div>
       </div>
       <div class="title">备注</div>
-      <textarea name="" id="" cols="30" rows="10" placeholder="输入备注信息" v-model="desc"></textarea>
+      <textarea name="" id="" cols="30" rows="10" placeholder="输入备注信息" v-model="params.desc"></textarea>
       <div class="cutOffLine30"></div>
     </div>
     <div class="bottom">
@@ -73,8 +73,8 @@ import {
   http
 } from 'util/request'
 import {
-  goodOrderData
-  // createOrderData
+  goodOrderData,
+  createOrderData
 } from 'util/netApi'
 import {
   storage
@@ -97,13 +97,14 @@ export default {
       goodsItemId: '',
       num: '',
       pricesData: [],
-      desc: '',
+      totalPric: '',
       info: null,
       params: {
         favorableId: '',
         key: '',
         goodsItems: [],
-        nvoicingId: ''
+        invoicingId: '',
+        desc: ''
       }
 
     }
@@ -135,8 +136,11 @@ export default {
               this.pricesData[i].spec.push(spec[j].value)
             }
           }
+          storage.setLocalStorage(goodsInfo, params)
+          this.params.key = res.data.body.key
+          this.params.goodsItems = res.data.body.orderGoodsItems
+          this.totalPric = res.data.body.totalPrice
         }
-        storage.setLocalStorage(goodsInfo, params)
       }).catch(err => {
         console.log(err)
       })
@@ -158,18 +162,21 @@ export default {
       params.invoicingId = orderInfoData.invoicingId
       params.shippingMethod = orderInfoData.shippingMethod
       params.favorableId = this.favorableId
-      // params.fromCart = this.goodsInfo.fromCart
-      console.log(params)
+      params.invoicingType = this.invoicingType
+      params = Object.assign(this.params, params)
       if (!params.deliveryId) {
         this.toastShow('请选择配送方式！')
         return false
       }
 
-      // http(createOrderData, params).then(res => {
-      //   console.log(res)
-      // }).catch(err => {
-      //   console.log(err)
-      // })
+      http(createOrderData, params).then(res => {
+        console.log(res)
+        if (res.data.code === 0) {
+          this.$router.push('/immedPayment/' + res.data.body)
+        }
+      }).catch(err => {
+        console.log(err)
+      })
     },
     toastShow (text) {
       Toast({
