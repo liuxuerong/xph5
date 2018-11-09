@@ -1,7 +1,7 @@
 <template>
   <div class="sendWay">
     <common-nav-header :title="title"/>
-      <router-link class="cellLink" to="/addressAdmin">
+      <router-link class="cellLink" to="/addressAdmin/need">
         <div class="text">快递配送</div>
       </router-link>
         <router-link class="cellLink" to="/storeAddress">

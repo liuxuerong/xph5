@@ -47,8 +47,10 @@ import IntegralDetails from '@/pages/person/IntegralDetails'
 import IntegralRule from '@/pages/person/IntegralRule'
 import CardVoucher from '@/pages/person/CardVoucher'
 import CardDetails from '@/pages/person/CardDetails'
+import ChooseCoupons from '@/pages/createOrder/ChooseCoupons'
 import { accessToken } from 'util/const'
 import { storage } from 'util/storage'
+
 // meta: { requireLogin: true }
 Vue.use(Router)
 
@@ -187,7 +189,7 @@ const router = new Router({
       component: GoodsAddress
     },
     {
-      path: '/addressAdmin',
+      path: '/addressAdmin/:need?',
       name: 'addressAdmin',
       component: AddressAdmind
     },
@@ -279,6 +281,11 @@ const router = new Router({
       path: '/cardDetails/:type/:id',
       name: 'cardDetails',
       component: CardDetails
+    },
+    {
+      path: '/chooseCoupons',
+      name: 'chooseCoupons',
+      component: ChooseCoupons
     }
   ]
 })

@@ -25,38 +25,40 @@
                 <div v-else class="fullSub">
                   <span>无门槛</span>
                 </div>
-                <span class="operBtn newReceive" v-if="item.useStatus == '1'" @click.stop="receiveCard(item.id)">立即领取</span>
-                <span class="operBtn newUse" v-if="item.useStatus == '2'">立即使用</span>
-                <span class="operBtn noReceive" v-if="item.useStatus == '3'">领光了</span>
+                <!-- <span class="operBtn newReceive" v-if="item.useStatus == '1'" >立即领取</span> -->
+                <span class="operBtn newUse" v-if="item.type == '1' || item.type == '3'"  @click="useCoupon(item.id,item.subMoney,item.type)">立即使用</span>
+                <span class="operBtn newUse" v-else  @click="useCoupon(item.id,item.discount,item.type)">立即使用</span>
+                <!-- <span class="operBtn noReceive" v-if="item.useStatus == '3'">领光了</span> -->
               </div>
               <div class="activityTime">
                 <!-- 立即领取 可以领取-->
-                <span v-if="item.useStatus == '1'" class="activityTime">领取时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
+                <!-- <span v-if="item.useStatus == '1'" class="activityTime">领取时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span> -->
                 <!-- 立即使用  到达使用时间-->
-                <span v-else-if="item.useStatus == '2' && item.display=='2'" class="countDown">{{item.invalidDay}}天后过期</span>
+                <span class="countDown">{{item.invalidDay}}天后过期</span>
                 <!-- 立即使用 未到达使用时间 -->
-                <span v-else-if="item.useStatus == '2' && item.display=='1'">使用时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
+                <!-- <span v-else-if="item.useStatus == '2' && item.display=='1'">使用时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span> -->
                 <!-- 领光了 -->
-                <span v-if="item.useStatus == '3'" class="activityTime">领取时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
-                <button class="cardDetails" @click.stop="cardDetailsPages(item.useStatus,item.id,item)">详情&nbsp;></button>
+                <!-- <span v-if="item.useStatus == '3'" class="activityTime">领取时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span> -->
               </div>
             </div>
           </div>
         </div>
+        <div class="noCoupons">不使用优惠券</div>
       </div>
       <div class="cardVoucherPage" v-else>
         <common-empty :emptyObj="emptyObj"/>
       </div>
     </div>
-    <div>不使用优惠券</div>
   </div>
 </template>
 <script>
 // import router from '@/router/index.js'
-import UserinfoHeader from './ComUserSetHeader'
+import UserinfoHeader from '../person/ComUserSetHeader'
 import { Tab, TabItem } from 'vux'
 import {listCouponByGoodsItemIds} from 'util/netApi'
 import {http} from 'util/request'
+import {storage} from 'util/storage'
+import {couponByGoods, orderInfo} from 'util/const.js'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
 export default {
   data () {
@@ -80,17 +82,31 @@ export default {
   methods: {
     // 优惠券页面渲染
     headleTabsChange () {
-      let params = {
-        CouponByGoodsItemIdDTO: 1,
-        goodsItemId: 1,
-        num: 100
-      }
-      http(listCouponByGoodsItemIds, params).then((result) => {
-        console.log(result)
-        this.list = result.data.body.list
+      let params = storage.getLocalStorage(couponByGoods)
+      http(listCouponByGoodsItemIds, params).then((response) => {
+        console.log(response)
+        if (response.data.code === 0) {
+          this.list = response.data.body
+        }
       }).catch((err) => {
         console.log(err)
       })
+    },
+    // 立即使用优惠券
+    useCoupon (id, name, type) {
+      let info = storage.getLocalStorage(orderInfo) || {}
+      info.couponId = id
+      if (type === 1 || type === 3) {
+        info.couponName = '￥' + name
+      } else {
+        if (name.toString().replace('.', '').length === 2) {
+          info.couponName = parseInt(name.toString().replace('.', ''))
+        } else {
+          info.couponName = name.toString().replace('.', '') / 10
+        }
+      }
+      storage.setLocalStorage(orderInfo, info)
+      this.$router.push({path: '/createOrder/1'})
     }
   },
   mounted () {
@@ -104,9 +120,6 @@ export default {
 }
 </script>
 <style lang="stylus">
-body, html, #app
-  width 100%
-  background-color #f5f5f5!important
 .commonEmpty
   padding-top 400px!important
 </style>
@@ -116,7 +129,7 @@ body, html, #app
     width 100%
     box-sizing border-box
     padding-top 132px
-    background #F5F5F5
+    background #fff
   .cardVoucherTitle
     width 100%
     height 120px
@@ -146,7 +159,6 @@ body, html, #app
     width 100%
     box-sizing border-box
     padding 34px 30px 0
-    background #f5f5f5
     .cardVouItem
       width 100%
       height 280px
@@ -229,4 +241,17 @@ body, html, #app
     background #fff
     font-size 30px
     color #666666
+  .noCoupons
+    width calc(100% - 100px)
+    height 140px
+    line-height 140px
+    border 1px solid #ba825a
+    font-size 50px
+    color #ba825a
+    text-align center
+    position fixed
+    margin auto
+    left 0
+    right 0
+    bottom 100px
 </style>
