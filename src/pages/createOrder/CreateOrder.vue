@@ -37,7 +37,7 @@
         <div class="text border-bottom">使用优惠券</div>
       </router-link>
       <router-link class="cellLink" to="/invoice">
-        <div class="text">发票<span class="fr" v-if="info&&info.addressType">{{info.invoiceTypeValue}}&nbsp;&nbsp;{{info.invoiceStyleValue}}</span></div>
+        <div class="text">发票<span class="fr" v-if="info&&info.invoiceTypeValue">{{info.invoiceTypeValue}}&nbsp;&nbsp;{{info.invoiceStyleValue}}</span></div>
       </router-link>
       <div class="cutOffLine30"></div>
       <div class="priceInfo">

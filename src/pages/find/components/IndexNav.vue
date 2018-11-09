@@ -144,7 +144,7 @@ export default {
       tabbar: [],
       hotelDetails: '/hotelDetails/',
       emptyObj: {
-        emptyImg: '/static/images/commentEmptyCart.png',
+        emptyImg: '/static/images/commentEmptyGoods.png',
         emptyBold: '暂无抢购商品',
         emptyP: '先去别的地方逛逛吧~',
         buttonText: null,
