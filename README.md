@@ -14,6 +14,16 @@ npm run dev
 # build for production with minification
 npm run build
 
+# build for testing with minification
+npm run build--test
+
+# build for preview with minification
+npm run build--prev
+
+# build for production with minification
+npm run build--prod
+
+
 # build for production and view the bundle analyzer report
 npm run build --report
 ```

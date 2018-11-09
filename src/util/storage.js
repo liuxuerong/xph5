@@ -21,6 +21,16 @@ const storage = {
       }
     }
   },
+  // 获取本地存储没有指定存储时间
+  getLocalStorageLong (name) {
+    const data = localStorage.getItem(name)
+    const dataObj = JSON.parse(data)
+    if (dataObj) {
+      return dataObj.data
+    } else {
+      return null
+    }
+  },
   // 删除本地存储
   delLocalStorage (name) {
     localStorage.removeItem('name')

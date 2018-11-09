@@ -3,8 +3,9 @@
     <ul>
       <li v-for="item in articleRecommends" :key="item.id">
         <router-link :to="linkTo+item.id">
-          <img v-lazy="imageUrl+item.articleCoverImage" alt="">
+        <img v-lazy="imageUrl+item.articleCoverImage" alt="">
         <p class="title">{{item.title}} <em v-if="item.subTitle">|</em> {{item.subTitle}}</p>
+        <slot></slot>
         <div class="summary">{{item.summary}}详细介绍详细介绍详细介绍详细介绍详细介绍详细介绍详细介绍
 详细介绍详细介绍详细介绍详细介绍详细介绍</div>
         </router-link>

@@ -63,6 +63,7 @@ export default {
   },
   methods: {
     initHallAtlasData (index) {
+      let id = this.experience[index - 1].experienceCategoryId
       for (let i = 0; i < this.experience.length; i++) {
         let flag = true
         for (let j = 0; j < this.hallAtlasData.length; j++) {
@@ -90,9 +91,11 @@ export default {
           index: i
         })
       }
-      this.getImgsList(index)
-      // this.scrollInitTopBar()
-      // console.log(this.$refs.xpAtlasTopContent.getElementsByClassName('vux-tab-erap'))
+      this.hallAtlasData.forEach((value, index) => {
+        if (value.experienceCategoryId === id) {
+          this.getImgsList(index)
+        }
+      })
     },
     onItemClick (index) {
       this.index = index
@@ -100,6 +103,7 @@ export default {
     },
     getImgsList (i) {
       this.imgsList = this.hallAtlasData[i].list
+      this.index = i
     }
   },
   created () {

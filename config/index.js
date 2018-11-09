@@ -44,6 +44,9 @@ module.exports = {
   },
 
   build: {
+    testEnv: require('./test.env'),
+    prevEnv: require('./prev.env'),
+    prodEnv: require('./prod.env'),
     // Template for index.html
     index: path.resolve(__dirname, '../dist/index.html'),
 

@@ -16,8 +16,6 @@
 </template>
 
 <script>
-// import {searchHistory} from 'util/const'
-// import {storage} from 'util/storage'
 export default {
   name: 'SearchHistory',
   components: {},

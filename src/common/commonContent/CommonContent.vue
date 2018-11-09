@@ -38,18 +38,9 @@ export default {
     goodsItems: Array,
     details: Object
   },
-  computed: {
-
-  },
-  watch: {
-
-  },
   methods: {
-
     updateContent () {
       const goodsItems = this.$refs.goodsItemsContainer.children
-      console.log(goodsItems)
-      console.log(this.details.content)
       this.contentArr = this.details.content.split('{')
       let newArr = []
       for (let i = 0; i < this.contentArr.length; i++) {
@@ -62,12 +53,7 @@ export default {
       }
       for (let i = 0; i < newArr.length; i++) {
         let j = 0
-        const innerStr = newArr[i]
-        console.log(innerStr)
         if (!isNaN(newArr[i])) {
-          console.log(i)
-          console.log(goodsItems[innerStr])
-          console.log(goodsItems[i])
           let goods = goodsItems[j].innerHTML
           newArr[i] = goods
           j++

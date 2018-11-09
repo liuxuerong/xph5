@@ -9,6 +9,7 @@ import HallDetails from '@/pages/hall/HallDetails'
 import HallAtlas from '@/pages/hall/HallAtlas'
 import Story from '@/pages/story/Story'
 import StoryDetails from '@/pages/StoryDetails/StoryDetails'
+import HotelDetails from '@/pages/StoryDetails/HotelDetails'
 import Details from '@/pages/details/Details'
 import Instructions from '@/pages/invoice/Instructions'
 import Invoice from '@/pages/invoice/Invoice'
@@ -97,6 +98,11 @@ const router = new Router({
       path: '/storyDetails/:id',
       name: 'StoryDetails',
       component: StoryDetails
+    },
+    {
+      path: '/hotelDetails/:id',
+      name: 'HotelDetails',
+      component: HotelDetails
     },
     {
       path: '/goods',
@@ -294,14 +300,10 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(res => res.meta.requireLogin)) {
     // 判断是否需要登录权限
     if (!storage.getLocalStorage(accessToken)) {
-      // notice.errorModal('未授权，请重新登录', function () {
-      //   router.push({path: '/login'})
-      // })
       next({
         path: '/login'
       })
     } else {
-      // 没登录则跳转到登录界面
       next()
     }
   } else {

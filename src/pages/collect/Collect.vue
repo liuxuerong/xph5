@@ -180,7 +180,7 @@ export default {
     li
       margin-bottom 150px
     .emptyBox
-      width 50% !important
+      width 3.395556rem !important
 .commonEmpty
   padding-top  4.5rem !important
   background #fff !important
