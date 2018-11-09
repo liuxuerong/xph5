@@ -6,7 +6,7 @@
         <div class="top border-bottom">
           <div class="left border-right" v-if="pastList">
             <span>￥<i>{{pastList.subMoney}}</i></span>
-            <!-- <i v-else-if="list.type == '2'"><i>{{list.discount.toString().split('.')[1]}}</i> 折</i> -->
+            <!-- <i v-else-if="list.type == '2'"><i>{{list.discount}}</i> 折</i> -->
             <p v-if="pastList.applyType == '1'">通用券</p>
             <p v-if="pastList.applyType == '2'">app专享</p>
             <p v-if="pastList.applyType == '3'">门店专享</p>
@@ -36,7 +36,7 @@
         <div class="top border-bottom">
           <div class="left border-right" v-if="list">
             <span v-if="list.type == '1' || list.type == '3'">￥<i>{{list.subMoney}}</i></span>
-            <span v-else-if="list.type == '2'"><i>{{list.discount.toString().split('.')[1]}}</i> 折</span>
+            <span v-else-if="list.type == '2'"><i>{{list.discount*10}}</i> 折</span>
             <p v-if="list.applyType == '1'">通用券</p>
             <p v-if="list.applyType == '2'">app专享</p>
             <p v-if="list.applyType == '3'">门店专享</p>

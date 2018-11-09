@@ -90,6 +90,7 @@ export default {
     },
     getGoods () {
       http(goodscollectionList).then(res => {
+        console.log(res)
         let goods = res.data.body.list
         for (let i = 0; i < goods.length; i++) {
           goods[i].coverImage = goods[i].goodsImage

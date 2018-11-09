@@ -52,7 +52,7 @@
       <div class="collectBox" v-else>
         <!-- 有收藏商品 -->
         <div class="goodsCollImg">
-          <img :src="item" alt="" v-for="(item , index) in goodsCollArr" :key="index">
+          <img :src="imageUrl + item.goodsPics[0].value" alt="" v-for="item in goodsCollArr" :key="item.id" @click="goodsDetails(item.id)">
         </div>
       </div>
       <div class="collectNumber">
@@ -173,6 +173,7 @@ export default {
       http(memberCenter).then((response) => {
         // console.log(response)
         let data = response.data.body
+        console.log(data)
         this.coupons = data.coupons
         this.$refs.cardScrollWidth.style.width = (this.coupons.length * 970 - 50) / 112.5 + 'rem'
 
@@ -187,11 +188,11 @@ export default {
         if (goodsArr.length > 0) {
           if (goodsArr.length > 3) {
             for (let i = 0; i < 3; i++) {
-              this.goodsCollArr.push(config.imageUrl + goodsArr[i].goodsPics[0].value)
+              this.goodsCollArr.push(goodsArr[i])
             }
           } else {
             for (let i = 0; i < goodsArr.length; i++) {
-              this.goodsCollArr.push(config.imageUrl + goodsArr[i].goodsPics[0].value)
+              this.goodsCollArr.push(goodsArr[i])
             }
           }
         }
@@ -266,6 +267,10 @@ export default {
     // 优惠卡券
     cardVoucher () {
       router.push('./cardVoucher')
+    },
+    // 商品详情
+    goodsDetails (id) {
+      router.push('/details/' + id)
     }
   },
 
