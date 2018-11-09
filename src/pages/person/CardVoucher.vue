@@ -8,11 +8,12 @@
         </div>
       </div>
       <div class="cardVoucherPage" v-if="index === 0 && list.length > 0">
-        <div class="cardVouItem" v-for="(item,index) in list" :key="index" @click="cardDetailsPages(item.useStatus,item.id,item)">
+        <div class="cardVouItem" v-for="item in list" :key="item.id">
           <div class="top">
             <div class="left">
               <span v-if="item.type == '1' || item.type == '3'">￥<i>{{item.subMoney}}</i></span>
-              <span v-else-if="item.type == '2'"><i>{{item.discount.toString().split('.')[1]}}</i> 折</span>
+              <span v-else-if="item.type == '2' && item.discount.toString().replace('.', '').length === 2"><i>{{parseInt(item.discount.toString().replace(".", ""))}}</i> 折</span>
+              <span v-else-if="item.type == '2' && item.discount.toString().replace('.', '').length === 3"><i>{{item.discount.toString().replace(".", "")/10}}</i> 折</span>
               <p v-if="item.applyType == '1'">通用券</p>
               <p v-if="item.applyType == '2'">app专享</p>
               <p v-if="item.applyType == '3'">门店专享</p>
@@ -29,9 +30,9 @@
                 <div v-else class="fullSub">
                   <span>无门槛</span>
                 </div>
-                <router-link to="/" class="operBtn newReceive" v-if="item.useStatus == '1'">立即领取</router-link>
-                <router-link to="/" class="operBtn newUse" v-if="item.useStatus == '2'">立即使用</router-link>
-                <router-link to="/" class="operBtn noReceive" v-if="item.useStatus == '3'">领光了</router-link>
+                <span class="operBtn newReceive" v-if="item.useStatus == '1'" @click.stop="receiveCard(item.id)">立即领取</span>
+                <span class="operBtn newUse" v-if="item.useStatus == '2'">立即使用</span>
+                <span class="operBtn noReceive" v-if="item.useStatus == '3'">领光了</span>
               </div>
               <div class="activityTime">
                 <!-- 立即领取 可以领取-->
@@ -42,7 +43,7 @@
                 <span v-else-if="item.useStatus == '2' && item.display=='1'">使用时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
                 <!-- 领光了 -->
                 <span v-if="item.useStatus == '3'" class="activityTime">领取时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
-                <button class="cardDetails">详情&nbsp;></button>
+                <button class="cardDetails" @click.stop="cardDetailsPages(item.useStatus,item.id,item)">详情&nbsp;></button>
               </div>
             </div>
           </div>
@@ -50,7 +51,37 @@
       </div>
       <div class="cardVoucherPage" v-else-if="index === 1 && list.length > 0">
       </div>
-      <div class="cardVoucherPage" v-else-if="index === 2 && list.length > 0">
+      <div class="cardVoucherPage cardVoucherPageThree" v-else-if="index === 2 && list.length > 0">
+        <div class="cardVouItem" v-for="item in list" :key="item.id" @click="cardDetailsPages(item.useStatus,item.id,item)">
+          <div class="top">
+            <div class="left">
+              <span v-if="item.type == '1' || item.type == '3'">￥<i>{{item.subMoney}}</i></span>
+              <span v-else-if="item.type == '2'"><i>{{parseFloat(item.discount*10)}}</i> 折</span>
+              <p v-if="item.applyType == '1'">通用券</p>
+              <p v-if="item.applyType == '2'">app专享</p>
+              <p v-if="item.applyType == '3'">门店专享</p>
+            </div>
+            <div class="right">
+              <h3>{{item.name}}</h3>
+              <div class="displayBtn">
+                <div v-if="item.condMoney != '0'" class="fullSub">
+                  <span v-if="item.range == '1'">满{{item.condMoney}}.0可用(限指定商品)</span>
+                  <span v-if="item.range == '2'">满{{item.condMoney}}.0可用(限指定门店)</span>
+                  <span v-if="item.range == '3'">满{{item.condMoney}}.0可用(限指定分类)</span>
+                  <span v-if="item.range == '4'">满{{item.condMoney}}.0可用</span>
+                </div>
+                <div v-else class="fullSub">
+                  <span>无门槛</span>
+                </div>
+                <router-link to="/" class="operBtn noReceive">已失效</router-link>
+              </div>
+              <div class="activityTime">
+                <span class="activityTime">{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
+                <button class="cardDetails" @click.stop="cardDetailsPages(item.useStatus,item.id,item)">详情&nbsp;></button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="cardVoucherPage" v-else>
         <common-empty :emptyObj="emptyObj"/>
@@ -62,13 +93,11 @@
 import router from '@/router/index.js'
 import UserinfoHeader from './ComUserSetHeader'
 import { Tab, TabItem } from 'vux'
-import {coupon} from 'util/netApi'
+import {coupon, memberCouponRecord} from 'util/netApi'
 import {http} from 'util/request'
 import {storage} from 'util/storage'
-import {
-  mapMutations,
-  mapState
-} from 'vuex'
+import {Toast} from 'mint-ui'
+import {mapMutations, mapState} from 'vuex'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
 export default {
   data () {
@@ -93,10 +122,6 @@ export default {
   },
   methods: {
     ...mapMutations(['changeListObj']),
-    // 卡券页面渲染
-    cardVoucherRender () {
-
-    },
     // tab切换
     headleTabsChange (index) {
       if (index === 0) {
@@ -119,16 +144,33 @@ export default {
           page: 1,
           rows: 100
         }
+        console.log(index)
         http(coupon, params).then((result) => {
           console.log(result)
           this.list = result.data.body.list
-          if (index === 0) {
-            console.log(666)
-          }
         }).catch((err) => {
           console.log(err)
         })
       }
+    },
+    // 领取优惠券
+    receiveCard (id) {
+      let params = {
+        couponId: id
+      }
+      http(memberCouponRecord, params).then((response) => {
+        console.log(response)
+        if (response.data.code === 0) {
+          Toast({
+            message: '优惠券领取成功',
+            position: 'bottom',
+            duration: 5000
+          })
+          this.headleTabsChange(0)
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
     },
     // 卡券详情
     cardDetailsPages (type, id, item) {
@@ -142,6 +184,7 @@ export default {
   },
   mounted () {
     this.headleTabsChange(0)
+    console.log(this.list)
   },
   computed: mapState({
     listObj: state => state.card.listObj
@@ -149,6 +192,9 @@ export default {
   watch: {
     '$route' (to, from) {
       this.$router.go(0)
+    },
+    list: function (v) {
+      console.log(v)
     }
   }
 }
@@ -185,6 +231,13 @@ body, html, #app
       .hrefCss.active
         color #262626
         border-bottom 8px solid #333333
+  .cardVoucherPage.cardVoucherPageThree
+    .cardVouItem
+      width 100%
+      height 280px
+      margin-bottom 50px
+      background #fff
+      bgImage('/static/images/cardVouItemBg')
   .cardVoucherPage
     width 100%
     box-sizing border-box

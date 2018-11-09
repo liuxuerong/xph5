@@ -71,6 +71,8 @@ export const getMemberIntegral = {url: '/integral/getMemberIntegral', method: 'G
 // 优惠券
 export const coupon = {url: '/coupon/page', method: 'GET', version: v1} // 列表
 export const getDetailById = {url: '/memberCouponRecord/getDetailById', method: 'GET', version: v1}
+export const memberCouponRecord = {url: '/memberCouponRecord/add', method: 'POST', version: v1}
+export const listCouponByGoodsItemIds = {url: '/coupon/listCouponByGoodsItemIds', method: 'POST', version: v1} // 用户订单可用优惠券
 
 // 发票
 export const addInvoice = { url: '/invoice/api', method: 'POST', version: v1 } // 新增
