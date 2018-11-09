@@ -1,12 +1,12 @@
 <template>
-  <div class="storyDetailsHeader">
+  <div class="storyDetailsHeader border-bottom" >
     <img :src="imageUrl+details.articleCoverImage" alt="">
     <div class="titleCont">
       <p class="title">{{details.title}} <em v-if="details.subTitle !==''">|</em> {{details.subTitle}}</p>
       <common-collection class="collection"/>
     </div>
-    <dir class="summary">{{details.summary}}
-    </dir>
+    <div class="summary">{{details.summary}}
+    </div>
   </div>
 </template>
 
@@ -34,6 +34,7 @@ export default {
 
 <style lang="stylus" scoped>
 .storyDetailsHeader
+    padding-bottom 60px
     img
       width 100%
       height 600px
@@ -49,10 +50,10 @@ export default {
       font-weight 600
       line-height 100px
       color #333
+      flex 1
     .summary
       color #808080
       font-size 36px
       line-height 50px
-      margin-bottom 100px
       padding 0 50px
 </style>
