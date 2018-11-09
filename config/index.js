@@ -11,8 +11,8 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {},
-    // host: 'localhost',
-    host:'192.168.1.71',
+    host: 'localhost',
+    // host:'192.168.1.71',
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
@@ -45,6 +45,9 @@ module.exports = {
   },
 
   build: {
+    testEnv: require('./test.env'),
+    prevEnv: require('./prev.env'),
+    prodEnv: require('./prod.env'),
     // Template for index.html
     index: path.resolve(__dirname, '../dist/index.html'),
 

@@ -29,9 +29,6 @@
           <div class="goodsContainer">
             <common-img-prices class="goodsItem" v-for="item in bestChoiceGoods" :key="item.id" :pricesData="item" v-if="recommendFlag" />
             <div class="emptyBox"></div>
-            <!-- <div class="moreGoods">
-                  <a href="#">查看<br>更多</a>
-                </div> -->
           </div>
           <divider>哎呀！底线到了</divider>
         </div>
@@ -39,7 +36,7 @@
       </mt-tab-container-item>
       <mt-tab-container-item id="supplies">
         <index-nav-banner :bannerData="indexSuppliesData.fiveStarQuality" :showMore="false" :showContent="true" v-if="suppliesFlag" />
-        <index-nav-banner :bannerData="indexSuppliesData.fiveStarHotel" :showMore="false" :showContent="false" :showItems="true" v-if="suppliesFlag" />
+        <index-nav-banner :bannerData="indexSuppliesData.fiveStarHotel" :showMore="false" :showContent="false" :showItems="true" v-if="suppliesFlag" :linkUrl="hotelDetails"/>
         <divider>哎呀！底线到了</divider>
       </mt-tab-container-item>
       <mt-tab-container-item id="products">
@@ -63,7 +60,7 @@
           </div>
         </div>
         <div class="indexNavItem">
-          <index-nav-banner :bannerData="indexProductsData.hotSale" :showMore="false" :showContent="false" v-if="productsFlag" />
+          <index-nav-banner :bannerData="indexProductsData.hotSale" :showMore="false" :showContent="false" v-if="productsFlag"  />
         </div>
         <div class="goodsContainer">
           <common-img-prices class="goodsItem" v-for="item in hotSale" :key="item.id" :pricesData="item" v-if="productsFlag" />
@@ -72,7 +69,7 @@
         <divider>哎呀！底线到了</divider>
       </mt-tab-container-item>
       <mt-tab-container-item id="buy">
-        限时购
+        <common-empty v-if="!buyData.length" :emptyObj="emptyObj"/>
       </mt-tab-container-item>
     </mt-tab-container>
   </div>
@@ -90,6 +87,7 @@ import IndexNavSwiper from './IndexNavSwiper'
 import IndexNavBanner from './IndexNavBanner'
 import IndexContent from './IndexContent'
 import CommonImgPrices from 'common/commonImgPrices/CommonImgPrices'
+import CommonEmpty from 'common/commonEmpty/CommonEmpty'
 import {
   recommend,
   hotel,
@@ -124,7 +122,8 @@ export default {
     CommonImgPrices,
     IndexNavBanner,
     IndexContent,
-    Divider
+    Divider,
+    CommonEmpty
   },
   data () {
     return {
@@ -142,7 +141,15 @@ export default {
       customized: [],
       hotSale: [],
       imageUrl: config.imageUrl,
-      tabbar: []
+      tabbar: [],
+      hotelDetails: '/hotelDetails/',
+      emptyObj: {
+        emptyImg: '/static/images/commentEmptyCart.png',
+        emptyBold: '暂无抢购商品',
+        emptyP: '先去别的地方逛逛吧~',
+        buttonText: null,
+        buttonRouter: null
+      }
     }
   },
   computed: mapState({
@@ -150,9 +157,6 @@ export default {
   }),
   watch: {
     selected (val) {
-      // this.changeTabbarFixed(false)
-      // document.querySelector('.index').scrollTop = 0
-      // console.log(document.body.scrollTop)
       switch (val) {
         case 'supplies':
           this.getHotelData()
@@ -163,8 +167,6 @@ export default {
         case 'buy':
           this.gettimeLimitData()
           break
-        default:
-          break
       }
     }
   },
@@ -173,9 +175,6 @@ export default {
   },
   mounted () {
     this.getTabbar()
-    // this.$vux.loading.show({
-    //   // text: 'Loading'
-    // })
     this.scroll = new BScroll(this.$refs.wrapper, {
       bounce: {
         left: true,
@@ -200,9 +199,6 @@ export default {
       if (!this.recommendFlag) {
         http(recommend)
           .then(res => {
-            if (res.data.code === 0) {
-              this.$vux.loading.hide()
-            }
             for (let key in res.data.body) {
               this.indexRecomondData[key] = res.data.body[key]
             }
@@ -219,9 +215,6 @@ export default {
       if (!this.suppliesFlag) {
         http(hotel)
           .then(res => {
-            if (res.data.code === 0) {
-              this.$vux.loading.hide()
-            }
             for (let key in res.data.body) {
               this.indexSuppliesData[key] = res.data.body[key]
             }
@@ -236,9 +229,6 @@ export default {
       if (!this.productsFlag) {
         http(houseGoods)
           .then(res => {
-            if (res.data.code === 0) {
-              this.$vux.loading.hide()
-            }
             for (let key in res.data.body) {
               this.indexProductsData[key] = res.data.body[key]
             }
@@ -256,16 +246,11 @@ export default {
       if (!this.buyFlag) {
         http(timeLimit)
           .then(res => {
-            if (res.data.code === 0) {
-              this.$vux.loading.hide()
-            }
+            console.log(res)
             for (let key in res.data.body) {
               this.buyData[key] = res.data.body[key]
             }
             this.buyFlag = true
-            // this.homeSelection = this.indexProductsData.homeSelection.articles[0].goodsItems
-            // this.customized = this.indexProductsData.customized.articles[0].goodsItems
-            // this.hotSale = this.indexProductsData.hotSale.articles[0].goodsItems
           })
           .catch(err => {
             console.log(err)
@@ -322,6 +307,9 @@ export default {
         margin 0 auto
         margin-top 157px
         padding-top 76px
+  .commonEmpty
+    padding-top 100px
+    padding-bottom 100px
 .indexNavItem
   border-bottom 10px solid #F5F5F5
 .indexNavItem:last-child

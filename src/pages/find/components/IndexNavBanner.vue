@@ -6,7 +6,7 @@
     <div
       v-for="item in bannerData.articles"
       :key="item.id">
-      <router-link :to="'/storyDetails/'+item.id">
+      <router-link :to="linkUrl+item.id">
       <img
         v-lazy="imageUrl+item.articleCoverImage"
         alt="" class="banner">
@@ -17,7 +17,6 @@
       <index-items
         :itemsData="item"
         v-if="showItems"/>
-
     </div>
   </div>
 
@@ -40,6 +39,10 @@ export default {
           }
         }
       }
+    },
+    linkUrl: {
+      type: String,
+      default: '/storyDetails/'
     },
     showMore: Boolean,
     showContent: Boolean,

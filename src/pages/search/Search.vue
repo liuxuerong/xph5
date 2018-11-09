@@ -80,7 +80,7 @@ export default {
       this.hasSearch = false
     },
     saveSearchHistory () {
-      this.searchHistoryStorage = storage.getLocalStorage(searchHistory)
+      this.searchHistoryStorage = storage.getLocalStorageLong(searchHistory)
       this.searchHistoryStorage = this.searchHistoryStorage || []
       if (this.searchVal.trim() !== '') {
         this.searchHistoryStorage.push(this.searchVal)
