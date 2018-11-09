@@ -33,9 +33,9 @@
         </ul>
       </div>
       <div class="title">支付信息</div>
-      <router-link class="cellLink" to="/">
+      <div class="cellLink" @click.prevent="chooseCoupons">
         <div class="text border-bottom">使用优惠券</div>
-      </router-link>
+      </div>
       <router-link class="cellLink" to="/invoice">
         <div class="text">发票<span class="fr" v-if="info&&info.invoiceTypeValue">{{info.invoiceTypeValue}}&nbsp;&nbsp;{{info.invoiceStyleValue}}</span></div>
       </router-link>
@@ -61,6 +61,7 @@
 </template>
 
 <script>
+import router from '@/router/index.js'
 import CommonNavHeader from 'common/commonHeader/CommonNavHeader'
 import OrderItem from './components/OrderItem'
 import {
@@ -81,7 +82,8 @@ import {
 } from 'util/storage'
 import {
   goodsInfo,
-  orderInfo
+  orderInfo,
+  couponByGoods
 } from 'util/const.js'
 export default {
   name: 'CreateOrder',
@@ -98,6 +100,7 @@ export default {
       num: '',
       pricesData: [],
       totalPric: '',
+      couponArr: [],
       info: null,
       params: {
         favorableId: '',
@@ -184,6 +187,17 @@ export default {
         position: 'center',
         duration: 1000
       })
+    },
+    // 使用优惠券
+    chooseCoupons () {
+      for (let i = 0; i < this.pricesData.length; i++) {
+        this.couponArr[i] = {
+          'goodsItemId': this.pricesData[i].goodsId,
+          'num': this.pricesData[i].num
+        }
+      }
+      storage.setLocalStorage(couponByGoods, this.couponArr)
+      router.push('/chooseCoupons')
     }
   },
   created () {

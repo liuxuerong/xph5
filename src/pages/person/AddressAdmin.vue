@@ -2,9 +2,9 @@
   <div class="wrapper">
     <userinfo-header title="我的地址" oper="新增地址" @operComplete="onOperComplete"></userinfo-header>
     <div class="addressCon">
-      <div class="addressItem border-bottom" v-for="item in addList" :key="item.id" @click="selectGoodsAddress">
+      <div class="addressItem border-bottom" v-for="item in addList" :key="item.id">
         <div class="addressInfo clearfix">
-          <div class="left">
+          <div class="left" @click="selectGoodsAddress(item.id)">
             <div class="top clearfix">
               <h4>{{item.receiverName}}</h4>
               <span>{{item.phone}}</span>
@@ -24,6 +24,8 @@ import router from '@/router/index.js'
 import UserinfoHeader from './ComUserSetHeader'
 import { listDelivery } from 'util/netApi'
 import {http} from 'util/request'
+import {storage} from 'util/storage'
+import {orderInfo} from 'util/const.js'
 export default {
   data () {
     return {
@@ -67,8 +69,14 @@ export default {
       router.push('./goodsAddress/2/' + id)
     },
     // 选择地址
-    selectGoodsAddress () {
-
+    selectGoodsAddress (id) {
+      if (this.$route.params.need) {
+        let info = storage.getLocalStorage(orderInfo) || {}
+        info.addressId = id
+        info.addressType = '快递配送'
+        storage.setLocalStorage(orderInfo, info)
+        this.$router.push({path: '/createOrder/1'})
+      }
     }
   },
   mounted () {
