@@ -64,6 +64,7 @@ export default {
     }
   },
   mounted () {
+    console.log('VConsole is cool')
     const searchTop = this.$refs.commonSearchDom.$el.offsetTop - this.$refs.commonSearchDom.$el.style.height
     const swiperTop = this.$refs.indexSwiper.$el.offsetTop
     let _this = this

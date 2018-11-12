@@ -18,7 +18,7 @@
               <div class="bottom clearfix">
                 <span class="tag fl" v-if="goodsItem.status!=1">已失效</span>
                 <span class="modify" v-show="showModify">
-                  <x-number :min="1" :max="goodsItem.stock" v-model="goodsItem.num" @click.stop.prevent fillable="true"></x-number>
+                  <x-number :min="1" :max="goodsItem.stock" v-model="goodsItem.num" @click.stop.prevent :fillable="true"></x-number>
                 </span>
                 <i class="price fr">￥{{goodsItem.price}}</i>
               </div>

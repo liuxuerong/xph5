@@ -1,7 +1,7 @@
 <template>
   <div class="xpGoods">
     <keep-alive>
-      <div>
+      <div class="xpGoodsWrap">
         <common-nav-search />
         <div class="xpGoodsTop border-bottom" ref="xpGoodsTop">
           <div class="xpGoodsTopContent">
@@ -12,12 +12,14 @@
         </div>
         <div ref="xpStoryContent" class="xpStoryContent">
           <div>
-            <ul class="goodsContainer" v-if="goodsList.length">
-              <li v-for="item in goodsList" v-if="goodsList.length" :key="item.id">
+            <ul class="goodsContainer" v-if="goodsListData.length">
+              <li v-for="item in goodsListData" v-if="goodsListData.length" :key="item.id">
                 <common-img-prices :pricesData="item" />
               </li>
+              <li class="emptyBox"></li>
             </ul>
-            <common-empty v-else :emptyObj="emptyObj" />
+            <common-empty v-if="!noMore&&!goodsListData.length" :emptyObj="emptyObj" />
+            <divider v-if="noMore">哎呀！底线到了</divider>
           </div>
         </div>
       </div>
@@ -31,7 +33,8 @@ import CommonImgPrices from 'common/commonImgPrices/CommonImgPrices'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
 import {
   Tab,
-  TabItem
+  TabItem,
+  Divider
 } from 'vux'
 import {
   http
@@ -51,17 +54,18 @@ export default {
     CommonImgPrices,
     CommonEmpty,
     Tab,
-    TabItem
-
+    TabItem,
+    Divider
   },
   data () {
     return {
       imageUrl: config.imageUrl,
       goodsCategoryList: [],
       tabbar: [],
-      goodsList: [],
+      goodsListData: [],
       page: 1,
       categoryId: '',
+      noMore: false,
       emptyObj: {
         emptyImg: '/static/images/commentEmptyGoods.png',
         emptyBold: '暂无商品',
@@ -90,6 +94,8 @@ export default {
     onItemClick (index) {
       this.categoryId = this.$refs.tabItem[index].$el.id
       this.page = 1
+      this.goodsListData = []
+      this.noMore = false
       this.getGoodsList(this.categoryId, this.page)
       this.scroll.refresh()
     },
@@ -101,32 +107,44 @@ export default {
       }
       http(goodsList, param).then(res => {
         console.log(res)
-        this.goodsList = res.data.body.list
-        console.log()
+        this.goodsListData = this.goodsListData.concat(res.data.body.list)
         this.scrollInit()
+        console.log(res.data.body.list)
+        if (this.page !== 1 && res.data.body.list.length === 0) {
+          this.scroll.finishPullUp()
+          this.noMore = true
+        }
+        // this.scroll.refresh()
       })
     },
 
     scrollInit () {
-      this.scroll = new BScroll(this.$refs.xpStoryContent, {
-        scrollY: true,
-        click: true,
-        pullUpLoad: {
-          threshold: -50,
-          moreTxt: '加载更多',
-          noMoreTxt: '没有更多数据了'
-        },
-        bounce: {
-          top: false,
-          bottom: true
-        }
-      })
-      this.scroll.on('pullingUp', () => {
-        this.getGoodsList(this.categoryId, this.page++)
+      if (!this.scroll) {
+        this.scroll = new BScroll(this.$refs.xpStoryContent, {
+          scrollY: true,
+          click: true,
+          pullUpLoad: {
+            threshold: -50,
+            moreTxt: '加载更多',
+            noMoreTxt: '没有更多数据了'
+          },
+          bounce: {
+            top: false,
+            bottom: true
+          }
+        })
+        this.scroll.on('pullingUp', () => {
+          console.log(this.page)
+          this.page++
+          this.getGoodsList(this.categoryId, this.page)
+          console.log(this.page)
+        })
+      } else {
         this.scroll.refresh()
-        // this.finishPullUp()
-      })
-      return this.scroll
+        this.scroll.finishPullUp()
+      }
+
+      // return this.scroll
     },
     scrollInitTopBar () {
       return (this.scrollTopBar = new BScroll(this.$refs.xpGoodsTop, {
@@ -175,6 +193,8 @@ export default {
   height 100%
   padding-top 202px
   background #f5f5f5
+  .xpGoodsWrap
+    height 100%
   .xpGoodsTop
     height 106px
     line-height 106px
@@ -203,6 +223,8 @@ export default {
   background-color #fff
   li
     margin-bottom 250px
+  .emptyBox
+    width 3.395556rem
 .border-bottom::before
   z-index 9999
 </style>

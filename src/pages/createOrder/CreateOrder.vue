@@ -122,6 +122,9 @@ export default {
     '$route' (to, from) {
       if (to.path === '/createOrder/1') {
         this.info = storage.getLocalStorage(orderInfo)
+        if (this.info.couponId) {
+          this.getDetails()
+        }
       } else if (to.path === '/createOrder') {
         storage.setLocalStorage(orderInfo, {})
       }
@@ -131,6 +134,7 @@ export default {
     getDetails () {
       const params = storage.getLocalStorage(goodsInfo)
       http(goodOrderData, params).then(res => {
+        console.log(7899)
         console.log(res)
         if (res.data.code === 0) {
           params.key = res.data.body.key

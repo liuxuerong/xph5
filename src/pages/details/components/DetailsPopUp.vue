@@ -19,8 +19,8 @@
       <div class="goodsInfoBottm border-top" v-if="from==1">
         <span class="buy" to="/createOrder" @click="buy()">立即购买</span>
         <span class="addCart" @click="addCart()">
-            加入购物车
-          </span>
+              加入购物车
+            </span>
       </div>
       <div class="goodsInfoBottm border-top" v-else-if="from==2">
         <div class="addSure" @click="addCart()">确认加入</div>
@@ -72,7 +72,8 @@ export default {
       goodsItemsId: '',
       coverImage: '',
       name: '',
-      goodsId: ''
+      goodsId: '',
+      newHaveChangedId: ''
     }
   },
   computed: mapState({
@@ -86,6 +87,11 @@ export default {
       this.cartCount++
       if (this.cartCount > this.maxCount) {
         this.cartCount = this.maxCount
+        Toast({
+          message: '商品库存不足',
+          position: 'center',
+          duration: 500
+        })
       }
     },
 
@@ -151,19 +157,27 @@ export default {
           num: this.cartCount
         }
         http(addCart, params).then(res => {
-          console.log(res.data.code)
           if (res.data.code === 0) {
             Toast({
               message: '添加购物车成功',
               position: 'bottom',
               duration: 500
             })
-          // this.getCartNum()
+            // this.getCartNum()
           }
         }).catch(err => {
           console.log(err)
         })
       }
+    },
+    isContained (a, b) {
+      if (!(a instanceof Array) || !(b instanceof Array)) return false
+      if (a.length !== b.length) return false
+      var aStr = a.toString()
+      for (var i = 0, len = b.length; i < len; i++) {
+        if (aStr.indexOf(b[i]) === -1) return false
+      }
+      return true
     },
     children (curEle, tagName) {
       let nodeList = curEle.childNodes
@@ -245,7 +259,6 @@ export default {
       for (i = 0; i < skuKeys.length; i++) {
         let skuKey = skuKeys[i] // 一条SKU信息key
         let sku = this.sku.data[skuKey] // 一条SKU信息value
-        console.log(sku)
         let skuKeyAttrs = skuKey.split(';') // SKU信息key属性值数组
         skuKeyAttrs.sort(function (value1, value2) {
           return parseInt(value1) - parseInt(value2)
@@ -343,7 +356,6 @@ export default {
     },
     /* 商品条件筛选 */
     tabInfoChange (index, cindex, cid, e) {
-      console.log()
       // let orderInfo = this.keys /* 所有规格 */
       let orderInfoChild = this.sku.keys[index]
         .value /* 当前点击的规格的所有子属性内容 */
@@ -364,39 +376,38 @@ export default {
       for (let i = 0; i < this.sku.keys.length; i++) {
         for (let j = 0; j < this.sku.keys[i].value.length; j++) {
           if (this.sku.keys[i].value[j].isActiveC === true) {
-            // this.goods.name = this.sku.keys[i].value[j].name
-            // console.log(this.sku.keys[i].value[j].name)
-            // if (this.sku.keys[i].value[j].pic !== '') {
-            //   this.goods.coverImage = this.sku.keys[i].value[j].pic
-            // } else {
-            //   this.goods.coverImage = this.coverImage
-            // }
             haveChangedId.push(this.sku.keys[i].value[j].id)
           }
         }
       }
 
       if (haveChangedId.length) {
+        for (let key in this.SKUResult) {
+          let keyArr = key.split(';')
+          if (this.isContained(keyArr, haveChangedId)) {
+            this.newHaveChangedId = keyArr
+          }
+        }
         // 获得组合key价格及数量
-        haveChangedId.sort(function (value1, value2) {
+        this.newHaveChangedId.sort(function (value1, value2) {
           return parseInt(value1) - parseInt(value2)
         })
-        let len = haveChangedId.length
-        let prices = this.SKUResult[haveChangedId.join(';')].prices
-        let name = this.SKUResult[haveChangedId.join(';')].name
-        let pic = this.SKUResult[haveChangedId.join(';')].pic
+        let len = this.newHaveChangedId.length
+        let prices = this.SKUResult[this.newHaveChangedId.join(';')].prices
+        let name = this.SKUResult[this.newHaveChangedId.join(';')].name
+        let pic = this.SKUResult[this.newHaveChangedId.join(';')].pic
         if (!name) {
           name = this.name
         }
-        const nowCount = this.SKUResult[haveChangedId.join(';')].count
-        this.goodsItemsId = this.SKUResult[haveChangedId.join(';')].goodsItemsId
+        const nowCount = this.SKUResult[this.newHaveChangedId.join(';')].count
+        this.goodsItemsId = this.SKUResult[this.newHaveChangedId.join(';')].goodsItemsId
 
         this.changeMaxCount(nowCount)
         if (this.cartCount > nowCount) {
           this.cartCount = nowCount
         }
-        var maxPrice = Math.max.apply(Math, prices)
-        var minPrice = Math.min.apply(Math, prices)
+        let maxPrice = Math.max.apply(Math, prices)
+        let minPrice = Math.min.apply(Math, prices)
         this.changeNowPrice(maxPrice > minPrice ? minPrice + '-' + maxPrice : maxPrice)
         this.goods.name = name
         this.goods.coverImage = pic
@@ -420,8 +431,8 @@ export default {
             }
           }
         }
-        for (let i = 0; i < haveChangedId.length; i++) {
-          let indexs = daiceshiId.indexOf(haveChangedId[i])
+        for (let i = 0; i < this.newHaveChangedId.length; i++) {
+          let indexs = daiceshiId.indexOf(this.newHaveChangedId[i])
           if (indexs > -1) {
             daiceshi.splice(indexs, 1)
           }
@@ -436,11 +447,11 @@ export default {
           }
           if (siblingsId !== '') {
             for (let j = 0; j < len; j++) {
-              haveChangedId[j] !== siblingsId &&
-                  testAttrIds.push(haveChangedId[j])
+              this.newHaveChangedId[j] !== siblingsId &&
+                  testAttrIds.push(this.newHaveChangedId[j])
             }
           } else {
-            testAttrIds = haveChangedId.concat()
+            testAttrIds = this.newHaveChangedId.concat()
           }
           testAttrIds = testAttrIds.concat(
             this.sku.keys[daiceshi[i].index].value[daiceshi[i].cindex].id
