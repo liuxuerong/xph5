@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <userinfo-header title="会员码"></userinfo-header>
+    <userinfo-header title="会员码" oper=''></userinfo-header>
     <div class="memberCodeCon">
       <div class="memberHeaderInfo">
         <dir class="top border-bottom">

@@ -51,6 +51,7 @@ import CardDetails from '@/pages/person/CardDetails'
 import ChooseCoupons from '@/pages/createOrder/ChooseCoupons'
 import { accessToken } from 'util/const'
 import { storage } from 'util/storage'
+import ToolStore from '@/pages/person/ToolStore'
 
 // meta: { requireLogin: true }
 Vue.use(Router)
@@ -292,6 +293,11 @@ const router = new Router({
       path: '/chooseCoupons',
       name: 'chooseCoupons',
       component: ChooseCoupons
+    },
+    {
+      path: '/toolStore',
+      name: 'toolStore',
+      component: ToolStore
     }
   ]
 })

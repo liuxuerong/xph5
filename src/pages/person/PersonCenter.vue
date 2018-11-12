@@ -1,6 +1,13 @@
 <template>
   <div class="wrapper">
     <div class="perTopbg">
+      <div class="headerScroll" :class="scrolled?'active':''">
+        <router-link to="/softwareSeting" class="perSeting left"></router-link>
+        <router-link to="/cart" class="perNews right"></router-link>
+        <router-link to="/cart" class="perShopping right">
+          <span class="num" v-if="count!=0">{{count}}</span>
+        </router-link>
+      </div>
       <div class="perHeader">
         <div class="headerInfo">
           <img v-if="list.memberHead === undefined" src="/static/images/memberHeader.png" class="headerImg"  @click="userDataSet">
@@ -32,18 +39,6 @@
     <div class="perOrder">
       <!-- 我的订单 -->
       <order-index :orderNum="orderNum" v-if="orderNum"></order-index>
-      <!-- <person-title content="我的地址" :moreShow="hasAddress"></person-title>
-      <div class="addressBox" v-if="!hasAddress">
-        <router-link to="./goodsAddress/1" class="goToAdd">去添加</router-link>
-        <span class="buttonTips">您还没有添加地址</span>
-      </div>
-      <div class="addressBox" v-else-if="hasAddress">
-        <div class="addressName">
-          <h3>{{addName}}</h3>
-          <span>{{phone}}</span>
-        </div>
-        <div class="addressText">{{address}}</div>
-      </div> -->
       <person-title content="我的收藏" :moreShow="collNum.goodsCount > 0"></person-title>
       <div class="collectBox" v-if="collNum.goodsCount < 1">
         <router-link to="/find" class="goToAdd">去逛逛</router-link>
@@ -63,10 +58,10 @@
           <p>内容收藏</p><span>{{collNum.contentCount}}</span>
         </div>
       </div>
-      <person-title content="优惠卡券" :moreShow="moreShow"></person-title>
+      <person-title content="优惠卡券" :moreShow="coupons.length > 0"></person-title>
       <div ref="memberGrade" class="emptyDiscountBg">
         <!-- @click="cardVoucher" -->
-        <ul class="memberGradeScroll clearfix" ref="cardScrollWidth" >
+        <ul class="memberGradeScroll clearfix" ref="cardScrollWidth" :style="'width:'+ coupons.length * 970 - 50 +'rem'" v-if="coupons.length > 0">
           <li class="cardVolItem" v-for="item in coupons" :key="item.id" @click="cardVoucher">
             <div class="left">
               <span v-if="item.type == '1' || item.type == '3'">￥<i>{{item.subMoney}}</i></span>
@@ -104,6 +99,7 @@
             </div>
           </li>
         </ul>
+        <div v-else class="enptyCoupons"></div>
       </div>
       <person-title content="可能感兴趣的活动" :moreShow="moreShow"></person-title>
       <div class="emptyAmusingBg"></div>
@@ -133,7 +129,7 @@
 import router from '@/router/index.js'
 import {storage} from 'util/storage'
 import { accessToken } from 'util/const.js'
-import {memberCenter, listDelivery, goodscollectionList} from 'util/netApi'
+import {memberCenter, listDelivery, goodscollectionList, cartNum} from 'util/netApi'
 import {http} from 'util/request'
 import PersonTitle from './ComCenterSmillTitle'
 import OrderIndex from '../order/OrderIndex'
@@ -156,7 +152,9 @@ export default {
       goodsCollArr: [],
       articleCollNum: 0,
       footprintNum: 0,
-      orderNum: null// 订单数量
+      orderNum: null, // 订单数量
+      scrolled: false, // 滚动
+      count: 0 // 购物车数量
     }
   },
   created () {},
@@ -171,19 +169,19 @@ export default {
     // 基础信息加载
     getUserInfo () {
       http(memberCenter).then((response) => {
-        // console.log(response)
         let data = response.data.body
         console.log(data)
-        this.coupons = data.coupons
-        this.$refs.cardScrollWidth.style.width = (this.coupons.length * 970 - 50) / 112.5 + 'rem'
-
+        console.log(data.coupons.length)
+        if (data.coupons.length > 0) {
+          this.coupons = data.coupons
+          // this.$refs.cardScrollWidth.style.width = (this.coupons.length * 970 - 50) / 112.5 + 'rem'
+        }
         this.list = response.data.body
         this.name = data.memberName
         this.orderNum = data.orderCount
         this.memberHead = data.memberHead
         // 商品收藏
         this.collNum = data.collections.collectionCounts
-        console.log(data.collections.collectionCounts)
         let goodsArr = data.collections.collectionGoods
         if (goodsArr.length > 0) {
           if (goodsArr.length > 3) {
@@ -248,16 +246,12 @@ export default {
         }
       })
     },
-    // 我的订单 查看更多
-    handleOrderMore () {
-      console.log('查看更多')
-    },
     // 必备工具跳转
     toolSpecific (type) {
       if (type === 1) {
         router.push('./toolCenter')
       } else if (type === 2) {
-        router.push('./ToolInte')
+        router.push('./integralDetails')
       } else if (type === 3) {
         router.push('./ToolStore')
       } else {
@@ -271,6 +265,20 @@ export default {
     // 商品详情
     goodsDetails (id) {
       router.push('/details/' + id)
+    },
+    // 滚动监听
+    handleScroll () {
+      this.scrolled = window.scrollY > 0
+    },
+    // 购物车数量
+    goodsNum () {
+      http(cartNum).then((response) => {
+        if (response.data.code === 0) {
+          this.count = response.data.body
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
     }
   },
 
@@ -282,8 +290,8 @@ export default {
     } else {
       // 基础信息加载
       this.getUserInfo()
-      // 我的收藏
-      // this.goodsCollent()
+      // 购物车数量
+      this.goodsNum()
     }
     this.scroll = new BScroll(this.$refs.memberGrade, {
       bounce: {
@@ -295,11 +303,8 @@ export default {
       click: true,
       startX: 0
     })
-  },
-  updated () {
-    // console.log(this.orderNum)
+    window.addEventListener('scroll', this.handleScroll)
   }
-
 }
 </script>
 <style lang='stylus' scoped>
@@ -315,6 +320,54 @@ export default {
       bgImage('/static/images/personBg')
       position relative
       margin-bottom 280px
+      .headerScroll
+        width 100%
+        height 130px
+        box-sizing border-box
+        padding 36px 54px
+        .perSeting
+          width 60px
+          height 50px
+          background #fff
+          bgImage("/static/icons/personalSetupfff")
+        .perShopping
+          width 60px
+          height 60px
+          bgImage("/static/icons/personCartfff")
+          position relative
+          .num
+            position absolute
+            width 46px
+            height 46px
+            line-height 46px
+            text-align center
+            border-radius 50%
+            background-color #D54B4B
+            color #fff
+            top 0
+            transform translate(50%,-25%)
+            right 0
+        .perNews
+          width 54px
+          height 60px
+          margin-left 50px
+          bgImage("/static/icons/personalNewsfff")
+        .left
+          float left
+        .right
+          float right
+      .headerScroll.active
+        position fixed
+        left 0
+        top 0
+        z-index 19
+        background #fff
+        .perSeting
+          bgImage("/static/icons/personalSetup")
+        .perShopping
+          display none
+        .perNews
+          bgImage("/static/icons/personalNews")
       .perHeader
         width 88%
         height 480px
@@ -513,6 +566,10 @@ export default {
     height 320px
     margin-bottom 50px
     overflow hidden
+    .enptyCoupons
+      width 100%
+      height 320px
+      bgImage('/static/images/emptyDiscount')
     .memberGradeScroll
       width 980px
       height 320px
@@ -605,5 +662,4 @@ export default {
     height 325px
     bgImage('/static/images/amusingActive')
     margin-bottom 50px
-
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <userinfo-header title="关于我们"></userinfo-header>
+    <userinfo-header title="关于我们" oper=''></userinfo-header>
     <div class="aboutUsCon">
       <div class="versionShow">
         <div class="appLogo"></div>

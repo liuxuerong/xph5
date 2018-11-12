@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <userinfo-header title="积分规则"></userinfo-header>
+    <userinfo-header title="积分规则" oper=''></userinfo-header>
     <div class="integralRuleCon">
       <div class="integralRuleText">
         <h3>积分获取规则</h3>

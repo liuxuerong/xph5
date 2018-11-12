@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <userinfo-header title="卡券中心"></userinfo-header>
+    <userinfo-header title="卡券中心" oper=''></userinfo-header>
     <div class="cardVoucherCon">
       <div v-if="type !== '2'" class="cardInfo">
         <div class="top border-bottom">

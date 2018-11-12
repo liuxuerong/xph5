@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <userinfo-header title="设置"></userinfo-header>
+    <userinfo-header title="设置" oper=''></userinfo-header>
     <div class="softwareCon">
       <div class="softSetItem border-bottom" v-for="(item,index) in list" :key="index" @click="softwareSetingInfo(index)">
         <span>{{item}}</span>
