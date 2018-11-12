@@ -18,15 +18,6 @@ export default {
     return {
       title: '配送方式'
     }
-  },
-  computed: {
-
-  },
-  watch: {
-
-  },
-  methods: {
-
   }
 }
 </script>

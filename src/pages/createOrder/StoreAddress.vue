@@ -6,7 +6,6 @@
         <p class="name">{{item.name}}</p>
         <p class="phone">电话：{{item.phone}}</p>
         <p class="address">{{item.province+item.city+item.area+item.address}}
-          <!-- 广东省深圳市福田区国都高尔夫花园二期二层星品优汇科技有限 公司产品部 -->
         </p>
       </li>
     </ul>
