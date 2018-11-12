@@ -2,7 +2,7 @@
     <div class="userInfoTop border-bottom" @scroll="titleScroll">
 		<span class="prevOper" @click="backPrevOper"></span>
 		<h3 class="userInfoTitle">{{title}}</h3>
-		<span class="completeOper" @click="perCompleteOper">{{oper}}</span>
+		<span v-if="oper !==''" class="completeOper" @click="perCompleteOper">{{oper}}</span>
 	</div>
 </template>
 <script>
@@ -23,10 +23,6 @@ export default {
     titleScroll () {
 
     }
-  },
-  mounted: function () {
-    // console.log(this.title)
-    // console.log(this.oper)
   }
 }
 </script>

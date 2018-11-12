@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <userinfo-header title="选择优惠券"></userinfo-header>
+    <userinfo-header title="选择优惠券" oper=''></userinfo-header>
     <div class="cardVoucherCon">
       <div class="cardVoucherPage" v-if="list.length > 0">
         <div class="cardVouItem" v-for="item in list" :key="item.id">
@@ -82,8 +82,9 @@ export default {
   methods: {
     // 优惠券页面渲染
     headleTabsChange () {
-      let params = storage.getLocalStorage(couponByGoods)
-      http(listCouponByGoodsItemIds, params).then((response) => {
+      let parmas = storage.getLocalStorage(couponByGoods)
+
+      http(listCouponByGoodsItemIds, parmas).then((response) => {
         console.log(response)
         if (response.data.code === 0) {
           this.list = response.data.body
@@ -100,9 +101,9 @@ export default {
         info.couponName = '￥' + name
       } else {
         if (name.toString().replace('.', '').length === 2) {
-          info.couponName = parseInt(name.toString().replace('.', ''))
+          info.couponName = parseInt(name.toString().replace('.', '')) + '折'
         } else {
-          info.couponName = name.toString().replace('.', '') / 10
+          info.couponName = name.toString().replace('.', '') / 10 + '折'
         }
       }
       storage.setLocalStorage(orderInfo, info)

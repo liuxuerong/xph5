@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <userinfo-header title="商城用户注册协议"></userinfo-header>
+    <userinfo-header title="商城用户注册协议" oper=''></userinfo-header>
     <div class="agreementCon">
       <span>本协议是您与商城网站（简称"本站"，网址：<router-link to="https://shop.jdhoe.com">https://shop.jdhoe.com</router-link>）所有者（以下简称为"商城"）之间就商城网站服务等相关事宜所订立的契约，请您仔细阅读本注册协议，您点击"同意并继续"按钮后，本协议即构成对双方有约束力的法律文件。</span>
       <h3>第1条 本站服务条款的确认和接纳</h3>

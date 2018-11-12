@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <userinfo-header title="我的积分" oper="积分规则" @operComplete = "onOperComplete"></userinfo-header>
+    <userinfo-header title="我的积分" oper='积分规则' @operComplete = "onOperComplete"></userinfo-header>
     <div class="integralHeader">
       <div class="integralNum">{{totalIntegral}}</div>
       <p>可用积分</p>
@@ -12,7 +12,7 @@
           <div class="top">
             <div class="left">
               <img v-if="item.image !== undefined || item.image !== ''" :src="imageUrl+item.image" alt="">
-              <h3>东莞旗舰店购物东莞旗舰店最多二十四哟我也个字是...</h3>
+              <h3>{{item.content}}</h3>
             </div>
             <div class="right" :class="item.type=='1'||item.type=='5'?'active':''">{{item.integral}}.0</div>
           </div>
@@ -121,7 +121,7 @@ export default {
       color #552F1A
   .integralCon
     width calc(100% - 100px)
-    min-height 1600px
+    min-height 1300px
     margin 0 auto
     position relative
     top -140px

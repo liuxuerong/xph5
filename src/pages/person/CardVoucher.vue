@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <userinfo-header title="卡券中心"></userinfo-header>
+    <userinfo-header title="卡券中心" oper=''></userinfo-header>
     <div class="cardVoucherCon">
       <div class="cardVoucherTitle">
         <div class="tabItem" v-for="(tabs,i) in tab" :key="i">

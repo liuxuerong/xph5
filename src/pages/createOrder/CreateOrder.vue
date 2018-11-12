@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import router from '@/router/index.js'
+// import router from '@/router/index.js'
 import CommonNavHeader from 'common/commonHeader/CommonNavHeader'
 import OrderItem from './components/OrderItem'
 import {
@@ -199,14 +199,17 @@ export default {
     },
     // 使用优惠券
     chooseCoupons () {
+      console.log(this.pricesData)
       for (let i = 0; i < this.pricesData.length; i++) {
         this.couponArr[i] = {
-          'goodsItemId': this.pricesData[i].goodsId,
+          'goodsItemId': this.pricesData[i].id,
           'num': this.pricesData[i].num
         }
       }
+      // console.log(CouponByGoodsItemIdDTO)
       storage.setLocalStorage(couponByGoods, this.couponArr)
-      router.push('/chooseCoupons')
+      // router.push('/chooseCoupons')
+      this.$router.push('/chooseCoupons')
     }
   },
   created () {
