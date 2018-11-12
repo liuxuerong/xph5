@@ -33,8 +33,8 @@
         </ul>
       </div>
       <div class="title">支付信息</div>
-      <div class="cellLink" @click.prevent="chooseCoupons">
-        <div class="text border-bottom">使用优惠券</div>
+      <div class="cellLink" @click.prevent="chooseCoupons" v-if="availableCoupon===1">
+        <div class="text border-bottom">使用优惠券<span class="fr" v-if="info&&info.couponName">已经使用{{info.couponName}}优惠券</span></div>
       </div>
       <router-link class="cellLink" to="/invoice">
         <div class="text">发票<span class="fr" v-if="info&&info.invoiceTypeValue">{{info.invoiceTypeValue}}&nbsp;&nbsp;{{info.invoiceStyleValue}}</span></div>
@@ -43,6 +43,7 @@
       <div class="priceInfo">
         <ul class="border-bottom">
           <li v-if="totalPric!==''"><span class="name">商品金额：</span><span class="item">￥{{totalPric}}</span></li>
+          <li v-if="shippingAmount!==''"><span class="name"> 运费 </span><span class="item">￥{{shippingAmount}}</span></li>
           <!-- <li><span class="name">居家商品满2000减200</span><span class="item">-￥200</span></li> -->
         </ul>
         <div class="total">
@@ -95,11 +96,13 @@ export default {
   data () {
     return {
       title: '确认订单',
+      availableCoupon: '',
       goodsId: '',
       goodsItemId: '',
       num: '',
       pricesData: [],
       totalPric: '',
+      shippingAmount: '',
       couponArr: [],
       info: null,
       params: {
@@ -131,7 +134,9 @@ export default {
         console.log(res)
         if (res.data.code === 0) {
           params.key = res.data.body.key
+          this.availableCoupon = res.data.body.availableCoupon
           this.pricesData = res.data.body.orderGoodsItems
+          this.shippingAmount = res.data.body.shippingAmount
           for (let i = 0; i < this.pricesData.length; i++) {
             let spec = JSON.parse(this.pricesData[i].spec)
             this.pricesData[i].spec = []
@@ -164,7 +169,7 @@ export default {
       params.deliveryId = orderInfoData.addressId
       params.invoicingId = orderInfoData.invoicingId
       params.shippingMethod = orderInfoData.shippingMethod
-      params.favorableId = this.favorableId
+      params.favorableId = orderInfoData.couponId
       params.invoicingType = this.invoicingType
       params = Object.assign(this.params, params)
       if (!params.deliveryId) {
@@ -175,7 +180,7 @@ export default {
       http(createOrderData, params).then(res => {
         console.log(res)
         if (res.data.code === 0) {
-          this.$router.push('/immedPayment/' + res.data.body)
+          // this.$router.push('/immedPayment/' + res.data.body)
         }
       }).catch(err => {
         console.log(err)
