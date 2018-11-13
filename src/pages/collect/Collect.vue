@@ -19,8 +19,8 @@
           <common-empty v-else :emptyObj="emptyObj" />
         </div>
         <div v-else>
-           <common-article-rec v-if="content.length" :articleRecommends="content" :linkTo="linkTo" />
-           <common-empty v-else :emptyObj="emptyContent" />
+          <common-article-rec v-if="content.length" :articleRecommends="content" :linkTo="linkTo" />
+          <common-empty v-else :emptyObj="emptyContent" />
         </div>
       </div>
     </div>
@@ -120,6 +120,7 @@ export default {
       if (!this.scroll) {
         this.scroll = new BScroll(this.$refs.xpCollectContent, {
           scrollY: true,
+          click: true,
           bounce: {
             top: true,
             bottom: true

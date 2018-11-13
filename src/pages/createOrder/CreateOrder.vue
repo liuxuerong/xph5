@@ -5,13 +5,13 @@
       <span class="nav">...</span>
         <div slot="content" class="popover-demo-content">
           <ul>
-            <li >
+            <li class="border-bottom">
               <router-link to="/" class="item">体验馆</router-link>
             </li>
-            <li>
+           <li class="border-bottom">
               <router-link to="/" class="item">联系客服</router-link>
             </li>
-            <li>
+           <li class="border-bottom">
               <router-link to="/search" class="item">搜索</router-link>
             </li>
           </ul>
@@ -47,7 +47,7 @@
           <!-- <li><span class="name">居家商品满2000减200</span><span class="item">-￥200</span></li> -->
         </ul>
         <div class="total">
-          实付：￥2357
+          实付：￥{{needPayPrice}}
         </div>
       </div>
       <div class="title">备注</div>
@@ -55,8 +55,8 @@
       <div class="cutOffLine30"></div>
     </div>
     <div class="bottom">
-      <div class="price">￥2357</div>
-      <span to="/" class="pay" @click="createOrder">立即支付</span>
+      <div class="price">￥{{needPayPrice}}</div>
+      <span class="pay" @click="createOrder">立即支付</span>
     </div>
   </div>
 </template>
@@ -105,6 +105,7 @@ export default {
       shippingAmount: '',
       couponArr: [],
       info: null,
+      needPayPrice: '',
       params: {
         favorableId: '',
         key: '',
@@ -122,6 +123,13 @@ export default {
     '$route' (to, from) {
       if (to.path === '/createOrder/1') {
         this.info = storage.getLocalStorage(orderInfo)
+        if (this.info.couponId) {
+        //   console.log(123)
+        //   let goodsInfos = storage.getLocalStorage(goodsInfo)
+        //   goodsInfos.favorableId = this.info.couponId
+        //   storage.setLocalStorage(goodsInfo, goodsInfos)
+          this.getDetails()
+        }
       } else if (to.path === '/createOrder') {
         storage.setLocalStorage(orderInfo, {})
       }
@@ -130,6 +138,11 @@ export default {
   methods: {
     getDetails () {
       const params = storage.getLocalStorage(goodsInfo)
+      console.log(this.info)
+      if (this.info && this.info.couponId) {
+        params.favorableId = this.info.couponId
+      }
+      console.log(params)
       http(goodOrderData, params).then(res => {
         console.log(res)
         if (res.data.code === 0) {
@@ -148,6 +161,7 @@ export default {
           this.params.key = res.data.body.key
           this.params.goodsItems = res.data.body.orderGoodsItems
           this.totalPric = res.data.body.totalPrice
+          this.needPayPrice = res.data.body.needPayPrice
         }
       }).catch(err => {
         console.log(err)
@@ -180,7 +194,7 @@ export default {
       http(createOrderData, params).then(res => {
         console.log(res)
         if (res.data.code === 0) {
-          // this.$router.push('/immedPayment/' + res.data.body)
+          this.$router.push('/immedPayment/' + res.data.body)
         }
       }).catch(err => {
         console.log(err)

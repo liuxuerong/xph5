@@ -9,12 +9,14 @@
         <common-swiper :swiperData="swiperData" v-if="swiperData!=[]" />
         <details-des :goods="goods" :activityLabel="activityLabel" v-if="goods" />
         <div class="cutOffLine"></div>
-        <details-cell :cellInfo="cellInfo[0]" @click.native="changePopupVisible(true), changeFrom(1)" />
+        <details-cell :cellInfo="cellInfo[0]" />
+        <div class="cutOffLine"></div>
+        <details-cell :cellInfo="cellInfo[1]" @click.native="changePopupVisible(true), changeFrom(1)" />
         <div class="cutOffLine"></div>
         <details-service/>
         <div class="cutOffLine"></div>
         <router-link :to="'/comment/'+goodsId" class="commentRouter">
-          <details-cell :cellInfo="cellInfo[1]" />
+          <details-cell :cellInfo="cellInfo[2]" />
         </router-link>
         <details-comment-swiper/>
         <div class="seeMore">上拉查看更多详情</div>
@@ -79,14 +81,18 @@ export default {
       goods: null,
       activityLabel: [],
       desc: '',
-      cellInfo: [{
-        title: '规格',
-        value: '选择规格数量'
-      },
-      {
-        title: '10',
-        value: ''
-      }
+      cellInfo: [
+        {
+          title: '领券',
+          value: '领取优惠券'
+        }, {
+          title: '规格',
+          value: '选择规格数量'
+        },
+        {
+          title: '1',
+          value: ''
+        }
       ],
       sku: null,
       goodsItems: []
@@ -113,8 +119,11 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['changePopupVisible', 'changeNowPrice', 'changeFrom']),
+    ...mapMutations(['changePopupVisible', 'changeNowPrice', 'changeFrom', 'changeMaxCount']),
     pushKeys (arr) {
+      if (arr.length === 1) {
+        this.changeMaxCount(arr[0].stock)
+      }
       console.log(arr)
       // 处理返回数据
       let sku = {}
@@ -210,8 +219,11 @@ export default {
         }
       })
       this.scroll.on('pullingUp', function () {
-        _this.$refs.isDetailsImgTextShow.$el.style.display = 'block'
-        _this.scroll.refresh()
+        console.log(_this.$refs)
+        if (_this.desc !== '') {
+          _this.$refs.isDetailsImgTextShow.$el.style.display = 'block'
+          _this.scroll.refresh()
+        }
       })
       this.changePopupVisible(false)
       // this.$refs.xpDetails.style.height =
@@ -233,7 +245,7 @@ export default {
             if (totals >= 999) {
               totals = '999+'
             }
-            this.cellInfo[1].title = '商品评价（' + totals + '）'
+            this.cellInfo[2].title = `商品评价（ ${totals} ）`
           })
           .catch(err => {
             console.log(err)

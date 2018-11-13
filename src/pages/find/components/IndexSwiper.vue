@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div class="xpSwiper">
       <swiper :options="swiperOption">
         <swiper-slide v-for="item in swiperData" :key="item.adId">
@@ -50,10 +50,8 @@ export default {
 </script>
 <style lang="stylus" scoped>
 .xpSwiper
-  height 512px
-  margin-top 48px
+  margin-top 50px
   padding 0 50px
-  margin-bottom 34px
   .swiperHref
     display block
     width 100%
@@ -64,18 +62,23 @@ export default {
 </style>
 <style lang="stylus">
 .xpSwiper
+  .swiper-container
+    height 628px
+  .swiper-wrapper
+    height 512px
   .swiper-container-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet
     margin 10px
   .swiper-pagination-bullet
     border-radius 0
     width 23px
-    height 6px
+    height 8px
     display inline-block
     border-radius 100%
-    background #fff
-    opacity 0.44
-
+    background #333333
+    opacity 0.4
   .swiper-pagination-bullet-active
-    background #BA825A
+    background #333333
     opacity 1
+  .swiper-pagination-fraction, .swiper-pagination-custom, .swiper-container-horizontal > .swiper-pagination-bullets
+    bottom 30px
 </style>

@@ -2,12 +2,11 @@
   <div class="commonArticleRec">
     <ul>
       <li v-for="item in articleRecommends" :key="item.id">
-        <router-link :to="linkTo+item.id">
+        <router-link :to="linkTo+item.id" class="routerDetailes">
         <img v-lazy="imageUrl+item.articleCoverImage" alt="">
         <p class="title">{{item.title}} <em v-if="item.subTitle">|</em> {{item.subTitle}}</p>
         <slot></slot>
-        <div class="summary">{{item.summary}}详细介绍详细介绍详细介绍详细介绍详细介绍详细介绍详细介绍
-详细介绍详细介绍详细介绍详细介绍详细介绍</div>
+        <div class="summary">{{item.summary}}</div>
         </router-link>
       </li>
     </ul>
@@ -34,6 +33,8 @@ export default {
 .commonArticleRec
   li
     padding-bottom 100px
+    .routerDetailes
+      display inline-block
     img
       width 100%
       height 600px

@@ -2,11 +2,11 @@
   <div class="indexNavSwiper">
     <h4>{{swiperData.name}}</h4>
     <div class="swiperContainer">
-      <a href="#" v-if="swiperData.title">
+      <span v-if="swiperData.title">
         <h3 class="title">
           {{swiperData.title}}
         </h3>
-      </a>
+      </span>
       <swiper :options="swiperOption">
         <swiper-slide v-for="item in swiperData.articles" :key="item.id">
           <router-link :to="isShowImgTitle?'/goods':'/details/'+item.goodsId" class="swiperHref">

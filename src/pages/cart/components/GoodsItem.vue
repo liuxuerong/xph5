@@ -6,8 +6,8 @@
             </check-icon>
           </div>
           <div class="goodsItemMain">
-            <router-link :to="'/details/'+goodsItem.goodsId" class="linkDetails">
-            <img v-lazy="imageUrl+goodsItem.goodsItemPic" alt="">
+            <router-link to="#" class="linkDetails">
+              <img v-lazy="imageUrl+goodsItem.goodsItemPic" alt="" >
              </router-link>
             <div class="info">
               <div class="name">{{goodsItem.goodsItemName}}</div>
@@ -18,12 +18,11 @@
               <div class="bottom clearfix">
                 <span class="tag fl" v-if="goodsItem.status!=1">已失效</span>
                 <span class="modify" v-show="showModify">
-                  <x-number :min="1" :max="goodsItem.stock" v-model="goodsItem.num" @click.stop.prevent fillable="true"></x-number>
+                  <x-number :min="1" :max="goodsItem.stock" v-model="goodsItem.num" @click.stop.prevent :fillable="true"></x-number>
                 </span>
-                <i class="price fr">￥{{goodsItem.price}}</i>
+                <i class="price fr">￥{{goodsItem.price.toFixed(2)}}</i>
               </div>
             </div>
-
         </div>
       </label>
   </div>
@@ -106,19 +105,20 @@ export default {
     doUpdateCart () {
       updateCart.url = '/cart'
       updateCart.url = updateCart.url + '/' + this.goodsItem.id
-      let params = {
-        cartId: this.goodsItem.id,
-        request: this.goodsItem.num
+      if (this.goodsItem.num !== '') {
+        let params = {
+          cartId: this.goodsItem.id,
+          request: this.goodsItem.num
+        }
+        http(updateCart, params, 'noloading').then(res => {
+        }).catch(err => {
+          console.log(err)
+        })
       }
-      http(updateCart, params, 'noloading').then(res => {
-      }).catch(err => {
-        console.log(err)
-      })
     }
   },
   mounted () {
     this.getSpecs()
-    console.log(this.goodsItem)
   }
 }
 </script>

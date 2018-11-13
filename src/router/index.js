@@ -1,15 +1,17 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Index from '@/pages/index'
+import Index from '@/pages/Index'
 import Find from '@/pages/find/Find'
+import Classify from '@/pages/classify/Classify'
+import Hotel from '@/pages/hotel/Hotel'
 import Brand from '@/pages/brand/Brand'
 import BrandDetails from '@/pages/brandDetails/BrandDetails'
 import Hall from '@/pages/hall/Hall'
 import HallDetails from '@/pages/hall/HallDetails'
 import HallAtlas from '@/pages/hall/HallAtlas'
 import Story from '@/pages/story/Story'
-import StoryDetails from '@/pages/StoryDetails/StoryDetails'
-import HotelDetails from '@/pages/StoryDetails/HotelDetails'
+import StoryDetails from '@/pages/storyDetails/StoryDetails'
+import HotelDetails from '@/pages/storyDetails/HotelDetails'
 import Details from '@/pages/details/Details'
 import Instructions from '@/pages/invoice/Instructions'
 import Invoice from '@/pages/invoice/Invoice'
@@ -49,11 +51,15 @@ import IntegralRule from '@/pages/person/IntegralRule'
 import CardVoucher from '@/pages/person/CardVoucher'
 import CardDetails from '@/pages/person/CardDetails'
 import ChooseCoupons from '@/pages/createOrder/ChooseCoupons'
+<<<<<<< HEAD
 import WatchLogistics from '@/pages/order/WatchLogistics'
 import AppDownload from '@/pages/download/AppDownload'
+=======
+import ToolStore from '@/pages/person/ToolStore'
+
+>>>>>>> 751077ee2b53f14a915eba3d16685f84c82e7224
 import { accessToken } from 'util/const'
 import { storage } from 'util/storage'
-import ToolStore from '@/pages/person/ToolStore'
 
 // meta: { requireLogin: true }
 Vue.use(Router)
@@ -71,6 +77,16 @@ const router = new Router({
         {name: 'Story', path: '/story', component: Story},
         {name: 'PersonCenter', path: '/personCenter', component: PersonCenter}
       ]
+    },
+    {
+      path: '/classify',
+      name: 'Classify',
+      component: Classify
+    },
+    {
+      path: '/hotel',
+      name: 'Hotel',
+      component: Hotel
     },
     {
       path: '/hallDetails/:index',

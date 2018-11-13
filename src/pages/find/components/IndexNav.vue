@@ -34,6 +34,7 @@
         </div>
 
       </mt-tab-container-item>
+      <!-- 酒店 -->
       <mt-tab-container-item id="supplies">
         <index-nav-banner :bannerData="indexSuppliesData.fiveStarQuality" :showMore="false" :showContent="true" v-if="suppliesFlag" />
         <index-nav-banner :bannerData="indexSuppliesData.fiveStarHotel" :showMore="false" :showContent="false" :showItems="true" v-if="suppliesFlag" :linkUrl="hotelDetails"/>
@@ -175,18 +176,24 @@ export default {
   },
   mounted () {
     this.getTabbar()
-    this.scroll = new BScroll(this.$refs.wrapper, {
-      bounce: {
-        left: true,
-        right: true
-      },
-      scrollX: true,
-      click: true
-    })
     this.getRecommendData()
   },
   methods: {
     ...mapMutations(['changeTabbarFixed']),
+    scrollInit () {
+      if (!this.scroll) {
+        this.scroll = new BScroll(this.$refs.wrapper, {
+          scrollY: true,
+          click: true,
+          bounce: {
+            top: true,
+            bottom: true
+          }
+        })
+      } else {
+        this.scroll.refresh()
+      }
+    },
     getTabbar () {
       let _this = this
       http(storyTabs, [mainEnum[2]]).then(res => {
@@ -210,6 +217,7 @@ export default {
             console.log(err)
           })
       }
+      this.scrollInit()
     },
     getHotelData () {
       if (!this.suppliesFlag) {

@@ -10,6 +10,7 @@
     </div>
     <div ref="xpStoryContent" class="xpStoryContent">
       <div>
+        <common-article-rec v-if="brandListData.length&&brandListDataFlag" :articleRecommends="brandListData" :linkTo="brandDetailsLink" />
         <common-article-rec v-if="storyKnow.length&&storyKnowFlag" :articleRecommends="storyKnow" :linkTo="linkTo" />
         <common-article-rec v-if="storyWord.length&&storyWordFlag" :articleRecommends="storyWord" :linkTo="linkTo" />
         <common-article-rec v-if="storySub.length&&storySubFlag" :articleRecommends="storySub" :linkTo="linkTo" />
@@ -31,7 +32,8 @@ import {
   storyKnow,
   storyWord,
   storySub,
-  storyTabs
+  storyTabs,
+  brandList
 } from 'util/netApi'
 import {
   mainEnum
@@ -53,14 +55,21 @@ export default {
     return {
       imageUrl: config.imageUrl,
       articles: [],
+      brandListData: [],
       storyKnow: [],
       storyWord: [],
       storySub: [],
-      storyKnowFlag: true,
+      brandListDataFlag: true,
+      storyKnowFlag: false,
       storyWordFlag: false,
       storySubFlag: false,
       linkTo: '/storyDetails/',
-      tabbar: []
+      brandDetailsLink: '/brandDetails/',
+      tabbar: [{
+        name: '国际品牌',
+        id: '001'
+      }
+      ]
     }
   },
   computed: {},
@@ -80,17 +89,33 @@ export default {
       })
     },
     onItemClick (index) {
+      this.brandListDataFlag = false
       this.storyKnowFlag = false
       this.storyWordFlag = false
       this.storySubFlag = false
       if (index === 0) {
-        this.storyKnowFlag = true
+        this.brandListDataFlag = true
       } else if (index === 1) {
-        this.storyWordFlag = true
+        this.storyKnowFlag = true
       } else if (index === 2) {
+        this.storyWordFlag = true
+      } else if (index === 3) {
         this.storySubFlag = true
       }
       this.scroll.refresh()
+      this.scroll.scrollTo(0, 0, 0)
+    },
+    getBrandList () {
+      const parmas = {
+        page: 1,
+        rows: 20
+      }
+      http(brandList, parmas).then(res => {
+        console.log(res)
+        this.brandListData = res.data.body.articles
+      }).catch(err => {
+        console.log(err)
+      })
     },
     getStoryKnow () {
       http(storyKnow)
@@ -125,6 +150,7 @@ export default {
       if (!this.scroll) {
         this.scroll = new BScroll(this.$refs.xpStoryContent, {
           scrollY: true,
+          click: true,
           bounce: {
             top: true,
             bottom: true
@@ -137,6 +163,7 @@ export default {
   },
   mounted () {
     this.getTabbar()
+    this.getBrandList()
     this.getStoryKnow()
     this.getStorySub()
     this.getStoryWord()
