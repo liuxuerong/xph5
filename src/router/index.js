@@ -49,6 +49,8 @@ import IntegralRule from '@/pages/person/IntegralRule'
 import CardVoucher from '@/pages/person/CardVoucher'
 import CardDetails from '@/pages/person/CardDetails'
 import ChooseCoupons from '@/pages/createOrder/ChooseCoupons'
+import WatchLogistics from '@/pages/order/WatchLogistics'
+import AppDownload from '@/pages/download/AppDownload'
 import { accessToken } from 'util/const'
 import { storage } from 'util/storage'
 import ToolStore from '@/pages/person/ToolStore'
@@ -298,6 +300,16 @@ const router = new Router({
       path: '/toolStore',
       name: 'toolStore',
       component: ToolStore
+    },
+    {
+      path: '/watchLogistics',
+      name: 'watchLogistics',
+      component: WatchLogistics
+    },
+    {
+      path: '/appDownload',
+      name: 'appDownload',
+      component: AppDownload
     }
   ]
 })

@@ -59,9 +59,9 @@
         </div>
       </div>
       <person-title content="优惠卡券" :moreShow="coupons.length > 0"></person-title>
-      <div ref="memberGrade" class="emptyDiscountBg">
+      <div ref="memberGrade" class="emptyDiscountBg" v-if="coupons.length > 0">
         <!-- @click="cardVoucher" -->
-        <ul class="memberGradeScroll clearfix" ref="cardScrollWidth" :style="'width:'+ coupons.length * 970 - 50 +'rem'" v-if="coupons.length > 0">
+        <ul class="memberGradeScroll clearfix" :style="{width:cardScrollWidth+'rem'}">
           <li class="cardVolItem" v-for="item in coupons" :key="item.id" @click="cardVoucher">
             <div class="left">
               <span v-if="item.type == '1' || item.type == '3'">￥<i>{{item.subMoney}}</i></span>
@@ -99,7 +99,9 @@
             </div>
           </li>
         </ul>
-        <div v-else class="enptyCoupons"></div>
+      </div>
+      <div v-else class="emptyDiscountBg">
+        <div  class="enptyCoupons"></div>
       </div>
       <person-title content="可能感兴趣的活动" :moreShow="moreShow"></person-title>
       <div class="emptyAmusingBg"></div>
@@ -154,7 +156,8 @@ export default {
       footprintNum: 0,
       orderNum: null, // 订单数量
       scrolled: false, // 滚动
-      count: 0 // 购物车数量
+      count: 0, // 购物车数量
+      cardScrollWidth: 0
     }
   },
   created () {},
@@ -170,10 +173,9 @@ export default {
     getUserInfo () {
       http(memberCenter).then((response) => {
         let data = response.data.body
-        console.log(data)
-        console.log(data.coupons.length)
         if (data.coupons.length > 0) {
           this.coupons = data.coupons
+          this.cardScrollWidth = (this.coupons.length * 970 - 50) / 112.5
           // this.$refs.cardScrollWidth.style.width = (this.coupons.length * 970 - 50) / 112.5 + 'rem'
         }
         this.list = response.data.body
@@ -283,6 +285,7 @@ export default {
   },
 
   mounted () {
+    window.addEventListener('scroll', this.handleScroll)
     // 判断账号是够登录
     if (!storage.getLocalStorage(accessToken)) {
       // 还未登录
@@ -293,17 +296,18 @@ export default {
       // 购物车数量
       this.goodsNum()
     }
-    this.scroll = new BScroll(this.$refs.memberGrade, {
-      bounce: {
-        left: true,
-        right: true
-      },
-      scrollY: false,
-      scrollX: true,
-      click: true,
-      startX: 0
-    })
-    window.addEventListener('scroll', this.handleScroll)
+    if (this.coupons.length > 0) {
+      this.scroll = new BScroll(this.$refs.memberGrade, {
+        bounce: {
+          left: true,
+          right: true
+        },
+        scrollY: false,
+        scrollX: true,
+        click: true,
+        startX: 0
+      })
+    }
   }
 }
 </script>
