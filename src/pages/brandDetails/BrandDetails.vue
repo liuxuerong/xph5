@@ -73,6 +73,7 @@ export default {
       if (!this.scroll) {
         this.scroll = new BScroll(this.$refs.brandDetails, {
           scrollY: true,
+          click: true,
           bounce: {
             top: true,
             bottom: true

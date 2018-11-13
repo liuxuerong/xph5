@@ -74,6 +74,7 @@ export default {
       if (!this.scroll) {
         this.scroll = new BScroll(this.$refs.goodsWrap, {
           scrollY: true,
+          click: true,
           bounce: {
             top: true,
             bottom: true

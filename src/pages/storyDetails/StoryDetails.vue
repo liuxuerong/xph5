@@ -66,6 +66,7 @@ export default {
       if (!this.scroll) {
         this.scroll = new BScroll(this.$refs.storyDetailsContent, {
           scrollY: true,
+          click: true,
           bounce: {
             top: true,
             bottom: true

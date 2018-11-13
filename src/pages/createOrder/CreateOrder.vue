@@ -5,13 +5,13 @@
       <span class="nav">...</span>
         <div slot="content" class="popover-demo-content">
           <ul>
-            <li >
+            <li class="border-bottom">
               <router-link to="/" class="item">体验馆</router-link>
             </li>
-            <li>
+           <li class="border-bottom">
               <router-link to="/" class="item">联系客服</router-link>
             </li>
-            <li>
+           <li class="border-bottom">
               <router-link to="/search" class="item">搜索</router-link>
             </li>
           </ul>
@@ -56,7 +56,7 @@
     </div>
     <div class="bottom">
       <div class="price">￥{{needPayPrice}}</div>
-      <span to="/" class="pay" @click="createOrder">立即支付</span>
+      <span class="pay" @click="createOrder">立即支付</span>
     </div>
   </div>
 </template>

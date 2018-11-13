@@ -47,6 +47,7 @@ export default {
       if (!this.scroll) {
         this.scroll = new BScroll(this.$refs.instructionsWrap, {
           scrollY: true,
+          click: true,
           bounce: {
             top: false,
             bottom: true

@@ -75,7 +75,7 @@ export default {
         info.addressId = id
         info.addressType = '快递配送'
         storage.setLocalStorage(orderInfo, info)
-        this.$router.push({path: '/createOrder/1'})
+        this.$router.replace({path: '/createOrder/1'})
       }
     }
   },

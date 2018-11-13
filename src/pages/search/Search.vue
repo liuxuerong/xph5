@@ -60,6 +60,7 @@ export default {
       if (!this.scroll) {
         this.scroll = new BScroll(this.$refs.mainSearch, {
           scrollY: true,
+          click: true,
           bounce: {
             top: true,
             bottom: true
@@ -78,6 +79,7 @@ export default {
     emptySearchVal () {
       this.searchVal = ''
       this.hasSearch = false
+      this.$router.back(-1)
     },
     saveSearchHistory () {
       this.searchHistoryStorage = storage.getLocalStorageLong(searchHistory)

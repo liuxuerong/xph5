@@ -52,7 +52,7 @@ export default {
       info.addressId = addressId
       info.addressType = '上门自提'
       storage.setLocalStorage(orderInfo, info)
-      this.$router.push({path: '/createOrder/1'})
+      this.$router.replace({path: '/createOrder/1'})
     }
   },
   created () {

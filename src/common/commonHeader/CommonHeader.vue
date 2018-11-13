@@ -94,4 +94,5 @@ export default {
       top 0
       transform translate(50%,-25%)
       right 0
+      font-size 36px
 </style>

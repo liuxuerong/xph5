@@ -162,3 +162,6 @@ body, html, #app{
 #__vconsole .vc-switch{
   z-index: 99999999 !important;
 }
+.mint-toast-text,.weui-toast__content{
+  font-size: 0.32rem !important;
+}

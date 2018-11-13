@@ -510,8 +510,8 @@ export default {
     span
       display inline-block
       width 100px
-      height 100px
-      line-height 100px
+      height 92px
+      line-height 92px
       font-size 80px
       text-align center
     .sub
@@ -519,10 +519,10 @@ export default {
     .add
       margin-top 6px
     input
-      width 196px
+      width 190px
       border-left 1px solid #CCCCCC
       border-right 1px solid #CCCCCC
-      height 94px
+      height 92px
       margin-top 2px
       outline none
       text-align center

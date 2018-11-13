@@ -16,7 +16,6 @@
         <index-nav/>
       </keep-alive>
     </div>
-
   </div>
 </div>
 </template>
@@ -64,13 +63,11 @@ export default {
     }
   },
   mounted () {
-    console.log('VConsole is cool')
     const searchTop = this.$refs.commonSearchDom.$el.offsetTop - this.$refs.commonSearchDom.$el.style.height
     const swiperTop = this.$refs.indexSwiper.$el.offsetTop
     let _this = this
     window.addEventListener('scroll', function () {
-      const documentScrollTop = document.documentElement.scrollTop
-      // alert(documentScrollTop)
+      const documentScrollTop = window.pageYOffset || document.documentElement.scrollTop
       const searchActive = !(searchTop > documentScrollTop)
       _this.changeSearchActive(searchActive)
       const tabbarIsFixed = !(swiperTop > documentScrollTop)

@@ -1,10 +1,10 @@
 <template>
   <div class="sendWay">
     <common-nav-header :title="title"/>
-      <router-link class="cellLink" to="/addressAdmin/need">
+      <router-link class="cellLink" to="/addressAdmin/need" replace>
         <div class="text">快递配送</div>
       </router-link>
-        <router-link class="cellLink" to="/storeAddress">
+        <router-link class="cellLink" to="/storeAddress" replace>
         <div class="text">上门自提</div>
       </router-link>
   </div>
