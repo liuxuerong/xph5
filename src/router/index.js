@@ -51,13 +51,9 @@ import IntegralRule from '@/pages/person/IntegralRule'
 import CardVoucher from '@/pages/person/CardVoucher'
 import CardDetails from '@/pages/person/CardDetails'
 import ChooseCoupons from '@/pages/createOrder/ChooseCoupons'
-<<<<<<< HEAD
 import WatchLogistics from '@/pages/order/WatchLogistics'
 import AppDownload from '@/pages/download/AppDownload'
-=======
 import ToolStore from '@/pages/person/ToolStore'
-
->>>>>>> 751077ee2b53f14a915eba3d16685f84c82e7224
 import { accessToken } from 'util/const'
 import { storage } from 'util/storage'
 

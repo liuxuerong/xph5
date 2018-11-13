@@ -31,27 +31,33 @@ export default {
           window.setTimeout(function () {
             let timeOutDateTime = new Date()
             if (timeOutDateTime - loadDateTime < 5000) {
-              // window.location = '要跳转的页面URL'
-              console.log(999)
+              console.log('下载iosApp')
+              // window.location = 'https://itunes.apple.com/cn/app/%E6%98%9F%E5%93%81%E5%95%86%E5%9F%8E/id1253883465?mt=8'
             } else {
               window.close()
             }
           }, 25)
-          // window.location = ''
-          console.log(666)
+          console.log('打开iosApp')
+          // window.location = " apps custom url schemes";
+          // window.location = 'schema://com.jdhoe.android'
         } else if (/(Android)/i.test(navigator.userAgent)) {
           this.terminalType = 'android'
-          let state = null
+          // let state = null
           try {
-            state = window.open('chblogs://com.jdhoe.android', '_blank')
+            console.log('打开安卓App')
+            alert('6')
+            // window.location = 'app://test'
+            // Uri uri=Uri.parse("app://test");
+            // Intent intent=new Intent(Intent.ACTION_VIEW,uri);
+            // startActivity(intent)
+            // state = window.open('app://test')
           } catch (e) {}
-          if (state) {
-            window.close()
-          } else {
-            // alert('去下载')
-            window.location.href = 'chblogs:' + 'com.jdhoe.android'
-            // window.location = 'com.jdhoe.android'
-          }
+          // if (state) {
+          //   window.close()
+          // } else {
+          //   console.log('下载安卓App')
+          //   // window.location = 'https://alissl.ucdl.pp.uc.cn/fs08/2018/10/09/0/110_860ee7b483abf81ecd840fac557d70b2.apk?appid=7876272&packageid=100445992&md5=5fb0eadbece066eb0f3411c98c408c59&apprd=7876272&pkg=com.jdhoe.android&vcode=17&fname=%E6%98%9F%E5%93%81%E4%BC%98%E6%B1%87&iconUrl=http%3A%2F%2Fandroid%2Dartworks%2E25pp%2Ecom%2Ffs08%2F2018%2F10%2F09%2F2%2F110%5Fcf55896e1e02c66b3c2f6f810a9a05d7%5Fcon%2Epng'
+          // }
         }
       }
 
@@ -82,8 +88,7 @@ export default {
     background #fff
     .wrapperBg
       width 100%
-      height 70%
-      background red
+      height 40%
       .weixinTips
         width calc(100% - 40px)
         margin 0 auto
@@ -123,7 +128,7 @@ export default {
     font-size 60px
     color #BA825A
     line-height 160px
-    margin 32% auto 0
+    // margin 32% auto 0
     background #262D35
     text-align center
 </style>
