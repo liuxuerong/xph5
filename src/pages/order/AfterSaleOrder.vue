@@ -13,6 +13,28 @@
           <span class="orderAddress">收货地址：{{list.delivery.province}}{{list.delivery.city}}{{list.delivery.area}}{{list.delivery.detailedAddr}}</span>
         </div>
       </div>
+      <!-- 退款进度详情 -->
+      <div class="refundSpeed">
+        <h3 class="border-bottom">退款详情</h3>
+        <div class="refundCon">
+          <div class="refundItem active">
+            <!-- hookIcon hookGreen hookActive  -->
+            <i class="hookIcon hookGreen"></i>
+            <span class="refundState">卖家退款</span>
+            <span v-if="list.confirmTime" class="refundTime">{{list.confirmTime}}</span>
+          </div>
+          <div class="refundItem active">
+            <i class="hookIcon hookActive"></i>
+            <span class="refundState">退款中</span>
+            <span v-if="list.confirmTime" class="refundTime">{{list.confirmTime}}</span>
+          </div>
+          <div class="refundItem">
+            <i class="hookIcon"></i>
+            <span class="refundState">退款成功</span>
+            <span v-if="list.confirmTime" class="refundTime">{{list.confirmTime}}</span>
+          </div>
+        </div>
+      </div>
       <div class="orderGoodsInfo">
         <div class="orderGoods clearfix" v-for="(item,index) in list.memberOrderGoods" :key="index" @click="goodsDetails(item.goodsId)">
           <img :src="imageUrl+item.pic" alt="">
@@ -30,9 +52,10 @@
         <div class="orderCount border-bottom">
           <span class="goodsCount">商品金额<p>￥ {{item.actualPrice}}</p></span>
           <span class="goodsDiscount">优惠金额<p>￥ {{list.offerAmount}}</p></span>
+          <span class="goodsDiscount">运费<p>￥ {{list.shippingAmount}}</p></span>
         </div>
         <div class="orderTotalPrice">
-          实付：￥{{item.actualPrice*item.num}}
+          实付：￥{{list.needPayAmount}}
         </div>
       </div>
       <ul class="orderOther">
@@ -56,7 +79,7 @@ import { config } from 'util/config' // 图片路径
 export default {
   data () {
     return {
-      title: '退款订单',
+      title: '',
       list: [],
       imageUrl: config.imageUrl,
       orderStatus: Number
@@ -71,8 +94,9 @@ export default {
       let orderId = this.$route.params.orderId
       console.log(orderId)
       http(refundOrderDetail, [orderId]).then((response) => {
-        console.log(response)
+        console.log(response.data.body)
         if (response.data.code === 0) {
+          this.title = response.data.body.afterSalesTypeDesc
           this.list = response.data.body
           let memberOrderGoods = response.data.body.memberOrderGoods[0]
           if (memberOrderGoods.orderItemStatus === 6) {
@@ -88,6 +112,7 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
+  @import "~styles/mixins.styl";
   body,html
     position relative
     background #F5F5F5
@@ -141,7 +166,6 @@ export default {
         width 286px
         height 286px
         margin-right 50px
-        background #000
       .orderText
         float left
         width calc(100% - 336px)
@@ -238,4 +262,88 @@ export default {
       font-size 36px
       color #808080
       margin-right 20px
+  .refundSpeed
+    width 100%
+    height 500px
+    margin-bottom 30px
+    box-sizing border-box
+    padding 0 50px
+    background #fff
+    h3
+      width 100%
+      height 110px
+      line-height 110px
+      font-size 40px
+      margin-bottom 50px
+      font-weight bold
+      color #262626
+    .refundCon
+      width 100%
+      height 290px
+      display flex
+      background #F5F5F5
+      .refundItem
+        flex 1
+        height 290px
+        box-sizing border-box
+        padding-top 120px
+        position relative
+        overflow hidden
+        span
+          display block
+          width 100%
+          text-align center
+        .refundState
+          font-size 40px
+          margin-bottom 10px
+          color #CCCCCC
+        .refundTime
+          font-size 28px
+          color #808080
+        .hookIcon
+          display block
+          width 30px
+          height 30px
+          bgImage('/static/icons/hookGray')
+          position absolute
+          left 0
+          right 0
+          top 72px
+          margin auto
+        .hookIcon.hookGreen
+          bgImage('/static/icons/hookGreen')
+        .hookIcon.hookActive
+          width 50px
+          height 50px
+          top 62px
+          bgImage('/static/icons/hookActive')
+        .hookIcon:after
+          display block
+          content ""
+          width 200px
+          height 5px
+          background #CCCCCC
+          position absolute
+          left 30px
+          top 12px
+        .hookIcon:before
+          display block
+          content ""
+          width 200px
+          height 5px
+          background #CCCCCC
+          position absolute
+          right 30px
+          top 12px
+      .refundItem:last-child .hookIcon:after,.refundItem:first-child .hookIcon:before
+          display none
+      .hookGreen.hookIcon:after,.hookGreen.hookIcon:before
+        background #47D955
+      .hookActive.hookIcon:after,.hookActive.hookIcon:before
+        top 22px
+        background #47D955
+      .hookActive.hookIcon:after
+        left 50px
+      .hookActive.hookIcon:before
+        right 50px
 </style>

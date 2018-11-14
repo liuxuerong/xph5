@@ -234,7 +234,7 @@ const router = new Router({
       component: OrderList
     },
     {
-      path: '/orderDetails/:orderCode',
+      path: '/orderDetails/:type/:orderCode',
       name: 'orderDetails',
       component: OrderDetails
     },
@@ -244,7 +244,7 @@ const router = new Router({
       component: ImmedPayment
     },
     {
-      path: '/afterSaleOrder/:orderId',
+      path: '/afterSaleOrder/:type/:orderId',
       name: 'afterSaleOrder',
       component: AfterSaleOrder
     },

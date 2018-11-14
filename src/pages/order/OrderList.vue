@@ -3,8 +3,9 @@
     <search-title :title="title"></search-title>
     <div class="orderCon" v-if="list.length > 0">
       <div class="orderItem" v-for="(item, i) in list" :key="i">
-        <div class="goodsItem border-bottom" v-for="(childItem,j) in item.memberOrderGoods" :key="j" @click="orderDetails(item.orderSn)">
-          <img :src="imageUrl+childItem.pic" alt="">
+        <div class="goodsItem border-bottom" v-for="(childItem,j) in item.memberOrderGoods" :key="j" @click="orderDetails(item.orderSn,item.memberOrderGoods[0].orderItemStatus,item.memberOrderGoods[0].orderItemId)">
+          <img v-if="childItem.pic != ''" :src="imageUrl+childItem.pic" alt="">
+          <img v-else src="/static/images/personalHeader.png">
           <div class="goodsinfo">
             <h3>{{childItem.goodsName}}</h3>
             <div class="goodsSpecWrapper clearfix">
@@ -37,22 +38,29 @@
             <!-- <span class="operState">交易成功</span> -->
             <span class="operState">{{item.memberOrderGoods[0].orderItemStatusDesc}}</span>
           </div>
-          <div class="totalPrice" v-else>
-            <!-- <span class="totalPayment" v-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===undefined"><p >待付</p>:￥ {{item.totalAmount}}</span> -->
+          <!-- 售后/退货 -->
+          <div class="totalPrice" v-if="type === '5'">
+            <span class="totalPayment"><p >退款</p>:￥ {{item.totalAmount}}</span>
+            <span class="operState">{{item.afterSalesTypeDesc}}</span>
+            <span class="operState">{{item.memberOrderGoods[0].orderItemStatusDesc}}</span>
+          </div>
+          <!-- 全部订单 顶单状态 -->
+          <div class="totalPrice" v-if="type === '-1'">
+            <span class="totalPayment" v-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===undefined"><p >待付</p>:￥ {{item.totalAmount}}</span>
             <span class="totalPayment" v-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===6"><p >退款</p>:￥ {{item.totalAmount}}</span>
-            <!-- <span class="totalPayment" v-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===6"><p >退款</p>:￥ {{item.totalAmount}}</span> -->
-            <!-- <span class="totalPayment" v-if="item.status=='2' || item.status=='3' || item.status=='4' || item.status=='5'"><p >已付</p>:￥ {{item.totalAmount}}</span> -->
+            <span class="totalPayment" v-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===6"><p >退款</p>:￥ {{item.totalAmount}}</span>
+            <span class="totalPayment" v-if="item.status=='2' || item.status=='3' || item.status=='4' || item.status=='5'"><p >已付</p>:￥ {{item.totalAmount}}</span>
             <span class="totalPayment" v-if="item.status=='6' || item.status=='7' || item.status=='8'"><p >未付</p>:￥ {{item.totalAmount}}</span>
-            <!-- <span class="operState" v-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===undefined">待付款</span> -->
-            <!-- <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='1'">待发货</span> -->
-            <!-- <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='2'">打包配货</span> -->
-            <!-- <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='3'">已发货</span> -->
+            <span class="operState" v-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===undefined">待付款</span>
+            <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='1'">待发货</span>
+            <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='2'">打包配货</span>
+            <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='3'">已发货</span>
             <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='5'">交易成功</span>
             <p v-if="item.memberOrderGoods[0].orderItemStatus=='6'">
               <span class="operState">{{item.afterSalesTypeDesc}}</span>
               <span class="operState">退款中</span>
             </p>
-            <!-- <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='6'">退货退款</span> -->
+            <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='6'">退货退款</span>
             <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='7'">已评论</span>
             <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='8'">退款中</span>
             <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='9'">退款完成</span>
@@ -84,15 +92,22 @@
             <span class="operbtn confirmGoods" @click="immedEvaluate(item.orderSn)">立即评价</span>
             <span class="operbtn checkDetails" @click="watchLogistics(item.memberOrderGoods[0].logisticsName,item.memberOrderGoods[0].logisticsNo)">查看物流</span>
           </div>
-          <!-- <span class="operbtn immedPayment" v-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===undefined" @click="immedPayment(item.orderSn)">立即支付</span> -->
-          <!-- <router-link :to="{ name: 'orderDetails', params: { orderCode: item.orderSn }}" class="operbtn checkDetails" v-show="item.status =='2'" @click="orderDetails">查看详情1</router-link> -->
-          <!-- <span class="operbtn confirmGoods" v-if="item.memberOrderGoods[0].orderItemStatus == '5'" @click="immedEvaluate(item.orderSn)">立即评价</span> -->
-          <!-- <span class="operbtn checkDetails" v-if="(item.memberOrderGoods[0].orderItemStatus !== undefined && item.memberOrderGoods[0].orderItemStatus != '3') || (item.memberOrderGoods[0].orderItemStatus != undefined && list.status !='1')" @click="orderDetails(item.orderSn,item.memberOrderGoods[0].orderItemStatus,item.memberOrderGoods[0].orderItemId)">查看详情</span> -->
-          <!-- <span class="operbtn checkDetails" v-if="(item.memberOrderGoods[0].orderItemStatus != undefined && item.status !='1') || item.status == '8' || item.status == '7' || (item.memberOrderGoods[0].orderItemStatus == '6' && item.status =='1')" @click="orderDetails(item.orderSn,item.memberOrderGoods[0].orderItemStatus,item.memberOrderGoods[0].orderItemId)">查看详情</span> -->
-          <!-- <div class="moreOperBtn clearfix" v-if="item.memberOrderGoods[0].orderItemStatus == '3'">
-            <span class="operbtn confirmGoods" @click="confirmGoods(item.orderSn)">确认收货</span>
-            <router-link to="/" class="operbtn checkDetails">查看物流</router-link>
-          </div> -->
+          <!-- 退款/售后 -->
+          <div class="moreOperBtn clearfix" v-if="type === '5'">
+            <span class="operbtn checkDetails" @click="orderDetails(item.orderSn,item.memberOrderGoods[0].orderItemStatus,item.memberOrderGoods[0].orderItemId)">查看详情</span>
+          </div>
+          <div class="moreOperBtn clearfix" v-if="type === '-1'">
+            <!-- <span class="operbtn immedPayment" v-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===undefined" @click="immedPayment(item.orderSn)">立即支付</span>
+            <router-link :to="{ name: 'orderDetails', params: { orderCode: item.orderSn }}" class="operbtn checkDetails" v-show="item.status =='2'" @click="orderDetails">查看详情1</router-link>
+            <span class="operbtn confirmGoods" v-if="item.memberOrderGoods[0].orderItemStatus == '5'" @click="immedEvaluate(item.orderSn)">立即评价</span>
+            <span class="operbtn checkDetails" v-if="(item.memberOrderGoods[0].orderItemStatus !== undefined && item.memberOrderGoods[0].orderItemStatus != '3') || (item.memberOrderGoods[0].orderItemStatus != undefined && list.status !='1')" @click="orderDetails(item.orderSn,item.memberOrderGoods[0].orderItemStatus,item.memberOrderGoods[0].orderItemId)">查看详情</span>
+            <span class="operbtn checkDetails" v-if="(item.memberOrderGoods[0].orderItemStatus != undefined && item.status !='1') || item.status == '8' || item.status == '7' || (item.memberOrderGoods[0].orderItemStatus == '6' && item.status =='1')" @click="orderDetails(item.orderSn,item.memberOrderGoods[0].orderItemStatus,item.memberOrderGoods[0].orderItemId)">查看详情</span>
+            <div class="moreOperBtn clearfix" v-if="item.memberOrderGoods[0].orderItemStatus == '3'">
+              <span class="operbtn confirmGoods" @click="confirmGoods(item.orderSn)">确认收货</span>
+              <router-link to="/" class="operbtn checkDetails">查看物流</router-link>
+            </div> -->
+          </div>
+
         </div>
       </div>
     </div>
@@ -164,13 +179,13 @@ export default {
     },
     // 查看详情
     orderDetails (orderCode, state, orderId) {
-      console.log(typeof (state))
+      console.log(state)
       if (state !== 6 && state !== 8 && state !== 9 && state !== 10) {
         // 售前订单详情
-        this.$router.push('../../orderDetails/' + orderCode)
+        this.$router.push('/orderDetails/' + this.type + '/' + orderCode)
       } else {
         // 售后订单详情
-        this.$router.push('../../afterSaleOrder/' + orderId)
+        this.$router.push('/afterSaleOrder/' + this.type + '/' + orderId)
       }
     },
     // 确认收货
@@ -190,11 +205,11 @@ export default {
     },
     // 立即支付
     immedPayment (orderSn) {
-      this.$router.push('../../immedPayment/' + orderSn)
+      this.$router.push('/immedPayment/' + orderSn)
     },
     // 立即评价
     immedEvaluate (orderCode) {
-      this.$router.push('../../immedEvaluate/' + orderCode)
+      this.$router.push('/immedEvaluate/' + orderCode)
     },
     // 查看物流
     watchLogistics (logisticsName, logisticsNo) {
@@ -251,11 +266,11 @@ export default {
           width 66%
           height 286px
           box-sizing border-box
-          padding-top 50px
+          padding-top 38px
           position relative
           h3
-            width auto
-            line-height 40px
+            width 80%
+            line-height 60px
             font-size 40px
             color #262626
             margin-bottom 30px

@@ -1,23 +1,28 @@
 <template>
   <div class="wrapper">
-    <search-title :title="title"></search-title>
+    <search-title :title="title[type-1]"></search-title>
     <div class="orderDetatilCon">
       <div class="orderUserInfo">
         <div class="orderCode border-bottom">订单编号：{{list.orderSn}}</div>
-        <div class="orderProvide" v-if="list.shippingMethod === '1'">
+        <div class="orderProvide" v-if="list.shippingMethod == '1'">
           <span class="shopName">提货店铺：{{list.franchiseeDetailVO.name}}  {{list.franchiseeDetailVO.phone}}</span>
           <span class="shopAddress">店铺地址：{{list.franchiseeDetailVO.province}}{{list.franchiseeDetailVO.city}}{{list.franchiseeDetailVO.area}}{{list.franchiseeDetailVO.address}}</span>
         </div>
-        <div class="orderProvide" v-else-if="list.shippingMethod === '2'">
-          <span class="orderName">收货人：{{list.delivery.receiverName}}   {{list.delivery.phone}}</span>
+        <div class="orderProvide" v-else-if="list.shippingMethod == '2'">
+          <span class="orderName">收货人：{{list.delivery.receiverName}}&nbsp;&nbsp;&nbsp;&nbsp;{{list.delivery.phone}}</span>
           <span class="orderAddress">收货地址：{{list.delivery.province}}{{list.delivery.city}}{{list.delivery.area}}{{list.delivery.detailedAddr}}</span>
         </div>
       </div>
+      <!-- 上门自提二维码 -->
+      <div class="deliveryDoodsCard" v-if="type=='3' && list.shippingMethod == '1'">
+
+      </div>
       <div class="orderGoodsInfo">
         <div class="orderGoods clearfix" v-for="(item,index) in list.memberOrderGoods" :key="index" @click="goodsDetails(item.goodsId)">
-          <img :src="imageUrl+item.pic" alt="">
+          <img v-if="item.pic != ''" :src="imageUrl+item.pic" alt="">
+          <img v-else src="/static/images/personalHeader.png">
           <div class="orderText">
-            <h3 class="goodsName">{{item.goodsName}}</h3>
+            <h3 class="goodsName">{{item.goodsName}} {{item.pic != ''}}</h3>
             <div class="goodsSpecWrapper clearfix">
               <span class="goodsSpec" v-for="(spec,n) in JSON.parse(item.spec)" :key="n">{{spec.value}}</span>
             </div>
@@ -30,9 +35,10 @@
         <div class="orderCount border-bottom">
           <span class="goodsCount">商品金额<p>￥ {{list.totalAmount}}</p></span>
           <span class="goodsDiscount">优惠金额<p>￥ {{list.offerAmount}}</p></span>
+          <span v-if="list.shippingAmount != '0' || list.shippingAmount != ''" class="goodsDiscount">运费<p>￥ {{list.shippingAmount}}</p></span>
         </div>
         <div class="orderTotalPrice">
-          实付：￥{{list.actualPrice}}
+          实付：￥{{list.needPayAmount}}
         </div>
       </div>
       <ul class="orderOther">
@@ -46,13 +52,42 @@
         <li v-else>备注：{{list.desc}}</li>
       </ul>
     </div>
-    <div class="orderOperBtn orderOperBtn8 border-top" v-if="orderStatus == '8'">支付超时</div>
-    <div class="orderOperBtn orderOperBtn8 border-top" v-if="orderStatus == '6'">交易关闭</div>
-    <!-- 未发货退款 -->
-    <div class="orderOperBtn orderOperBtn11 border-top" v-if="orderStatus == '11' || orderStatus == '1'">
+    <!-- 1、待付款订单 -->
+    <div class="orderOperBtn orderOperBtn11 border-top" v-if="type == '1'">
+      <span @click="cancelOrder(list.orderId)">取消订单</span>
+      <span @click="immedPayment(list.orderSn)" class="immedPaymentBtn">立即支付<i class="time">{{time}}</i></span>
+    </div>
+    <!-- 2、待发货订单 -->
+    <div class="orderOperBtn orderOperBtn11 border-top" v-if="type == '2'">
       <span @click="unGoodsapplyRefund(list.orderSn)">申请退款</span>
       <span>已付款</span>
     </div>
+    <!-- 3、待收货订单 -->
+    <div class="orderOperBtn orderOperBtn11 border-top" v-if="type == '3' && list.shippingMethod == '2'">
+      <span @click="watchLogistics(list.memberOrderGoods[0].logisticsName,list.memberOrderGoods[0].logisticsNo)">查看物流</span>
+      <span class="immedPaymentBtn" @click="confirmGoods(list.orderSn)">确认收货</span>
+    </div>
+
+    <!-- 4、待评价订单  上门自提 -->
+    <div class="orderOperBtn orderOperBtn8 border-top" v-if="type == '4' && list.shippingMethod == '1'" @click="immedEvaluate(list.orderSn)">立即评价</div>
+    <!-- 4、待评价订单 收货 -->
+    <div class="orderOperBtn orderOperBtn11 border-top" v-if="type == '4' && list.shippingMethod == '2'">
+      <span @click="watchLogistics(list.memberOrderGoods[0].logisticsName,list.memberOrderGoods[0].logisticsNo)">查看物流</span>
+      <span class="immedPaymentBtn" @click="immedEvaluate(list.orderSn)">立即评价</span>
+    </div>
+    <!-- 4、待评价订单 已评价 -->
+    <!-- <div class="orderOperBtn orderOperBtn11 border-top" v-if="type == '4' && list.shippingMethod == '2'">
+      <span @click="watchLogistics(list.memberOrderGoods[0].logisticsName,list.memberOrderGoods[0].logisticsNo)">查看物流</span>
+      <span>已评价</span>
+    </div> -->
+
+    <div class="orderOperBtn orderOperBtn8 border-top" v-if="orderStatus == '8'">支付超时</div>
+    <div class="orderOperBtn orderOperBtn8 border-top" v-if="orderStatus == '6'">交易关闭</div>
+    <!-- 未发货退款 -->
+    <!-- <div class="orderOperBtn orderOperBtn11 border-top" v-if="orderStatus == '11' || orderStatus == '1'">
+      <span @click="unGoodsapplyRefund(list.orderSn)">申请退款</span>
+      <span>已付款</span>
+    </div> -->
     <!-- 已发货，分单退款 -->
     <div class="orderOperBtn orderOperBtn11 border-top" v-if="orderStatus == '9' || orderStatus == '10'">
       <span @click="unGoodsapplyRefund(list.orderId)">申请退款</span>
@@ -62,17 +97,24 @@
 </template>
 <script>
 import router from '@/router/index.js'
-import { subOrderDetail } from 'util/netApi'
+import { subOrderDetail, cancelOrder, confirmGoods } from 'util/netApi'
 import { http } from 'util/request'
 import SearchTitle from './ComOrderSearchTitle'
 import { config } from 'util/config' // 图片路径
+import notice from 'util/notice.js'
+import {Toast} from 'mint-ui'
+import {storage} from 'util/storage'
+import { logistics } from 'util/const'
 export default {
   data () {
     return {
-      title: '',
+      title: ['待付款订单', '待发货订单', '待收货订单', '交易完成'],
+      type: '',
       list: [],
       imageUrl: config.imageUrl,
-      orderStatus: Number
+      orderStatus: Number,
+      computedTime: 0,
+      time: ''
       // 1 立即支付
       // 7 查看详情 --- 交易关闭
     }
@@ -81,25 +123,29 @@ export default {
     SearchTitle
   },
   methods: {
+    // 订单列表页面渲染
     orderDetailRender () {
       let orderCode = this.$route.params.orderCode
+      let type = this.$route.params.type
+      this.type = type
       http(subOrderDetail, [orderCode]).then((response) => {
         let data = response.data.body
         console.log(data)
         this.list = data
         let memberOrderGoods = data.memberOrderGoods[0]
-        console.log(memberOrderGoods)
-        if (data.status === 2) {
-          this.title = '待发货订单'
-        } else if (data.status === 7) {
-          this.title = '交易关闭'
-        } else if (data.status === 8) {
-          this.title = '支付超时'
-        } else if (data.status === 4) {
-          this.title = '待评价订单'
-        } else if (memberOrderGoods.orderItemStatus === 1) {
-          this.title = '待发货订单'
-        }
+        // if (data.status === 1) {
+        //   this.title = '待付款订单'
+        // } else if (data.status === 2) {
+        //   this.title = '待发货订单'
+        // } else if (data.status === 7) {
+        //   this.title = '交易关闭'
+        // } else if (data.status === 8) {
+        //   this.title = '支付超时'
+        // } else if (data.status === 4) {
+        //   this.title = '待评价订单'
+        // } else if (memberOrderGoods.orderItemStatus === 1) {
+        //   this.title = '待发货订单'
+        // }
         if (memberOrderGoods.orderItemStatus === undefined && data.status === 8) {
           this.orderStatus = 8 // 交易关闭
         } else if (memberOrderGoods.orderItemStatus === 11) {
@@ -109,6 +155,34 @@ export default {
         } else if (memberOrderGoods.orderItemStatus === 1) {
           this.orderStatus = 1
         }
+        // 立即支付倒计时
+        let newDate1 = data.allowPayTime.split('T')[0] + ' ' + data.allowPayTime.split('T')[1]
+        var time = new Date(newDate1).getTime() - new Date().getTime()
+        this.computedTime = time / 1000
+        this.timer = setInterval(() => {
+          this.computedTime--
+          let time1 = parseInt(this.computedTime / 3600)
+          if (time1 < 10) {
+            time1 = '0' + time1
+          }
+          let time2 = parseInt((this.computedTime % 3600) / 60)
+          if (time2 < 10) {
+            time2 = '0' + time2
+          }
+          let time3 = parseInt(this.computedTime % 60)
+          if (time3 < 10) {
+            time3 = '0' + time3
+          }
+          this.time = time1 + ' : ' + time2 + ' : ' + time3
+          if (this.computedTime === 0) {
+          }
+        }, 1000)
+
+        // 获取收获地址
+        // console.log(data.deliveryId)
+        // http(idDelivery, [data.deliveryId]).then((response) => {
+        //   console.log(response)
+        // })
       })
     },
     // 商品详情页面
@@ -120,6 +194,51 @@ export default {
       console.log(666)
       // type 1   未发货退款
       router.push('../../applyRefund/1/' + orderId)
+    },
+    // 取消订单
+    cancelOrder (orderId) {
+      let _this = this
+      console.log(orderId)
+      http(cancelOrder, [orderId]).then((response) => {
+        console.log(response)
+        if (response.data.code === 0) {
+          notice.confirm('取消订单', '是否取消此订单', function () {
+            _this.$router.push('/orderList/1')
+          })
+        }
+      })
+    },
+    // 立即付款
+    immedPayment (orderSn) {
+      this.$router.push('../../immedPayment/' + orderSn)
+    },
+    // 确认收货
+    confirmGoods (orderCode) {
+      console.log(orderCode)
+      notice.confirm('您确定收到货物？', '否则可能钱财两空', function () {
+        http(confirmGoods, [orderCode]).then((response) => {
+          if (response.data.body === true) {
+            Toast({
+              message: '收货成功',
+              position: 'bottom',
+              duration: 2000
+            })
+          }
+        })
+      })
+    },
+    // 查看物流
+    watchLogistics (logisticsName, logisticsNo) {
+      let params = {
+        logino: logisticsNo,
+        code: logisticsName
+      }
+      storage.setLocalStorage(logistics, params)
+      this.$router.push('/watchLogistics')
+    },
+    // 立即评价
+    immedEvaluate (orderCode) {
+      this.$router.push('/immedEvaluate/' + orderCode)
     }
   },
   mounted () {
@@ -127,10 +246,12 @@ export default {
   }
 }
 </script>
-<style lang="stylus" scoped>
-  body,html
+<style lang="stylus">
+  html,body
     position relative
-    background #F5F5F5
+    background #F5F5F5!important
+</style>
+<style lang="stylus" scoped>
   .wrapper
     width 100%
     box-sizing border-box
@@ -139,6 +260,7 @@ export default {
     width 100%
     box-sizing border-box
     padding-bottom 148px
+    background #F5F5F5
   .orderUserInfo
     width 100%
     background #fff
@@ -151,7 +273,7 @@ export default {
       font-size 46px
       color #262626
       font-weight bold
-      background #fff
+      // background #fff
     .orderProvide
       width 100%
       height auto
@@ -185,13 +307,14 @@ export default {
         width calc(100% - 336px)
         height 286px
         box-sizing border-box
-        padding-top 50px
+        padding-top 38px
         position relative
         .goodsName
-          width 100%
+          width 94%
           line-height 40px
           font-size 40px
           color #262626
+          line-height 60px
           margin-bottom 30px
           font-weight blod
         .goodsPrice
@@ -289,4 +412,18 @@ export default {
       font-size 36px
       color #808080
       margin-right 20px
+  .immedPaymentBtn
+    font-size 46px
+    color #BA825A
+    position relative
+    i.time
+      display block
+      width 100%
+      height 20px
+      line-height 20px
+      position absolute
+      bottom  16px
+      left 0
+      font-size 30px
+      text-align center
 </style>

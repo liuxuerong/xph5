@@ -5,7 +5,7 @@
       <div class="paymentTitle">支付中心</div>
       <div class="paymentOrder">
         <span>订单编号：{{list.orderSn}}</span>
-        <span>付款总额：￥ {{list.totalAmount}}</span>
+        <span>付款总额：￥ {{list.needPayAmount}}</span>
       </div>
       <div class="paymentTitle">请选择支付方式</div>
       <div class="paymentWay">
@@ -30,7 +30,6 @@
 import SearchTitle from './ComOrderSearchTitle'
 import {payMoney, subOrderDetail} from 'util/netApi'
 import {http} from 'util/request'
-// import axios from 'axios'
 import notice from 'util/notice'
 export default {
   data () {
