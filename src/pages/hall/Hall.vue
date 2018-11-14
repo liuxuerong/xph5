@@ -51,7 +51,7 @@ export default {
         slidesPerView: 'auto',
         loopedSlides: 5,
         height: window.innerHeight - 200,
-        observer: true,
+        // observer: true,
         loop: true
       }
     }

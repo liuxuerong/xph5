@@ -12,7 +12,8 @@
 
 <script>
 import Find from '@/pages/find/Find'
-import Brand from '@/pages/brand/Brand'
+import Classfiy from '@/pages/classify/Classify'
+// import Brand from '@/pages/brand/Brand'
 import Hall from '@/pages/hall/Hall'
 import Story from '@/pages/story/Story'
 import Person from '@/pages/person/PersonCenter'
@@ -20,7 +21,7 @@ export default {
   name: 'Index',
   components: {
     Find,
-    Brand,
+    Classfiy,
     Hall,
     Story,
     Person
@@ -38,10 +39,10 @@ export default {
         },
         {
           id: 'tabbar2',
-          to: '/brand',
-          imgSrc: '/static/icons/story_icon_Tabbar@2x.png',
-          imgSrcSelect: '/static/icons/story_icon_Tabbar_active@2x.png',
-          text: '国际品牌',
+          to: '/classify',
+          imgSrc: '/static/icons/classify_icon.png',
+          imgSrcSelect: '/static/icons/classify_icon_active.png',
+          text: '分类',
           selected: false
         },
         {

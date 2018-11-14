@@ -4,7 +4,7 @@ import Index from '@/pages/Index'
 import Find from '@/pages/find/Find'
 import Classify from '@/pages/classify/Classify'
 import Hotel from '@/pages/hotel/Hotel'
-import Brand from '@/pages/brand/Brand'
+// import Brand from '@/pages/brand/Brand'
 import BrandDetails from '@/pages/brandDetails/BrandDetails'
 import Hall from '@/pages/hall/Hall'
 import HallDetails from '@/pages/hall/HallDetails'
@@ -67,16 +67,11 @@ const router = new Router({
       component: Index,
       children: [
         {name: 'Find', path: '/find', component: Find},
-        {name: 'Brand', path: '/brand', component: Brand},
+        {name: 'Classify', path: '/classify', component: Classify},
         {name: 'Hall', path: '/hall', component: Hall},
         {name: 'Story', path: '/story', component: Story},
         {name: 'PersonCenter', path: '/personCenter', component: PersonCenter}
       ]
-    },
-    {
-      path: '/classify',
-      name: 'Classify',
-      component: Classify
     },
     {
       path: '/hotel',

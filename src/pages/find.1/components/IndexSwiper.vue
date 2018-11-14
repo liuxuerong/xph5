@@ -1,5 +1,5 @@
  <template>
-  <div class="xpSwiperIndex">
+  <div class="xpSwiper">
       <swiper :options="swiperOption">
         <swiper-slide v-for="item in swiperData" :key="item.adId">
           <router-link :to="'/details/'+item.linkId" class="swiperHref">
@@ -41,7 +41,7 @@ export default {
   mounted () {
     http(bannerList, ['find-banner']).then((res) => {
       this.swiperData = res.data.body
-      // console.log(res.data.body)
+      console.log(res.data.body)
     }).catch((err) => {
       console.log(err)
     })
@@ -49,7 +49,7 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-.xpSwiperIndex
+.xpSwiper
   margin-top 50px
   padding 0 50px
   .swiperHref
@@ -61,13 +61,11 @@ export default {
       height 100%
 </style>
 <style lang="stylus">
-.xpSwiperIndex
+.xpSwiper
   .swiper-container
     height 628px
   .swiper-wrapper
     height 512px
-   .swiper-slide
-      width 100% !important
   .swiper-container-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet
     margin 10px
   .swiper-pagination-bullet

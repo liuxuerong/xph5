@@ -2,15 +2,16 @@
   <div class="xpGoods">
     <keep-alive>
       <div class="xpGoodsWrap">
-        <common-nav-search />
-        <div class="xpGoodsTop border-bottom" ref="xpGoodsTop">
+        <slot></slot>
+        <common-nav-search v-if="searchShow"/>
+        <div class="xpGoodsTop border-bottom" ref="xpGoodsTop" :class="{isFixed:!isFixed}">
           <div class="xpGoodsTopContent">
             <tab v-if="tabbar.length">
               <tab-item :selected="index===0" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.id" :id="item.id" ref="tabItem">{{item.catName}}</tab-item>
             </tab>
           </div>
         </div>
-        <div ref="xpStoryContent" class="xpStoryContent">
+        <div ref="xpStoryContent" class="xpStoryContent" >
           <div>
             <ul class="goodsContainer" v-if="goodsListData.length">
               <li v-for="item in goodsListData" v-if="goodsListData.length" :key="item.id">
@@ -48,7 +49,7 @@ import {
 } from 'util/config.js'
 import BScroll from 'better-scroll'
 export default {
-  name: 'Goods',
+  name: 'Story',
   components: {
     CommonNavSearch,
     CommonImgPrices,
@@ -56,6 +57,19 @@ export default {
     Tab,
     TabItem,
     Divider
+  },
+  props: {
+    searchShow: {
+      type: Boolean,
+      default: true
+    },
+    isFixed: {
+      type: Boolean,
+      default: true
+    },
+    indexPage: {
+      type: Number
+    }
   },
   data () {
     return {
@@ -75,12 +89,16 @@ export default {
       }
     }
   },
-  computed: {},
-  // watch: {
-  //   '$route' (to, from) {
-  //     this.$router.go(0)
-  //   }
-  // },
+  watch: {
+    indexPage: function (v) {
+      this.page = v
+      this.getGoodsList(this.categoryId, this.page)
+    },
+    isFixed: function (v) {
+      console.log(v)
+    }
+  },
+
   methods: {
     getTabbar () {
       http(category).then(res => {
@@ -97,7 +115,7 @@ export default {
       this.goodsListData = []
       this.noMore = false
       this.getGoodsList(this.categoryId, this.page)
-      this.scroll.refresh()
+      this.$emit('changePage', this.page)
     },
     getGoodsList (categoryId, page) {
       const param = {
@@ -108,7 +126,7 @@ export default {
       http(goodsList, param).then(res => {
         console.log(res)
         this.goodsListData = this.goodsListData.concat(res.data.body.list)
-        this.scrollInit()
+        // this.scrollInit()
         console.log(res.data.body.list)
         if (this.page !== 1 && res.data.body.list.length === 0) {
           this.scroll.finishPullUp()
@@ -129,10 +147,12 @@ export default {
             noMoreTxt: '没有更多数据了'
           },
           bounce: {
-            top: false,
+            top: true,
             bottom: true
           }
         })
+        console.log(this.scroll)
+
         this.scroll.on('pullingUp', () => {
           console.log(this.page)
           this.page++
@@ -143,19 +163,11 @@ export default {
         this.scroll.refresh()
         this.scroll.finishPullUp()
       }
+      if (!this.isFixed) {
+        this.scroll.destroy()
+      }
 
       // return this.scroll
-    },
-    scrollInitTopBar () {
-      return (this.scrollTopBar = new BScroll(this.$refs.xpGoodsTop, {
-        scrollX: true,
-        scrollY: false,
-        click: true,
-        bounce: {
-          left: true,
-          right: true
-        }
-      }))
     }
   },
   mounted () {
@@ -192,7 +204,7 @@ export default {
 .xpGoods
   height 100%
   padding-top 202px
-  background #f5f5f5
+  background-color #fff
   .xpGoodsWrap
     height 100%
   .xpGoodsTop
@@ -202,11 +214,15 @@ export default {
     position fixed
     width 100%
     top 120px
-    z-index 9999999
+    z-index 99999
     padding 0 50px
     background-color #fff
+  .isFixed
+    position relative !important
   .xpStoryContent
     height 100%
+  .xpStoryContent.auto
+    height auto
   h1.title
     font-size 56px
   .topBgImg
