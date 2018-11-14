@@ -1,5 +1,5 @@
 <template>
-    <div class="userInfoTop border-bottom">
+    <div class="userInfoTop">
 		<span class="prevOper" @click="backPrevOper"></span>
 		<h3 class="userInfoTitle">{{title}}</h3>
 		<span v-if="oper == 1" :class="oper == 1 ? 'comOperSearch' : ''"></span>
@@ -42,6 +42,7 @@ export default {
 	top 0
 	background #fff
 	z-index 999
+	border 1px solid #f5f5f5
 	.prevOper
 		display block
 		width 32px

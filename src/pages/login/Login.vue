@@ -15,9 +15,6 @@
           <input type="password" placeholder="密码" name="password" maxlength="12" v-model="password" />
           <router-link to="/remberPassword" class="passWordOper">忘记密码？</router-link>
         </div>
-        <!-- <button class="loginBtn" @click="loginBtnClick">登录</button>
-        <router-link to="/phoneCode" class="phoneCodeLogin">手机验证码登录</router-link>
-        <span class="loginTipText">未注册的手机号码验证后自动创建星品账户</span> -->
       </form>
     </div>
     <button class="loginBtn" @click="loginBtnClick">登录</button>
@@ -77,14 +74,14 @@ export default {
           Toast({
             message: '登录成功',
             position: 'bottom',
-            duration: 5000
+            duration: 2000
           })
           router.push('./')
         } else {
           Toast({
             message: '账号和密码不匹配，请重新输入',
             position: 'bottom',
-            duration: 5000
+            duration: 2000
           })
         }
       })
@@ -131,7 +128,7 @@ export default {
         bgImage('/static/images/loginBg')
         overflow hidden
         box-sizing border-box
-        padding-top 180px
+        padding-top 100px
     .loginTop
         height 72px
         line-height 72px
@@ -148,7 +145,7 @@ export default {
         width 88%
         height 530px
         background rgba(0,0,0,0.1)
-        margin 20% auto 5%
+        margin 30% auto 5%
         box-sizing border-box
         padding 0 30px
         .loginInput
@@ -203,8 +200,7 @@ export default {
         text-align center
         font-size 36px
         color #E6E6E6
-        position absolute
-        bottom 8%
+        margin-top 34%
     ::-webkit-input-placeholder {
         color: #fff;
     }

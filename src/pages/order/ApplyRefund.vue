@@ -4,7 +4,8 @@
     <div class="refundCon">
       <div class="orderGoodsInfo">
         <div class="orderGoods clearfix" v-for="(item,index) in list.memberOrderGoods" :key="index" @click="goodsDetails(item.goodsId)">
-          <img :src="imageUrl+item.pic" alt="">
+          <img v-if="item.pic != ''" :src="imageUrl+item.pic" alt="">
+          <img v-else src="/static/images/personalHeader.png">
           <div class="orderText">
             <h3 class="goodsName">{{item.goodsName}}</h3>
             <div class="goodsSpecWrapper clearfix">

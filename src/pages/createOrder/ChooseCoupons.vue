@@ -43,7 +43,7 @@
             </div>
           </div>
         </div>
-        <div class="noCoupons">不使用优惠券</div>
+        <div class="noCoupons" @click="noCoupons">不使用优惠券</div>
       </div>
       <div class="cardVoucherPage" v-else>
         <common-empty :emptyObj="emptyObj"/>
@@ -108,6 +108,12 @@ export default {
       }
       storage.setLocalStorage(orderInfo, info)
       this.$router.push({path: '/createOrder/1'})
+    },
+    // 不使用优惠券
+    noCoupons () {
+      let info = storage.getLocalStorage(orderInfo) || {}
+      info.couponId = null
+      info.couponName = null
     }
   },
   mounted () {

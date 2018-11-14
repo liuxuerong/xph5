@@ -51,6 +51,12 @@ export default {
   }
 }
 </script>
+<style lang="stylus">
+  html,body
+    width 100%
+    background #fff
+</style>
+
 <style lang="stylus" scoped>
   @import "~styles/mixins.styl";
   body,html

@@ -51,8 +51,9 @@ import IntegralRule from '@/pages/person/IntegralRule'
 import CardVoucher from '@/pages/person/CardVoucher'
 import CardDetails from '@/pages/person/CardDetails'
 import ChooseCoupons from '@/pages/createOrder/ChooseCoupons'
+import WatchLogistics from '@/pages/order/WatchLogistics'
+import AppDownload from '@/pages/download/AppDownload'
 import ToolStore from '@/pages/person/ToolStore'
-
 import { accessToken } from 'util/const'
 import { storage } from 'util/storage'
 
@@ -228,7 +229,7 @@ const router = new Router({
       component: OrderList
     },
     {
-      path: '/orderDetails/:orderCode',
+      path: '/orderDetails/:type/:orderCode',
       name: 'orderDetails',
       component: OrderDetails
     },
@@ -238,7 +239,7 @@ const router = new Router({
       component: ImmedPayment
     },
     {
-      path: '/afterSaleOrder/:orderId',
+      path: '/afterSaleOrder/:type/:orderId',
       name: 'afterSaleOrder',
       component: AfterSaleOrder
     },
@@ -306,6 +307,16 @@ const router = new Router({
       path: '/toolStore',
       name: 'toolStore',
       component: ToolStore
+    },
+    {
+      path: '/watchLogistics',
+      name: 'watchLogistics',
+      component: WatchLogistics
+    },
+    {
+      path: '/appDownload',
+      name: 'appDownload',
+      component: AppDownload
     }
   ]
 })
