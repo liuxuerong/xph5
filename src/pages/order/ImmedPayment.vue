@@ -79,39 +79,6 @@ export default {
               document.body.appendChild(dom)
               document.forms[0].submit()
             } else if (this.readioActive === 5) {
-              // let weiXin = 'https://api.mch.weixin.qq.com/pay/unifiedorder'
-              // 'timeStamp': data.body.timeStamp.toString(),
-              // 'nonceStr': data.body.nonceStr,
-              // 'package': data.body.package,
-              // 'signType': data.body.signType,
-              // 'paySign': data.body.paySign,
-              // let weixinData = {
-              //   appid: response.data.body.appid,
-              //   mch_id: response.data.body.partnerid,
-              //   sub_mch_id: response.data.body.prepayid,
-              //   nonce_str: response.data.body.noncestr,
-              //   sign: response.data.body.sign,
-              //   body: '深圳市星品优汇电子商务有限公司支付',
-              //   out_trade_no: this.list.orderSn,
-              //   total_fee: this.list.needPayAmount,
-              //   spbill_create_ip: '',
-              //   notify_url: '',
-              //   trade_type: 'MWEB'
-              // }
-
-              // WeixinJSBridge.invoke(
-              //   'getBrandWCPayRequest', {
-              //     'appId': 'wx2421b1c4370ec43b', // 公众号名称，由商户传入
-              //     'timeStamp': '1395712654', // 时间戳，自1970年以来的秒数
-              //     'nonceStr': 'e61463f8efa94090b1f366cccfbbb444', // 随机串
-              //     'package': 'prepay_id=u802345jgfjsdfgsdg888',
-              //     'signType': 'MD5', // 微信签名方式：
-              //     'paySign': '70EA570631E4BB79628FBCA90534C63FF7FADD89' // 微信签名
-              //   }
-              // )
-
-              // let xml = '<xml><appid>' + response.data.body.appid + '</appid><body>深圳市星品优汇电子商务有限公司支付</body><mch_id>' + response.data.body.partnerid + '</mch_id><sign>' + response.data.body.sign + '</sign></xml>'
-              // window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + response.data.body.appid + '&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect'
               window.location.href = 'weixin://wap/pay?appid=' + response.data.body.appid + '&noncestr=' + response.data.body.noncestr + '&package=' + response.data.body.package + '&prepayid=' + response.data.body.prepayid + '&sign=' + response.data.body.sign + '&timestamp=' + response.data.body.timestamp
             }
           }
