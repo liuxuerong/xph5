@@ -31,6 +31,7 @@ export default {
   margin-right 43px
   position relative
   padding  0 50px
+  top 0
   input
     height 100%
     background-color #F5F5F5

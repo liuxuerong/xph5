@@ -12,7 +12,6 @@
    <div class="mainSearch" ref="mainSearch">
      <div>
         <search-history :searchHistoryStorage = "searchHistoryStorage" v-if="searchHistoryStorage.length&&!hasSearch" @removeOneHistory="removeOneHistory" @removeAllHistory="removeAllHistory" @doSearch="doSearch"/>
-
         <SearchItem :searchHistoryStorage="searchHistoryStorage" :searchVal="searchVal"  v-if="hasSearch"/>
      </div>
    </div>

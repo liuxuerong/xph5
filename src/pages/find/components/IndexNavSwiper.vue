@@ -12,6 +12,14 @@
           <router-link :to="isShowImgTitle?'/goods':'/details/'+item.goodsId" class="swiperHref">
             <img v-lazy="imageUrl+item.articleCoverImage" alt="">
             <span v-if="isShowImgTitle" class="routerTitle">{{item.title}}</span>
+            <!-- <div class="cutDown">
+              <h6>{{item.title}}</h6>
+              <div class="price">
+                <em class="goodsPrice">{{item.goodsPrice}}</em>
+                <del>{{item.goodsPrice}}</del>
+                <em class="tag">距结束{{item.createTime}}</em>
+              </div>
+            </div> -->
             <index-content :content="item" v-if="showContent" />
           </router-link>
         </swiper-slide>
@@ -41,24 +49,36 @@ export default {
   props: {
     swiperData: Object,
     showContent: Boolean,
-    isShowImgTitle: Boolean
+    isShowImgTitle: Boolean,
+    swiperOption: {
+      type: Object,
+      default: function () {
+        return {
+          spaceBetween: 15,
+          slidesPerView: 1.1,
+          pagination: {
+            el: '.swiper-pagination',
+            type: 'fraction'
+          }
+        }
+      }
+    }
   },
   data () {
     return {
-      swiperOption: {
-        spaceBetween: 15,
-        slidesPerView: 1.1,
-        pagination: {
-          el: '.swiper-pagination',
-          type: 'fraction'
-        }
-      },
+      // swiperOption: {
+      //   spaceBetween: 15,
+      //   slidesPerView: 1.1,
+      //   pagination: {
+      //     el: '.swiper-pagination',
+      //     type: 'fraction'
+      //   }
+      // },
       navSwiperData: {},
       imageUrl: config.imageUrl
     }
   },
   mounted () {
-    console.log(this.swiperData)
   }
 }
 </script>
@@ -105,7 +125,7 @@ export default {
   .swiper-container
     overflow visible
   .swiper-pagination-fraction
-    top -90px
+    top -125px
     text-align right
     color #333333
     font-size 60px
@@ -117,6 +137,6 @@ export default {
        font-size 40px
   .indexContent
     margin-top 0
-  .swiper-wrapper
-    // max-height 800px
+  .swiper-slide
+    box-shadow:0px 2px 26px 0px rgba(0, 0, 0, 0.1);
 </style>

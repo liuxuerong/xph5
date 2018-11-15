@@ -63,8 +63,8 @@ export default {
   display flex
   justify-content space-between
   .scan
-    width 83px
-    height 83px
+    width 60px
+    height 60px
     bgImage("/static/icons/scan")
     margin-right 40px
     vertical-align middle

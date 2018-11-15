@@ -4,7 +4,7 @@
       <h1 class="title fl">故事</h1>
     </common-header>
     <div class="top">
-      <tab v-if="tabbar.length">
+      <tab v-if="tabbar.length>1">
         <tab-item :selected="index===0" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.id" >{{item.name}}</tab-item>
       </tab>
     </div>

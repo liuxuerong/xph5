@@ -68,7 +68,6 @@ export default {
       let fnType = Object.prototype.toString.call(hasCollection(params)).slice(8, -1)
       if (fnType === 'Promise') {
         hasCollection(params).then(res => {
-          // console.log(res.data.body)
           this.collect = res.data.body
         }).catch(err => {
           console.log(err)

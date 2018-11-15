@@ -1,89 +1,201 @@
 <template>
-<div class="index" :class="{searchTop:searchActive,swipperTop:tabbarIsFixed}" ref="index">
-  <div class="scrollTopTop" v-show="showScrollToTop" @click="scrollToTop">返回顶部</div>
-    <common-header/>
-     <h2 class="indexHeader" ref="indexHeader">
-        五星生活在等你哦~
-    </h2>
-    <common-search ref="commonSearchDom"/>
-    <keep-alive include="IndexSwiper">
-      <index-swiper ref="indexSwiper" v-if="IndexSwiperShow"/>
+  <div class="xpGoods">
+    <keep-alive>
+      <div class="xpGoodsWrap">
+        <div class="xpGoodsTop border-bottom" ref="xpGoodsTop" v-show="isFixed">
+          <div class="xpGoodsTopContent">
+            <tab v-if="tabbar.length">
+              <tab-item :selected="index===pageIndex" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.id" :id="item.id" ref="tabItem">{{item.catName}}</tab-item>
+            </tab>
+          </div>
+        </div>
+        <div class="index" :class="{searchTop:searchActive}" ref="index">
+          <div class="scrollTopTop" v-show="showScrollToTop" @click="scrollToTop">返回顶部</div>
+          <common-header ref="commonHeader"/>
+          <h2 class="indexHeader" ref="indexHeader">
+            五星生活在等你哦~
+          </h2>
+          <common-search ref="commonSearchDom" :class="{searchActive:searchActive}" />
+          <index-swiper ref="indexSwiper" v-if="IndexSwiperShow" />
+          <div class="navBox">
+            <router-link to="/" class="item wrap left">
+              <h2>会员福利</h2>
+              <h4>material comforts</h4>
+            </router-link>
+            <div class="right wrap">
+              <router-link to="/" class="item top">
+                <h2>活动精选</h2>
+                <h4>Featured</h4>
+              </router-link>
+              <router-link to="/" class="item bottom">
+                <h2>酒店用品</h2>
+                <h4>hotel supplies</h4>
+              </router-link>
+            </div>
+          </div>
+          <index-nav/>
+        </div>
+        <div ref="xpStoryContent" class="xpStoryContent">
+          <div>
+            <div class="xpGoodsTop border-bottom" ref="xpGoodsTop" v-show="!isFixed">
+              <div class="xpGoodsTopContent">
+                <tab v-if="tabbar.length">
+                  <tab-item :selected="index===pageIndex" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.id" :id="item.id" ref="tabItem">{{item.catName}}</tab-item>
+                </tab>
+              </div>
+            </div>
+            <ul class="goodsContainer" v-if="goodsListData.length">
+              <li v-for="item in goodsListData" v-if="goodsListData.length" :key="item.id">
+                <common-img-prices :pricesData="item" />
+              </li>
+              <li class="emptyBox"></li>
+            </ul>
+            <common-empty v-if="!noMore&&!goodsListData.length" :emptyObj="emptyObj" />
+            <divider v-if="noMore">哎呀！底线到了</divider>
+          </div>
+        </div>
+      </div>
     </keep-alive>
-  <div class="indexTabbar" >
-    <!-- tab-container -->
-    <div ref="wrapper" class="wrapper">
-      <keep-alive>
-        <index-nav/>
-      </keep-alive>
-    </div>
   </div>
-</div>
 </template>
+
 <script>
-import { mapState, mapMutations } from 'vuex'
-// import BScroll from 'better-scroll'
+import PullTo from 'vue-pull-to'
+import CommonNavSearch from 'common/commonHeader/CommonNavSearch'
+import CommonImgPrices from 'common/commonImgPrices/CommonImgPrices'
+import CommonEmpty from 'common/commonEmpty/CommonEmpty'
 import CommonSearch from 'common/commonSearch/CommonSearch'
 import CommonHeader from 'common/commonHeader/CommonHeader'
 import IndexSwiper from './components/IndexSwiper'
 import IndexNav from './components/IndexNav'
-import Brand from '@/pages/brand/Brand'
+import {
+  Tab,
+  TabItem,
+  Divider
+} from 'vux'
+import {
+  http
+} from 'util/request'
+import {
+  category,
+  goodsList
+} from 'util/netApi'
+import {
+  config
+} from 'util/config.js'
 export default {
   name: 'Find',
   components: {
+    CommonNavSearch,
+    CommonImgPrices,
+    CommonEmpty,
+    Tab,
+    TabItem,
+    Divider,
     IndexNav,
     CommonHeader,
     CommonSearch,
     IndexSwiper,
-    Brand
+    PullTo
   },
+  props: {},
   data () {
     return {
+      imageUrl: config.imageUrl,
+      goodsCategoryList: [],
+      tabbar: [],
+      goodsListData: [],
+      page: 1,
+      pageIndex: 0,
+      categoryId: '',
+      isFixed: false,
+      noMore: false,
       showScrollToTop: false,
-      IndexSwiperShow: true
+      IndexSwiperShow: true,
+      searchActive: false,
+      emptyObj: {
+        emptyImg: '/static/images/commentEmptyGoods.png',
+        emptyBold: '暂无商品',
+        emptyP: '此类商品暂未上架，星品君正在努力挖掘中..',
+        buttonText: null,
+        buttonRouter: null
+      }
     }
   },
-  computed: {
-    isShowScrollToTop: {
-      get () {
-        return this.showScrollToTop
-      },
-      set (v) {
-        this.showScrollToTop = v
-      }
-    },
-    ...mapState({
-      searchActive: state => state.home.searchActive,
-      tabbarIsFixed: state => state.home.tabbarIsFixed
-    })
-  },
+  computed: {},
   methods: {
-    ...mapMutations(['changeSearchActive', 'changeTabbarFixed']),
     scrollToTop () {
       this.$refs.indexHeader.scrollIntoView()
+    },
+    getTabbar () {
+      http(category).then(res => {
+        for (let i = 0; i < res.data.body.length; i++) {
+          this.tabbar.push(res.data.body[i])
+          this.categoryId = this.tabbar[0].id
+        }
+        this.getGoodsList(this.categoryId, this.page)
+      })
+    },
+    onItemClick (index) {
+      this.categoryId = this.$refs.tabItem[index].$el.id
+      this.page = 1
+      this.pageIndex = index
+      this.goodsListData = []
+      this.noMore = false
+      this.getGoodsList(this.categoryId, this.page)
+    },
+    getGoodsList (categoryId, page) {
+      const param = {
+        page: page,
+        rows: 20,
+        categoryId: categoryId
+      }
+      if (!this.noMore) {
+        http(goodsList, param).then(res => {
+          if (this.page !== 1 && res.data.body.list.length === 0) {
+            this.noMore = true
+          }
+          this.goodsListData = this.goodsListData.concat(res.data.body.list)
+        })
+      }
+    },
+    changeStatus () {
+      const _this = this
+      const searchTop = this.$refs.commonSearchDom.$el.offsetTop - this.$refs.commonSearchDom.$el.style.height
+      const commonHeader = this.$refs.commonHeader.$el.offsetHeight
+      const index = this.$refs.index
+      window.addEventListener('scroll', function () {
+        const goodsTop = index.offsetHeight
+        const documentScrollTop = window.pageYOffset || document.documentElement.scrollTop
+        _this.isFixed = documentScrollTop + commonHeader > goodsTop
+        _this.searchActive = !(searchTop > documentScrollTop)
+        _this.showScrollToTop = documentScrollTop > 800
+        if (document.documentElement.scrollHeight - documentScrollTop - 20 < document.documentElement.clientHeight) {
+          if (!_this.noMore && _this.goodsListData.length) {
+            _this.page++
+            _this.getGoodsList(_this.categoryId, _this.page)
+          }
+        }
+      })
     }
   },
   mounted () {
-    const searchTop = this.$refs.commonSearchDom.$el.offsetTop - this.$refs.commonSearchDom.$el.style.height
-    const swiperTop = this.$refs.indexSwiper.$el.offsetTop
-    let _this = this
-    window.addEventListener('scroll', function () {
-      const documentScrollTop = window.pageYOffset || document.documentElement.scrollTop
-      const searchActive = !(searchTop > documentScrollTop)
-      _this.changeSearchActive(searchActive)
-      const tabbarIsFixed = !(swiperTop > documentScrollTop)
-      _this.isShowScrollToTop = documentScrollTop > 800
-      _this.changeTabbarFixed(tabbarIsFixed)
-    })
+    this.getTabbar()
+    this.changeStatus()
   }
+
 }
 </script>
+
 <style lang="stylus" scoped>
 .searchTop.index
   padding-top 266px
  .swipperTop.index
   padding-top 355px
 .index
-  padding-top  136px
+  padding-top 136px
+  // position absolute
+  width 100%
 .indexHeader
   color #333
   font-size 86px
@@ -105,61 +217,103 @@ export default {
   font-size 36px
   background rgba(0,0,0,1)
   opacity 0.5
-</style>
-
-<style lang="stylus" >
-.indexTabbar
-  .mint-navbar
-    height 219px
-    line-height 219px
-    text-align left
-    justify-content space-between
-  .mint-navbar .mint-tab-item
-    padding 0
-    padding-top 45px
-    flex none
-    .mint-tab-item-label
-      height 130px
-      line-height 130px
+.xpGoodsTop>>>.vux-tab .vux-tab-item.vux-tab-selected
+  color #333333
+  border-bottom 8px solid #262626
+  font-weight 600
+  position relative
+.xpGoodsTop>>>.vux-tab .vux-tab-item.vux-tab-selected::before
+  content ''
+  position absolute
+  bottom 0
+  left 50%
+  transform translateX(-50%)
+  width 88px
+  background-color #262626
+  height 8px
+.xpGoodsTop>>>.vux-tab-ink-bar
+  display none !important
+.xpGoodsTop>>>.vux-tab-container
+  height 106px
+.xpGoodsTop>>>.vux-tab
+  height 106px
+.xpGoodsTop>>>.vux-tab .vux-tab-item
+  height 106px
+  line-height 106px
+  font-size 46px
+.xpGoods
+  height 100%
+  background-color #fff
+  .xpGoodsWrap
+    height 100%
+  .xpGoodsTop
+    height 106px
+    line-height 106px
+    font-size 46px
+    position fixed
+    width 100%
+    top 130px
+    z-index 99999
+    padding 0 50px
+    background-color #fff
+  .isFixed
+    position relative !important
+  .xpStoryContent
+    // height 100%
+    padding-bottom 200px
+  .xpStoryContent.auto
+    height auto
+  h1.title
+    font-size 56px
+  .topBgImg
+    width 100%
+    height 400px
+    img
+      width 100%
+      height 100%
+.goodsContainer
+  display flex
+  flex-wrap wrap
+  justify-content space-around
+  background-color #fff
+  padding-top 50px
+  li
+    margin-bottom 250px
+  .emptyBox
+    width 3.395556rem
+.border-bottom::before
+  z-index 9999
+.xpGoods .xpStoryContent .xpGoodsTop
+  position relative
+  top 0
+  .swiper-slide
+    width 100% !important
+.navBox
+  height 570px
+  margin-bottom 120px
+  display flex
+  padding 0 50px
+  .wrap
+    flex 1
+  .item
+    padding 50px 0 0 50px
+    h2
+      color #333333
       font-size 46px
-      color #333
-      font-weight 600
-      vertical-align top
-  .mint-navbar .mint-tab-item.is-selected
-    border 0
-    .mint-tab-item-label
-      display inline-block
-      position relative
-      font-size 76px
-    .mint-tab-item-label::before
-      content ''
-      position absolute
-      width 70%
-      height 8px
-      background-color #333
-      left 50%
-      transform translateX(-50%)
-      bottom 0
-  .mint-tabbar
-    height 148px
-    line-height 148px
-    font-size 30px
-    color #CCCCCC
-    background-color #fff
-    z-index 9999
-  .mint-tab-item
-    padding-top 35px
-  .mint-tab-item:nth-child(3)
-    .mint-tab-item-icon
-      width 114px
-      height 127px
-      margin-top -25px
-  .mint-tab-item-icon
-    width 60px
-    height 60px
-    margin-bottom 17px
-  .mint-tabbar > .mint-tab-item.is-selected
-    color #BA825A
-  .mint-tabbar > .mint-tab-item.is-selected
-    background-color #fff
+    h4
+      color #333333
+      font-size 24px
+  .left
+    background url("/static/images/recommond_bg.png") no-repeat center center/100% 100%
+    margin-right 10px
+  .right
+    display flex
+    flex-direction column
+    .top
+      background url("/static/images/goods_bg.png") no-repeat center center/100% 100%
+      margin-bottom 10px
+      flex 1
+    .bottom
+      background url("/static/images/hotel_bg.png") no-repeat center center/100% 100%
+      flex 1
 </style>

@@ -48,6 +48,9 @@ import {
   mapState
 } from 'vuex'
 import {
+  comment
+} from 'util/const'
+import {
   goodsDetail
 } from 'util/netApi'
 import {
@@ -219,7 +222,6 @@ export default {
         }
       })
       this.scroll.on('pullingUp', function () {
-        console.log(_this.$refs)
         if (_this.desc !== '') {
           _this.$refs.isDetailsImgTextShow.$el.style.display = 'block'
           _this.scroll.refresh()
@@ -239,7 +241,7 @@ export default {
             this.sku = this.pushKeys(res.data.body.goodsItems)
             this.swiperData = res.data.body.goodsPic
             this.changeNowPrice(res.data.body.goods.minPrice)
-            storage.setLocalStorage('commemt', res.data.body.goodsComments)
+            storage.setLocalStorage(comment, res.data.body.goodsComments)
             // this.changeComment(res.data.body.goodsComments)
             let totals = res.data.body.goodsComments.totals
             if (totals >= 999) {

@@ -31,7 +31,7 @@ export default {
   },
   methods: {
     hasCollection (params) {
-      var fnType = Object.prototype.toString.call(hasCollection(params)).slice(8, -1)
+      let fnType = Object.prototype.toString.call(hasCollection(params)).slice(8, -1)
       if (fnType === 'Promise') {
         hasCollection(params).then(res => {
           this.collect = res.data.body

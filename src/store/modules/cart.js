@@ -19,6 +19,9 @@ const cart = {
     changeGoodsList (state, goodsList) {
       state.goodsList = goodsList
     },
+    // changeNotCheckGoodsList (state, goodsList) {
+    //   state.goodsList = goodsList
+    // },
     changeIsAllSelect (state, isAllSelect) {
       state.isAllSelect = isAllSelect
     }

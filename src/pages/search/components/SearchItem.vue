@@ -66,6 +66,7 @@ export default {
       }
       http(goodsList, param).then(res => {
         this.goodsList = res.data.body.list
+        console.log(this.goodsList)
         this.emptyObj.emptyP = '没有找到关键字为“' + searchName + '”的产品'
       })
     }

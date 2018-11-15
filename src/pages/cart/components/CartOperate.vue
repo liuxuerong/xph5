@@ -2,10 +2,9 @@
   <div class="cartOperate border-top">
     <div class="checkIcon"><check-icon :value.sync="check" @click.native="checkAll"> </check-icon></div>
     <span class="all" >全选</span>
-    <span class="price" v-if="!showModify">￥{{price}}</span>
+    <span class="price" v-if="!showModify">￥{{price.toFixed(2)}}</span>
     <span class="btn" :class="{active:clearBtn}" v-if="!showModify" @click="buy">去结算</span>
     <span class="btn delBtn" :class="{active:clearBtn}" v-else @click="delCheck">删除所选</span>
-     <toast v-model="show5" :time="1000">删除成功</toast>
   </div>
 </template>
 
@@ -23,9 +22,11 @@ import {
   delCart
 } from 'util/netApi'
 import {
-  CheckIcon,
-  Toast
+  CheckIcon
 } from 'vux'
+import {
+  Toast
+} from 'mint-ui'
 import {
   mapState,
   mapMutations
@@ -43,8 +44,7 @@ export default {
     return {
       check: false,
       price: 0,
-      clearBtn: false,
-      show5: false
+      clearBtn: false
     }
   },
   computed: mapState({
@@ -94,6 +94,7 @@ export default {
         }
       }
       this.changeGoodsList(goodsList)
+      console.log(this.goodsList)
     },
     delCheck () {
       let checkGoodsList = []
@@ -108,10 +109,17 @@ export default {
         }
       }
       id = id.substring(1, id.length)
+      console.log(id)
       if (checkGoodsList.length) {
         http(delCart, [id]).then(res => {
           if (res.data.code === 0) {
-            this.show5 = true
+            // this.show5 = true
+            Toast({
+              message: '删除成功',
+              position: 'center',
+              duration: 1000
+            })
+            console.log(this.goodsList)
             this.changeGoodsList(notCheckGoodsList)
           }
         }).catch(err => {

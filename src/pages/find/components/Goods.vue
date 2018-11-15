@@ -1,0 +1,247 @@
+<template>
+  <div class="xpGoods">
+    <keep-alive>
+      <div class="xpGoodsWrap">
+        <slot></slot>
+        <common-nav-search v-if="searchShow" />
+        <div class="xpGoodsTop border-bottom" ref="xpGoodsTop" :class="{isFixed:!isFixed}">
+          <div class="xpGoodsTopContent">
+            <tab v-if="tabbar.length">
+              <tab-item :selected="index===0" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.id" :id="item.id" ref="tabItem">{{item.catName}}</tab-item>
+            </tab>
+          </div>
+        </div>
+        <div ref="xpStoryContent" class="xpStoryContent" >
+          <div>
+            <ul class="goodsContainer" v-if="goodsListData.length">
+              <li v-for="item in goodsListData" v-if="goodsListData.length" :key="item.id">
+                <common-img-prices :pricesData="item" />
+              </li>
+              <li class="emptyBox"></li>
+            </ul>
+            <common-empty v-if="!noMore&&!goodsListData.length" :emptyObj="emptyObj" />
+            <divider v-if="noMore">哎呀！底线到了</divider>
+          </div>
+        </div>
+      </div>
+    </keep-alive>
+  </div>
+</template>
+
+<script>
+import CommonNavSearch from 'common/commonHeader/CommonNavSearch'
+import CommonImgPrices from 'common/commonImgPrices/CommonImgPrices'
+import CommonEmpty from 'common/commonEmpty/CommonEmpty'
+import {
+  Tab,
+  TabItem,
+  Divider
+} from 'vux'
+import {
+  http
+} from 'util/request'
+import {
+  category,
+  goodsList
+} from 'util/netApi'
+import {
+  config
+} from 'util/config.js'
+import BScroll from 'better-scroll'
+export default {
+  name: 'Story',
+  components: {
+    CommonNavSearch,
+    CommonImgPrices,
+    CommonEmpty,
+    Tab,
+    TabItem,
+    Divider
+  },
+  props: {
+    searchShow: {
+      type: Boolean,
+      default: true
+    },
+    isFixed: {
+      type: Boolean,
+      default: true
+    },
+    indexPage: {
+      type: Number
+    }
+  },
+  data () {
+    return {
+      imageUrl: config.imageUrl,
+      goodsCategoryList: [],
+      tabbar: [],
+      goodsListData: [],
+      page: 1,
+      categoryId: '',
+      noMore: false,
+      showCart: false,
+      emptyObj: {
+        emptyImg: '/static/images/commentEmptyGoods.png',
+        emptyBold: '暂无商品',
+        emptyP: '此类商品暂未上架，星品君正在努力挖掘中..',
+        buttonText: null,
+        buttonRouter: null
+      }
+    }
+  },
+  watch: {
+    indexPage: function (v) {
+      this.page = v
+      this.getGoodsList(this.categoryId, this.page)
+    },
+    isFixed: function (v) {
+      console.log(v)
+    }
+  },
+
+  methods: {
+    getTabbar () {
+      http(category).then(res => {
+        for (let i = 0; i < res.data.body.length; i++) {
+          this.tabbar.push(res.data.body[i])
+          this.categoryId = this.tabbar[0].id
+        }
+        this.getGoodsList(this.categoryId, this.page)
+      })
+    },
+    onItemClick (index) {
+      this.categoryId = this.$refs.tabItem[index].$el.id
+      this.page = 1
+      this.goodsListData = []
+      this.noMore = false
+      this.getGoodsList(this.categoryId, this.page)
+      this.$emit('changePage', this.page)
+    },
+    getGoodsList (categoryId, page) {
+      const param = {
+        page: page,
+        rows: 20,
+        categoryId: categoryId
+      }
+      http(goodsList, param).then(res => {
+        console.log(res)
+        this.goodsListData = this.goodsListData.concat(res.data.body.list)
+        // this.scrollInit()
+        console.log(res.data.body.list)
+        if (this.page !== 1 && res.data.body.list.length === 0) {
+          this.scroll.finishPullUp()
+          this.noMore = true
+        }
+        // this.scroll.refresh()
+      })
+    },
+
+    scrollInit () {
+      if (!this.scroll) {
+        this.scroll = new BScroll(this.$refs.xpStoryContent, {
+          scrollY: true,
+          click: true,
+          pullUpLoad: {
+            threshold: -50,
+            moreTxt: '加载更多',
+            noMoreTxt: '没有更多数据了'
+          },
+          bounce: {
+            top: true,
+            bottom: true
+          }
+        })
+        console.log(this.scroll)
+
+        this.scroll.on('pullingUp', () => {
+          console.log(this.page)
+          this.page++
+          this.getGoodsList(this.categoryId, this.page)
+          console.log(this.page)
+        })
+      } else {
+        this.scroll.refresh()
+        this.scroll.finishPullUp()
+      }
+      if (!this.isFixed) {
+        this.scroll.destroy()
+      }
+
+      // return this.scroll
+    }
+  },
+  mounted () {
+    this.getTabbar()
+  }
+}
+</script>
+
+<style lang="stylus" scoped>
+  .xpGoodsTop>>>.vux-tab .vux-tab-item.vux-tab-selected
+    color #333333
+    border-bottom 8px solid #262626
+    font-weight: 600;
+    position relative
+  .xpGoodsTop>>>.vux-tab .vux-tab-item.vux-tab-selected::before
+    content ""
+    position absolute
+    bottom 0
+    left 50%
+    transform translateX(-50%)
+    width 88px
+    background-color #262626
+    height 8px
+.xpGoodsTop>>>.vux-tab-ink-bar
+    display none !important
+.xpGoodsTop>>>.vux-tab-container
+    height 106px
+.xpGoodsTop>>>.vux-tab
+    height 106px
+.xpGoodsTop>>>.vux-tab .vux-tab-item
+    height 106px
+    line-height 106px
+    font-size 46px
+.xpGoods
+  height 100%
+  padding-top 202px
+  background-color #fff
+  .xpGoodsWrap
+    height 100%
+  .xpGoodsTop
+    height 106px
+    line-height 106px
+    font-size 46px
+    position fixed
+    width 100%
+    top 120px
+    z-index 99999
+    padding 0 50px
+    background-color #fff
+  .isFixed
+    position relative !important
+  .xpStoryContent
+    height 100%
+  .xpStoryContent.auto
+    height auto
+  h1.title
+    font-size 56px
+  .topBgImg
+    width 100%
+    height 400px
+    img
+      width 100%
+      height 100%
+.goodsContainer
+  display flex
+  flex-wrap wrap
+  justify-content space-around
+  padding-top 150px
+  background-color #fff
+  li
+    margin-bottom 250px
+  .emptyBox
+    width 3.395556rem
+.border-bottom::before
+  z-index 9999
+</style>

@@ -7,9 +7,9 @@
         <img src="/static/icons/hall_tag_icon.png" alt="">
       </div>
     </div>
-    <div v-transfer-dom>
-      <popup v-model="show">
-        <router-link :to="'/details/'+itemObj.goodId" v-if="itemObj">
+    <div v-transfer-dom class="oneGoodsWrap">
+      <popup v-model="showOne">
+          <router-link :to="'/details/'+itemObj.goodId" v-if="itemObj">
           <div class="details">
             <img :src="imageUrl+itemObj.goodCoverImage" alt="">
             <div class="text">
@@ -19,9 +19,29 @@
             </div>
           </div>
         </router-link>
+
       </popup>
     </div>
-    <router-link :to="'/hallAtlas/'+(parseInt(index)+1)" class="morePic"> <i class="arrow"></i>更多图片 </router-link>
+    <div v-transfer-dom>
+      <popup v-model="show" class="goodsWrap">
+        <div class="titlExa">样板间商品</div>
+
+        <div class="details" v-if="experienceObj" v-for="(itemObj,index) in experienceObj.experienceGoods" :key="itemObj.goodId">
+          <router-link :to="'/details/'+itemObj.goodId">
+            <img v-lazy="imageUrl+itemObj.goodCoverImage" alt="">
+          </router-link>
+          <div class="text">
+            <p class="name">{{itemObj.goodName}}</p>
+            <div class="priceWrap">
+              <span class="price">￥{{itemObj.minPrice}}起</span>
+              <em class="collect" :class="{active:itemObj.collected}" @click.stop="doCollection(index,itemObj.goodId)"></em>
+            </div>
+          </div>
+        </div>
+
+      </popup>
+    </div>
+    <div class="morePic"><router-link :to="'/hallAtlas/'+(parseInt(index)+1)" class="link">更多图片</router-link>  <em @click="showAllDetails()">商品({{experienceObj.experienceGoods.length}})</em></div>
   </div>
 </template>
 
@@ -30,6 +50,10 @@ import {
   Popup,
   TransferDom
 } from 'vux'
+import {
+  hasCollection,
+  doCollection
+} from '@/func/collection'
 import CommonNavHeader from '@/common/commonHeader/CommonNavHeader'
 import PinchZoom from '@/func/pinch-zoom'
 import {
@@ -56,7 +80,12 @@ export default {
       RealImgWidth: '',
       RealImgHeight: '',
       show: false,
-      itemObj: null
+      showOne: false,
+      itemObj: null,
+      params: {
+        collectionType: 1
+      // collectionDataId:
+      }
     }
   },
   components: {
@@ -86,10 +115,45 @@ export default {
       }
     },
     showDetails (index) {
-      this.show = true
-      console.log(this.$refs.tag[index])
+      this.showOne = true
       this.$refs.tag[index].classList.add('active')
+
       this.itemObj = this.experienceObj.experienceGoods[index]
+    },
+    showAllDetails () {
+      this.show = true
+    },
+    hasCollection (params, index) {
+      let fnType = Object.prototype.toString.call(hasCollection(params)).slice(8, -1)
+      if (fnType === 'Promise') {
+        console.log(777)
+        hasCollection(params).then(res => {
+          let goods = this.experienceObj.experienceGoods[index]
+
+          // console.log(this.hasCollection(params))
+          // this.experienceObj = Object.assign({}, vm.userProfile, {
+          //   age: 27,
+          //   favoriteColor: 'Vue Green'
+          // })
+          goods.collected = res.data.body
+          // goods.experienceGoods[index].params = params
+          this.$set(this.experienceObj.experienceGoods, index, goods)
+          console.log(this.experienceObj.experienceGoods)
+          console.log(7777)
+          // console.log(this.experienceObj.experienceGoods)
+        }).catch(err => {
+          console.log(err)
+        })
+      }
+    },
+    doCollection (index, goodId) {
+      let params = Object.assign({}, this.params, {collectionDataId: goodId})
+      console.log(params)
+      doCollection(params).then(res => {
+        this.hasCollection(params, index)
+      }).catch(err => {
+        console.log(err)
+      })
     }
   },
   watch: {
@@ -112,16 +176,23 @@ export default {
   created () {
     this.index = this.$route.params.index
     const _this = this
+
     if (!storage.getLocalStorage(experience)) {
       notice.errorModal('未授权，请重新登录', function () {
-        _this.$router.push({path: '/login'})
+        _this.$router.push({
+          path: '/login'
+        })
       })
     } else {
       this.experienceObj = storage.getLocalStorage(experience)[this.index]
+      let goods = this.experienceObj.experienceGoods
+      for (let i = 0; i < goods.length; i++) {
+        let params = Object.assign({}, this.params, {collectionDataId: goods[i].goodId})
+        this.hasCollection(params, i)
+      }
     }
   },
-  mounted () {
-  }
+  mounted () {}
 }
 </script>
 
@@ -134,25 +205,24 @@ export default {
   .hallDetails
     position absolute
   .morePic
-    color #262626
+    color #fff
     font-size p2r(46)
     position absolute
-    bottom 50px
+    bottom 63px
+    width 510px
     line-height 100px
-    font-weight 600
-    padding-left 100px
-    &::before
-      content ""
-      position absolute
-      border 1px solid #262626
-      border-top none
-      border-left none
-      transform rotate(45deg)
-      width 30px
-      height 30px
-      top 26px
-      left 40px
-
+    text-align center
+    height 100px
+    font-size 46px
+    background:linear-gradient(-90deg,rgba(172,124,98,1),rgba(220,166,116,1));
+    border-radius:50px;
+    left 50%
+    transform translateX(-50%)
+    .link
+      color #fff
+    em
+      border-left 1px solid #B08064
+      padding-left 20px
   .tag
     width 300px
     height 300px
@@ -167,44 +237,97 @@ export default {
       border 4px solid #fff
       background rgba(248,249,251,0.25)
       border-radius 50%
+  .goodsWrap
+    max-height 1376px !important
+    height auto !important
+    overflow-y auto
+    background-color #f5f5f5
+    padding 0 50px 70px
+    border-top-left-radius 20px
+    border-top-right-radius 20px
+    .titlExa
+      line-height 145px
+      color #262626
+      font-size 46px
+    .details
+      display flex
+      margin-bottom 30px
+      background-color #fff
+      .text
+        flex 1
+        color #333
+        .name
+          height 166px
+          color #262626
+          line-height 166px
+          font-size 46px
+          font-weight 600
+          ellipsis()
+          width 90%
+          vertical-align middle
+        .priceWrap
+          display flex
+          justify-content space-between
+          padding-right 60px
+          align-items center
+          .price
+            font-size 46px
+            font-weight 600
+            display inline-block
+            vertical-align middle
+            height 100px
+            line-height 100px
+          .collect
+            width 52px
+            height 52px
+            // margin-top 20px
+            display inline-block
+            bgImage("/static/icons/Collection_icon")
+            &.active
+                bgImage("/static/icons/Collection_icon_click")
+      img
+        width 260px
+        height 260px
+        margin-right 50px
+.oneGoodsWrap
   .details
-    padding 30px
-    display flex
-    margin-bottom 200px
-    background-color #fff
-    .text
-      flex 1
-      color #333
-      .name
-        display inline-block
-        height 166px
-        line-height 166px
-        font-size 46px
-        font-weight 600
-        float left
-        ellipsis()
-        width 60%
-        vertical-align middle
-      .price
-        font-size 40px
-        font-weight 600
-        display inline-block
-        vertical-align middle
-        height 166px
-        line-height 166px
-        float right
-      p
-        color #808080
-        font-size 36px
-        line-height 50px
-        ellipsisM()
-        -webkit-line-clamp: 2
-        width 100%
-        float left
-    img
-      width 310px
-      height 310px
-      margin-right 28px
+      padding 30px
+      display flex
+      margin-bottom 200px
+      background-color #fff
+      .text
+        flex 1
+        color #333
+        .name
+          display inline-block
+          height 166px
+          line-height 166px
+          font-size 46px
+          font-weight 600
+          float left
+          ellipsis()
+          width 60%
+          vertical-align middle
+        .price
+          font-size 40px
+          font-weight 600
+          display inline-block
+          vertical-align middle
+          height 166px
+          line-height 166px
+          float right
+        p
+          color #808080
+          font-size 36px
+          line-height 50px
+          ellipsisM()
+          -webkit-line-clamp: 2
+          width 100%
+          float left
+      img
+        width 310px
+        height 310px
+        margin-right 28px
 </style>
 
 <style lang="stylus">
