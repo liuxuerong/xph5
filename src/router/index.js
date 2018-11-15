@@ -54,6 +54,7 @@ import ChooseCoupons from '@/pages/createOrder/ChooseCoupons'
 import WatchLogistics from '@/pages/order/WatchLogistics'
 import AppDownload from '@/pages/download/AppDownload'
 import ToolStore from '@/pages/person/ToolStore'
+import ReturnGoods from '@/pages/order/ReturnGoods'
 import { accessToken } from 'util/const'
 import { storage } from 'util/storage'
 
@@ -322,6 +323,11 @@ const router = new Router({
       path: '/appDownload',
       name: 'appDownload',
       component: AppDownload
+    },
+    {
+      path: '/returnGoods/:orderId',
+      name: 'returnGoods',
+      component: ReturnGoods
     }
   ]
 })

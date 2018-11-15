@@ -2,7 +2,8 @@
   <div class="wrapper">
     <search-title :title="title" :oper="false"></search-title>
     <div class="refundCon">
-      <div class="orderGoodsInfo">
+      <!-- 未发货退款 -->
+      <div class="orderGoodsInfo" v-if="type=='1'">
         <div class="orderGoods clearfix" v-for="(item,index) in list.memberOrderGoods" :key="index" @click="goodsDetails(item.goodsId)">
           <img v-if="item.pic != ''" :src="imageUrl+item.pic" alt="">
           <img v-else src="/static/images/personalHeader.png">
@@ -16,17 +17,31 @@
           </div>
         </div>
       </div>
+      <!-- 退货退款 -->
+      <div v-if="type=='2'">
+        <goods-item :goodsData="list"></goods-item>
+      </div>
       <div class="refundTitle">详细信息</div>
       <div class="refundOper border-bottom" @click="refundReason">
         <span>退款原因</span>
         <input type="text" v-model="reason" placeholder="请选择" readonly>
       </div>
       <div class="refundOper border-bottom">
-        <span>退款金额</span><span>￥{{list.totalAmount}}</span>
+        <span>退款金额</span><span v-if="type=='2'">￥{{list.actualPrice}}</span><span v-else>￥{{list.totalAmount}}</span>
       </div>
       <div class="refundOper border-bottom">
         <span>退款说明</span>
         <input type="text" placeholder="选填" v-model="desc">
+      </div>
+      <div class="refundTitle" v-if="type=='2'">上传凭证</div>
+      <div class="uploadWrapper" v-if="type=='2'">
+        <div class="uploadItem" v-for="(childImg,j) in objImgs" :key="j">
+          <img :src="imageUrl+childImg" alt="">
+        </div>
+        <div class="uploadPicBtn" v-if="(!objImgs) || ( objImgs.length < 3)">
+          <input name="file" @change="uploadPic($event)" ref="inputer"  type="file"/>
+        </div>
+        <span class="uploadPicTips">最多3张</span>
       </div>
     </div>
     <div class="refundOperBtn" @click="sureRefundOper">提交</div>
@@ -44,10 +59,14 @@
 </template>
 <script>
 import SearchTitle from './ComOrderSearchTitle'
+import goodsItem from './components/goodsItem'
 import { deliverAfterSales, subOrderDetail } from 'util/netApi'
 import { http } from 'util/request'
 import { Popup, Toast } from 'mint-ui'
 import { config } from 'util/config' // 图片路径
+import {storage} from 'util/storage'
+import { aftersale, accessToken } from 'util/const'
+import axios from 'axios'
 export default {
   data () {
     return {
@@ -58,11 +77,14 @@ export default {
       desc: '', // 退款描述
       popData: ['7天无理由退换货', '颜色/尺寸/参数不符', '商品瑕疵', '质量问题', '少件/漏发', '发票问题 '],
       popupVisible: false, // 退款理由显示问题
-      imageUrl: config.imageUrl
+      imageUrl: config.imageUrl,
+      type: '',
+      objImgs: []
     }
   },
   components: {
     SearchTitle,
+    goodsItem,
     'mt-popup': Popup
   },
   computed: {
@@ -72,6 +94,8 @@ export default {
     // 页面初始化渲染
     applyRefundRender () {
       let type = this.$route.params.type
+      this.type = type
+      console.log(type)
       let orderData = this.$route.params.orderId
       if (type === '1') {
         this.title = '仅退款'
@@ -84,8 +108,31 @@ export default {
         })
       } else if (type === '2') {
         this.title = '退货退款'
+        let data = storage.getLocalStorage(aftersale)
+        this.list = data
       }
     },
+    uploadPic (e) {
+      let ss = e.target.files
+      let formData = new FormData()
+      formData.append('file', ss[0])
+      let cf = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': storage.getLocalStorage(accessToken)
+        }
+      }
+      // https://api.test.jdhoe.com/file/upload
+      axios.post(config.baseUrl + 'file/upload', formData, cf).then((response) => {
+        if (response.data.code === 0) {
+          this.objImgs.push(response.data.body.key)
+          console.log(this.objImgs)
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    // 退款数据提交
     sureRefundOper () {
       let type = this.$route.params.type
       if (type === '1') {
@@ -96,7 +143,6 @@ export default {
         }
         if (this.reason !== '') {
           http(deliverAfterSales, params).then((response) => {
-            console.log(response)
           })
         } else {
           Toast({
@@ -106,23 +152,33 @@ export default {
           })
         }
       } else {
-        // let orderId = this.$route.params.orderId
-        // let params = {
-        //   orderId: orderId,
-        //   reason: this.reason,
-        //   desc: this.desc
+        console.log(this.objImgs)
+        let orderId = this.$route.params.orderId
+        // for (let i = 0; i < this.objImgs.length; i++) {
+        //   picObj = this.objImgs[i]
         // }
-        // if (this.reason !== '') {
-        //   http(deliverAfterSales, params).then((response) => {
-        //     console.log()
-        //   })
-        // } else {
-        //   Toast({
-        //     message: '请选择退款原因',
-        //     position: 'bottom',
-        //     duration: 5000
-        //   })
-        // }
+
+        let params = {
+          orderId: orderId,
+          shouldRefund: this.list.actualPrice,
+          num: this.list.num,
+          reason: this.reason,
+          desc: this.desc,
+          pic: this.objImgs
+        }
+        console.log(params)
+        if (this.reason !== '' && this.desc !== '' && this.pic !== '') {
+          console.log(6666)
+          http(deliverAfterSales, params).then((response) => {
+            console.log(response)
+          })
+        } else {
+          Toast({
+            message: '请完善退货信息',
+            position: 'bottom',
+            duration: 5000
+          })
+        }
       }
     },
     refundReason () {
@@ -130,7 +186,6 @@ export default {
     },
     // 退货理由选择
     reasonChoice (index) {
-      console.log(index)
       this.reason = this.popData[index]
       this.popupVisible = false
     }
@@ -141,6 +196,7 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
+  @import "~styles/mixins.styl";
   .wrapper
     width 100%
     box-sizing border-box
@@ -185,7 +241,11 @@ export default {
     color #BA825A
     background #F0F0F0
     text-align center
-    margin 46% auto 0
+    position fixed
+    left 0
+    right 0
+    margin auto
+    bottom 40px
   .reasonPopWrapper
     display block
     width 100%
@@ -256,4 +316,38 @@ export default {
     color: #ccc;
     font-size:40px;
   }
+  .uploadWrapper
+    width 100%
+    box-sizing border-box
+    padding 50px
+    height 290px
+    position relative
+    .uploadPicTips
+      position absolute
+      left 50px
+      bottom -18px
+      font-size 30px
+      color #808080
+    .uploadPicBtn
+      float left
+      width 185px
+      height 185px
+      bgImage('/static/images/upLoadPic')
+      input[type="file"]
+        display block
+        width 185px
+        height 185px
+        overflow hidden
+        opacity 0
+    .uploadItem
+      float left
+      width auto
+      height 190px
+      img
+        float left
+        width 180px
+        height 180px
+        margin-right 24px
+      img:nth-of-type
+        margin-right 0px
 </style>

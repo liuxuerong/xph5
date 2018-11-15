@@ -109,6 +109,13 @@ export default {
         con['goodsItemId'] = this.list[i].goodsItemId
         con['comments'] = this.$refs.phoneNum[i].value
         con['commentsPics'] = JSON.stringify(this.objImgs[i])
+        if (this.objImgs[i] !== undefined) {
+          con['commentsPics'] = this.objImgs[i] + ','
+          con['commentsPics'] = con['commentsPics'].substr(0, con['commentsPics'].length - 1)
+        } else {
+          con['commentsPics'] = ''
+        }
+        console.log(con['commentsPics'])
         con['start'] = ''
         goodsComments[i] = con
       }
