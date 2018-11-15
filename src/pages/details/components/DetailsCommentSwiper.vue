@@ -1,27 +1,22 @@
 <template>
-  <div class="detailsCommentSwiper">
+  <div class="detailsCommentSwiper" v-if="swiperData.length">
     <swiper :options="swiperOption">
-      <swiper-slide v-for="item in swiperData" :key="item.adId">
+      <swiper-slide v-for="(item,i) in swiperData" :key="item.id">
         <div class="imgText">
           <div class="left">
-            <p class="name">我就是昵称呀我就是昵称呀~</p>
-            <p class="commentText">行间距
-              内容这里是用户评论这里是这里是
-              用户评论这里是这里是用户评
-              这里是用户评论这里是论这行间距
-              内容这里是用户评论这里是这里是
-              用户评论这里是这里是用户评
-              这里是用户评论这里是论这
+            <p class="name">{{item.memberName.substr(0, 3) + '****' + item.memberName.substr(7)}}</p>
+            <p class="commentText">{{item.comments}}
             </p>
           </div>
           <div class="commentImg">
+            <!-- {{list[i]}} -->
             <div class="previewCon">
-              <img class="previewer-demo-img" v-for="(item, index) in list" :src="item.src" width="100" @click="show(index)" :key="index">
+              <img :src="itemImg.src" alt="" v-for="(itemImg,index) in list[i]" :key="itemImg.src" @click="show(i,index)" class="previewer-demo-img">
               <div v-transfer-dom>
-                <previewer :list="list" ref="previewer" :options="options" @on-index-change="logIndexChange"></previewer>
+                <previewer :list="list[i]" ref="previewer" :options="options"></previewer>
               </div>
             </div>
-             <div class="commentImgNum">３张</div>
+            <div class="commentImgNum">{{list[i].length}}张</div>
           </div>
         </div>
       </swiper-slide>
@@ -35,15 +30,24 @@ import {
   swiper,
   swiperSlide
 } from 'vue-awesome-swiper'
+  // import {
+  //   bannerList
+  // } from 'util/netApi'
+  // import {
+  //   http
+  // } from 'util/request'
 import {
-  bannerList
-} from 'util/netApi'
-import {
-  http
-} from 'util/request'
+  storage
+} from 'util/storage.js'
 import {
   config
 } from 'util/config.js'
+import {
+  getList
+} from '@/func/preview'
+import {
+  comment
+} from 'util/const'
 import {
   Previewer,
   TransferDom
@@ -59,11 +63,11 @@ export default {
     Previewer
   },
   methods: {
-    logIndexChange (arg) {
-      console.log(arg)
-    },
-    show (index) {
-      this.$refs.previewer[index].show(index)
+    // logIndexChange (arg) {
+    //   console.log(arg)
+    // },
+    show (i, index) {
+      this.$refs.previewer[i].show(index)
     }
   },
   data () {
@@ -73,61 +77,48 @@ export default {
         spaceBetween: 12,
         slidesPerView: 1.2
       },
-      list: [{
-        msrc: 'http://ww1.sinaimg.cn/thumbnail/663d3650gy1fplwu9ze86j20m80b40t2.jpg',
-        src: 'http://ww1.sinaimg.cn/large/663d3650gy1fplwu9ze86j20m80b40t2.jpg',
-        w: 800,
-        h: 400
-      },
-      {
-        msrc: 'http://ww1.sinaimg.cn/thumbnail/663d3650gy1fplwvqwuoaj20xc0p0t9s.jpg',
-        src: 'http://ww1.sinaimg.cn/large/663d3650gy1fplwvqwuoaj20xc0p0t9s.jpg',
-        w: 1200,
-        h: 900
-      }, {
-        msrc: 'http://ww1.sinaimg.cn/thumbnail/663d3650gy1fplwwcynw2j20p00b4js9.jpg',
-        src: 'http://ww1.sinaimg.cn/large/663d3650gy1fplwwcynw2j20p00b4js9.jpg'
-      }
-      ],
+      list: [],
       options: {
         getThumbBoundsFn (index) {
-          // find thumbnail element
           let thumbnail = document.querySelectorAll('.previewer-demo-img')[index]
-          // get window scroll Y
           let pageYScroll = window.pageYOffset || document.documentElement.scrollTop
-          // optionally get horizontal scroll
-          // get position of element relative to viewport
           let rect = thumbnail.getBoundingClientRect()
-          // w = width
           return {
             x: rect.left,
             y: rect.top + pageYScroll,
             w: rect.width
           }
-          // Good guide on how to get element coordinates:
-          // http://javascript.info/tutorial/coordinates
         }
       },
       swiperData: []
     }
   },
   mounted () {
-    http(bannerList, ['find-banner'])
-      .then(res => {
-        this.swiperData = res.data.body
-      })
-      .catch(err => {
-        console.log(err)
-      })
+    // http(bannerList, ['find-banner'])
+    //   .then(res => {
+    //     this.swiperData = res.data.body
+    //   })
+    //   .catch(err => {
+    //     console.log(err)
+    //   })
+    const commemts = storage.getLocalStorage(comment)
+    if (commemts.totals) {
+      this.swiperData = commemts.list
+      this.comments = commemts
+      this.list = getList(commemts.list)
+    }
   }
+
 }
 </script>
+
 <style lang="stylus">
 .detailsCommentSwiper
   .swiper-slide
-    height 400px
+    height 320px
     background rgba(255,255,255,1);
     padding 20px
+    width 320px
   .commentImg>.previewCon
     width 100%
     height 100%
@@ -135,13 +126,23 @@ export default {
     img
       height 100%
       width 320px
-.pswp__button--close
-  display none !important
+// .pswp__button--close
+//   display none !important
+.pswp__top-bar
+  height 100px !important
+  line-height 100px !important
+.pswp__counter
+  font-size 46px !important
+  height 100px !important
+  line-height 100px !important
 .pswp__button--fs
   display none !important
 .pswp
   z-index 19998 !important
+.pswp__button--close
+  display none !important
 </style>
+
 <style lang="stylus" scoped>
 @import "~styles/mixins.styl";
 .detailsCommentSwiper
@@ -158,6 +159,7 @@ export default {
   .commentImg
     height 320px
     position relative
+    width 320px
   .name
     font-size 40px
     height 124px

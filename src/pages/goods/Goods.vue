@@ -2,7 +2,9 @@
   <div class="xpGoods">
     <keep-alive>
       <div class="xpGoodsWrap">
-        <common-nav-search />
+        <common-nav-search :showCart="showCart">
+          123
+        </common-nav-search>
         <div class="xpGoodsTop border-bottom" ref="xpGoodsTop">
           <div class="xpGoodsTopContent">
             <tab v-if="tabbar.length">
@@ -66,6 +68,7 @@ export default {
       page: 1,
       categoryId: '',
       noMore: false,
+      showCart: false,
       emptyObj: {
         emptyImg: '/static/images/commentEmptyGoods.png',
         emptyBold: '暂无商品',

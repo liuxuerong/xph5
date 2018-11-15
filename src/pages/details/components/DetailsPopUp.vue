@@ -20,7 +20,7 @@
         <span class="buy" to="/createOrder" @click="buy()">立即购买</span>
         <span class="addCart" @click="addCart()">
               加入购物车
-            </span>
+        </span>
       </div>
       <div class="goodsInfoBottm border-top" v-else-if="from==2">
         <div class="addSure" @click="addCart()">确认加入</div>
@@ -84,6 +84,7 @@ export default {
   methods: {
     ...mapMutations(['changeNowPrice', 'changeMaxCount']),
     addCount () {
+      console.log(this.maxCount)
       this.cartCount++
       if (this.cartCount > this.maxCount) {
         this.cartCount = this.maxCount
@@ -164,6 +165,12 @@ export default {
               duration: 500
             })
             // this.getCartNum()
+          } else {
+            Toast({
+              message: res.data.message,
+              position: 'bottom',
+              duration: 500
+            })
           }
         }).catch(err => {
           console.log(err)

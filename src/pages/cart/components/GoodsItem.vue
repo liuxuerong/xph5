@@ -1,12 +1,12 @@
 <template>
-  <div class="goodsItem">
-    <label for="goodsItem1" class="border-bottom">
+  <div class="goodsItem" :class="{disabled:disabled}">
+    <label for="" class="border-bottom">
         <div class="checkIcon">
             <check-icon :value.sync="goodsItem.value">
             </check-icon>
           </div>
           <div class="goodsItemMain">
-            <router-link to="#" class="linkDetails">
+            <router-link :to="'/details/'+goodsItem.goodsId" class="linkDetails">
               <img v-lazy="imageUrl+goodsItem.goodsItemPic" alt="" >
              </router-link>
             <div class="info">
@@ -14,11 +14,17 @@
               <div class="describe">
                 <span class="color" v-for="(item,index) in specs" :key="index">{{item}}</span>
                  x <em class="num">{{goodsItem.num}}</em>
-                </div>
+              </div>
+              <div class="inventory" v-if="goodsItem.stock<5&&goodsItem.stock>=0&&goodsItem.status==1">
+                库存紧张
+              </div>
+               <!-- <div class="inventory" v-if="goodsItem.stock==0">
+                无库存
+              </div> -->
               <div class="bottom clearfix">
                 <span class="tag fl" v-if="goodsItem.status!=1">已失效</span>
                 <span class="modify" v-show="showModify">
-                  <x-number :min="1" :max="goodsItem.stock" v-model="goodsItem.num" @click.stop.prevent :fillable="true"></x-number>
+                  <x-number :min="1" :max="goodsItem.stock" v-model="goodsItem.num" :fillable="true" @on-change="changeCartNum"></x-number>
                 </span>
                 <i class="price fr">￥{{goodsItem.price.toFixed(2)}}</i>
               </div>
@@ -37,6 +43,9 @@ import {
   CheckIcon,
   XNumber
 } from 'vux'
+import {
+  Toast
+} from 'mint-ui'
 import {
   config
 } from 'util/config.js'
@@ -58,7 +67,11 @@ export default {
   },
   props: {
     goodsItem: Object,
-    showModify: Boolean
+    showModify: Boolean,
+    disabled: {
+      type: Boolean,
+      default: false
+    }
   },
   computed: mapState({
     clearNum: state => state.cart.clearNum,
@@ -67,7 +80,7 @@ export default {
   watch: {
     goodsItem: {
       handler (newVal, oldVal) {
-        this.doUpdateCart()
+        console.log(newVal)
         if (this.clearNum.length > 0) {
           let index = this.clearNum.indexOf(this.goodsItem)
           if (newVal.value) {
@@ -82,13 +95,14 @@ export default {
             }
           }
           let goodsList = this.goodsList
+          console.log(this.goodsList)
           this.changeGoodsList(goodsList)
-          this.changeClearNum(this.clearNum)
         } else {
           if (newVal.value) {
             this.clearNum.push(this.goodsItem)
           }
         }
+        this.changeClearNum(this.clearNum)
       },
       deep: true,
       immediate: true
@@ -102,13 +116,26 @@ export default {
         this.specs.push(specs[i].value)
       }
     },
-    doUpdateCart () {
+    change (v) {
+      console.log(v)
+    },
+    changeCartNum (val) {
+      if (val >= this.goodsItem.stock) {
+        Toast({
+          message: `库存紧张，最多购买${this.goodsItem.stock}件`,
+          position: 'center',
+          duration: 2000
+        })
+      }
+      this.doUpdateCart(val)
+    },
+    doUpdateCart (val) {
       updateCart.url = '/cart'
       updateCart.url = updateCart.url + '/' + this.goodsItem.id
       if (this.goodsItem.num !== '') {
         let params = {
           cartId: this.goodsItem.id,
-          request: this.goodsItem.num
+          request: val
         }
         http(updateCart, params, 'noloading').then(res => {
         }).catch(err => {
@@ -118,6 +145,7 @@ export default {
     }
   },
   mounted () {
+    console.log(this.goodsItem)
     this.getSpecs()
   }
 }
@@ -156,7 +184,7 @@ export default {
           color #808080
           font-size 36px
           line-height 50px
-          margin-bottom 50px
+          margin-bottom 30px
           span
             margin-right 20px
         .bottom
@@ -175,6 +203,9 @@ export default {
             display inline-block
             line-height 100px
             height 100px
+          .price
+            display inline-block
+            line-height 100px
 .disabled .checkIcon>>>.vux-check-icon
   display none
 .disabled.goodsItem .goodsItemMain .info .name
@@ -183,6 +214,15 @@ export default {
   color #ccc
 .disabled.goodsItem .goodsItemMain .info .bottom
   color #ccc
+.inventory
+  height 47px
+  display inline-block
+  line-height 47px
+  background-color #F5F5F5
+  font-size 30px
+  padding 0 10px
+  color #BA825A
+  margin-bottom 20px
 </style>
 
 <style lang="stylus">
@@ -210,7 +250,7 @@ export default {
   border 2px solid #CCCCCC
   position relative
   svg
-    fill #CCCCCC
+    fill #808080
     position absolute
     top 50%
     left 50%

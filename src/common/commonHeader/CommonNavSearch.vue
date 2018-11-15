@@ -1,11 +1,12 @@
 <template>
   <div class="commonNavSearch">
     <div class="back" @click="goBack"></div>
-    <router-link to="/cart" class="car fr">
+    <slot></slot>
+    <router-link to="/cart" class="car fr" v-if="showCart">
       <span class="num" v-if="count!=0">{{count}}</span>
     </router-link>
-    <div class="search fr">
-    </div>
+    <router-link to="/search" class="search fr">
+    </router-link>
   </div>
 </template>
 <script>
@@ -21,7 +22,11 @@ export default {
   name: 'CommonNavHeader',
   components: {},
   props: {
-    title: String
+    title: String,
+    showCart: {
+      type: Boolean,
+      default: true
+    }
   },
   data () {
     return {
@@ -60,7 +65,6 @@ export default {
     width 100%
     background-color #fff
     z-index 999999
-    padding-right 50px
     .back
       position absolute
       left 50px
@@ -74,15 +78,16 @@ export default {
       width 60px
       height 60px
       bgImage("/static/icons/search_black")
-      margin-right 40px
       vertical-align middle
       margin-top 20px
+      margin-right 50px
     .car
       width 83px
       height 83px
       bgImage("/static/icons/car")
       margin-top 13px
       position relative
+      margin-right 50px
       .num
         position absolute
         width 46px

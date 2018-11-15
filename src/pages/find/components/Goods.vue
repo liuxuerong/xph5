@@ -3,7 +3,7 @@
     <keep-alive>
       <div class="xpGoodsWrap">
         <slot></slot>
-        <common-nav-search v-if="searchShow"/>
+        <common-nav-search v-if="searchShow" />
         <div class="xpGoodsTop border-bottom" ref="xpGoodsTop" :class="{isFixed:!isFixed}">
           <div class="xpGoodsTopContent">
             <tab v-if="tabbar.length">
@@ -80,6 +80,7 @@ export default {
       page: 1,
       categoryId: '',
       noMore: false,
+      showCart: false,
       emptyObj: {
         emptyImg: '/static/images/commentEmptyGoods.png',
         emptyBold: '暂无商品',

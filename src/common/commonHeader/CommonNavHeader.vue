@@ -14,7 +14,6 @@ export default {
   },
   methods: {
     goBack () {
-      console.log(7777)
       this.$router.back(-1)
     }
   }
@@ -32,7 +31,7 @@ export default {
     color #262626
     width 100%
     background-color #fff
-    z-index 999999
+    z-index 9999
     padding 0 200px
     ellipsis()
     .back
