@@ -1,12 +1,13 @@
 <template>
   <div class="xpDetails">
-    <common-nav-header>
-      <router-link to="/" class="icon home"></router-link>
+    <div v-show="goodsStatus!==4">
+      <common-nav-header>
+      <router-link to="/" class="icon home" ></router-link>
       <span class="icon share"></span>
     </common-nav-header>
     <div class="xpDetailsWrap" ref="xpDetailsWrap">
       <div class="xpDetailsScroll">
-        <common-swiper :swiperData="swiperData" v-if="swiperData!=[]" />
+        <common-swiper :swiperData="swiperData" v-if="swiperData.length" />
         <details-des :goods="goods" :activityLabel="activityLabel" v-if="goods" />
         <div class="cutOffLine"></div>
         <details-cell :cellInfo="cellInfo[0]" />
@@ -23,9 +24,14 @@
         <details-img-text-desc class="isDetailsImgTextShow" ref="isDetailsImgTextShow" :desc="desc" v-if="desc.length" />
       </div>
     </div>
-
-    <details-operate class="detailsOperate" :goodsItems="goodsItems" />
+    <div class="goodsStatus" v-if="goodsStatus!=1">商品已经{{goodsStatusText}}</div>
+    <details-operate class="detailsOperate" :goodsItems="goodsItems" :goodsStatus="goodsStatus"/>
     <details-pop-up :sku="sku" v-if="sku" :goods="goods" />
+    </div>
+    <div v-show="goodsStatus===4">
+      <common-nav-header :title="emptyTitle"/>
+     <common-empty  :emptyObj="emptyObj" />
+    </div>
   </div>
 </template>
 
@@ -33,6 +39,7 @@
 // import 'swiper/dist/css/swiper.css'
 import CommonSwiper from 'common/commonSwiper/CommonSwiper'
 import CommonNavHeader from 'common/commonHeader/CommonNavHeader'
+import CommonEmpty from 'common/commonEmpty/CommonEmpty'
 import DetailsDes from './components/DetailsDes'
 import DetailsCell from './components/DetailsCell'
 import DetailsPopUp from './components/DetailsPopUp'
@@ -42,7 +49,6 @@ import DetailsImgTextDesc from './components/DetailsImgTextDesc'
 import DetailsCommentSwiper from './components/DetailsCommentSwiper'
 
 import BScroll from 'better-scroll'
-// import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import {
   mapMutations,
   mapState
@@ -66,6 +72,7 @@ export default {
   name: 'Details',
   components: {
     CommonSwiper,
+    CommonEmpty,
     CommonNavHeader,
     DetailsDes,
     DetailsCell,
@@ -84,6 +91,16 @@ export default {
       goods: null,
       activityLabel: [],
       desc: '',
+      goodsStatus: 1,
+      goodsStatusText: '',
+      emptyTitle: '商品过期不存在',
+      emptyObj: {
+        emptyImg: '/static/images/commentEmptyGoods.png',
+        emptyBold: '商品过期不存在',
+        emptyP: '哇噢~商品过期了哦~快去找新商品吧',
+        buttonText: '回到首页',
+        buttonRouter: '/'
+      },
       cellInfo: [
         {
           title: '领券',
@@ -109,9 +126,10 @@ export default {
   },
   watch: {
     $route (to, from) {
-      if (to.name === 'Details') {
-        this.initDeatils()
-      }
+      this.scroll.refresh()
+      // if (to.name === 'Details') {
+      //   this.initDeatils()
+      // }
     },
     popupVisible: function (curval) {
       if (curval) {
@@ -127,7 +145,6 @@ export default {
       if (arr.length === 1) {
         this.changeMaxCount(arr[0].stock)
       }
-      console.log(arr)
       // 处理返回数据
       let sku = {}
       sku.keys = []
@@ -208,32 +225,46 @@ export default {
       sku.SKUResult = {}
       return sku
     },
-    initDeatils () {
-      const _this = this
-      this.goodsId = this.$route.params.goodsId
-      this.scroll = new BScroll(this.$refs.xpDetailsWrap, {
-        scrollY: true,
-        click: true,
-        bounce: {
-          bottom: true
-        },
-        pullUpLoad: {
-          threshold: -30 // 当上拉距离超过30px时触发 pullingUp 事件
-        }
-      })
+    initScroll () {
+      if (!this.scroll) {
+        this.scroll = new BScroll(this.$refs.xpDetailsWrap, {
+          scrollY: true,
+          click: true,
+          bounce: {
+            bottom: true
+          },
+          pullUpLoad: {
+            threshold: -30 // 当上拉距离超过30px时触发 pullingUp 事件
+          }
+        })
+      } else {
+        this.scroll.refresh()
+      }
+
+      let _this = this
       this.scroll.on('pullingUp', function () {
         if (_this.desc !== '') {
           _this.$refs.isDetailsImgTextShow.$el.style.display = 'block'
           _this.scroll.refresh()
         }
       })
+    },
+    initDeatils () {
+      this.goodsId = this.$route.params.goodsId
       this.changePopupVisible(false)
-      // this.$refs.xpDetails.style.height =
-      //     document.documentElement.clientHeight + 'px'
       // 商品详情
       if (this.goodsId !== '' || this.goodsId !== undefined) {
         http(goodsDetail, [this.goodsId])
           .then(res => {
+            console.log(res)
+            this.goodsStatus = res.data.body.status
+            if (this.goodsStatus === 2) {
+              this.goodsStatusText = '下架'
+            } else if (this.goodsStatus === 3) {
+              this.goodsStatusText = '卖光了'
+            } else if (this.goodsStatus === 4) {
+              // this.$router.push('/detailsEmpty')
+            }
             this.goods = res.data.body.goods
             this.desc = res.data.body.goods.desc
             this.keys = res.data.body.activityLabel
@@ -243,11 +274,14 @@ export default {
             this.changeNowPrice(res.data.body.goods.minPrice)
             storage.setLocalStorage(comment, res.data.body.goodsComments)
             // this.changeComment(res.data.body.goodsComments)
+            console.log(res.data.body.goodsComments)
             let totals = res.data.body.goodsComments.totals
             if (totals >= 999) {
               totals = '999+'
             }
             this.cellInfo[2].title = `商品评价（ ${totals} ）`
+            this.initScroll()
+            this.scroll.scrollTo(0, 0)
           })
           .catch(err => {
             console.log(err)
@@ -256,6 +290,7 @@ export default {
     }
   },
   mounted () {
+    console.log(1111)
     this.initDeatils()
   }
 }
@@ -270,6 +305,8 @@ export default {
   height 100%
   padding-top 120px
   padding-bottom 146px
+.xpDetails>div
+    height 100%
   .icon
     width 60px
     height 60px
@@ -307,4 +344,15 @@ export default {
   display none
 .commentRouter
   color #262626
+.goodsStatus
+  height 146px
+  line-height  146px
+  background #E4B492
+  font-size 46px
+  color #ffffff
+  text-align center
+  position fixed
+  z-index 1999
+  width 100%
+  bottom 146px
 </style>

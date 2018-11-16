@@ -8,8 +8,8 @@
       </router-link>
     </div>
     <ul class="operateRight">
-      <li class="border-left" @click="popUpShowBuy">立即购买</li>
-      <li class="border-left active" @click="popUpShow">加入购物车</li>
+      <li class="border-left" :class="{disabled:goodsSataus!=1}" @click="popUpShowBuy">立即购买</li>
+      <li class="border-left active" :class="{disabled:goodsSataus!=1}" @click="popUpShow">加入购物车</li>
     </ul>
   </div>
 </template>
@@ -41,7 +41,8 @@ export default {
     }
   },
   props: {
-    goodsItems: Array
+    goodsItems: Array,
+    goodsSataus: Number
   },
   computed: mapState({
     details: state => state.details,
@@ -89,12 +90,16 @@ export default {
       })
     },
     popUpShow () {
-      this.changeFrom(2)
-      this.changePopupVisible(true)
+      if (this.popUpShowBuy === 1) {
+        this.changeFrom(2)
+        this.changePopupVisible(true)
+      }
     },
     popUpShowBuy () {
-      this.changeFrom(3)
-      this.changePopupVisible(true)
+      if (this.popUpShowBuy === 1) {
+        this.changeFrom(3)
+        this.changePopupVisible(true)
+      }
     }
 
   },
@@ -155,4 +160,6 @@ export default {
       text-align center
     li.active
       background-color #F0F0F0
+    li.disabled
+      color #CCCCCC
 </style>
