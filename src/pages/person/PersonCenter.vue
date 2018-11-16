@@ -3,7 +3,7 @@
     <div class="perTopbg">
       <div class="headerScroll" :class="scrolled?'active':''">
         <router-link to="/softwareSeting" class="perSeting left"></router-link>
-        <router-link to="/cart" class="perNews right"></router-link>
+        <span class="perNews right" @click="perNews"></span>
         <router-link to="/cart" class="perShopping right">
           <span class="num" v-if="count!=0">{{count}}</span>
         </router-link>
@@ -117,7 +117,7 @@
         </div>
         <div class="toolItem">
           <span class="toolIcon storeIcon" @click="toolSpecific(3)"></span>
-          <p>门户查询</p>
+          <p>门店查询</p>
         </div>
         <div class="toolItem">
           <span class="toolIcon cusserIcon" @click="toolSpecific(4)"></span>
@@ -131,7 +131,7 @@
 import router from '@/router/index.js'
 import {storage} from 'util/storage'
 import { accessToken } from 'util/const.js'
-import {memberCenter, listDelivery, goodscollectionList, cartNum} from 'util/netApi'
+import {memberCenter, listDelivery, goodscollectionList, cartNum, customerService} from 'util/netApi'
 import {http} from 'util/request'
 import PersonTitle from './ComCenterSmillTitle'
 import OrderIndex from '../order/OrderIndex'
@@ -200,7 +200,7 @@ export default {
     },
     // 基础资料设置
     userDataSet () {
-      router.push('./userInfoSet')
+      router.push('/userInfoSet')
     },
     // 我的地址
     goodsAddress () {
@@ -257,7 +257,7 @@ export default {
       } else if (type === 3) {
         router.push('./ToolStore')
       } else {
-        router.push('./ToolCusser')
+        window.location.href = customerService
       }
     },
     // 优惠卡券
@@ -281,6 +281,10 @@ export default {
       }).catch((err) => {
         console.log(err)
       })
+    },
+    // 客服
+    perNews () {
+      window.location.href = customerService
     }
   },
 

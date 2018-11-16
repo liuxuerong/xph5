@@ -89,27 +89,6 @@ export default {
   },
   mounted: function () {
   }
-  //   beforeCreate: function () {
-  //     console.group('beforeCreate 创建前状态')
-  //   },
-  //   created: function () {
-  //     console.group('created 创建完毕状态')
-  //   }
-  //   beforeMount: function () {
-  //     console.group('beforeMount 挂载前状态===============》')
-  //   },
-  //   beforeUpdate: function () {
-  //     console.group('beforeUpdate 更新前状态===============》')
-  //   },
-  //   updated: function () {
-  //     console.group('updated 更新完成状态===============》')
-  //   },
-  // beforeDestroy: function () {
-  //     console.group('beforeDestroy 销毁前状态===============》')
-  //   },
-  // destroyed: function () {
-  //     console.group('destroyed 销毁完成状态===============》')
-  //   }
 }
 </script>
 
@@ -127,13 +106,11 @@ export default {
         height 100%
         bgImage('/static/images/loginBg')
         overflow hidden
-        box-sizing border-box
-        padding-top 100px
     .loginTop
         height 72px
         line-height 72px
         box-sizing border-box
-        padding 0 44px
+        padding 100px 44px 0
         span
             font-size 76px
             color #fff

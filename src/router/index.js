@@ -55,6 +55,8 @@ import WatchLogistics from '@/pages/order/WatchLogistics'
 import AppDownload from '@/pages/download/AppDownload'
 import ToolStore from '@/pages/person/ToolStore'
 import ReturnGoods from '@/pages/order/ReturnGoods'
+import AccountSecurity from '@/pages/person/AccountSecurity'
+import UserPhoneCode from '@/pages/person/userSetup/UserPhoneCode'
 import { accessToken } from 'util/const'
 import { storage } from 'util/storage'
 
@@ -186,7 +188,7 @@ const router = new Router({
       component: UserName
     },
     {
-      path: '/userPassword',
+      path: '/userPassword/:type',
       name: 'userPassword',
       component: UserPassword
     },
@@ -323,6 +325,16 @@ const router = new Router({
       path: '/returnGoods/:orderId',
       name: 'returnGoods',
       component: ReturnGoods
+    },
+    {
+      path: '/accountSecurity',
+      name: 'accountSecurity',
+      component: AccountSecurity
+    },
+    {
+      path: '/userPhoneCode/:type',
+      name: 'userPhoneCode',
+      component: UserPhoneCode
     }
   ]
 })

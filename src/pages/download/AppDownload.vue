@@ -6,6 +6,11 @@
         <p>点击右上角，选择在<i class="iconBrowser"></i>浏览器中打开，即可下载<i class="appName">星品优汇</i> </p>
         <i class="operBrowser"></i>
       </div>
+      <div class="appText">
+        <span>你值得</span>
+        <span>拥有更好的家</span>
+        <p>汇聚全球五星酒店奢华&nbsp;&nbsp;&nbsp;&nbsp;时尚好物</p>
+      </div>
     </div>
     <div class="downloadBtn" @click="appOperClick">{{btnText}}</div>
     <div class="mask" v-if="terminalType === 'weixin'"></div>
@@ -126,8 +131,29 @@ export default {
     background #fff
     .wrapperBg
       width 100%
-      height 73%
-      background red
+      height 100%
+      position absolute
+      left 0
+      top 0
+      bgImage('/static/images/appDownload')
+      .appText
+        position absolute
+        top 300px
+        left 0
+        box-sizing border-box
+        padding-left 50px
+        width 100%
+        span,p
+          display block
+          width 100%
+        span
+          font-size 112px
+          font-weight 500
+          color #fff
+        p
+          font-size 60px
+          margin-top 60px
+          color #fff
       .weixinTips
         width calc(100% - 40px)
         margin 0 auto
@@ -162,12 +188,16 @@ export default {
       right 40px
       bgImage('/static/icons/operBrowser')
   .downloadBtn
+    position absolute
+    left 0
+    right 0
+    margin auto
+    bottom 180px
     width 800px
     height 160px
     font-size 60px
     color #BA825A
     line-height 160px
-    margin 10% auto 0
-    background #262D35
+    background #FFFFFF
     text-align center
 </style>

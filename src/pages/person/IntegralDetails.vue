@@ -33,7 +33,7 @@
 </template>
 <script >
 import router from '@/router/index.js'
-import UserinfoHeader from './ComUserSetHeader'
+import UserinfoHeader from './components/ComUserSetHeader'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
 import {getMemberIntegral} from 'util/netApi'
 import {http} from 'util/request'

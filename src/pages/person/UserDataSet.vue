@@ -39,7 +39,7 @@
 </template>
 <script>
 import router from '@/router/index.js'
-import UserinfoHeader from './ComUserSetHeader'
+import UserinfoHeader from './components/ComUserSetHeader'
 import UserinfoPopset from './ComSetInfoPop'
 import ChangeItem from './ComChangeItem'
 import CropperHeader from './ComCropperHeader'

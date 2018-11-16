@@ -52,8 +52,7 @@
   </div>
 </template>
 <script>
-// import router from '@/router/index.js'
-import UserinfoHeader from '../person/ComUserSetHeader'
+import UserinfoHeader from '../person/components/ComUserSetHeader'
 import { Tab, TabItem } from 'vux'
 import {listCouponByGoodsItemIds} from 'util/netApi'
 import {http} from 'util/request'

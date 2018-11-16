@@ -97,13 +97,13 @@ export default {
         .orderIcon01
           bgImage('/static/icons/orderItem01')
         .orderIcon02
-          bgImage('/static/icons/orderItem02')
-        .orderIcon03
           bgImage('/static/icons/orderItem03')
-        .orderIcon04
+        .orderIcon03
           bgImage('/static/icons/orderItem04')
-        .orderIcon05
+        .orderIcon04
           bgImage('/static/icons/orderItem05')
+        .orderIcon05
+          bgImage('/static/icons/orderItem02')
   .centerTitle
     width 100%
     height 160px
