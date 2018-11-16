@@ -39,6 +39,7 @@
             </span>
           </div>
           <img v-lazy="imageUrl+certificate" alt="" class="upImg" v-else>
+          <div class="delIcon"  v-if="certificate!==''" @click="delImg ('certificate')"></div>
         </div>
       </group>
       <group title="附件" v-if="infoShow&&infoAllShow">
@@ -52,6 +53,7 @@
               </span>
           </div>
           <img v-lazy="imageUrl+certificate" alt="" class="upImg" v-show="certificate!==''">
+          <div class="delIcon"  v-if="certificate!==''" @click="delImg ('certificate')"></div>
         </div>
         <div class="upWrap">
           <div v-show="advice===''">
@@ -63,6 +65,7 @@
             </span>
           </div>
           <img v-lazy="imageUrl+advice" alt="" class="upImg" v-show="advice!==''">
+          <div class="delIcon"  v-if="advice!==''" @click="delImg ('advice')"></div>
         </div>
         <div class="upWrap">
           <div v-show="license===''">
@@ -74,6 +77,7 @@
             </span>
           </div>
           <img v-lazy="imageUrl+license" alt="" class="upImg" v-show="license!==''">
+          <div class="delIcon"  v-if="license!==''"  @click="delImg ('license')"></div>
         </div>
       </group>
       <router-link to="/instructions" tag="div" class="instructions">发票须知</router-link>
@@ -160,6 +164,9 @@ export default {
         duration: 1000
       })
     },
+    delImg (str) {
+      this[str] = ''
+    },
     submit: function () {
       let input = document.getElementsByTagName('input')
       for (var i = 0; i < input.length; i++) {
@@ -173,7 +180,6 @@ export default {
         }
         if (input[i].type === 'hidden') {
           if (input[i].name.indexOf('need') !== -1) {
-            console.log(input[i])
             if (input[i].value.trim() === '') {
               this.toastShow(input[i].placeholder + '不能为空')
               return
@@ -394,6 +400,7 @@ export default {
     margin 48px 0 48px 48px
     display inline-block
     vertical-align top
+    position relative
     div
       position relative
       width 100%
@@ -402,6 +409,14 @@ export default {
       width 100%
       height 100%
       vertical-align top
+    .delIcon
+      width 40px
+      height 40px
+      position absolute
+      background url("/static/icons/del_icon.png") no-repeat center center/100% 100%
+      top -20px
+      right -20px
+      z-index 9
   input
     position absolute
     width 100%

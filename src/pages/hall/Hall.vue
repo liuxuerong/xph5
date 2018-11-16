@@ -4,7 +4,7 @@
     <swiper :options="swiperOption" v-if="swiperData.length">
       <swiper-slide v-for="(item,index) in swiperData" :key="item.id">
         <router-link :to="'/hallDetails/'+index">
-        <img :src="imageUrl+item.experienceCoverImage" alt="" class="swiperImg">
+        <img :src="imageUrl+item.experienceCoverImage" alt="" class="swiperImg" :style="{height:imgHeight}">
         <div class="infoContainer">
           <div class="left">
             <div class="title">{{item.categoryName}}</div>
@@ -46,12 +46,13 @@ export default {
     return {
       imageUrl: config.imageUrl,
       swiperData: [],
+      imgHeight: '',
+      speed: 400,
       swiperOption: {
         direction: 'vertical',
-        slidesPerView: 'auto',
-        loopedSlides: 5,
-        height: window.innerHeight - 200,
-        // observer: true,
+        // slidesPerView: 1,
+        // loopedSlides: 1,
+        height: window.innerHeight,
         loop: true
       }
     }
@@ -64,7 +65,6 @@ export default {
   methods: {
     getHallData () {
       http(inforSpace).then(res => {
-        console.log(res)
         this.swiperData = res.data.body
         this.swiperOption.loopedSlides = this.swiperData.length
         storage.setLocalStorage(experience, res.data.body)
@@ -75,6 +75,7 @@ export default {
   },
   mounted () {
     this.getHallData()
+    this.imgHeight = document.documentElement.clientHeight + 'px'
   }
 }
 </script>
@@ -86,11 +87,11 @@ export default {
   padding-bottom 148px
   .swiperImg
     width 100%
-    min-height 100%
+    background #fff
+    // min-height 100%
   .infoContainer
     position absolute
-    bottom 0
-    left 0
+    top 70px
     padding 50px
     color #fff
     display flex
@@ -120,22 +121,32 @@ export default {
 .xpHall
   .swiper-slide
     transition  all 0.4s
-    height 1200px  !important
     position relative
     a
       display inline-block
       width 100%
       height 100%
-  .swiper-slide-next
-    height 400px !important
-    transition  all 0.4s
+  .swiper-slide
+    position relative
   .swiper-slide-prev
-    transition  all 0.4s
-    opacity 0.5
+      top 1000px
+      z-index 2
+  .swiper-slide-next
+    // transition  all 0.4s
+    top calc((-100vh+(1137px)))
+    z-index 4
+  .swiper-slide-next+.swiper-slide
+    top calc((-200vh+(1477px)))
+    z-index 5
+  .swiper-slide-next+.swiper-slide+.swiper-slide
+    top calc((-300vh+(1817px)))
+    z-index 6
   .swiper-slide-active
-    height 1200px !important
-    transition  all 0.4s
-    opacity 1
+    top 0
+    z-index 3
+    .infoContainer
+      top 877px
+      background linear-gradient(0deg,rgba(3,0,0,0.75),rgba(0,0,0,0))
     .left
       flex 1
       height 160px

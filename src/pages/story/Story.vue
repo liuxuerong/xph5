@@ -68,8 +68,7 @@ export default {
       tabbar: [{
         name: '国际品牌',
         id: '001'
-      }
-      ]
+      }]
     }
   },
   computed: {},
