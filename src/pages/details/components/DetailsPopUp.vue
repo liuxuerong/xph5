@@ -17,10 +17,11 @@
         </div>
       </div>
       <div class="goodsInfoBottm border-top" v-if="from==1">
-        <span class="buy" to="/createOrder" @click="buy()">立即购买</span>
-        <span class="addCart" @click="addCart()">
-              加入购物车
+        <span class="buy" to="/createOrder" @click="buy()" v-if="!goodsEmpty">立即购买</span>
+        <span class="addCart" @click="addCart()" v-if="!goodsEmpty">
+          加入购物车
         </span>
+        <div class="goodsEmpty" v-if="goodsEmpty">暂无可售商品</div>
       </div>
       <div class="goodsInfoBottm border-top" v-else-if="from==2">
         <div class="addSure" @click="addCart()">确认加入</div>
@@ -73,7 +74,8 @@ export default {
       coverImage: '',
       name: '',
       goodsId: '',
-      newHaveChangedId: ''
+      newHaveChangedId: '',
+      goodsEmpty: false
     }
   },
   computed: mapState({
@@ -495,6 +497,11 @@ export default {
     this.coverImage = this.goods.coverImage
     this.name = this.goods.name
     this.goodsId = this.goods.id
+    if (typeof (this.maxCount) === 'number' && this.maxCount === 0) {
+      this.goodsEmpty = true
+    }
+    // { console.log(typeof (this.maxCount)) }
+    // if(typeof(this.maxCount))
   }
 }
 </script>
@@ -588,11 +595,18 @@ export default {
     text-align center
     color #BA825A
     font-size 46px
+.goodsEmpty
+  flex 1
+  height 145px
+  line-height 145px
+  text-align center
+  background-color #F0F0F0
+  font-size 46px
+  color #CCCCCC
 </style>
 
 <style lang="stylus">
 .detailsPopUp
   .mint-popup
     width 100%
-    // height 1528px
 </style>

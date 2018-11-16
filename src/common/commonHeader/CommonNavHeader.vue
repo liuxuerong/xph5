@@ -14,7 +14,14 @@ export default {
   },
   methods: {
     goBack () {
-      this.$router.back(-1)
+      console.log(this.$router.history.current)
+      console.log(this.$router.history.current.name === 'DetailsEmpty')
+      if (this.$router.history.current.name === 'DetailsEmpty') {
+        console.log(123)
+        this.$router.back(-2)
+      } else {
+        this.$router.back(-1)
+      }
     }
   }
 }

@@ -8,7 +8,7 @@
     <div class="goodsWrap" ref="goodsWrap">
       <div>
         <div v-if="cartList.length">
-          <goods-item  v-for="item in cartList" :key="item.id" :goodsItem="item" :showModify="showModify"></goods-item>
+          <goods-item  v-for="(item,index) in cartList" :key="index" :goodsItem="item" :showModify="showModify"></goods-item>
         </div>
         <div class="disabledWrap" v-if="disabledCartList.length" >
           <div class="empty" @click="emptyNoInventory">清空失效商品</div>

@@ -4,7 +4,7 @@
     <swiper :options="swiperOption" v-if="swiperData.length">
       <swiper-slide v-for="(item,index) in swiperData" :key="item.id">
         <router-link :to="'/hallDetails/'+index">
-        <img :src="imageUrl+item.experienceCoverImage" alt="" class="swiperImg" :style="{height:imgHeight}">
+        <img v-lazy="imageUrl+item.experienceCoverImage" alt="" class="swiperImg" :style="{height:imgHeight}">
         <div class="infoContainer">
           <div class="left">
             <div class="title">{{item.categoryName}}</div>

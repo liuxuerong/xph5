@@ -43,6 +43,7 @@
       <div class="priceInfo">
         <ul class="border-bottom">
           <li v-if="totalPric!==''"><span class="name">商品金额：</span><span class="item">￥{{totalPric}}</span></li>
+          <li>优惠<span class="item">￥{{offerAmount}}</span></li>
           <li v-if="shippingAmount!==''"><span class="name"> 运费 </span><span class="item">￥{{shippingAmount}}</span></li>
           <!-- <li><span class="name">居家商品满2000减200</span><span class="item">-￥200</span></li> -->
         </ul>
@@ -106,6 +107,7 @@ export default {
       couponArr: [],
       info: null,
       needPayPrice: '',
+      offerAmount: '',
       params: {
         favorableId: '',
         key: '',
@@ -124,10 +126,6 @@ export default {
       if (to.path === '/createOrder/1') {
         this.info = storage.getLocalStorage(orderInfo)
         if (this.info.couponId) {
-        //   console.log(123)
-        //   let goodsInfos = storage.getLocalStorage(goodsInfo)
-        //   goodsInfos.favorableId = this.info.couponId
-        //   storage.setLocalStorage(goodsInfo, goodsInfos)
           this.getDetails()
         }
       } else if (to.path === '/createOrder') {
@@ -138,11 +136,9 @@ export default {
   methods: {
     getDetails () {
       const params = storage.getLocalStorage(goodsInfo)
-      console.log(this.info)
       if (this.info && this.info.couponId) {
         params.favorableId = this.info.couponId
       }
-      console.log(params)
       http(goodOrderData, params).then(res => {
         console.log(res)
         if (res.data.code === 0) {
@@ -150,6 +146,7 @@ export default {
           this.availableCoupon = res.data.body.availableCoupon
           this.pricesData = res.data.body.orderGoodsItems
           this.shippingAmount = res.data.body.shippingAmount
+          this.offerAmount = res.data.body.offerAmount
           for (let i = 0; i < this.pricesData.length; i++) {
             let spec = JSON.parse(this.pricesData[i].spec)
             this.pricesData[i].spec = []

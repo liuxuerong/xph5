@@ -116,6 +116,9 @@ export default {
     },
     showDetails (index) {
       this.showOne = true
+      for (let i = 0; i < this.$refs.tag.length; i++) {
+        this.$refs.tag[i].classList.remove('active')
+      }
       this.$refs.tag[index].classList.add('active')
 
       this.itemObj = this.experienceObj.experienceGoods[index]
@@ -126,21 +129,10 @@ export default {
     hasCollection (params, index) {
       let fnType = Object.prototype.toString.call(hasCollection(params)).slice(8, -1)
       if (fnType === 'Promise') {
-        console.log(777)
         hasCollection(params).then(res => {
           let goods = this.experienceObj.experienceGoods[index]
-
-          // console.log(this.hasCollection(params))
-          // this.experienceObj = Object.assign({}, vm.userProfile, {
-          //   age: 27,
-          //   favoriteColor: 'Vue Green'
-          // })
           goods.collected = res.data.body
-          // goods.experienceGoods[index].params = params
           this.$set(this.experienceObj.experienceGoods, index, goods)
-          console.log(this.experienceObj.experienceGoods)
-          console.log(7777)
-          // console.log(this.experienceObj.experienceGoods)
         }).catch(err => {
           console.log(err)
         })
@@ -148,7 +140,6 @@ export default {
     },
     doCollection (index, goodId) {
       let params = Object.assign({}, this.params, {collectionDataId: goodId})
-      console.log(params)
       doCollection(params).then(res => {
         this.hasCollection(params, index)
       }).catch(err => {
@@ -192,7 +183,13 @@ export default {
       }
     }
   },
-  mounted () {}
+  mounted () {
+    this.$nextTick(function () {
+      setTimeout(() => {
+        this.doPosition()
+      }, 16)
+    })
+  }
 }
 </script>
 

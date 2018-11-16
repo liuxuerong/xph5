@@ -34,7 +34,7 @@ export default {
   .commonEmpty
     padding-top 634px
     text-align center
-    background-color: #F5F5F5;
+    // background-color: #F5F5F5;
     height 100%
     img
       width 890px
@@ -55,7 +55,8 @@ export default {
       color #BA825A
       padding 0 60px
       border-radius 4px
-      background #F5F5F5
+      background-color #fff
+      // background #F5F5F5
       margin-top 92px
 </style>
 <style lang="stylus">
