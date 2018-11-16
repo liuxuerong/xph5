@@ -61,26 +61,26 @@ export default {
     // 立即支付
     immedPayment () {
       if (this.readioActive !== '') {
+        let orderSn = this.$route.params.orderCode
         let params = {
-          orderSn: this.orderCode,
+          orderSn: orderSn,
           payment: this.readioActive
         }
+        console.log(params)
         http(payMoney, params).then((response) => {
           console.log(response)
-          let data = response.data
-          if (data.code === 0) {
-            // let list = data.body
-            // axios('https://api.mch.weixin.qq.com/pay/unifiedorder', {
-            //   appid: list.appid, // 公众账号id
-            //   nonce_str: list.noncestr, // 随机字符串
-            //   out_trade_no: this.orderCode, // 订单号
-            //   total_fee: this.totalNum,
-            //   trade_type: 'MWEB' // 交易类型
-            // }).then((response) => {
-            //   console.log(response)
-            // }).catch((err) => {
-            //   console.log(err)
-            // })
+          // 提交接口成功
+          if (response.data.code === 0) {
+            console.log(this.readioActive)
+            // 支付宝
+            if (this.readioActive === 2) {
+              let dom = document.createElement('div')
+              dom.innerHTML = response.data.body
+              document.body.appendChild(dom)
+              document.forms[0].submit()
+            } else if (this.readioActive === 5) {
+              window.location.href = 'weixin://wap/pay?appid=' + response.data.body.appid + '&noncestr=' + response.data.body.noncestr + '&package=' + response.data.body.package + '&prepayid=' + response.data.body.prepayid + '&sign=' + response.data.body.sign + '&timestamp=' + response.data.body.timestamp
+            }
           }
         })
       } else {

@@ -18,7 +18,7 @@
 
       </div>
       <div class="orderGoodsInfo">
-        <div class="orderGoods clearfix" v-for="(item,index) in list.memberOrderGoods" :key="index" @click="goodsDetails(item.goodsId)">
+        <div class="orderGoods clearfix" v-for="(item,index) in list.memberOrderGoods" :key="index" @click.stop.prevent="goodsDetails(item.goodsId)">
           <img v-if="item.pic != ''" :src="imageUrl+item.pic" alt="">
           <img v-else src="/static/images/personalHeader.png">
           <div class="orderText">
@@ -28,6 +28,7 @@
             </div>
             <span class="goodsPrice">￥ {{item.price}}</span>
             <span class="goodsNum">×{{item.num}}</span>
+            <div class="afterSale" v-if="type=='4'" @click.stop.prevent="afterSale(item,list.orderSn)">申请售后</div>
           </div>
         </div>
       </div>
@@ -96,7 +97,6 @@
   </div>
 </template>
 <script>
-import router from '@/router/index.js'
 import { subOrderDetail, cancelOrder, confirmGoods } from 'util/netApi'
 import { http } from 'util/request'
 import SearchTitle from './ComOrderSearchTitle'
@@ -104,7 +104,7 @@ import { config } from 'util/config' // 图片路径
 import notice from 'util/notice.js'
 import {Toast} from 'mint-ui'
 import {storage} from 'util/storage'
-import { logistics } from 'util/const'
+import { logistics, aftersale } from 'util/const'
 export default {
   data () {
     return {
@@ -177,23 +177,16 @@ export default {
           if (this.computedTime === 0) {
           }
         }, 1000)
-
-        // 获取收获地址
-        // console.log(data.deliveryId)
-        // http(idDelivery, [data.deliveryId]).then((response) => {
-        //   console.log(response)
-        // })
       })
     },
     // 商品详情页面
     goodsDetails (goodsId) {
-      router.push('../../details/' + goodsId)
+      this.$router.push('/details/' + goodsId)
     },
     // 申请退款
     unGoodsapplyRefund (orderId) {
-      console.log(666)
-      // type 1   未发货退款
-      router.push('../../applyRefund/1/' + orderId)
+      // type 1   未发货退款 2 退货退款
+      this.$router.push('/applyRefund/1/' + orderId)
     },
     // 取消订单
     cancelOrder (orderId) {
@@ -210,7 +203,7 @@ export default {
     },
     // 立即付款
     immedPayment (orderSn) {
-      this.$router.push('../../immedPayment/' + orderSn)
+      this.$router.push('/immedPayment/' + orderSn)
     },
     // 确认收货
     confirmGoods (orderCode) {
@@ -239,6 +232,11 @@ export default {
     // 立即评价
     immedEvaluate (orderCode) {
       this.$router.push('/immedEvaluate/' + orderCode)
+    },
+    // 申请售后
+    afterSale (data, orderId) {
+      storage.setLocalStorage(aftersale, data)
+      this.$router.push('/returnGoods/' + orderId)
     }
   },
   mounted () {
@@ -426,4 +424,15 @@ export default {
       left 0
       font-size 30px
       text-align center
+  .afterSale
+    width 220px
+    height 84px
+    text-align center
+    line-height 84px
+    border 1px solid #808080
+    font-size 36px
+    color #808080
+    position absolute
+    right 0
+    top 160px
 </style>
