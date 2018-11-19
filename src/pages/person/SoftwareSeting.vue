@@ -11,8 +11,7 @@
   </div>
 </template>
 <script>
-import router from '@/router/index.js'
-import UserinfoHeader from './ComUserSetHeader'
+import UserinfoHeader from './components/ComUserSetHeader'
 import notice from 'util/notice.js'
 import {storage} from 'util/storage.js'
 import { accessToken } from 'util/const.js'
@@ -34,18 +33,21 @@ export default {
       // 3 账户安全
       if (index === 0) {
         console.log(666)
-        router.push('./agreement')
+        this.$router.push('/agreement')
       } else if (index === 1) {
-        router.push('./feedBack')
+        this.$router.push('/feedBack')
       } else if (index === 2) {
-        router.push('./aboutUs')
+        this.$router.push('/aboutUs')
+      } else if (index === 3) {
+        this.$router.push('/accountSecurity')
       }
     },
     // 退出登录
     headleLogOut () {
+      let _this = this
       notice.confirm('确定退出登录', '退出登录后需要重新登录', function () {
-        router.push('./login')
         storage.delLocalStorage(accessToken)
+        _this.$router.push('/login')
       })
     }
   }

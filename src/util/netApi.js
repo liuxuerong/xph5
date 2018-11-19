@@ -14,6 +14,7 @@ export const getOpenId = { url: '/auth/token', method: 'GET', version: '' } // �
 export const verifySms = { url: '/sms', method: 'GET', version: v1, join: true } // 短信验证
 export const restPassword = { url: '/member/api/rest/password', method: 'PUT', version: v1 } // 重置密码
 export const modifyPassword = { url: '/member/api/updateMemberPassword', method: 'PUT', version: v1 } // 修改密码
+export const modifyPhone = { url: '/member/api/verificationPhone	', method: 'POST', version: v1 } // 修改密码
 
 // 收货地址
 export const addDelivery = { url: '/delivery/api', method: 'POST', version: v1 } // 新增地址
@@ -142,3 +143,6 @@ export const deliverAfterSales = { url: '/afterSales/deliverAfterSales', method:
 // 快递查询
 export const express = { url: '/express/order-kuaidi', method: 'GET', version: v1 }
 export const logisticsCompany = { url: '/logisticsCompany/list-logisticsCompany-all', method: 'GET', version: '' }
+
+// 客服接口
+export const customerService = 'http://jdhoe.udesk.cn/im_client/?web_plugin_id=59329'

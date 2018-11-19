@@ -33,7 +33,7 @@
   </div>
 </template>
 <script>
-import UserinfoHeader from './ComUserSetHeader'
+import UserinfoHeader from './components/ComUserSetHeader'
 import { Toast } from 'mint-ui'
 import { addDelivery, updateDelivery, idDelivery } from 'util/netApi'
 import { http } from 'util/request'

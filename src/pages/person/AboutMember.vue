@@ -86,7 +86,7 @@
   </div>
 </template>
 <script>
-import UserinfoHeader from './ComUserSetHeader'
+import UserinfoHeader from './components/ComUserSetHeader'
 export default {
   data () {
     return {

@@ -16,7 +16,7 @@
   </div>
 </template>
 <script>
-import UserinfoHeader from './ComUserSetHeader'
+import UserinfoHeader from './components/ComUserSetHeader'
 import {storeAddr} from 'util/netApi'
 import {http} from 'util/request'
 export default {

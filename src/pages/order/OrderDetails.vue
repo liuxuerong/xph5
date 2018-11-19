@@ -1,6 +1,7 @@
 <template>
   <div class="wrapper">
-    <search-title :title="title[type-1]"></search-title>
+    <search-title v-if="orderStatus == '8'" title="支付超时"></search-title>
+    <search-title v-else :title="title[type-1]"></search-title>
     <div class="orderDetatilCon">
       <div class="orderUserInfo">
         <div class="orderCode border-bottom">订单编号：{{list.orderSn}}</div>
@@ -15,7 +16,17 @@
       </div>
       <!-- 上门自提二维码 -->
       <div class="deliveryDoodsCard" v-if="type=='3' && list.shippingMethod == '1'">
-
+        <div class="deliveryText">
+          <span>请向商家出示二维码</span>
+          <span>商家扫码成功即验证成功</span>
+        </div>
+        <div class="memberCodeImg">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <qrcode class="Scavenging"  :value="codeValue" type="img"></qrcode>
+        </div>
       </div>
       <div class="orderGoodsInfo">
         <div class="orderGoods clearfix" v-for="(item,index) in list.memberOrderGoods" :key="index" @click.stop.prevent="goodsDetails(item.goodsId)">
@@ -103,6 +114,7 @@ import SearchTitle from './ComOrderSearchTitle'
 import { config } from 'util/config' // 图片路径
 import notice from 'util/notice.js'
 import {Toast} from 'mint-ui'
+import { Qrcode } from 'vux'
 import {storage} from 'util/storage'
 import { logistics, aftersale } from 'util/const'
 export default {
@@ -114,13 +126,15 @@ export default {
       imageUrl: config.imageUrl,
       orderStatus: Number,
       computedTime: 0,
-      time: ''
+      time: '',
+      codeValue: ''
       // 1 立即支付
       // 7 查看详情 --- 交易关闭
     }
   },
   components: {
-    SearchTitle
+    SearchTitle,
+    Qrcode
   },
   methods: {
     // 订单列表页面渲染
@@ -128,11 +142,20 @@ export default {
       let orderCode = this.$route.params.orderCode
       let type = this.$route.params.type
       this.type = type
+      console.log(6666)
       http(subOrderDetail, [orderCode]).then((response) => {
+        console.log(response)
         let data = response.data.body
-        console.log(data)
         this.list = data
         let memberOrderGoods = data.memberOrderGoods[0]
+        if (data.status === 1 && memberOrderGoods.orderItemStatus === undefined) {
+          this.type = '1'
+        } else if (memberOrderGoods.orderItemStatus === 11) {
+          this.type = '2'
+        } else if (memberOrderGoods.orderItemStatus === '3') {
+          this.type = '3'
+        }
+        console.log(this.type)
         // if (data.status === 1) {
         //   this.title = '待付款订单'
         // } else if (data.status === 2) {
@@ -216,6 +239,7 @@ export default {
               position: 'bottom',
               duration: 2000
             })
+            this.$router.go(0)
           }
         })
       })
@@ -248,6 +272,20 @@ export default {
   html,body
     position relative
     background #F5F5F5!important
+  .Scavenging
+    display block
+    width 600px
+    height 600px
+    position absolute
+    left 0
+    top 0
+    right 0
+    bottom 0
+    margin auto
+    img
+      display block
+      width 600px!important
+      height 600px!important
 </style>
 <style lang="stylus" scoped>
   .wrapper
@@ -308,12 +346,12 @@ export default {
         padding-top 38px
         position relative
         .goodsName
-          width 94%
+          width 90%
           line-height 40px
           font-size 40px
           color #262626
           line-height 60px
-          margin-bottom 30px
+          margin-bottom 10px
           font-weight blod
         .goodsPrice
           display block
@@ -435,4 +473,54 @@ export default {
     position absolute
     right 0
     top 160px
+  .deliveryDoodsCard
+    width 100%
+    height 1200px
+    margin-bottom 30px
+    background #fff
+  .deliveryText
+    width 100%
+    height 200px
+    span
+      display block
+      width 100%
+      text-align center
+      line-height 100px
+    span:nth-of-type(1)
+      font-size 36px
+      color #BA825A
+    span:nth-of-type(2)
+      font-size 46px
+      color #262626
+  .memberCodeImg
+    width calc(100% - 100px)
+    height 1000px
+    margin 0 auto
+    position relative
+    background #fff
+    span
+      display block
+      width 60px
+      height 60px
+      position absolute
+    span:nth-of-type(1)
+      left 160px
+      top 120px
+      border-top 6px solid #F2F2F2
+      border-left 6px solid #F2F2F2
+    span:nth-of-type(2)
+      left 160px
+      bottom  120px
+      border-bottom 6px solid #F2F2F2
+      border-left 6px solid #F2F2F2
+    span:nth-of-type(3)
+      right  160px
+      top 120px
+      border-top 6px solid #F2F2F2
+      border-right 6px solid #F2F2F2
+    span:nth-of-type(4)
+      right 160px
+      bottom 120px
+      border-bottom 6px solid #F2F2F2
+      border-right 6px solid #F2F2F2
 </style>

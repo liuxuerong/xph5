@@ -37,7 +37,7 @@
   </div>
 </template>
 <script>
-import UserinfoHeader from './ComUserSetHeader'
+import UserinfoHeader from './components/ComUserSetHeader'
 import { Qrcode } from 'vux'
 import {memberCenter} from 'util/netApi'
 import {http} from 'util/request'

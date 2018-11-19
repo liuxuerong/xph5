@@ -11,7 +11,7 @@
                 <input type="text" name="" id="" v-model="password">
             </div>
         </div>
-        <router-link to="/userName" class="nextOper">跳过</router-link>
+        <router-link to="/userName" class="nextOper" v-if="type=='1'">跳过</router-link>
     </div>
 </template>
 <script type = "text/javascript">
@@ -24,7 +24,8 @@ import { accessToken } from 'util/const.js'
 export default {
   data () {
     return {
-      password: ''
+      password: '',
+      type: ''
     }
   },
   computed: {
@@ -33,6 +34,16 @@ export default {
     }
   },
   methods: {
+    // 设置密码渲染
+    setPasswordRender () {
+      let type = this.$route.params.type
+      this.type = type
+      if (type === '1') {
+        // 设置密码  可跳过
+      } else {
+        // 修改或者忘记密码 不可跳过
+      }
+    },
     setPasswordNext: function () {
       // 设置密码下一步
       if (this.rightPassword) {

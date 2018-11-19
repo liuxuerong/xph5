@@ -21,7 +21,7 @@
 </template>
 <script>
 import router from '@/router/index.js'
-import UserinfoHeader from './ComUserSetHeader'
+import UserinfoHeader from './components/ComUserSetHeader'
 import { listDelivery } from 'util/netApi'
 import {http} from 'util/request'
 import {storage} from 'util/storage'

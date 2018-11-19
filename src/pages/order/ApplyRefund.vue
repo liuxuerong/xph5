@@ -134,6 +134,7 @@ export default {
     },
     // 退款数据提交
     sureRefundOper () {
+      let _this = this
       let type = this.$route.params.type
       if (type === '1') {
         let params = {
@@ -143,12 +144,20 @@ export default {
         }
         if (this.reason !== '') {
           http(deliverAfterSales, params).then((response) => {
+            if (response.data.code === 0) {
+              Toast({
+                message: '提交成功',
+                position: 'bottom',
+                duration: 2000
+              })
+              _this.$router.back(-1)
+            }
           })
         } else {
           Toast({
             message: '请选择退款原因',
             position: 'bottom',
-            duration: 5000
+            duration: 2000
           })
         }
       } else {
@@ -202,6 +211,10 @@ export default {
     box-sizing border-box
     padding-top 132px
     background #fff
+  .refundCon
+    width 100%
+    box-sizing border-box
+    padding-bottom 200px
   .refundTitle
     width 100%
     height 174px

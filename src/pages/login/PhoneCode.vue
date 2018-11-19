@@ -109,8 +109,8 @@ export default {
               router.push('/')
             } else {
               console.log('新注册用户')
-              //   设置密码
-              router.push('/userPassword')
+              //  1 设置密码
+              this.$router.push('/userPassword/1')
             }
           } else {
             Toast({

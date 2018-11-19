@@ -91,7 +91,7 @@
 </template>
 <script>
 import router from '@/router/index.js'
-import UserinfoHeader from './ComUserSetHeader'
+import UserinfoHeader from './components/ComUserSetHeader'
 import { Tab, TabItem } from 'vux'
 import {coupon, memberCouponRecord} from 'util/netApi'
 import {http} from 'util/request'
