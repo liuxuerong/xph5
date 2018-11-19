@@ -67,13 +67,22 @@ export default {
     z-index 999999
     .back
       position absolute
+      width 100px
+      height 120px
       left 50px
+      z-index 99999
+    .back:before,.back:after
+      width 0
+      height 0
+      content ''
+      position absolute
+      border 30px solid transparent
+      border-right 30px solid #262626
+      left -30px
       top 30px
-      width 45px
-      height 45px
-      border-left 4px solid #262626
-      border-top 4px solid #262626
-      transform rotate(-45deg)
+    .back:after
+      border-right 30px solid #fff
+      left -26px
     .search
       width 60px
       height 60px

@@ -1,5 +1,5 @@
 <template>
-  <div class="brandDetailsContent">
+  <div class="brandDetailsContent" ref="brandDetailsContent">
     <common-nav-header :title="details.title" v-if="details" />
     <div class="brandDetails" ref="brandDetails">
       <div>
@@ -9,7 +9,7 @@
         <details-header v-if="details" :details="details" />
         <common-content v-if="details&&goodsItems.length" :goodsItems="goodsItems" :details="details" />
         <div class="cutOffLine30"></div>
-        <h2>热文推荐</h2>
+         <h2 v-if="details&&details.articleRecommends.length">热文推荐</h2>
         <common-article-rec v-if="details" :articleRecommends="details.articleRecommends" :linkTo="linkTo" />
       </div>
     </div>
@@ -49,10 +49,11 @@ export default {
 
     }
   },
-  computed: {},
   watch: {
     '$route' (to, from) {
-      this.$router.go(0)
+      if (to.name === 'BrandDetails') {
+        this.getBrandDetail()
+      }
     }
   },
   methods: {
@@ -62,8 +63,11 @@ export default {
         .then(res => {
           this.details = res.data.body
           this.goodsItems = res.data.body.goodsItems
-          this.scrollInit()
-          this.scroll.scrollTo(0, 0, 0)
+          setTimeout(() => {
+            this.scrollInit()
+            console.log(7777)
+            this.scroll.scrollTo(0, 0, 0)
+          }, 16)
         })
         .catch(err => {
           console.log(err)
@@ -87,6 +91,24 @@ export default {
   },
   mounted () {
     this.getBrandDetail()
+    console.log(this.$refs.brandDetailsContent.getElementsByTagName('img').length)
+  },
+  updated () {
+    this.$nextTick(function () {
+      let img = this.$refs.brandDetailsContent.getElementsByTagName('img')
+      let count = 0
+      let length = img.length
+      if (length) {
+        let timer = setInterval(() => {
+          if (count === length) {
+            this.scroll.refresh()
+            clearInterval(timer)
+          } else if (img[count].complete) {
+            count++
+          }
+        }, 16)
+      }
+    })
   }
 }
 </script>

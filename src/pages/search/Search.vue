@@ -3,17 +3,17 @@
     <div class="xpSearchTop border-bottom " :class="{active:hasSearch}">
       <div class="back" @click="goBack" v-show="hasSearch"></div>
       <div class="search">
-        <input type="search" placeholder="搜索" v-model="searchVal" @keyup.13="getSearchVal" autofocus="true">
+        <form action="javascript:return true;">
+        <input type="search" placeholder="搜索" v-model.trim="searchVal" @keyup.13="getSearchVal" autofocus="true">
+        </form>
         <div class="icon glass" v-show="!hasSearch"></div>
         <div class="icon close" v-show="hasSearch" @click="emptySearchVal">×</div>
       </div>
       <div class="cancel" v-show="!hasSearch" @click="emptySearchVal">取消</div>
     </div>
    <div class="mainSearch" ref="mainSearch">
-     <div>
         <search-history :searchHistoryStorage = "searchHistoryStorage" v-if="searchHistoryStorage.length&&!hasSearch" @removeOneHistory="removeOneHistory" @removeAllHistory="removeAllHistory" @doSearch="doSearch"/>
         <SearchItem :searchHistoryStorage="searchHistoryStorage" :searchVal="searchVal"  v-if="hasSearch"/>
-     </div>
    </div>
   </div>
 </template>
@@ -21,7 +21,7 @@
 <script>
 import SearchHistory from './components/SearchHistory'
 import SearchItem from './components/SearchItem'
-import BScroll from 'better-scroll'
+
 import {searchHistory} from 'util/const'
 import {storage} from 'util/storage'
 export default {
@@ -55,20 +55,7 @@ export default {
     goBack () {
       this.$router.back(-1)
     },
-    scrollInit () {
-      if (!this.scroll) {
-        this.scroll = new BScroll(this.$refs.mainSearch, {
-          scrollY: true,
-          click: true,
-          bounce: {
-            top: true,
-            bottom: true
-          }
-        })
-      } else {
-        this.scroll.refresh()
-      }
-    },
+
     // 获取input的value
     getSearchVal () {
       this.hasSearch = true
@@ -114,7 +101,6 @@ export default {
     this.saveSearchHistory()
   },
   mounted () {
-    this.scrollInit()
   }
 }
 </script>
@@ -143,6 +129,8 @@ export default {
     font-size 46px
     color #4D4D4D
     position relative
+    form
+      height 100%
     input
       height 100%
       background-color #F5F5F5

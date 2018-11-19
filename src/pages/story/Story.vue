@@ -204,7 +204,7 @@ export default {
     position fixed
     width 100%
     top 136px
-    z-index 9999999
+    z-index 999999
   .xpStoryContent
     height 100%
   h1.title

@@ -42,7 +42,9 @@ export default {
   },
   watch: {
     $route (to, from) {
-      this.$router.go(0)
+      if (to.name === 'StoryDetails') {
+        this.getBrandDetail()
+      }
     }
   },
   methods: {
@@ -81,19 +83,21 @@ export default {
     this.getStoryDetails()
   },
   updated () {
-    let img = this.$refs.storyDetailsContent.getElementsByTagName('img')
-    let count = 0
-    let length = img.length
-    if (length) {
-      let timer = setInterval(() => {
-        if (count === length) {
-          this.scroll.refresh()
-          clearInterval(timer)
-        } else if (img[count].complete) {
-          count++
-        }
-      }, 100)
-    }
+    this.$nextTick(function () {
+      let img = this.$refs.storyDetailsContent.getElementsByTagName('img')
+      let count = 0
+      let length = img.length
+      if (length) {
+        let timer = setInterval(() => {
+          if (count === length) {
+            this.scroll.refresh()
+            clearInterval(timer)
+          } else if (img[count].complete) {
+            count++
+          }
+        }, 16)
+      }
+    })
   }
 }
 </script>
