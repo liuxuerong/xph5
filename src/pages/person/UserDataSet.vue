@@ -14,7 +14,7 @@
           </div>
         </div>
         <userinfo-popset setPro="会员等级" :inputData="memberLevelName+'会员'"></userinfo-popset>
-        <userinfo-popset setPro="我的收获地址" @click.native="addressAdmin"></userinfo-popset>
+        <userinfo-popset setPro="我的收货地址" @click.native="addressAdmin"></userinfo-popset>
       </div>
 
       <!-- 基础设置 -->

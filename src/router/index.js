@@ -56,6 +56,7 @@ import AppDownload from '@/pages/download/AppDownload'
 import ToolStore from '@/pages/person/ToolStore'
 import ReturnGoods from '@/pages/order/ReturnGoods'
 import AccountSecurity from '@/pages/person/AccountSecurity'
+import SearchOrder from '@/pages/order/SearchOrder'
 import UserPhoneCode from '@/pages/person/userSetup/UserPhoneCode'
 import { accessToken } from 'util/const'
 import { storage } from 'util/storage'
@@ -297,7 +298,7 @@ const router = new Router({
       component: CardVoucher
     },
     {
-      path: '/cardDetails/:type/:id',
+      path: '/cardDetails/:type/:mainType/:id',
       name: 'cardDetails',
       component: CardDetails
     },
@@ -335,6 +336,11 @@ const router = new Router({
       path: '/userPhoneCode/:type',
       name: 'userPhoneCode',
       component: UserPhoneCode
+    },
+    {
+      path: '/searchOrder',
+      name: 'searchOrder',
+      component: SearchOrder
     }
   ]
 })

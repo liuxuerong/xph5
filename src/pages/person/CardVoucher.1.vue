@@ -7,8 +7,8 @@
           <span class="hrefCss" :class="index==i?'active':''" @click="headleTabsChange(i)">{{tabs}}</span>
         </div>
       </div>
-      <div class="cardVoucherPage" v-if="list.length > 0">
-        <div class="cardVouItem" :class="index ===0?'':'grayCardVouItem'" v-for="item in list" :key="item.id" @click.stop="cardDetailsPages(item.useStatus,item.id,item)">
+      <div class="cardVoucherPage" v-if="index === 0 && list.length > 0">
+        <div class="cardVouItem" v-for="item in list" :key="item.id">
           <div class="top">
             <div class="left">
               <span v-if="item.type == '1' || item.type == '3'">￥<i>{{item.subMoney}}</i></span>
@@ -30,23 +30,11 @@
                 <div v-else class="fullSub">
                   <span>无门槛</span>
                 </div>
-                <!-- 未使用 -->
-                <div class="cardVoucherOper" v-if="index ===0">
-                  <span class="operBtn newReceive" v-if="item.useStatus == '1'" @click.stop="receiveCard(item.id)">立即领取</span>
-                  <span class="operBtn newUse" v-if="item.useStatus == '2'">立即使用</span>
-                  <span class="operBtn noReceive" v-if="item.useStatus == '3'">领光了</span>
-                </div>
-                <!-- 已使用 -->
-                <div class="cardVoucherOper" v-if="index ===1">
-                  <span class="operBtn noReceive">已使用</span>
-                </div>
-                <!-- 已失效 -->
-                <div class="cardVoucherOper" v-if="index ===2">
-                  <span class="operBtn noReceive">已失效</span>
-                </div>
+                <span class="operBtn newReceive" v-if="item.useStatus == '1'" @click.stop="receiveCard(item.id)">立即领取</span>
+                <span class="operBtn newUse" v-if="item.useStatus == '2'">立即使用</span>
+                <span class="operBtn noReceive" v-if="item.useStatus == '3'">领光了</span>
               </div>
-              <!-- 未使用 -->
-              <div class="activityTime" v-if="index == 0">
+              <div class="activityTime">
                 <!-- 立即领取 可以领取-->
                 <span v-if="item.useStatus == '1'" class="activityTime">领取时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
                 <!-- 立即使用  到达使用时间-->
@@ -55,11 +43,41 @@
                 <span v-else-if="item.useStatus == '2' && item.display=='1'">使用时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
                 <!-- 领光了 -->
                 <span v-if="item.useStatus == '3'" class="activityTime">领取时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
-                <button class="cardDetails">详情&nbsp;></button>
+                <button class="cardDetails" @click.stop="cardDetailsPages(item.useStatus,item.id,item)">详情&nbsp;></button>
               </div>
-              <div class="activityTime" v-else>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cardVoucherPage" v-else-if="index === 1 && list.length > 0">
+      </div>
+      <div class="cardVoucherPage cardVoucherPageThree" v-else-if="index === 2 && list.length > 0">
+        <div class="cardVouItem" v-for="item in list" :key="item.id" @click="cardDetailsPages(item.useStatus,item.id,item)">
+          <div class="top">
+            <div class="left">
+              <span v-if="item.type == '1' || item.type == '3'">￥<i>{{item.subMoney}}</i></span>
+              <span v-else-if="item.type == '2'"><i>{{parseFloat(item.discount*10)}}</i> 折</span>
+              <p v-if="item.applyType == '1'">通用券</p>
+              <p v-if="item.applyType == '2'">app专享</p>
+              <p v-if="item.applyType == '3'">门店专享</p>
+            </div>
+            <div class="right">
+              <h3>{{item.name}}</h3>
+              <div class="displayBtn">
+                <div v-if="item.condMoney != '0'" class="fullSub">
+                  <span v-if="item.range == '1'">满{{item.condMoney}}.0可用(限指定商品)</span>
+                  <span v-if="item.range == '2'">满{{item.condMoney}}.0可用(限指定门店)</span>
+                  <span v-if="item.range == '3'">满{{item.condMoney}}.0可用(限指定分类)</span>
+                  <span v-if="item.range == '4'">满{{item.condMoney}}.0可用</span>
+                </div>
+                <div v-else class="fullSub">
+                  <span>无门槛</span>
+                </div>
+                <router-link to="/" class="operBtn noReceive">已失效</router-link>
+              </div>
+              <div class="activityTime">
                 <span class="activityTime">{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
-                <button class="cardDetails">详情&nbsp;></button>
+                <button class="cardDetails" @click.stop="cardDetailsPages(item.useStatus,item.id,item)">详情&nbsp;></button>
               </div>
             </div>
           </div>
@@ -72,6 +90,7 @@
   </div>
 </template>
 <script>
+import router from '@/router/index.js'
 import UserinfoHeader from './components/ComUserSetHeader'
 import { Tab, TabItem } from 'vux'
 import {coupon, memberCouponRecord} from 'util/netApi'
@@ -155,13 +174,12 @@ export default {
     },
     // 卡券详情
     cardDetailsPages (type, id, item) {
-      let mainType = this.index
-      console.log(mainType)
-      // id不能搜索到卡券
-      if (type !== 2) {
+      if (type === 2) {
+        router.push('./cardDetails/' + type + '/' + id)
+      } else {
         storage.setLocalStorage('card', item)
+        router.push('./cardDetails/' + type + '/' + id)
       }
-      this.$router.push('./cardDetails/' + type + '/' + mainType + '/' + id)
     }
   },
   mounted () {
@@ -213,13 +231,18 @@ body, html, #app
       .hrefCss.active
         color #262626
         border-bottom 8px solid #333333
+  .cardVoucherPage.cardVoucherPageThree
+    .cardVouItem
+      width 100%
+      height 280px
+      margin-bottom 50px
+      background #fff
+      bgImage('/static/images/cardVouItemBg')
   .cardVoucherPage
     width 100%
     box-sizing border-box
     padding 34px 30px 0
     background #f5f5f5
-    .cardVouItem.grayCardVouItem
-      bgImage('/static/images/cardVouItemBg')
     .cardVouItem
       width 100%
       height 280px
@@ -302,6 +325,4 @@ body, html, #app
     background #fff
     font-size 30px
     color #666666
-  .cardVoucherOper
-    float right
 </style>

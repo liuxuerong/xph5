@@ -4,7 +4,8 @@
     <div class="evaluateCon">
       <div class="goodsItem" v-for="(item,index) in list" :key="item.goodsItemId">
         <div class="evaluateTop clearfix">
-          <img :src="imageUrl+item.pic" alt="">
+          <img v-if="item.pic != ''" :src="imageUrl+item.pic" alt="">
+          <img v-else src="/static/images/personalHeader.png">
           <div class="orderText">
             <h3 class="goodsName">{{item.goodsName}}</h3>
             <div class="goodsSpecWrapper clearfix">
@@ -14,8 +15,8 @@
           </div>
         </div>
         <div class="evaluateText">
-          <textarea class="evaluateArea" ref="phoneNum" placeholder="宝贝满足您的期待吗？说说他的优点和美中不足的地方吧。" cols="30" rows="10"></textarea>
-          <span class="fontNum">{{fontNum}}/100</span>
+          <textarea class="evaluateArea" :maxlength="100" @input="descArea(index)" v-model="evaluateText" placeholder="宝贝满足您的期待吗？说说他的优点和美中不足的地方吧。" cols="30" rows="10"></textarea>
+          <span class="fontNum">{{Surplus}}/100</span>
         </div>
         <div class="uploadWrapper">
           <div class="uploadItem" v-for="(childImg,j) in objImgs[index]" :key="j">
@@ -44,16 +45,19 @@ export default {
       orderCode: '',
       list: [],
       imageUrl: config.imageUrl,
-      fontNum: 0,
-      objImgs: []
+      objImgs: [],
+      evaluateText: '',
+      Surplus: 0
     }
   },
   components: {
     SearchTitle
   },
   watch: {
-    objImgs: function () {
-      // console.log(45465)
+    '$route' (to, from) {
+      if (to.name === 'immedEvaluate') {
+        this.evaluateRender()
+      }
     }
   },
   methods: {
@@ -61,7 +65,9 @@ export default {
     evaluateRender () {
       let orderCode = this.$route.params.orderCode
       this.orderCode = orderCode
+      console.log(orderCode)
       http(subOrderDetail, [orderCode]).then((response) => {
+        console.log(response)
         let data = response.data.body.memberOrderGoods
         this.list = data
       })
@@ -132,6 +138,10 @@ export default {
           console.log('评论完成')
         }
       })
+    },
+    // 字数
+    descArea (index) {
+      this.Surplus = this.evaluateText.length
     }
   },
   mounted () {

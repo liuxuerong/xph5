@@ -173,6 +173,7 @@ export default {
     getUserInfo () {
       http(memberCenter).then((response) => {
         let data = response.data.body
+        console.log(data)
         if (data.coupons.length > 0) {
           this.coupons = data.coupons
           this.cardScrollWidth = (this.coupons.length * 970 - 50) / 112.5
