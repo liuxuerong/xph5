@@ -323,21 +323,7 @@ const router = new Router({
     {
       path: '/returnGoods/:orderId',
       name: 'returnGoods',
-<<<<<<< HEAD
       component: resolve => require(['@/pages/order/ReturnGoods'], resolve)
-=======
-      component: ReturnGoods
-    },
-    {
-      path: '/accountSecurity',
-      name: 'accountSecurity',
-      component: AccountSecurity
-    },
-    {
-      path: '/userPhoneCode/:type',
-      name: 'userPhoneCode',
-      component: UserPhoneCode
->>>>>>> bd010bae3cf210559be38dc1c6b242b4366d2e24
     }
   ]
 })
