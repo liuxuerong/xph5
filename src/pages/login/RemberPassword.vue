@@ -11,7 +11,7 @@
     </div>
 </template>
 <script type="text/javascript">
-import PhoneCode from './components/ComPhonecode'
+import PhoneCode from './components/comPhoneCode'
 import {mapState} from 'vuex'
 export default {
   data () {
