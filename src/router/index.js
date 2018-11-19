@@ -276,9 +276,9 @@ const router = new Router({
       component: resolve => require(['@/pages/person/AccountSecurity'], resolve)
     },
     {
-      path: '/userPhoneCode/:type',
-      name: 'userPhoneCode',
-      component: resolve => require(['@/pages/person/userSetup/UserPhoneCode'], resolve)
+      path: '/userPhonecode/:type',
+      name: 'userPhonecode',
+      component: resolve => require(['@/pages/person/userSetup/UserPhonecode'], resolve)
     },
     {
       path: '/searchOrder',
