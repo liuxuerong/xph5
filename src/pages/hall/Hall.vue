@@ -1,17 +1,17 @@
 <template>
   <div class="xpHall">
     <common-header/>
-    <swiper :options="swiperOption" v-if="swiperData.length">
+    <swiper :options="swiperOption" v-if="swiperData.length" class="swpierWrap">
       <swiper-slide v-for="(item,index) in swiperData" :key="item.id">
         <router-link :to="'/hallDetails/'+index">
-        <img v-lazy="imageUrl+item.experienceCoverImage" alt="" class="swiperImg" :style="{height:imgHeight}">
-        <div class="infoContainer">
-          <div class="left">
-            <div class="title">{{item.categoryName}}</div>
-            <div class="summary">{{item.summary}}</div>
+          <img v-lazy="imageUrl+item.experienceCoverImage" alt="" class="swiperImg" :style="{height:imgHeight}">
+          <div class="infoContainer">
+            <div class="left">
+              <div class="title">{{item.categoryName}}</div>
+              <div class="summary">{{item.summary}}</div>
+            </div>
+            <div class="experienceGoods"><img src="/static/icons/outsidelabel_icon.png" alt="">{{item.experienceGoods.length}}</div>
           </div>
-          <div class="experienceGoods"><img src="/static/icons/outsidelabel_icon.png" alt="">{{item.experienceGoods.length}}</div>
-        </div>
         </router-link>
       </swiper-slide>
     </swiper>
@@ -50,8 +50,12 @@ export default {
       speed: 400,
       swiperOption: {
         direction: 'vertical',
-        // slidesPerView: 1,
-        // loopedSlides: 1,
+        notNextTick: true,
+        setWrapperSize: true,
+        mousewheelControl: true,
+        observeParents: true,
+        slidesPerView: 1,
+        loopedSlides: 1,
         height: window.innerHeight,
         loop: true
       }
@@ -115,6 +119,8 @@ export default {
         height 30px
         margin-left 25px
         margin-right 20px
+.swpierWrap
+  height 100% !important
 </style>
 
 <style lang="stylus">

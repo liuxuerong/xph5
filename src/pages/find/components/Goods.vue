@@ -94,9 +94,6 @@ export default {
     indexPage: function (v) {
       this.page = v
       this.getGoodsList(this.categoryId, this.page)
-    },
-    isFixed: function (v) {
-      console.log(v)
     }
   },
 
@@ -124,19 +121,16 @@ export default {
         rows: 20,
         categoryId: categoryId
       }
-      http(goodsList, param).then(res => {
-        console.log(res)
-        this.goodsListData = this.goodsListData.concat(res.data.body.list)
-        // this.scrollInit()
-        console.log(res.data.body.list)
-        if (this.page !== 1 && res.data.body.list.length === 0) {
-          this.scroll.finishPullUp()
-          this.noMore = true
-        }
-        // this.scroll.refresh()
-      })
+      if (!this.noMore) {
+        http(goodsList, param).then(res => {
+          this.goodsListData = this.goodsListData.concat(res.data.body.list)
+          if (this.page !== 1 && res.data.body.list.length === 0) {
+            this.scroll.finishPullUp()
+            this.noMore = true
+          }
+        })
+      }
     },
-
     scrollInit () {
       if (!this.scroll) {
         this.scroll = new BScroll(this.$refs.xpStoryContent, {
@@ -152,13 +146,10 @@ export default {
             bottom: true
           }
         })
-        console.log(this.scroll)
 
         this.scroll.on('pullingUp', () => {
-          console.log(this.page)
           this.page++
           this.getGoodsList(this.categoryId, this.page)
-          console.log(this.page)
         })
       } else {
         this.scroll.refresh()

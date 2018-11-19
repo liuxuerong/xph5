@@ -28,8 +28,6 @@ export default {
       imageUrl: config.imageUrl
     }
   },
-  computed: {},
-  watch: {},
   methods: {
     scrollInit () {
       if (!this.scroll) {

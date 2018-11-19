@@ -31,9 +31,7 @@ export default {
   },
   computed: mapState({
     nowPrice: state => state.details.nowPrice
-  }),
-  watch: {},
-  methods: {}
+  })
 }
 </script>
 

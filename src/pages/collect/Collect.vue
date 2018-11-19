@@ -17,10 +17,12 @@
             <li class="emptyBox"></li>
           </ul>
           <common-empty v-else :emptyObj="emptyObj" />
+          <divider v-if="noMore">哎呀！底线到了</divider>
         </div>
         <div v-else>
           <common-article-rec v-if="content.length" :articleRecommends="content" :linkTo="linkTo" />
           <common-empty v-else :emptyObj="emptyContent" />
+          <divider v-if="noMore">哎呀！底线到了</divider>
         </div>
       </div>
     </div>
@@ -31,7 +33,8 @@
 import CommonNavHeader from 'common/commonHeader/CommonNavHeader'
 import {
   Tab,
-  TabItem
+  TabItem,
+  Divider
 } from 'vux'
 import {
   http
@@ -56,7 +59,8 @@ export default {
     TabItem,
     CommonImgPrices,
     CommonArticleRec,
-    CommonEmpty
+    CommonEmpty,
+    Divider
   },
   data () {
     return {
@@ -65,7 +69,10 @@ export default {
       content: [],
       goods: [],
       showWhich: 0,
+      noMore: false,
       tabbar: ['商品', '内容'],
+      page: 1,
+      type: '1',
       linkTo: '/storyDetails/',
       emptyObj: {
         emptyImg: '/static/images/commentEmptyCollect.png',
@@ -84,37 +91,68 @@ export default {
     }
   },
   methods: {
+    // onItemClick (index) {
+    //   this.showWhich = index
+    //   this.scroll.refresh()
+    // },
     onItemClick (index) {
       this.showWhich = index
-      this.scroll.refresh()
+      this.page = 1
+      this.noMore = false
+      if (index === 0) {
+        this.goods = []
+        this.getGoods(this.page)
+      } else {
+        this.content = []
+        this.getContent(this.page)
+      }
     },
-    getGoods () {
-      http(goodscollectionList).then(res => {
-        console.log(res)
-        let goods = res.data.body.list
-        for (let i = 0; i < goods.length; i++) {
-          goods[i].coverImage = goods[i].goodsImage
-          goods[i].name = goods[i].goodsName
-          goods[i].minPrice = goods[i].goodsPrice
-          goods[i].id = goods[i].goodsId
-          this.goods.push(goods[i])
-        }
-        this.scrollInit()
-      })
-    },
-    getContent () {
-      http(articlecollectionlist)
-        .then(res => {
-          let content = res.data.body.list
-          for (let i = 0; i < content.length; i++) {
-            content[i].id = content[i].articleId
-            this.content.push(content[i])
+    getGoods (page) {
+      let params = {
+        page: page,
+        rows: 10
+      }
+      if (!this.noMore) {
+        http(goodscollectionList, params).then(res => {
+          if (this.page !== 1 && res.data.body.list.length === 0) {
+            this.scroll.finishPullUp()
+            this.noMore = true
+          }
+          let goods = res.data.body.list
+          for (let i = 0; i < goods.length; i++) {
+            goods[i].coverImage = goods[i].goodsImage
+            goods[i].name = goods[i].goodsName
+            goods[i].minPrice = goods[i].goodsPrice
+            goods[i].id = goods[i].goodsId
+            this.goods.push(goods[i])
           }
           this.scrollInit()
         })
-        .catch(err => {
-          console.log(err)
-        })
+      }
+    },
+    getContent (page) {
+      let params = {
+        page: page,
+        rows: 10
+      }
+      if (!this.noMore) {
+        http(articlecollectionlist, params)
+          .then(res => {
+            let content = res.data.body.list
+            if (this.page !== 1 && res.data.body.list.length === 0) {
+              this.scroll.finishPullUp()
+              this.noMore = true
+            }
+            for (let i = 0; i < content.length; i++) {
+              content[i].id = content[i].articleId
+              this.content.push(content[i])
+            }
+            this.scrollInit()
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
     },
     scrollInit () {
       if (!this.scroll) {
@@ -124,16 +162,28 @@ export default {
           bounce: {
             top: true,
             bottom: true
+          },
+          pullUpLoad: {
+            threshold: -30 // 当上拉距离超过30px时触发 pullingUp 事件
+          }
+        })
+        this.scroll.on('pullingUp', () => {
+          this.page++
+          if (this.showWhich === 0) {
+            this.getGoods(this.page)
+          } else {
+            this.getContent(this.page)
           }
         })
       } else {
         this.scroll.refresh()
+        this.scroll.finishPullUp()
       }
     }
   },
   mounted () {
-    this.getContent()
-    this.getGoods()
+    // this.getContent(this.page)
+    this.getGoods(this.page)
   }
 }
 </script>

@@ -17,11 +17,11 @@
         </div>
       </div>
       <div class="goodsInfoBottm border-top" v-if="from==1">
-        <span class="buy" to="/createOrder" @click="buy()" v-if="!goodsEmpty">立即购买</span>
-        <span class="addCart" @click="addCart()" v-if="!goodsEmpty">
+        <span class="buy" to="/createOrder" @click="buy()" v-if="!goodsEmpty&&goodsStatus==4">立即购买</span>
+        <span class="addCart" @click="addCart()" v-if="!goodsEmpty&&goodsStatus==4">
           加入购物车
         </span>
-        <div class="goodsEmpty" v-if="goodsEmpty">暂无可售商品</div>
+        <div class="goodsEmpty" v-if="goodsEmpty||goodsStatus!=4">暂无可售商品</div>
       </div>
       <div class="goodsInfoBottm border-top" v-else-if="from==2">
         <div class="addSure" @click="addCart()">确认加入</div>
@@ -63,7 +63,8 @@ export default {
   },
   props: {
     sku: Object,
-    goods: Object
+    goods: Object,
+    goodsStatus: Number
   },
   data () {
     return {
@@ -497,6 +498,7 @@ export default {
     this.coverImage = this.goods.coverImage
     this.name = this.goods.name
     this.goodsId = this.goods.id
+    console.log(this.maxCount)
     if (typeof (this.maxCount) === 'number' && this.maxCount === 0) {
       this.goodsEmpty = true
     }
@@ -512,7 +514,7 @@ export default {
   padding 50px 0px 150px 50px
   .tabWrap
     overflow-y scroll
-    height 700px
+    height 30vh
   .num
     height 100px
     line-height 100px

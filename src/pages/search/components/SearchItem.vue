@@ -1,18 +1,22 @@
 <template>
-  <div class="SearchItem">
-    <ul class="goodsContainer" v-if="goodsList.length">
+  <div class="searchItem" ref="searchItem">
+    <div>
+      <ul class="goodsContainer" v-if="goodsList.length">
       <li v-for="item in goodsList" v-if="goodsList.length" :key="item.id">
         <common-img-prices :pricesData="item" />
       </li>
       <li class="emptyBox"></li>
     </ul>
     <common-empty v-else :emptyObj="emptyObj" class="commonEmpty" />
+    <divider v-if="noMore">哎呀！底线到了</divider>
+    </div>
   </div>
 </template>
 
 <script>
 import CommonImgPrices from 'common/commonImgPrices/CommonImgPrices'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
+import BScroll from 'better-scroll'
 import {
   http
 } from 'util/request'
@@ -22,17 +26,22 @@ import {
 import {
   config
 } from 'util/config.js'
+import {
+  Divider
+} from 'vux'
 export default {
   name: 'Story',
   components: {
     CommonImgPrices,
-    CommonEmpty
+    CommonEmpty,
+    Divider
   },
   data () {
     return {
       imageUrl: config.imageUrl,
       goodsList: [],
       page: 1,
+      noMore: false,
       emptyObj: {
         emptyImg: '/static/images/commentEmptySearch.png',
         emptyBold: '没有找到相关产品',
@@ -49,6 +58,7 @@ export default {
   watch: {
     searchHistoryStorage: {
       handler (val) {
+        console.log(888)
         let searchVal = val[val.length - 1]
         if (searchVal !== val[val.length - 2]) {
           this.getGoodsList(searchVal, 1)
@@ -64,11 +74,40 @@ export default {
         rows: 20,
         searchName: searchName
       }
-      http(goodsList, param).then(res => {
-        this.goodsList = res.data.body.list
-        console.log(this.goodsList)
-        this.emptyObj.emptyP = '没有找到关键字为“' + searchName + '”的产品'
-      })
+      if (!this.noMore) {
+        http(goodsList, param).then(res => {
+          if (this.page !== 1 && res.data.body.list.length === 0) {
+            this.scroll.finishPullUp()
+            this.noMore = true
+          }
+          this.goodsList = [...this.goodsList, ...res.data.body.list]
+          this.scrollInit()
+          this.emptyObj.emptyP = '没有找到关键字为“' + searchName + '”的产品'
+        })
+      }
+    },
+    scrollInit () {
+      if (!this.scroll) {
+        this.scroll = new BScroll(this.$refs.searchItem, {
+          scrollY: true,
+          click: true,
+          bounce: {
+            top: true,
+            bottom: true
+          },
+          pullUpLoad: {
+            threshold: -30 // 当上拉距离超过30px时触发 pullingUp 事件
+          }
+        })
+        let _this = this
+        this.scroll.on('pullingUp', function () {
+          _this.page++
+          let searchName = _this.searchHistoryStorage[_this.searchHistoryStorage.length - 1]
+          _this.getGoodsList(searchName, _this.page)
+        })
+      } else {
+        this.scroll.refresh()
+      }
     }
   },
   mounted () {
@@ -141,4 +180,6 @@ export default {
 .emptyBox
   margin 0 !important
   width 3.9rem
+.searchItem
+  height 100%
 </style>

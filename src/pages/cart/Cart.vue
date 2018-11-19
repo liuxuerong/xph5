@@ -76,6 +76,11 @@ export default {
           this.disabledCartList.push(v[i])
         }
       }
+    },
+    '$route' (to, from) {
+      if (to.name === 'Cart') {
+        this.getCartList()
+      }
     }
   },
   computed: mapState({
@@ -112,7 +117,6 @@ export default {
           }
           this.changeGoodsList(cartList)
         }
-
         this.scrollInit()
       }).catch(err => {
         console.log(err)
@@ -120,7 +124,6 @@ export default {
     },
     changeShowModify () {
       this.showModify = !this.showModify
-      console.log(122)
       if (this.showModify) {
         this.text = '完成'
         // 修改购物车数量
@@ -150,6 +153,7 @@ export default {
     }
   },
   mounted () {
+    console.log(789)
     this.getCartList()
   }
 }

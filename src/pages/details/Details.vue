@@ -26,7 +26,7 @@
     </div>
     <div class="goodsStatus" v-if="goodsStatus!=1">商品已经{{goodsStatusText}}</div>
     <details-operate class="detailsOperate" :goodsItems="goodsItems" :goodsStatus="goodsStatus"/>
-    <details-pop-up :sku="sku" v-if="sku" :goods="goods" />
+    <details-pop-up :sku="sku" v-if="sku" :goods="goods" :goodsStatus="goodsStatus"/>
     </div>
     <div v-show="goodsStatus===4">
       <common-nav-header :title="emptyTitle"/>

@@ -32,7 +32,7 @@ export default {
 
 <style lang="stylus" scoped>
   .commonEmpty
-    padding-top 634px
+    padding-top 300px
     text-align center
     // background-color: #F5F5F5;
     height 100%

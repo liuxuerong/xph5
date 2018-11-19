@@ -1,6 +1,6 @@
 <template>
-  <div class="commonNavHeader border-bottom">
-    <div class="back" @click="goBack"></div>
+  <div class="commonNavHeader border-bottom"  >
+    <div class="back" @click.stop="goBack"></div>
     {{title}}
     <slot></slot>
   </div>
@@ -14,14 +14,7 @@ export default {
   },
   methods: {
     goBack () {
-      console.log(this.$router.history.current)
-      console.log(this.$router.history.current.name === 'DetailsEmpty')
-      if (this.$router.history.current.name === 'DetailsEmpty') {
-        console.log(123)
-        this.$router.back(-2)
-      } else {
-        this.$router.back(-1)
-      }
+      this.$router.back(-1)
     }
   }
 }
@@ -43,11 +36,21 @@ export default {
     ellipsis()
     .back
       position absolute
+      width 100px
+      height 120px
       left 50px
+      z-index 99999
+    .back:before,.back:after
+      width 0
+      height 0
+      content ''
+      position absolute
+      border 30px solid transparent
+      border-right 30px solid #262626
+      left -30px
       top 30px
-      width 45px
-      height 45px
-      border-left 4px solid #262626
-      border-top 4px solid #262626
-      transform rotate(-45deg)
+    .back:after
+      border-right 30px solid #fff
+      left -26px
+
 </style>
