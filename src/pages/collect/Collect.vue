@@ -106,6 +106,7 @@ export default {
       http(articlecollectionlist)
         .then(res => {
           let content = res.data.body.list
+          console.log(res)
           for (let i = 0; i < content.length; i++) {
             content[i].id = content[i].articleId
             this.content.push(content[i])

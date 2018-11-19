@@ -24,7 +24,6 @@ export default {
   width 100%
   height 130px
   line-height 130px
-  // background-color #F5F5F5
   font-size 46px
   color #4D4D4D
   padding-left 30px
@@ -53,8 +52,20 @@ export default {
   top 18px
   left 150px
   z-index 9999
-
+  transition all 0.2s linear
+  animation opa 0.2s linear
   input
   .inputIcon
     top 24px
+@keyframes opa {
+  0%{
+    opacity 0
+  }
+  70%{
+    opacity 0.3
+  }
+  100%{
+    opacity 1
+  }
+}
 </style>

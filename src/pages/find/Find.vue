@@ -212,7 +212,7 @@ export default {
   top 380px
   left 50%
   transform  translateX(-50%)
-  z-index 10000
+  z-index 9999999
   color #EFEFEF
   font-size 36px
   background rgba(0,0,0,1)

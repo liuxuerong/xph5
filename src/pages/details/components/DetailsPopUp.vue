@@ -512,7 +512,7 @@ export default {
   padding 50px 0px 150px 50px
   .tabWrap
     overflow-y scroll
-    height 700px
+    height 30vh
   .num
     height 100px
     line-height 100px
