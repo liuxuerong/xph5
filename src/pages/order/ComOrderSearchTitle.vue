@@ -1,14 +1,32 @@
 <template>
-    <div class="userInfoTop">
-		<span class="prevOper" @click="backPrevOper"></span>
-		<h3 class="userInfoTitle">{{title}}</h3>
-		<span v-if="oper == 1" :class="oper == 1 ? 'comOperSearch' : ''"></span>
-		<!-- 评论完成提交 -->
-		<span v-if="oper == 3" :class="oper == 3 ? 'commentSubmit' : ''" @click="commentSubmit">完成</span>
+	<div class="titleWrapper">
+		<div class="userInfoTop" v-if="!searchState">
+			<span class="prevOper" @click="backPrevOper"></span>
+			<h3 class="userInfoTitle">{{title}}</h3>
+			<span v-if="oper == '1'" :class="oper == '1' ? 'comOperSearch' : ''" @click="comOperSearch"></span>
+			<!-- 评论完成提交 -->
+			<span v-if="oper == 3" :class="oper == 3 ? 'commentSubmit' : ''" @click="commentSubmit">完成</span>
+		</div>
+		<div class="userInfoTop clearfix" v-if="searchState">
+			<div class="searchInput clearfix">
+				<input type="serch" @keypress="searchGoods" v-model="searchName" name="" class="" placeholder="搜索">
+				<span class="comOperSearch"></span>
+			</div>
+			<span class="cancelOper" @click="cancelOper">取消</span>
+		</div>
+		<div v-if="searchState" class="mask" @click="maskOper"></div>
 	</div>
 </template>
 <script>
+import {storage} from 'util/storage'
+import {searchorder} from 'util/const'
 export default {
+  data () {
+    return {
+      searchState: false,
+      searchName: ''
+    }
+  },
   // 接受父级数据
   props: {
     title: '',
@@ -16,22 +34,57 @@ export default {
   },
   methods: {
     // 返回上一步
-    backPrevOper: function () {
+    backPrevOper () {
       this.$router.back(-1)
     },
     // 评论提交
-    commentSubmit: function () {
+    commentSubmit () {
       this.$emit('commentSubmit')
+    },
+    // 搜素点击事件
+    comOperSearch () {
+      this.searchState = true
+    },
+    // 取消搜索
+    cancelOper () {
+      this.searchState = false
+    },
+    // 遮罩
+    maskOper () {
+      this.searchState = false
+    },
+    // 搜索
+    searchGoods (event) {
+      if (event.keyCode === 13) {
+        // 点击了手机键盘搜索
+        if (this.searchName !== '') {
+          storage.setLocalStorage(searchorder, this.searchName)
+          this.$router.push('/searchOrder')
+          // let params = {
+          //   searchName: '',
+          //   page: 1,
+          //   row: 100
+          // }
+
+          // http(orderSearch, params).then((response) => {
+          //   console.log(response)
+          // })
+        }
+      }
     }
   },
-  mounted: function () {
-    // console.log(this.title)
-    // console.log(this.oper)
+  mounted () {
   }
 }
 </script>
 <style lang="stylus" scoped>
 @import "~styles/mixins.styl";
+.mask
+	position fixed
+	width 100%
+	height 100%
+	z-index 99
+	background rgba(0,0,0,0.2)
 .userInfoTop
 	width 100%
 	height 130px
@@ -43,6 +96,25 @@ export default {
 	background #fff
 	z-index 999
 	border 1px solid #f5f5f5
+	.searchInput
+		float left
+		width 88%
+		height 100px
+		border-radius 10px
+		margin-top 12px
+		box-sizing border-box
+		padding-right 20px
+		overflow hidden
+		background #f5f5f5
+		.comOperSearch
+			margin-top 20px
+		input
+			float left
+			height 100%
+			width 90%
+			box-sizing border-box
+			padding 0 40px
+			background #f5f5f5
 	.prevOper
 		display block
 		width 32px
@@ -72,8 +144,8 @@ export default {
 		float right
 		width 60px
 		height 60px
-		background red
 		margin-top 30px
+		bgImage('/static/icons/serch_icon')
 	.commentSubmit
 		float right
 		width auto
@@ -81,4 +153,31 @@ export default {
 		font-size 40px
 		color #808080
 		margin-top 30px
+	.cancelOper
+		float left
+		width 12%
+		font-size 40px
+		color #808080
+		text-align right
+		height 130px
+		line-height 130px
+	::-moz-placeholder {
+		font-size 40px
+		color #808080
+	}
+
+	:-ms-input-placeholder {
+		font-size 40px
+		color #808080
+	}
+
+	::-moz-placeholder {
+		font-size 40px
+		color #808080
+	}
+
+	::-webkit-input-placeholder {
+		font-size 40px
+		color #808080
+	}
 </style>

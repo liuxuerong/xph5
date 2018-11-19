@@ -215,7 +215,9 @@ export default {
     },
     // 监测路由发生变化  则刷新页面
     '$route' (to, from) {
-      this.$router.go(0)
+      if (to.name === 'goodsAddress') {
+        this.addressRender()
+      }
     }
   },
   mounted () {

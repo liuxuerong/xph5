@@ -22,7 +22,7 @@ export default {
   },
   methods: {
     softwareSetingInfo (index) {
-      this.$router.push('/userPhoneCode/' + index)
+      this.$router.push('/userPhonecode/' + index)
     }
   }
 }

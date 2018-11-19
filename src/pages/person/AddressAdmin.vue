@@ -79,6 +79,13 @@ export default {
       }
     }
   },
+  watch: {
+    '$route' (to, from) {
+      if (to.name === 'addressAdmin') {
+        this.addressAdmin()
+      }
+    }
+  },
   mounted () {
     // 地址初始化管理
     this.addressAdmin()

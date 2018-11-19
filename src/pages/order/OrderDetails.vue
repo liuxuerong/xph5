@@ -136,6 +136,11 @@ export default {
     SearchTitle,
     Qrcode
   },
+  watch: {
+    '$route' (to, from) {
+      this.$router.go(0)
+    }
+  },
   methods: {
     // 订单列表页面渲染
     orderDetailRender () {

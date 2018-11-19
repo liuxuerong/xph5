@@ -4,7 +4,8 @@
     <div class="evaluateCon">
       <div class="goodsItem" v-for="(item,index) in list" :key="item.goodsItemId">
         <div class="evaluateTop clearfix">
-          <img :src="imageUrl+item.pic" alt="">
+          <img v-if="item.pic != ''" :src="imageUrl+item.pic" alt="">
+          <img v-else src="/static/images/personalHeader.png">
           <div class="orderText">
             <h3 class="goodsName">{{item.goodsName}}</h3>
             <div class="goodsSpecWrapper clearfix">
@@ -14,8 +15,8 @@
           </div>
         </div>
         <div class="evaluateText">
-          <textarea class="evaluateArea" ref="phoneNum" placeholder="宝贝满足您的期待吗？说说他的优点和美中不足的地方吧。" cols="30" rows="10"></textarea>
-          <span class="fontNum">{{fontNum}}/100</span>
+          <textarea class="evaluateArea" :maxlength="100" ref="evaluateText"  v-model="item.evaluateText" placeholder="宝贝满足您的期待吗？说说他的优点和美中不足的地方吧。" cols="30" rows="10"></textarea>
+          <span class="fontNum">{{item.evaluateText.length}}/100</span>
         </div>
         <div class="uploadWrapper">
           <div class="uploadItem" v-for="(childImg,j) in objImgs[index]" :key="j">
@@ -44,16 +45,19 @@ export default {
       orderCode: '',
       list: [],
       imageUrl: config.imageUrl,
-      fontNum: 0,
-      objImgs: []
+      objImgs: [],
+      evaluateText: '',
+      Surplus: 0
     }
   },
   components: {
     SearchTitle
   },
   watch: {
-    objImgs: function () {
-      // console.log(45465)
+    '$route' (to, from) {
+      if (to.name === 'immedEvaluate') {
+        this.evaluateRender()
+      }
     }
   },
   methods: {
@@ -61,8 +65,13 @@ export default {
     evaluateRender () {
       let orderCode = this.$route.params.orderCode
       this.orderCode = orderCode
+      console.log(orderCode)
       http(subOrderDetail, [orderCode]).then((response) => {
         let data = response.data.body.memberOrderGoods
+        console.log(data)
+        for (let i = 0; i < data.length; i++) {
+          data[i].evaluateText = ''
+        }
         this.list = data
       })
     },
@@ -100,22 +109,20 @@ export default {
     },
     // 评论数据提交
     commentSubmit () {
-      console.log(this.list)
-      console.log(9999)
-      console.log(this.$refs.phoneNum[0].value)
       let goodsComments = []
       for (let i = 0; i < this.list.length; i++) {
+        console.log(i)
         let con = {}
         con['goodsItemId'] = this.list[i].goodsItemId
-        con['comments'] = this.$refs.phoneNum[i].value
+        con['comments'] = this.list[i].evaluateText
         con['commentsPics'] = JSON.stringify(this.objImgs[i])
-        if (this.objImgs[i] !== undefined) {
+        console.log(this.objImgs[i] !== undefined)
+        if (this.objImgs[i] === undefined || this.objImgs[i] === '') {
+          con['commentsPics'] = ''
+        } else {
           con['commentsPics'] = this.objImgs[i] + ','
           con['commentsPics'] = con['commentsPics'].substr(0, con['commentsPics'].length - 1)
-        } else {
-          con['commentsPics'] = ''
         }
-        console.log(con['commentsPics'])
         con['start'] = ''
         goodsComments[i] = con
       }

@@ -1,60 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import Index from '@/pages/Index'
-// import Find from '@/pages/find/Find'
-// import Classify from '@/pages/classify/Classify'
-// import Hotel from '@/pages/hotel/Hotel'
-// import Brand from '@/pages/brand/Brand'
-// import BrandDetails from '@/pages/brandDetails/BrandDetails'
-// import Hall from '@/pages/hall/Hall'
-// import HallDetails from '@/pages/hall/HallDetails'
-// import HallAtlas from '@/pages/hall/HallAtlas'
-// import Story from '@/pages/story/Story'
-// import StoryDetails from '@/pages/storyDetails/StoryDetails'
-// import HotelDetails from '@/pages/storyDetails/HotelDetails'
-// import Details from '@/pages/details/Details'
-// import Instructions from '@/pages/invoice/Instructions'
-// import Invoice from '@/pages/invoice/Invoice'
-// import Cart from '@/pages/cart/Cart'
-// import Collect from '@/pages/collect/Collect'
-// import Comment from '@/pages/comment/Comment'
-// import Goods from '@/pages/goods/Goods'
-// import CreateOrder from '@/pages/createOrder/CreateOrder'
-// import SendWay from '@/pages/createOrder/SendWay'
-// import StoreAddress from '@/pages/createOrder/StoreAddress'
-// import Search from '@/pages/search/Search'
-// import Login from '@/pages/login/Login'
-// import PhoneCode from '@/pages/login/PhoneCode'
-// import RemberPassword from '@/pages/login/RemberPassword'
-// import UserName from '@/pages/login/UserName'
-// import UserPassword from '@/pages/login/UserPassword'
-// import PersonCenter from '@/pages/person/PersonCenter'
-// import PerUserInfoSet from '@/pages/person/UserDataSet'
-// import GoodsAddress from '@/pages/person/GoodsAddress'
-// import AddressAdmind from '@/pages/person/AddressAdmin'
-// import ToolCenter from '@/pages/person/ToolCenter'
-// import AboutMember from '@/pages/person/AboutMember'
-// import OrderIndex from '@/pages/order/OrderIndex'
-// import OrderList from '@/pages/order/OrderList'
-// import OrderDetails from '@/pages/order/OrderDetails'
-// import ImmedPayment from '@/pages/order/ImmedPayment'
-// import AfterSaleOrder from '@/pages/order/AfterSaleOrder'
-// import ApplyRefund from '@/pages/order/ApplyRefund'
-// import ImmedEvaluate from '@/pages/order/ImmedEvaluate'
-// import SoftwareSeting from '@/pages/person/SoftwareSeting'
-// import Agreement from '@/pages/person/Agreement'
-// import FeedBack from '@/pages/person/FeedBack'
-// import AboutUs from '@/pages/person/AboutUs'
-// import MemberCode from '@/pages/person/MemberCode'
-// import IntegralDetails from '@/pages/person/IntegralDetails'
-// import IntegralRule from '@/pages/person/IntegralRule'
-// import CardVoucher from '@/pages/person/CardVoucher'
-// import CardDetails from '@/pages/person/CardDetails'
-// import ChooseCoupons from '@/pages/createOrder/ChooseCoupons'
-// import WatchLogistics from '@/pages/order/WatchLogistics'
-// import AppDownload from '@/pages/download/AppDownload'
-// import ToolStore from '@/pages/person/ToolStore'
-// import ReturnGoods from '@/pages/order/ReturnGoods'
 import { accessToken } from 'util/const'
 import { storage } from 'util/storage'
 
@@ -296,7 +241,7 @@ const router = new Router({
       component: resolve => require(['@/pages/person/CardVoucher'], resolve)
     },
     {
-      path: '/cardDetails/:type/:id',
+      path: '/cardDetails/:type/:mainType/:id',
       name: 'cardDetails',
       component: resolve => require(['@/pages/person/CardDetails'], resolve)
     },
@@ -324,6 +269,21 @@ const router = new Router({
       path: '/returnGoods/:orderId',
       name: 'returnGoods',
       component: resolve => require(['@/pages/order/ReturnGoods'], resolve)
+    },
+    {
+      path: '/accountSecurity',
+      name: 'accountSecurity',
+      component: resolve => require(['@/pages/person/AccountSecurity'], resolve)
+    },
+    {
+      path: '/userPhonecode/:type',
+      name: 'userPhonecode',
+      component: resolve => require(['@/pages/person/userSetup/UserPhonecode'], resolve)
+    },
+    {
+      path: '/searchOrder',
+      name: 'searchOrder',
+      component: resolve => require(['@/pages/order/SearchOrder'], resolve)
     }
   ]
 })
