@@ -118,7 +118,6 @@ export default {
         con['commentsPics'] = JSON.stringify(this.objImgs[i])
         console.log(this.objImgs[i] !== undefined)
         if (this.objImgs[i] === undefined || this.objImgs[i] === '') {
-          console.log(777777)
           con['commentsPics'] = ''
         } else {
           con['commentsPics'] = this.objImgs[i] + ','
@@ -128,18 +127,18 @@ export default {
         goodsComments[i] = con
       }
       console.log(goodsComments)
-      // let params = {
-      //   orderItemSn: this.orderCode,
-      //   goodsComments: goodsComments
-      // }
-      // console.log(params)
-      // http(comment, params).then((response) => {
-      //   console.log(response)
-      //   if (response.body === true) {
-      //     location.reload() // 刷新页面
-      //     console.log('评论完成')
-      //   }
-      // })
+      let params = {
+        orderItemSn: this.orderCode,
+        goodsComments: goodsComments
+      }
+      console.log(params)
+      http(comment, params).then((response) => {
+        console.log(response)
+        if (response.body === true) {
+          location.reload() // 刷新页面
+          console.log('评论完成')
+        }
+      })
     }
   },
   mounted () {
