@@ -9,7 +9,7 @@
 </template>
 <script>
 import UserinfoHeader from './../components/ComUserSetHeader'
-import PhoneCode from '@/pages/login/components/comPhoneCode'
+import PhoneCode from '@/pages/login/components/ComPhoneCode'
 import { mapState } from 'vuex'
 export default {
   data () {
