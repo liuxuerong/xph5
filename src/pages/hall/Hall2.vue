@@ -1,10 +1,13 @@
 <template>
   <div class="xpHall">
     <common-header/>
-    <swiper :options="swiperOption" v-if="swiperData.length" class="swpierWrap">
-      <swiper-slide v-for="(item,index) in swiperData" :key="item.id">
+    <div class="swiper-container swpierWrap"  ref="swpierWrap">
+       <div class="swiper-wrapper">
+      <div class="swiper-slide" v-for="(item,index) in swiperData" :key="item.id">
+    <!-- <swiper :options="swiperOption" v-if="swiperData.length" class="swpierWrap">
+      <swiper-slide v-for="(item,index) in swiperData" :key="item.id"> -->
         <router-link :to="'/hallDetails/'+index">
-          <img v-lazy="imageUrl+item.experienceCoverImage" alt="" class="swiperImg" :style="{height:imgHeight}">
+          <img v-lazy="imageUrl+item.experienceCoverImage" alt="" class="swiperImg" >
           <div class="infoContainer">
             <div class="left">
               <div class="title">{{item.categoryName}}</div>
@@ -13,8 +16,11 @@
             <div class="experienceGoods"><img src="/static/icons/outsidelabel_icon.png" alt="">{{item.experienceGoods.length}}</div>
           </div>
         </router-link>
-      </swiper-slide>
-    </swiper>
+       </div>
+       </div>
+       </div>
+      <!-- </swiper-slide>
+    </swiper> -->
   </div>
 </template>
 
@@ -36,10 +42,11 @@ import {
 } from 'util/storage.js'
 import CommonHeader from 'common/commonHeader/CommonHeader'
 import 'swiper/dist/css/swiper.css'
-import {
-  swiper,
-  swiperSlide
-} from 'vue-awesome-swiper'
+// import {
+//   swiper,
+//   swiperSlide
+// } from 'vue-awesome-swiper'
+import Swiper from 'swiper'
 export default {
   name: 'Hall',
   data () {
@@ -62,9 +69,9 @@ export default {
     }
   },
   components: {
-    CommonHeader,
-    swiper,
-    swiperSlide
+    CommonHeader
+    // swiper,
+    // swiperSlide
   },
   methods: {
     getHallData () {
@@ -72,6 +79,20 @@ export default {
         this.swiperData = res.data.body
         this.swiperOption.loopedSlides = this.swiperData.length
         storage.setLocalStorage(experience, res.data.body)
+        console.log(this.$refs)
+        console.log(this.swiperData)
+        this.mySwiper = new Swiper(this.$refs.swpierWrap, {
+          direction: 'vertical',
+          notNextTick: true,
+          setWrapperSize: true,
+          mousewheelControl: true,
+          observeParents: true,
+          slidesPerView: 1,
+          loopedSlides: 1,
+          height: window.innerHeight,
+          loop: true,
+          autoplay: true
+        })
       }).catch(err => {
         console.log(err)
       })
@@ -120,7 +141,7 @@ export default {
         margin-left 25px
         margin-right 20px
 .swpierWrap
-  height 100% !important
+  // height 100% !important
 </style>
 
 <style lang="stylus">
