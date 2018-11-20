@@ -59,8 +59,7 @@
         </div>
       </div>
       <person-title content="优惠卡券" :moreShow="coupons.length > 0"></person-title>
-      <div ref="memberGrade" class="emptyDiscountBg" v-if="coupons.length > 0">
-        <!-- @click="cardVoucher" -->
+      <div ref="couponsScroll">
         <ul class="memberGradeScroll clearfix" :style="{width:cardScrollWidth+'rem'}">
           <li class="cardVolItem" v-for="item in coupons" :key="item.id" @click="cardVoucher">
             <div class="left">
@@ -87,9 +86,9 @@
                 <router-link to="/" class="operBtn noReceive" v-if="item.useStatus == '3'">领光了</router-link>
               </div>
               <div class="activityTime">
-                <!-- 立即领取 可以领取-->
+                <!-- 立即领取 可以领取 -->
                 <span v-if="item.useStatus == '1'" class="activityTime">领取时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
-                <!-- 立即使用  到达使用时间-->
+                <!-- 立即使用  到达使用时间 -->
                 <span v-else-if="item.useStatus == '2' && item.display=='2'" class="countDown">{{item.invalidDay}}天后过期</span>
                 <!-- 立即使用 未到达使用时间 -->
                 <span v-else-if="item.useStatus == '2' && item.display=='1'">使用时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
@@ -100,9 +99,10 @@
           </li>
         </ul>
       </div>
-      <div v-else class="emptyDiscountBg">
+      <!-- <div v-else class="emptyDiscountBg">
+        6666
         <div  class="enptyCoupons"></div>
-      </div>
+      </div> -->
       <person-title content="可能感兴趣的活动" :moreShow="moreShow"></person-title>
       <div class="emptyAmusingBg"></div>
       <person-title content="必备工具" :moreShow="moreShow"></person-title>
@@ -173,7 +173,6 @@ export default {
     getUserInfo () {
       http(memberCenter).then((response) => {
         let data = response.data.body
-        console.log(data)
         if (data.coupons.length > 0) {
           this.coupons = data.coupons
           this.cardScrollWidth = (this.coupons.length * 970 - 50) / 112.5
@@ -290,6 +289,16 @@ export default {
   },
 
   mounted () {
+    this.scroll = new BScroll(this.$refs.couponsScroll, {
+      bounce: {
+        left: true,
+        right: true
+      },
+      scrollY: false,
+      scrollX: true,
+      click: true,
+      startX: 0
+    })
     window.addEventListener('scroll', this.handleScroll)
     // 判断账号是够登录
     if (!storage.getLocalStorage(accessToken)) {
@@ -300,18 +309,6 @@ export default {
       this.getUserInfo()
       // 购物车数量
       this.goodsNum()
-    }
-    if (this.coupons.length > 0) {
-      this.scroll = new BScroll(this.$refs.memberGrade, {
-        bounce: {
-          left: true,
-          right: true
-        },
-        scrollY: false,
-        scrollX: true,
-        click: true,
-        startX: 0
-      })
     }
   }
 }
@@ -572,6 +569,7 @@ export default {
         color #333333
         text-align center
   .emptyDiscountBg
+    width 100%
     height 320px
     margin-bottom 50px
     overflow hidden
@@ -579,60 +577,60 @@ export default {
       width 100%
       height 320px
       bgImage('/static/images/emptyDiscount')
-    .memberGradeScroll
-      width 980px
+  .memberGradeScroll
+    width 980px
+    height 320px
+    .cardVolItem
+      float left
+      width 920px
       height 320px
-      .cardVolItem
+      margin-right 50px
+      bgImage('/static/images/newCardVouItemBg')
+      .left
         float left
-        width 920px
+        width 260px
         height 320px
-        margin-right 50px
-        bgImage('/static/images/newCardVouItemBg')
-        .left
-          float left
-          width 260px
-          height 320px
-          box-sizing border-box
-          padding-top 60px
-          span
-            display block
-            width 100%
-            height 80px
-            line-height 80px
-            font-size 40px
-            font-weight bold
-            text-align center
+        box-sizing border-box
+        padding-top 60px
+        span
+          display block
+          width 100%
+          height 80px
+          line-height 80px
+          font-size 40px
+          font-weight bold
+          text-align center
+          color #fff
+          i
+            display inline-block
+            font-size 80px
             color #fff
-            i
-              display inline-block
-              font-size 80px
-              color #fff
-              font-weight bold
-          p
-            display block
-            width 180px
-            height 56px
-            text-align center
-            font-size 30px
-            margin 30px auto 0
-            color #FFFFFF
-            border 1px solid #fff
-        .right
-          float left
-          width 70%
-          box-sizing border-box
-          padding 40px 24px 0
-          h3
-            width 100%
-            font-size 40px
             font-weight bold
-            color #333333
-          .displayBtn
-            width 100%
-            div
-              display inline-block
-      .cardVolItem:last-child
-        margin-right 0
+        p
+          display block
+          width 180px
+          height 56px
+          text-align center
+          font-size 30px
+          margin 30px auto 0
+          color #FFFFFF
+          border 1px solid #fff
+      .right
+        float left
+        width 70%
+        box-sizing border-box
+        padding 40px 24px 0
+        h3
+          width 100%
+          font-size 40px
+          font-weight bold
+          color #333333
+        .displayBtn
+          width 100%
+          div
+            display inline-block
+    .cardVolItem:last-child
+      margin-right 0
   .operBtn
     float right
     width 160px
@@ -671,4 +669,11 @@ export default {
     height 325px
     bgImage('/static/images/amusingActive')
     margin-bottom 50px
+  .ceshi
+    width 100%
+    height 400px
+    background green
+    .ceshiscroll
+      width 3000px
+      background red
 </style>

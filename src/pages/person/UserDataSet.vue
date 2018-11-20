@@ -13,7 +13,7 @@
             <input type="file" name="" class="headerImgFile" @change="headerUpfile($event)">
           </div>
         </div>
-        <userinfo-popset setPro="会员等级" :inputData="memberLevelName+'会员'"></userinfo-popset>
+        <userinfo-popset setPro="会员等级" :inputData="memberLevelName+'会员'" @click.native="memberGrade"></userinfo-popset>
         <userinfo-popset setPro="我的收货地址" @click.native="addressAdmin"></userinfo-popset>
       </div>
 
@@ -24,9 +24,20 @@
         <input type="text" class="setInfoInput" v-model="name">
       </div>
       <userinfo-popset setPro="性别" :inputData="sex" @click.native="sexChangeShow"></userinfo-popset>
-      <userinfo-popset setPro="年龄段" :inputData="age" @click.native="ageChangeShow"></userinfo-popset>
+      <!-- <userinfo-popset setPro="出生日期" :inputData="age" @click.native="ageChangeShow"></userinfo-popset> -->
+      <group class="setBirthdayPop">
+        <datetime
+          class="setBirthday"
+          title="出生日期"
+          v-model="age"
+          @click="ageChangeShow"
+          @on-change="change"
+          @on-cancel="log('cancel')"
+          @on-confirm="onConfirm"
+          @on-hide="log('hide', $event)"></datetime>
+      </group>
       <mt-popup
-       class="sexPopWrapper"
+        class="sexPopWrapper"
         v-model="popupVisible"
         :visible.sync="popupVisible"
         popup-transition="popup-fade"
@@ -43,13 +54,12 @@ import UserinfoHeader from './components/ComUserSetHeader'
 import UserinfoPopset from './ComSetInfoPop'
 import ChangeItem from './ComChangeItem'
 import CropperHeader from './ComCropperHeader'
+import { Datetime, Group } from 'vux'
 import { setMemberData, memberData } from 'util/netApi'
 import { http } from 'util/request'
-import { Popup } from 'mint-ui'
+import { Popup, DatetimePicker } from 'mint-ui'
 import notice from 'util/notice.js'
 import { config } from 'util/config' // 图片路径
-// import { storage } from 'util/storage.js'
-// import { accessToken } from 'util/const.js'
 import axios from 'axios'
 import {uploadPic} from '@/func/upload'
 export default {
@@ -73,7 +83,10 @@ export default {
     UserinfoHeader,
     UserinfoPopset,
     'change-item': ChangeItem,
-    CropperHeader
+    CropperHeader,
+    Datetime,
+    Group,
+    'mt-datetime-picker': DatetimePicker
   },
   methods: {
     // 获取页面资料信息
@@ -138,14 +151,24 @@ export default {
     },
     // 年龄选择
     ageChangeShow () {
-      this.popupVisible = true
       this.popType = 2
-      // 改变数据
-      this.popData = ['10后', '00后', '90后', '80后', '70后', '60后']
+      console.log(6666)
+      // // 改变数据
+      // this.popData = ['10后', '00后', '90后', '80后', '70后', '60后']
+    },
+    log (str1, str2 = '') {
+      console.log(str1, str2)
+    },
+    change (value) {
+      console.log('change', value)
+    },
+    onConfirm (val) {
+      console.log('on-confirm arg', val)
+      console.log('current value', this.value1)
     },
     // 收货地址
     addressAdmin () {
-      router.push('./addressAdmin')
+      router.push('/addressAdmin')
     },
     // 获取弹窗子组件数据选择
     getValueFromChild (val1, val2, val3) {
@@ -170,19 +193,23 @@ export default {
           notice.toast('设置成功', '2000', 'success')
         }
       })
+    },
+    // 会员等级页面跳转
+    memberGrade () {
+      this.$router.push('/toolCenter')
     }
   },
   // 事件监听
   watch: {
     sex: {
-      handler: function (val, oldVal) {
+      handler (val, oldVal) {
         if (this.sex !== '' && this.sex != null) {
           this.sexShow = true
         }
       }
     },
     age: {
-      handler: function (val, oldVal) {
+      handler (val, oldVal) {
         if (this.age !== '' && this.age != null) {
           this.ageShow = true
         }
@@ -190,8 +217,9 @@ export default {
     }
 
   },
-  mounted: function () {
+  mounted () {
     this.getUserInfo()
+    console.log(this.pickerVisible)
   },
   // 计算属性
   computed: {
@@ -203,9 +231,28 @@ export default {
   }
 }
 </script>
-
 <style lang="stylus">
   @import "~styles/mixins.styl";
+  .vux-no-group-title
+    margin-top 0!important
+  .weui-cell
+    p
+      font-size 46px!important
+      color #262626!important
+    .vux-cell-value
+      font-size 46px!important
+      color #808080!important
+  .weui-cell_access .weui-cell__ft:after
+    display none!important
+  .dp-container
+    width 100%
+    height 500px!important
+  .dp-header
+    height 130px
+    line-height 130px
+    font-size 46px!important
+    box-sizing border-box
+    padding 0 50px
   .setItemPop
     width 100%
     height 148px
@@ -294,4 +341,19 @@ export default {
 .sexPopWrapper
   width 100%
   height auto
+.setBirthdayPop
+  width 100%
+.setBirthday
+  width 100%
+  height 148px
+  line-height 148px
+  box-sizing border-box
+  padding 0 70px 0 50px
+  margin-top 1px
+  p
+    width auto
+    height 148px
+    line-height 148px
+    font-size 46px
+    color #262626
 </style>

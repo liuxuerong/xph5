@@ -57,10 +57,10 @@
       </div>
     </div>
     <div class="toolInte">
-      <div class="toolInteItem border-bottom">
+      <router-link class="toolInteItem border-bottom" to="/integralDetails">
         <h3>我的积分</h3>
         <p>{{integral}} 积分</p>
-      </div>
+      </router-link>
     </div>
     <div class="memberGradeExplain">
       <router-link to="./aboutMember" class="memberGradeItem">
