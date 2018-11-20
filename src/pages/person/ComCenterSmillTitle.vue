@@ -21,7 +21,7 @@ export default {
       if (this.content === '我的订单') {
         router.push('./orderIndex')
       } else if (this.content === '我的收藏') {
-        router.push('/collect')
+        router.push('/collect/0')
       }
     }
   },

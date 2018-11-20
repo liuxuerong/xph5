@@ -4,12 +4,12 @@
     </common-nav-header>
     <div class="top">
       <tab>
-        <tab-item :selected="index===0" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="index">{{item}}</tab-item>
+        <tab-item :selected="index==showWhich" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="index">{{item}}</tab-item>
       </tab>
     </div>
     <div ref="xpCollectContent" class="xpCollectContent">
       <div>
-        <div v-if="showWhich===0" class="goodsContainer">
+        <div v-if="showWhich==0" class="goodsContainer">
           <ul class="goodsContainer" v-if="goods.length">
             <li v-for="item in goods" v-if="goods.length" :key="item.id">
               <common-img-prices :pricesData="item" />
@@ -114,6 +114,7 @@ export default {
       }
       if (!this.noMore) {
         http(goodscollectionList, params).then(res => {
+          console.log(res)
           if (this.page !== 1 && res.data.body.list.length === 0) {
             this.scroll.finishPullUp()
             this.noMore = true
@@ -183,7 +184,14 @@ export default {
   },
   mounted () {
     // this.getContent(this.page)
-    this.getGoods(this.page)
+    this.showWhich = this.$route.params.index
+    if (this.$route.params.index === '0') {
+      console.log(789)
+      this.getGoods(this.page)
+    } else {
+      console.log(123)
+      this.getContent(this.page)
+    }
   }
 }
 </script>

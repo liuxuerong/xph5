@@ -1,10 +1,11 @@
 <template>
   <div class="xpHall">
     <common-header/>
-    <swiper :options="swiperOption" v-if="swiperData.length" class="swpierWrap">
-      <swiper-slide v-for="(item,index) in swiperData" :key="item.id">
+    <div class="swiper-container "  ref="swpierWrap" style="height:100%">
+       <div class="swiper-wrapper">
+      <div class="swiper-slide" v-for="(item,index) in swiperData" :key="item.id">
         <router-link :to="'/hallDetails/'+index">
-          <img v-lazy="imageUrl+item.experienceCoverImage" alt="" class="swiperImg" :style="{height:imgHeight}">
+          <img :src="imageUrl+item.experienceCoverImage" alt="" class="swiperImg" >
           <div class="infoContainer">
             <div class="left">
               <div class="title">{{item.categoryName}}</div>
@@ -13,8 +14,9 @@
             <div class="experienceGoods"><img src="/static/icons/outsidelabel_icon.png" alt="">{{item.experienceGoods.length}}</div>
           </div>
         </router-link>
-      </swiper-slide>
-    </swiper>
+       </div>
+       </div>
+       </div>
   </div>
 </template>
 
@@ -36,10 +38,7 @@ import {
 } from 'util/storage.js'
 import CommonHeader from 'common/commonHeader/CommonHeader'
 import 'swiper/dist/css/swiper.css'
-import {
-  swiper,
-  swiperSlide
-} from 'vue-awesome-swiper'
+import Swiper from 'swiper'
 export default {
   name: 'Hall',
   data () {
@@ -62,9 +61,7 @@ export default {
     }
   },
   components: {
-    CommonHeader,
-    swiper,
-    swiperSlide
+    CommonHeader
   },
   methods: {
     getHallData () {
@@ -72,6 +69,19 @@ export default {
         this.swiperData = res.data.body
         this.swiperOption.loopedSlides = this.swiperData.length
         storage.setLocalStorage(experience, res.data.body)
+        this.$nextTick(function () {
+          this.mySwiper = new Swiper(this.$refs.swpierWrap, {
+            direction: 'vertical',
+            notNextTick: true,
+            mousewheelControl: true,
+            observeParents: true,
+            slidesPerView: 1.2,
+            loopedSlides: 8,
+            autoHeight: true,
+            speed: 400,
+            loop: true
+          })
+        })
       }).catch(err => {
         console.log(err)
       })
@@ -79,7 +89,6 @@ export default {
   },
   mounted () {
     this.getHallData()
-    this.imgHeight = document.documentElement.clientHeight + 'px'
   }
 }
 </script>
@@ -91,8 +100,8 @@ export default {
   padding-bottom 148px
   .swiperImg
     width 100%
+    height 100%
     background #fff
-    // min-height 100%
   .infoContainer
     position absolute
     top 70px
@@ -119,39 +128,20 @@ export default {
         height 30px
         margin-left 25px
         margin-right 20px
-.swpierWrap
-  height 100% !important
 </style>
 
 <style lang="stylus">
 .xpHall
-  .swiper-slide
-    transition  all 0.4s
-    position relative
-    a
-      display inline-block
-      width 100%
-      height 100%
-  .swiper-slide
-    position relative
-  .swiper-slide-prev
-      top 1000px
-      z-index 2
   .swiper-slide-next
-    // transition  all 0.4s
-    top calc((-100vh+(1137px)))
-    z-index 4
-  .swiper-slide-next+.swiper-slide
-    top calc((-200vh+(1477px)))
-    z-index 5
-  .swiper-slide-next+.swiper-slide+.swiper-slide
-    top calc((-300vh+(1817px)))
-    z-index 6
+    .swiperImg
+      transition all 0.4s
   .swiper-slide-active
-    top 0
-    z-index 3
+    .swiperImg
+      transform scale(1.5,1.5)
+      transition all 0.4s
     .infoContainer
-      top 877px
+      top auto
+      bottom 0
       background linear-gradient(0deg,rgba(3,0,0,0.75),rgba(0,0,0,0))
     .left
       flex 1

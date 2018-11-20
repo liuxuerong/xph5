@@ -61,7 +61,7 @@ const router = new Router({
       component: resolve => require(['@/pages/storyDetails/HotelDetails'], resolve)
     },
     {
-      path: '/goods',
+      path: '/goods/:index?',
       name: 'Goods',
       component: resolve => require(['@/pages/goods/Goods'], resolve)
     },
@@ -106,7 +106,7 @@ const router = new Router({
       component: resolve => require(['@/pages/cart/Cart'], resolve)
     },
     {
-      path: '/collect',
+      path: '/collect/:index',
       name: 'Collect',
       meta: { requireLogin: true },
       component: resolve => require(['@/pages/collect/Collect'], resolve)

@@ -3,12 +3,11 @@
     <keep-alive>
       <div class="xpGoodsWrap">
         <common-nav-search :showCart="showCart">
-          123
         </common-nav-search>
         <div class="xpGoodsTop border-bottom" ref="xpGoodsTop">
           <div class="xpGoodsTopContent">
             <tab v-if="tabbar.length">
-              <tab-item :selected="index===0" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.id" :id="item.id" ref="tabItem">{{item.catName}}</tab-item>
+              <tab-item :selected="index==currentIndex" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.id" :id="item.id" ref="tabItem">{{item.catName}}</tab-item>
             </tab>
           </div>
         </div>
@@ -69,6 +68,7 @@ export default {
       categoryId: '',
       noMore: false,
       showCart: false,
+      currentIndex: 0,
       emptyObj: {
         emptyImg: '/static/images/commentEmptyGoods.png',
         emptyBold: '暂无商品',
@@ -79,18 +79,16 @@ export default {
     }
   },
   computed: {},
-  // watch: {
-  //   '$route' (to, from) {
-  //     this.$router.go(0)
-  //   }
-  // },
   methods: {
     getTabbar () {
       http(category).then(res => {
+        if (this.$route.params.index) {
+          this.currentIndex = this.$route.params.index
+        }
         for (let i = 0; i < res.data.body.length; i++) {
           this.tabbar.push(res.data.body[i])
-          this.categoryId = this.tabbar[0].id
         }
+        this.categoryId = this.tabbar[this.currentIndex].id
         this.getGoodsList(this.categoryId, this.page)
       })
     },
@@ -160,6 +158,7 @@ export default {
         }
       }))
     }
+
   },
   mounted () {
     this.getTabbar()

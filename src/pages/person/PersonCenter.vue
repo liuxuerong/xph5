@@ -51,12 +51,12 @@
         </div>
       </div>
       <div class="collectNumber">
-        <div class="collectNumItem left">
+        <router-link to="/collect/0" class="collectNumItem left">
           <p>商品收藏</p><span>{{collNum.goodsCount}}</span>
-        </div>
-        <div class="collectNumItem list">
+        </router-link>
+        <router-link to="/collect/1" class="collectNumItem list">
           <p>内容收藏</p><span>{{collNum.contentCount}}</span>
-        </div>
+        </router-link>
       </div>
       <person-title content="优惠卡券" :moreShow="coupons.length > 0"></person-title>
       <div ref="memberGrade" class="emptyDiscountBg" v-if="coupons.length > 0">

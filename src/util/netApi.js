@@ -31,6 +31,7 @@ export const isCollection = { url: '/member/collection/check', method: 'POST', v
 
 // 分类
 export const category = { url: '/goods/categorys', method: 'GET', version: v1 } // tab
+export const categoryTree = { url: '/goods/categorys/tree', method: 'GET', version: v1 } // 分类树
 
 // 更多商品
 export const goodsList = { url: '/goods/list', method: 'GET', version: v1 }// 列表

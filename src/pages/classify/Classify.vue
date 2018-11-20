@@ -1,28 +1,19 @@
 <template>
   <div class="xpClassify">
     <common-header :isScan="false"></common-header>
-    <div class="xpClassifyWrap">
+    <div class="xpClassifyWrap" ref="xpClassifyWrap">
       <ul class="xpClassifyWrapUl">
-        <li class="xpClassifyWrapli" v-for="(item,index) in classfiyData" :key="index" :item="item">
+        <li class="xpClassifyWrapli" v-for="(item,index) in classfiyData" :key="index" :item="item" v-if="classfiyData.length">
           <div class="top" @click="changeToggle(index)">
             <div class="name">
-              <p class="title">家具</p>
-              <p class="subTitle">Furniture</p>
+              <p class="title">{{item.catName}}</p>
+              <p class="subTitle">{{item.appCode}}</p>
             </div>
-            <img src="/static/images/appLogo@3x.png" alt="">
+            <img v-lazy="imageUrl+item.appIcon" alt="">
           </div>
-            <ul class="classifyDetails" :class="{active:showIndex==index}">
+            <ul class="classifyDetails" :class="{active:showIndex==index}" v-for="goods in item.children" :key="goods.id">
               <li class="border-bottom">
-                <router-link to="/goods" class="nav">沙发</router-link>
-              </li>
-              <li class="border-bottom">
-                <router-link to="/goods" class="nav">沙发</router-link>
-              </li>
-              <li class="border-bottom">
-                <router-link to="/goods" class="nav">沙发</router-link>
-              </li>
-              <li class="border-bottom">
-                <router-link to="/goods" class="nav">沙发</router-link>
+                <router-link :to="`/goods/${index}`" class="nav">{{goods.catName}}</router-link>
               </li>
             </ul>
         </li>
@@ -33,6 +24,16 @@
 
 <script>
 import CommonHeader from 'common/commonHeader/CommonHeader'
+import BScroll from 'better-scroll'
+import {
+  http
+} from 'util/request'
+import {
+  categoryTree
+} from 'util/netApi'
+import {
+  config
+} from 'util/config.js'
 export default {
   name: 'Classify',
   components: {
@@ -40,10 +41,9 @@ export default {
   },
   data () {
     return {
+      imageUrl: config.imageUrl,
       showIndex: null,
-      classfiyData: [{
-
-      }, {}]
+      classfiyData: []
     }
   },
   computed: {
@@ -55,7 +55,34 @@ export default {
   methods: {
     changeToggle (index) {
       this.showIndex = index
+      this.scrollInit()
+    },
+    scrollInit () {
+      if (!this.scroll) {
+        this.scroll = new BScroll(this.$refs.xpClassifyWrap, {
+          scrollY: true,
+          click: true,
+          bounce: {
+            top: true,
+            bottom: true
+          }
+        })
+      } else {
+        this.scroll.refresh()
+      }
+    },
+    getTreeData () {
+      http(categoryTree).then(res => {
+        console.log(res)
+        this.classfiyData = res.data.body
+        this.scrollInit()
+      }).catch(err => {
+        console.log(err)
+      })
     }
+  },
+  created () {
+    this.getTreeData()
   }
 }
 </script>
@@ -66,6 +93,9 @@ export default {
     height 100%
     .xpClassifyWrap
       padding 0 50px
+      height 100%
+    .xpClassifyWrapUl
+      padding-bottom 100px
     .xpClassifyWrapli
       width 100%
       margin-bottom 60px
