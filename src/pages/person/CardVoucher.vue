@@ -76,8 +76,8 @@ import UserinfoHeader from './components/ComUserSetHeader'
 import { Tab, TabItem } from 'vux'
 import {coupon, memberCouponRecord} from 'util/netApi'
 import {http} from 'util/request'
-import {storage} from 'util/storage'
 import {Toast} from 'mint-ui'
+import {storage} from 'util/storage'
 import {mapMutations, mapState} from 'vuex'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
 export default {
@@ -134,6 +134,16 @@ export default {
         })
       }
     },
+    // 卡券详情
+    cardDetailsPages (type, id, item) {
+      let mainType = this.index
+      console.log(mainType)
+      // id不能搜索到卡券
+      if (type !== 2) {
+        storage.setLocalStorage('card', item)
+      }
+      this.$router.push('./cardDetails/' + type + '/' + mainType + '/' + id)
+    },
     // 领取优惠券
     receiveCard (id) {
       let params = {
@@ -152,16 +162,6 @@ export default {
       }).catch((err) => {
         console.log(err)
       })
-    },
-    // 卡券详情
-    cardDetailsPages (type, id, item) {
-      let mainType = this.index
-      console.log(mainType)
-      // id不能搜索到卡券
-      if (type !== 2) {
-        storage.setLocalStorage('card', item)
-      }
-      this.$router.push('./cardDetails/' + type + '/' + mainType + '/' + id)
     }
   },
   mounted () {

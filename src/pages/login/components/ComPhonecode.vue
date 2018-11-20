@@ -14,15 +14,10 @@
 </div>
 </template>
 <script>
-import {
-  Toast
-} from 'mint-ui'
+import {Toast} from 'mint-ui'
 import {getVerifyCode, modifyPhone} from 'util/netApi'
 import {http} from 'util/request'
-import {
-  // mapState
-  mapMutations
-} from 'vuex'
+import {mapMutations} from 'vuex'
 export default {
   data () {
     return {
@@ -31,20 +26,6 @@ export default {
       code: ''
     }
   },
-  // computed: mapState({
-  //   returnVal: state => state.returnVal.returnVal
-  // }),
-  // computed: {
-  //   rigthPhone: function () {
-  //     return /^1\d{10}$/gi.test(this.phone)
-  //   },
-  //   rigthCode: function () {
-  //     return /^\d{6}$/gi.test(this.code)
-  //   },
-  //   mapState({
-  //     searchActive: state => state.home.searchActive
-  //   })
-  // },
   methods: {
     //   获取验证码
     ...mapMutations(['changeReturnVal']),

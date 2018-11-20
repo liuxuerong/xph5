@@ -6,7 +6,7 @@
       <div class="cardInfo" :class="mainType == '0'?'':'grayColor'">
         <div class="top border-bottom">
           <div class="left border-right" v-if="pastList">
-            <span v-if="pastList.type == '1' || pastList.type == '3'">￥<i>{{item.subMoney}}</i></span>
+            <span v-if="pastList.type == '1' || pastList.type == '3'">￥<i>{{pastList.subMoney}}</i></span>
             <span v-else-if="pastList.type == '2' && pastList.discount.toString().replace('.', '').length === 2"><i>{{parseInt(pastList.discount.toString().replace(".", ""))}}</i> 折</span>
             <span v-else-if="pastList.type == '2' && pastList.discount.toString().replace('.', '').length === 3"><i>{{pastList.discount.toString().replace(".", "")/10}}</i> 折</span>
             <!-- <span>￥<i>{{pastList.subMoney}}</i></span> -->
@@ -16,12 +16,12 @@
             <p v-if="pastList.applyType == '3'">门店专享</p>
           </div>
           <div class="right">
-            <h3>{{pastList.name}} ---1</h3>
+            <h3>{{pastList.name}}-----1</h3>
             <div class="fullSub">
-              <span v-if="pastList.condMoney != '0' && pastList.range == '1'">满{{pastList.condMoney}}.0可用</span>
-              <span v-else-if="pastList.condMoney != '0' && pastList.range == '2'">满{{pastList.condMoney}}.0可用</span>
-              <span v-else-if="pastList.condMoney != '0' && pastList.range == '3'">满{{pastList.condMoney}}.0可用</span>
-              <span v-else-if="pastList.condMoney != '0' && pastList.range == '4'">满{{pastList.condMoney}}.0可用</span>
+              <span v-if="pastList.condMoney != '0' && pastList.range == '1'">满 {{pastList.condMoney}}.0 可用</span>
+              <span v-else-if="pastList.condMoney != '0' && pastList.range == '2'">满 {{pastList.condMoney}}.0 可用</span>
+              <span v-else-if="pastList.condMoney != '0' && pastList.range == '3'">满 {{pastList.condMoney}}.0 可用</span>
+              <span v-else-if="pastList.condMoney != '0' && pastList.range == '4'">满 {{pastList.condMoney}}.0 可用</span>
               <span v-else>无门槛</span>
               <!-- 领取状态(1-未领取 2-已领取 3-领光了) -->
               <!-- 未使用 -->
@@ -33,6 +33,7 @@
         </div>
         <div class="bottom" v-if="mainType == '0'">
           <router-link to="/find" class="operBtn" v-if="type == '2'">立即使用</router-link>
+          <div class="operBtn" @click.stop="receiveCard(pastList.id)">立即领取</div>
           <div class="operBtn gray" v-if="type == '3'">抢光了</div>
         </div>
         <div class="bottom grayBottom" v-else>
@@ -53,12 +54,12 @@
             <p v-if="list.applyType == '3'">门店专享</p>
           </div>
           <div class="right">
-            <h3>{{list.name}} ----2</h3>
+            <h3>{{list.name}}-----2</h3>
             <div class="fullSub">
-              <span v-if="list.condMoney != '0'&& list.range == '1'">满{{list.condMoney}}.0可用</span>
-              <span v-else-if="list.condMoney != '0'&& list.range == '2'">满{{list.condMoney}}.0可用</span>
-              <span v-else-if="list.condMoney != '0'&& list.range == '3'">满{{list.condMoney}}.0可用</span>
-              <span v-else-if="list.condMoney != '0'&& list.range == '4'">满{{list.condMoney}}.0可用</span>
+              <span v-if="list.condMoney != '0'&& list.range == '1'">满 {{list.condMoney}}.0 可用</span>
+              <span v-else-if="list.condMoney != '0'&& list.range == '2'">满 {{list.condMoney}}.0 可用</span>
+              <span v-else-if="list.condMoney != '0'&& list.range == '3'">满 {{list.condMoney}}.0 可用</span>
+              <span v-else-if="list.condMoney != '0'&& list.range == '4'">满 {{list.condMoney}}.0 可用</span>
               <span v-else>无门槛</span>
               <!-- 未使用 -->
               <span v-if="mainType == '0'" class="activityTime">{{list.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{list.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
@@ -69,8 +70,9 @@
         </div>
         <!-- 未使用 -->
         <div class="bottom" v-if="mainType == '0'">
-          {{list.status}}
-          <div class="operBtn" v-if="list.status == '1'">立即使用</div>
+          <router-link class="operBtn" to="/find"  v-if="status == '1'">立即使用</router-link>
+          <div class="operBtn" v-else-if="status == '2'" @click.stop="receiveCard(pastList.id)">立即领取</div>
+          <div class="operBtn gray" v-else-if="status == '3'">抢光了</div>
         </div>
         <div class="bottom grayBottom" v-else>
           <div class="operBtn" >立即使用</div>
@@ -94,8 +96,9 @@
 </template>
 <script>
 import UserinfoHeader from './components/ComUserSetHeader'
-import {getDetailById} from 'util/netApi'
+import {getDetailById, memberCouponRecord} from 'util/netApi'
 import {http} from 'util/request'
+import {Toast} from 'mint-ui'
 import { Qrcode } from 'vux'
 import {mapState} from 'vuex'
 import {storage} from 'util/storage'
@@ -115,6 +118,13 @@ export default {
   components: {
     UserinfoHeader,
     Qrcode
+  },
+  watch: {
+    '$route' (to, from) {
+      if (to.name === 'cardDetails') {
+        this.cardDetailsRender()
+      }
+    }
   },
   methods: {
     // 卡券详情也难渲染
@@ -138,6 +148,8 @@ export default {
             this.status = response.data.body.status
             if (this.mainType !== '0') {
               this.fgColor = '#999999'
+            } else {
+              this.fgColor = '#000000'
             }
             this.cardNo = response.data.body.couponNo
           }
@@ -147,9 +159,26 @@ export default {
       } else {
         let newList = storage.getLocalStorage('card')
         this.pastList = newList
-        console.log(6666)
-        console.log(this.pastList)
       }
+    },
+    // 领取优惠券
+    receiveCard (id) {
+      let params = {
+        couponId: id
+      }
+      http(memberCouponRecord, params).then((response) => {
+        console.log(response)
+        if (response.data.code === 0) {
+          Toast({
+            message: '优惠券领取成功',
+            position: 'bottom',
+            duration: 5000
+          })
+          this.headleTabsChange(0)
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
     }
   },
   mounted () {
@@ -280,6 +309,7 @@ export default {
             margin-top 40px
     .grayBottom.bottom
       .operBtn
+        display block
         box-shadow none
         background #E6E6E6
     .bottom
@@ -288,6 +318,7 @@ export default {
       overflow hidden
       line-height 240px
       .operBtn
+        display block
         width 620px
         height 140px
         line-height 140px
@@ -299,6 +330,7 @@ export default {
         text-align center
         border-radius 68px
       .operBtn.gray
+        display block
         background #E6E6E6
         box-shadow 0 0 0 0 #fff
     .cardInfo.gray
