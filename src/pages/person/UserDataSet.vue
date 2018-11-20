@@ -241,6 +241,8 @@ export default {
   @import "~styles/mixins.styl";
   .vux-no-group-title
     margin-top 0!important
+  .dp-header .dp-item
+    font-size 46px!important
   .weui-cell
     p
       font-size 46px!important
