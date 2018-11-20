@@ -5,7 +5,6 @@
   </div>
 </template>
 <script>
-import router from '@/router/index.js'
 export default {
   data () {
     return {
@@ -19,9 +18,11 @@ export default {
   methods: {
     seeMoreData () {
       if (this.content === '我的订单') {
-        router.push('./orderIndex')
+        this.$router.push('./orderIndex')
       } else if (this.content === '我的收藏') {
-        router.push('/collect')
+        this.$router.push('/collect')
+      } else if (this.content === '优惠卡券') {
+        this.$router.push('/cardVoucher')
       }
     }
   },

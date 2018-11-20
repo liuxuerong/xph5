@@ -59,7 +59,7 @@
         </div>
       </div>
       <person-title content="优惠卡券" :moreShow="coupons.length > 0"></person-title>
-      <div ref="couponsScroll">
+      <div ref="couponsScroll" class="couponsScroll">
         <ul class="memberGradeScroll clearfix" :style="{width:cardScrollWidth+'rem'}">
           <li class="cardVolItem" v-for="item in coupons" :key="item.id" @click="cardVoucher">
             <div class="left">
@@ -461,6 +461,10 @@ export default {
     width 100%
     box-sizing border-box
     padding 100px 50px 150px
+    .couponsScroll
+      width 100%
+      height 320px
+      overflow hidden
   .addressBox,.collectBox
     width 100%
     height auto

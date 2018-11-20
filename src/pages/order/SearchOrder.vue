@@ -70,10 +70,14 @@
         </div>
       </div>
     </div>
+    <div class="searchOrderCon" v-else>
+      <common-empty :emptyObj="emptyObj"/>
+    </div>
   </div>
 </template>
 <script>
 import SearchTitle from './ComOrderSearchTitle'
+import CommonEmpty from 'common/commonEmpty/CommonEmpty'
 import { orderSearch, confirmGoods } from 'util/netApi'
 import {Toast} from 'mint-ui'
 import notice from 'util/notice'
@@ -86,11 +90,19 @@ export default {
     return {
       searchName: '',
       imageUrl: config.imageUrl,
-      list: []
+      list: [],
+      emptyObj: {
+        emptyImg: '/static/images/commentEmptySearch.png',
+        emptyBold: '暂无订单',
+        emptyP: '对不起，未查询到相关订单~',
+        buttonText: null,
+        buttonRouter: null
+      }
     }
   },
   components: {
-    SearchTitle
+    SearchTitle,
+    CommonEmpty
   },
   methods: {
     // 搜索页面渲染

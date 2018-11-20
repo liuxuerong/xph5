@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <userinfo-header title="我的积分" oper='积分规则' @operComplete = "onOperComplete"></userinfo-header>
+    <userinfo-header title="我的积分" :oper='title' @operComplete = "onOperComplete"></userinfo-header>
     <div class="integralHeader">
       <div class="integralNum">{{totalIntegral}}</div>
       <p>可用积分</p>
@@ -41,6 +41,7 @@ import { config } from 'util/config'
 export default {
   data () {
     return {
+      title: '积分规则',
       list: [],
       totalIntegral: '',
       emptyShow: false,
@@ -50,7 +51,7 @@ export default {
         emptyBold: '暂无积分',
         emptyP: '快去购物赚积分吧',
         buttonText: '去购物',
-        buttonRouter: true
+        buttonRouter: '/find'
       }
     }
   },

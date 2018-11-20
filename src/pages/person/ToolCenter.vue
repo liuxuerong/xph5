@@ -59,6 +59,7 @@
     <div class="toolInte">
       <router-link class="toolInteItem border-bottom" to="/integralDetails">
         <h3>我的积分</h3>
+        <i class="aboutIcon"></i>
         <p>{{integral}} 积分</p>
       </router-link>
     </div>
@@ -328,6 +329,7 @@ export default {
         height 45px
         bgImage('/static/icons/enterNextGray')
         margin-top 70px
+        margin-left 30px
   .indexNavWrapper
     overflow hidden
     .memberGradeScroll

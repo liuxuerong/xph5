@@ -31,7 +31,7 @@
           title="出生日期"
           :readonly="readonly"
           v-model="age"
-          min-year='1960'
+          :min-year='1960'
           @on-show="ageChangeShow"
           @on-confirm="onConfirm"></datetime>
       </group>
@@ -93,6 +93,7 @@ export default {
     // 获取页面资料信息
     getUserInfo () {
       http(memberData).then((response) => {
+        console.log(response)
         let data = response.data.body
         this.memberLevelName = data.memberLevelName
         this.name = data.name

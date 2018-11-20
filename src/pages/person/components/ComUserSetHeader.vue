@@ -1,6 +1,8 @@
 <template>
     <div class="userInfoTop" @scroll="titleScroll">
-		<span class="prevOper" @click="backPrevOper"></span>
+		<span class="prevOper" @click="backPrevOper">
+			<i class="backOperIcon"></i>
+		</span>
 		<h3 class="userInfoTitle">{{title}}</h3>
 		<span v-if="oper !==''" class="completeOper" @click="perCompleteOper">{{oper}}</span>
 	</div>
@@ -41,14 +43,18 @@ export default {
 	background #fff
 	.prevOper
 		display block
-		width 32px
+		width 92px
 		height 58px
-		bgImage('/static/icons/back')
 		position absolute
 		left 50px
 		top 0
 		bottom 0
 		margin auto
+		.backOperIcon
+			display block
+			width 32px
+			height 58px
+			bgImage('/static/icons/back')
 	.userInfoTitle
 		width 60%
 		height 130px
