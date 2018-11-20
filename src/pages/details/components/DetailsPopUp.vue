@@ -17,11 +17,11 @@
         </div>
       </div>
       <div class="goodsInfoBottm border-top" v-if="from==1">
-        <span class="buy" to="/createOrder" @click="buy()" v-if="!goodsEmpty&&goodsStatus==4">立即购买</span>
-        <span class="addCart" @click="addCart()" v-if="!goodsEmpty&&goodsStatus==4">
+        <span class="buy" to="/createOrder" @click="buy()" v-if="!goodsEmpty&&goodsStatus==1">立即购买</span>
+        <span class="addCart" @click="addCart()" v-if="!goodsEmpty&&goodsStatus==1">
           加入购物车
         </span>
-        <div class="goodsEmpty" v-if="goodsEmpty||goodsStatus!=4">暂无可售商品</div>
+        <div class="goodsEmpty" v-if="goodsEmpty||goodsStatus!=1">{{goodsEmpty}}{{goodsStatus}}暂无可售商品</div>
       </div>
       <div class="goodsInfoBottm border-top" v-else-if="from==2">
         <div class="addSure" @click="addCart()">确认加入</div>

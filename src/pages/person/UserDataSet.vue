@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper userDataSet">
     <!-- 个人资料设置头部 -->
     <userinfo-header title="个人资料" oper="完成" @operComplete="onOperComplete"></userinfo-header>
     <div class="userInfoSetCon">
@@ -299,6 +299,22 @@ export default {
   :-moz-placeholder {
       color: #CCCCCC;
   }
+.dp-container
+  .scroller-component
+    height 400px
+  .scroller-item
+    font-size 46px
+  .scroller-item,.scroller-indicator
+    height 80px
+    line-height 80px
+  .scroller-indicator
+    top 160px
+    border 1px solid #ccc
+    border-left 0 solid #000
+    border-right 0 solid #000
+  .scroller-mask
+    background-size: 100% 1.206667rem;
+
 </style>
 <style lang="stylus" scoped>
 .wrapper

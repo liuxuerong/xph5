@@ -20,9 +20,13 @@ export default {
       if (this.content === '我的订单') {
         this.$router.push('./orderIndex')
       } else if (this.content === '我的收藏') {
+<<<<<<< HEAD
         this.$router.push('/collect')
       } else if (this.content === '优惠卡券') {
         this.$router.push('/cardVoucher')
+=======
+        router.push('/collect/0')
+>>>>>>> e197d70510034c7c141a9cb64b90e644ade92119
       }
     }
   },

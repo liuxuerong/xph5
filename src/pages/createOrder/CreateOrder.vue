@@ -1,17 +1,17 @@
 <template>
   <div class="createOrder">
     <common-nav-header :title="title">
-    <popover placement="bottom" class="popUp">
-      <span class="nav">...</span>
+      <popover placement="bottom" class="popUp">
+        <span class="nav">...</span>
         <div slot="content" class="popover-demo-content">
           <ul>
             <li class="border-bottom">
               <router-link to="/" class="item">体验馆</router-link>
             </li>
-           <li class="border-bottom">
+            <li class="border-bottom">
               <router-link to="/" class="item">联系客服</router-link>
             </li>
-           <li class="border-bottom">
+            <li class="border-bottom">
               <router-link to="/search" class="item">搜索</router-link>
             </li>
           </ul>
@@ -140,7 +140,6 @@ export default {
         params.favorableId = this.info.couponId
       }
       http(goodOrderData, params).then(res => {
-        console.log(res)
         if (res.data.code === 0) {
           params.key = res.data.body.key
           this.availableCoupon = res.data.body.availableCoupon
@@ -154,9 +153,13 @@ export default {
               this.pricesData[i].spec.push(spec[j].value)
             }
           }
+          let goodsItems = res.data.body.orderGoodsItems
+          for (let index in goodsItems) {
+            goodsItems[index].goodsItemId = goodsItems[index].id
+          }
           storage.setLocalStorage(goodsInfo, params)
           this.params.key = res.data.body.key
-          this.params.goodsItems = res.data.body.orderGoodsItems
+          this.params.goodsItems = goodsItems
           this.totalPric = res.data.body.totalPrice
           this.needPayPrice = res.data.body.needPayPrice
         }
@@ -353,6 +356,7 @@ export default {
     padding 50px
     background-color #fff
 </style>
+
 <style lang="stylus">
   .vux-popover.v-transfer-dom
     top 120px !important

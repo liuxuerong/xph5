@@ -2,16 +2,24 @@
   <div class="commonContent">
     <div class="goodsItemsContainer" ref="goodsItemsContainer">
       <div v-for="item in goodsItems" :key="item.id">
-        <div class="goodsItems">
-          <img :src="imageUrl+item.coverImage" alt="">
-          <div class="right">
-            <p class="name">{{item.name}}</p>
-            <div class="price">
-              <span>￥{{item.minPrice}}</span>
-              <del>￥{{item.marketPrice}}</del>
+        <div class="goodsItems" @click="linkDetails" >
+          <!-- <router-link :to="'/details/'+item.id"  tag="div" class="goodsItems" > -->
+          <!-- <a :href="'/details/'+item.id" class="goodsItems"> -->
+           <router-link :to="'/details/'+item.id">
+            <img :src="imageUrl+item.coverImage" alt="">
+              </router-link>
+            <div class="right">
+              <router-link :to="'/details/'+item.id" class="name">{{item.name}}</router-link>
+              <div class="price">
+                <router-link :to="'/details/'+item.id">
+                <span>￥{{item.minPrice}}</span>
+                <del>￥{{item.marketPrice}}</del>
+                </router-link>
+              </div>
+              <router-link :to="'/details/'+item.id" class="seeMore">查看详情</router-link>
+
             </div>
-            <router-link :to="'/details/'+item.id">查看详情</router-link>
-          </div>
+          <!-- </router-link> -->
         </div>
       </div>
     </div>
@@ -60,6 +68,10 @@ export default {
         }
       }
       this.content = newArr.join('')
+    },
+    linkDetails (id) {
+      console.log(777)
+      this.$route.push(`/details/${id}`)
     }
   },
   mounted () {
@@ -79,6 +91,7 @@ export default {
     padding 30px
     background-color #F5F5F5
     margin-bottom 50px
+    display blo
     img
       width 230px
       height 230px
@@ -90,14 +103,16 @@ export default {
         font-size 40px
         font-weight 600
         margin-bottom 40px
+        color #333
       .price
         span
           font-size 40px
           display inline-block
           margin-right 20px
+          color #333
         del
           color #999999
-      a
+      .seeMore
         position absolute
         width 200px
         height 80px

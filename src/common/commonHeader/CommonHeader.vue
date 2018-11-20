@@ -77,8 +77,8 @@ export default {
     vertical-align middle
     margin-top 20px
   .car
-    width 83px
-    height 83px
+    width 60px
+    height 60px
     bgImage("/static/icons/car")
     margin-top 13px
     position relative
@@ -91,8 +91,8 @@ export default {
       border-radius 50%
       background-color #D54B4B
       color #fff
-      top 0
+      top -10px
       transform translate(50%,-25%)
-      right 0
+      right -10px
       font-size 36px
 </style>

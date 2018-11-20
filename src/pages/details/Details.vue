@@ -110,7 +110,7 @@ export default {
           value: '选择规格数量'
         },
         {
-          title: '1',
+          title: '',
           value: ''
         }
       ],
