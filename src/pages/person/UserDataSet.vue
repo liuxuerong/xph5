@@ -29,12 +29,11 @@
         <datetime
           class="setBirthday"
           title="出生日期"
+          :readonly="readonly"
           v-model="age"
-          @click="ageChangeShow"
-          @on-change="change"
-          @on-cancel="log('cancel')"
-          @on-confirm="onConfirm"
-          @on-hide="log('hide', $event)"></datetime>
+          min-year='1960'
+          @on-show="ageChangeShow"
+          @on-confirm="onConfirm"></datetime>
       </group>
       <mt-popup
         class="sexPopWrapper"
@@ -57,7 +56,7 @@ import CropperHeader from './ComCropperHeader'
 import { Datetime, Group } from 'vux'
 import { setMemberData, memberData } from 'util/netApi'
 import { http } from 'util/request'
-import { Popup, DatetimePicker } from 'mint-ui'
+import { Popup, DatetimePicker, Toast } from 'mint-ui'
 import notice from 'util/notice.js'
 import { config } from 'util/config' // 图片路径
 import axios from 'axios'
@@ -75,7 +74,9 @@ export default {
       popupVisible: false,
       popType: 0,
       popData: [],
-      memberLevelName: ''
+      memberLevelName: '',
+      readonly: false,
+      birthdayStatus: 1
     }
   },
   components: {
@@ -90,11 +91,10 @@ export default {
   },
   methods: {
     // 获取页面资料信息
-    getUserInfo: function () {
+    getUserInfo () {
       http(memberData).then((response) => {
         let data = response.data.body
         this.memberLevelName = data.memberLevelName
-        console.log(data)
         this.name = data.name
         if (data.headImage !== '' && data.headImage != null) {
           this.headImage = data.headImage
@@ -106,6 +106,10 @@ export default {
         if (data.ageGroup !== '' && data.ageGroup != null) {
           this.ageShow = true
           this.age = data.ageGroup
+          if (data.birthdayStatus === 2) {
+            this.birthdayStatus = 2
+            this.readonly = true
+          }
         }
         if (data.sex !== '' && data.sex != null) {
           this.sexIndex = data.sex
@@ -152,19 +156,17 @@ export default {
     // 年龄选择
     ageChangeShow () {
       this.popType = 2
-      console.log(6666)
-      // // 改变数据
-      // this.popData = ['10后', '00后', '90后', '80后', '70后', '60后']
-    },
-    log (str1, str2 = '') {
-      console.log(str1, str2)
-    },
-    change (value) {
-      console.log('change', value)
+      if (this.birthdayStatus === 2) {
+        Toast({
+          message: '生日信息修改，请联系在线客服，谢谢',
+          position: 'bottom',
+          duration: 2000
+        })
+      }
     },
     onConfirm (val) {
-      console.log('on-confirm arg', val)
-      console.log('current value', this.value1)
+      this.popType = 2
+      this.ageGroup = val
     },
     // 收货地址
     addressAdmin () {
@@ -201,6 +203,11 @@ export default {
   },
   // 事件监听
   watch: {
+    '$route' (to, from) {
+      if (to.name === 'userInfoSet') {
+        this.getUserInfo()
+      }
+    },
     sex: {
       handler (val, oldVal) {
         if (this.sex !== '' && this.sex != null) {
@@ -215,11 +222,9 @@ export default {
         }
       }
     }
-
   },
   mounted () {
     this.getUserInfo()
-    console.log(this.pickerVisible)
   },
   // 计算属性
   computed: {
