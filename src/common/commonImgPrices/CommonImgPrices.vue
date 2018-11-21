@@ -8,9 +8,8 @@
         {{pricesData.name}}
       </p>
       <p class="price">¥{{pricesData.minPrice}}</p>
-      <div class="promotion" v-if="pricesData.activityLabel&&pricesData.activityLabel.length>0">
-        <span class="promotionItem " v-for="(item,index) in pricesData.activityLabel" :key="index">{{item}}</span>
-        <!-- <span class="promotionItem active">满减</span> -->
+      <div class="promotion" v-if="pricesData.activityLabels&&pricesData.activityLabels.length>0">
+        <span class="promotionItem" :class="{gray:item.color==2}" v-for="(item,index) in pricesData.activityLabels" :key="index">{{item.labelName}}</span>
       </div>
     </router-link>
   </div>
@@ -81,4 +80,8 @@ export default {
     margin-top 23px
   .promotionItem.active
     background-color  #FED9D9
+  .promotionItem.gray
+    background-color  #F5F5F5
+    border none
+    color #999999
 </style>

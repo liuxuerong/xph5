@@ -4,6 +4,7 @@
         <div class="checkIcon">
             <check-icon :value.sync="goodsItem.value">
             </check-icon>
+            <div class="shadow" v-if="goodsItem.stock==0&&goodsItem.status==1"></div>
           </div>
           <div class="goodsItemMain">
             <router-link :to="'/details/'+goodsItem.goodsId" class="linkDetails">
@@ -15,16 +16,17 @@
                 <span class="color" v-for="(item,index) in specs" :key="index">{{item}}</span>
                  x <em class="num">{{goodsItem.num}}</em>
               </div>
-              <div class="inventory" v-if="goodsItem.stock<5&&goodsItem.stock>=0&&goodsItem.status==1">
+              <div class="inventory" v-if="goodsItem.stock<5&&goodsItem.stock>0&&goodsItem.status==1">
                 库存紧张
               </div>
-               <!-- <div class="inventory" v-if="goodsItem.stock==0">
+               <div class="inventory" v-if="goodsItem.stock==0&&goodsItem.status==1">
                 无库存
-              </div> -->
+              </div>
               <div class="bottom clearfix">
                 <span class="tag fl" v-if="goodsItem.status!=1">已失效</span>
                 <span class="modify" v-show="showModify">
                   <x-number :min="1" :max="goodsItem.stock" v-model="goodsItem.num" :fillable="true" @on-change="changeCartNum"></x-number>
+                  <div class="shadow" v-if="goodsItem.stock==0&&goodsItem.status==1"></div>
                 </span>
                 <i class="price fr">￥{{goodsItem.price.toFixed(2)}}</i>
               </div>
@@ -80,7 +82,6 @@ export default {
   watch: {
     goodsItem: {
       handler (newVal, oldVal) {
-        console.log(newVal)
         if (this.clearNum.length > 0) {
           let index = this.clearNum.indexOf(this.goodsItem)
           if (newVal.value) {
@@ -95,7 +96,6 @@ export default {
             }
           }
           let goodsList = this.goodsList
-          console.log(this.goodsList)
           this.changeGoodsList(goodsList)
         } else {
           if (newVal.value) {
@@ -103,6 +103,7 @@ export default {
           }
         }
         this.changeClearNum(this.clearNum)
+        this.changeIsAllSelect(false)
       },
       deep: true,
       immediate: true
@@ -115,9 +116,6 @@ export default {
       for (let i in specs) {
         this.specs.push(specs[i].value)
       }
-    },
-    change (v) {
-      console.log(v)
     },
     changeCartNum (val) {
       if (val >= this.goodsItem.stock) {
@@ -145,7 +143,6 @@ export default {
     }
   },
   mounted () {
-    console.log(this.goodsItem)
     this.getSpecs()
   }
 }
@@ -162,6 +159,11 @@ export default {
       width 60px
       margin-right 30px
       position relative
+    .shadow
+      height 46px
+      width 60px
+      position absolute
+      z-index 2
     .goodsItemMain
       flex 1
       display flex
@@ -201,8 +203,16 @@ export default {
             text-align center
           .modify
             display inline-block
-            line-height 100px
-            height 100px
+            line-height 120px
+            height 120px
+            position relative
+            .shadow
+              width 100%
+              height 100%
+              position absolute
+              z-index 2
+              top 0
+              left 0
           .price
             display inline-block
             line-height 100px

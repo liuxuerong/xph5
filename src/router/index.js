@@ -61,7 +61,7 @@ const router = new Router({
       component: resolve => require(['@/pages/storyDetails/HotelDetails'], resolve)
     },
     {
-      path: '/goods/:index?',
+      path: '/goods/:index/:innerIndex',
       name: 'Goods',
       component: resolve => require(['@/pages/goods/Goods'], resolve)
     },

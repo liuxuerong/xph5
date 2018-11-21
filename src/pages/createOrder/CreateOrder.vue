@@ -96,6 +96,7 @@ export default {
   },
   data () {
     return {
+      canClick: true,
       title: '确认订单',
       availableCoupon: '',
       goodsId: '',
@@ -125,7 +126,11 @@ export default {
     '$route' (to, from) {
       if (to.path === '/createOrder/1') {
         this.info = storage.getLocalStorage(orderInfo)
+        console.log(this.info)
         if (this.info.couponId) {
+          this.getDetails()
+        }
+        if (this.info.shippingMethod) {
           this.getDetails()
         }
       } else if (to.path === '/createOrder') {
@@ -135,15 +140,18 @@ export default {
   },
   methods: {
     getDetails () {
-      const params = storage.getLocalStorage(goodsInfo)
+      const params = Object.assign({}, storage.getLocalStorage(goodsInfo), this.info)
       if (this.info && this.info.couponId) {
         params.favorableId = this.info.couponId
       }
+      console.log(params)
       http(goodOrderData, params).then(res => {
+        console.log(res)
         if (res.data.code === 0) {
           params.key = res.data.body.key
           this.availableCoupon = res.data.body.availableCoupon
           this.pricesData = res.data.body.orderGoodsItems
+          console.log(res.data.body.shippingAmount)
           this.shippingAmount = res.data.body.shippingAmount
           this.offerAmount = res.data.body.offerAmount
           for (let i = 0; i < this.pricesData.length; i++) {
@@ -168,7 +176,6 @@ export default {
       })
     },
     getOrderInfo () {
-      // console.log(this.$route.params)
       if (this.$route.path === '/createOrder/1') {
         this.info = storage.getLocalStorage(orderInfo)
       } else if (this.$route.path === '/createOrder') {
@@ -190,15 +197,23 @@ export default {
         this.toastShow('请选择配送方式！')
         return false
       }
-
-      http(createOrderData, params).then(res => {
-        console.log(res)
-        if (res.data.code === 0) {
-          this.$router.push('/immedPayment/' + res.data.body)
-        }
-      }).catch(err => {
-        console.log(err)
-      })
+      if (this.canClick) {
+        http(createOrderData, params).then(res => {
+          console.log(res)
+          if (res.data.code === 0) {
+            this.$router.push('/immedPayment/' + res.data.body)
+            this.canClick = false
+          } else if (res.data.code === 40005) {
+            Toast({
+              message: res.data.message,
+              position: 'bottom',
+              duration: 1000
+            })
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+      }
     },
     toastShow (text) {
       Toast({
@@ -209,17 +224,14 @@ export default {
     },
     // 使用优惠券
     chooseCoupons () {
-      console.log(this.pricesData)
       for (let i = 0; i < this.pricesData.length; i++) {
         this.couponArr[i] = {
           'goodsItemId': this.pricesData[i].id,
           'num': this.pricesData[i].num
         }
       }
-      // console.log(CouponByGoodsItemIdDTO)
       storage.setLocalStorage(couponByGoods, this.couponArr)
-      // router.push('/chooseCoupons')
-      this.$router.push('/chooseCoupons')
+      // this.$router.push('/chooseCoupons')
     }
   },
   created () {

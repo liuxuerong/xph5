@@ -74,6 +74,7 @@ export default {
         let info = storage.getLocalStorage(orderInfo) || {}
         info.addressId = id
         info.addressType = '快递配送'
+        info.shippingMethod = 2
         storage.setLocalStorage(orderInfo, info)
         this.$router.replace({path: '/createOrder/1'})
       }

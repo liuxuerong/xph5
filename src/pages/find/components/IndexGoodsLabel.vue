@@ -5,7 +5,7 @@
     <div class="goodsContainer">
       <common-img-prices class="goodsItem" v-for="item in goodsLabel.goodsDetails" :key="item.id" :pricesData="item" v-if="bestChoiceGoods.length" />
       <div class="moreGoods">
-        <router-link to="/goods" v-if="bestChoiceGoods.length">查看<br>更多</router-link>
+        <router-link to="/goods" v-if="bestChoiceGoods.length">查看<br>更多商品</router-link>
       </div>
       <div class="emptyBox"></div>
     </div>
@@ -13,11 +13,7 @@
 </template>
 
 <script>
-// import IndexNavSwiper from './IndexNavSwiper'
-// import IndexNavBanner from './IndexNavBanner'
-// import IndexContent from './IndexContent'
 import CommonImgPrices from 'common/commonImgPrices/CommonImgPrices'
-// import CommonEmpty from 'common/commonEmpty/CommonEmpty'
 import {
   recommend,
   timeLimit

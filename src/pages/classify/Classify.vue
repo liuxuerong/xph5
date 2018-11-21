@@ -11,9 +11,9 @@
             </div>
             <img v-lazy="imageUrl+item.appIcon" alt="">
           </div>
-            <ul class="classifyDetails" :class="{active:showIndex==index}" v-for="goods in item.children" :key="goods.id">
+            <ul class="classifyDetails" :class="{active:showIndex==index}" v-for="(goods,innerIndex) in item.children" :key="goods.id">
               <li class="border-bottom">
-                <router-link :to="`/goods/${index}`" class="nav">{{goods.catName}}</router-link>
+                <router-link :to="`/goods/${index}/${innerIndex}`" class="nav">{{goods.catName}}</router-link>
               </li>
             </ul>
         </li>
@@ -25,6 +25,8 @@
 <script>
 import CommonHeader from 'common/commonHeader/CommonHeader'
 import BScroll from 'better-scroll'
+import {storage} from 'util/storage'
+import {goodsListData} from 'util/const'
 import {
   http
 } from 'util/request'
@@ -45,12 +47,6 @@ export default {
       showIndex: null,
       classfiyData: []
     }
-  },
-  computed: {
-
-  },
-  watch: {
-
   },
   methods: {
     changeToggle (index) {
@@ -75,6 +71,7 @@ export default {
       http(categoryTree).then(res => {
         console.log(res)
         this.classfiyData = res.data.body
+        storage.setLocalStorage(goodsListData, res.data.body)
         this.scrollInit()
       }).catch(err => {
         console.log(err)

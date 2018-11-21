@@ -14,6 +14,9 @@
               <div class="content">
                 {{item.subName}}
               </div>
+              <div class="promotion">
+                <span class="promotionItem" :class="{gray:lables.color==2}" v-for="(lables,j) in item.activityLabels" :key="j">{{lables.labelName}}</span>
+              </div>
             </div>
           </router-link>
         </swiper-slide>
@@ -47,7 +50,7 @@ export default {
     return {
       swiperOption: {
         spaceBetween: 15,
-        slidesPerView: 1.1,
+        // slidesPerView: 1.1,
         pagination: {
           el: '.swiper-pagination',
           type: 'fraction'
@@ -75,6 +78,8 @@ export default {
     font-weight 600
   .swiperContainer
     position relative
+    width 94%
+    margin 0 auto
   .swiperHref
     display block
     width 100%
@@ -104,7 +109,23 @@ export default {
     line-height 60px
     ellipsisM()
     -webkit-line-clamp 2
+.promotion
+  font-size 0
+  height 100px
+  .promotionItem
+    font-size 30px
+    color #D54B4B
+    padding 22px 20px
+    border 1px solid #D54B4B
+    display inline-block
+    margin 0 30px 0 0
+    margin-top 23px
+  .promotionItem.gray
+    background-color  #F5F5F5
+    border none
+    color #999999
 </style>
+
 <style lang="stylus">
 .indexNewProducts
   .swiper-container
@@ -115,6 +136,8 @@ export default {
     color #333333
     font-size 60px
     height 60px
+    right -30px
+    left auto
     .swiper-pagination-current
       font-size 60px
       font-weight 500
@@ -124,4 +147,5 @@ export default {
     margin-top 0
   .swiper-slide
     box-shadow:0px 2px 26px 0px rgba(0, 0, 0, 0.1);
+
 </style>

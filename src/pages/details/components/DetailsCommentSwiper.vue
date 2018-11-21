@@ -9,7 +9,6 @@
             </p>
           </div>
           <div class="commentImg">
-            <!-- {{list[i]}} -->
             <div class="previewCon">
               <img :src="itemImg.src" alt="" v-for="(itemImg,index) in list[i]" :key="itemImg.src" @click="show(i,index)" class="previewer-demo-img">
               <div v-transfer-dom>
@@ -30,24 +29,12 @@ import {
   swiper,
   swiperSlide
 } from 'vue-awesome-swiper'
-  // import {
-  //   bannerList
-  // } from 'util/netApi'
-  // import {
-  //   http
-  // } from 'util/request'
-import {
-  storage
-} from 'util/storage.js'
 import {
   config
 } from 'util/config.js'
 import {
   getList
 } from '@/func/preview'
-import {
-  comment
-} from 'util/const'
 import {
   Previewer,
   TransferDom
@@ -57,17 +44,37 @@ export default {
   directives: {
     TransferDom
   },
+  props: {
+    goodsComment: Object
+  },
   components: {
     swiper,
     swiperSlide,
     Previewer
   },
+  watch: {
+    goodsComment (v) {
+      console.log(v)
+      const commemts = v
+      if (commemts.totals) {
+        this.swiperData = commemts.list
+        this.comments = commemts
+        this.list = getList(commemts.list)
+      }
+    }
+  },
   methods: {
-    // logIndexChange (arg) {
-    //   console.log(arg)
-    // },
     show (i, index) {
       this.$refs.previewer[i].show(index)
+    }
+  },
+  mounted () {
+    console.log(this.goodsComment)
+    const commemts = this.goodsComment
+    if (commemts.totals) {
+      this.swiperData = commemts.list
+      this.comments = commemts
+      this.list = getList(commemts.list)
     }
   },
   data () {
@@ -92,23 +99,7 @@ export default {
       },
       swiperData: []
     }
-  },
-  mounted () {
-    // http(bannerList, ['find-banner'])
-    //   .then(res => {
-    //     this.swiperData = res.data.body
-    //   })
-    //   .catch(err => {
-    //     console.log(err)
-    //   })
-    const commemts = storage.getLocalStorage(comment)
-    if (commemts.totals) {
-      this.swiperData = commemts.list
-      this.comments = commemts
-      this.list = getList(commemts.list)
-    }
   }
-
 }
 </script>
 

@@ -46,7 +46,6 @@ export default {
     // 支付页面渲染
     paymentRender () {
       let orderSn = this.$route.params.orderCode
-      console.log(orderSn)
       http(subOrderDetail, [orderSn]).then((response) => {
         console.log(response)
         this.list = response.data.body

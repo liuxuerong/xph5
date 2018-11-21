@@ -42,9 +42,11 @@ export default {
   },
   watch: {
     $route (to, from) {
-      if (to.name === 'StoryDetails') {
-        this.getBrandDetail()
-      }
+      // console.log()
+      // if (to.name === 'StoryDetails') {
+      //   console.log(444)
+      //   this.getBrandDetail()
+      // }
     }
   },
   methods: {

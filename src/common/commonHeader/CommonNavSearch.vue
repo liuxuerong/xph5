@@ -60,6 +60,7 @@ export default {
     height 120px
     line-height 120px
     text-align center
+    text-indent 2.5em
     font-size 56px
     color #262626
     width 100%
