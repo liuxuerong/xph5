@@ -132,9 +132,6 @@ export default {
 
 <style lang="stylus">
 .xpHall
-  .swiper-slide-next
-    .swiperImg
-      transition all 0.4s
   .swiper-slide-active
     .swiperImg
       transform scale(1.5,1.5)
