@@ -1,7 +1,7 @@
 <template>
   <div class="detailsOperate border-top">
     <div class="operateLeft">
-      <span class="udesk"></span>
+      <span class="udesk" @click="contactService"></span>
       <span class="collect" :class="{active:collect}" @click="doCollection(params)"></span>
       <router-link to="/cart" class="cart">
         <i class="num" v-show="cartNum != 0">{{cartNum}}</i>
@@ -28,7 +28,8 @@ import {
   http
 } from 'util/request'
 import {
-  cartNum
+  cartNum,
+  customerService
 } from 'util/netApi'
 import {storage} from 'util/storage'
 import {accessToken} from 'util/const'
@@ -100,8 +101,11 @@ export default {
         this.changeFrom(3)
         this.changePopupVisible(true)
       }
+    },
+    // 联系客服
+    contactService () {
+      window.location.href = customerService
     }
-
   },
   created () {
     this.params = {

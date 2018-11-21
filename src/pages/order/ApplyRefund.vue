@@ -79,7 +79,8 @@ export default {
       popupVisible: false, // 退款理由显示问题
       imageUrl: config.imageUrl,
       type: '',
-      objImgs: []
+      objImgs: [],
+      pic: ''
     }
   },
   components: {
@@ -122,7 +123,6 @@ export default {
           'Authorization': storage.getLocalStorage(accessToken)
         }
       }
-      // https://api.test.jdhoe.com/file/upload
       axios.post(config.baseUrl + 'file/upload', formData, cf).then((response) => {
         if (response.data.code === 0) {
           this.objImgs.push(response.data.body.key)
@@ -163,27 +163,30 @@ export default {
       } else {
         console.log(this.objImgs)
         let orderId = this.$route.params.orderId
-        // for (let i = 0; i < this.objImgs.length; i++) {
-        //   picObj = this.objImgs[i]
-        // }
-
         let params = {
-          orderId: orderId,
+          orderItemId: orderId,
           shouldRefund: this.list.actualPrice,
           num: this.list.num,
           reason: this.reason,
           desc: this.desc,
-          pic: this.objImgs
+          pic: this.objImgs.join(',')
         }
         console.log(params)
-        if (this.reason !== '' && this.desc !== '' && this.pic !== '') {
-          console.log(6666)
+        if (this.reason !== '') {
           http(deliverAfterSales, params).then((response) => {
             console.log(response)
+            if (response.data.body === true) {
+              Toast({
+                message: '申请售后成功',
+                position: 'bottom',
+                duration: 5000
+              })
+              this.$router.push('/orderList/5')
+            }
           })
         } else {
           Toast({
-            message: '请完善退货信息',
+            message: '请选择退款原因',
             position: 'bottom',
             duration: 5000
           })

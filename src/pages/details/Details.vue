@@ -10,8 +10,9 @@
         <common-swiper :swiperData="swiperData" v-if="swiperData.length" />
         <details-des :goods="goods" :activityLabel="activityLabel" v-if="goods" />
         <div class="cutOffLine"></div>
-        <details-cell :cellInfo="cellInfo[0]" />
+        <details-cell :cellInfo="cellInfo[0]" v-if="showCoupon" @click.native="changeCoupponVisible(true)"/>
         <div class="cutOffLine"></div>
+
         <details-cell :cellInfo="cellInfo[1]" @click.native="changePopupVisible(true), changeFrom(1)" />
         <div class="cutOffLine"></div>
         <details-service/>
@@ -27,6 +28,7 @@
     <div class="goodsStatus" v-if="goodsStatus!=1">商品已经{{goodsStatusText}}</div>
     <details-operate class="detailsOperate" :goodsItems="goodsItems" :goodsStatus="goodsStatus"/>
     <details-pop-up :sku="sku" v-if="sku" :goods="goods" :goodsStatus="goodsStatus"/>
+    <details-coupon :couponData = "couponData"></details-coupon>
     </div>
     <div v-show="goodsStatus===4">
       <common-nav-header :title="emptyTitle"/>
@@ -47,6 +49,7 @@ import DetailsService from './components/DetailsService'
 import DetailsOperate from './components/DetailsOperate'
 import DetailsImgTextDesc from './components/DetailsImgTextDesc'
 import DetailsCommentSwiper from './components/DetailsCommentSwiper'
+import DetailsCoupon from './components/DetailsCoupon'
 
 import BScroll from 'better-scroll'
 import {
@@ -57,7 +60,8 @@ import {
   comment
 } from 'util/const'
 import {
-  goodsDetail
+  goodsDetail,
+  listUseCouponByGoodsId
 } from 'util/netApi'
 import {
   http
@@ -81,7 +85,8 @@ export default {
     DetailsOperate,
     DetailsImgTextDesc,
     DetailsCommentSwiper,
-    BScroll
+    BScroll,
+    DetailsCoupon
   },
   data () {
     return {
@@ -115,7 +120,10 @@ export default {
         }
       ],
       sku: null,
-      goodsItems: []
+      goodsItems: [],
+      showCoupon: false,
+      coupponVisible: false,
+      couponData: []
     }
   },
 
@@ -140,7 +148,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['changePopupVisible', 'changeNowPrice', 'changeFrom', 'changeMaxCount']),
+    ...mapMutations(['changePopupVisible', 'changeNowPrice', 'changeFrom', 'changeMaxCount', 'changeCoupponVisible']),
     pushKeys (arr) {
       if (arr.length === 1) {
         this.changeMaxCount(arr[0].stock)
@@ -287,11 +295,27 @@ export default {
             console.log(err)
           })
       }
+    },
+    // 领取优惠券
+    receiveCellInfo () {
+      let params = {
+        goodsId: this.$route.params.goodsId
+      }
+      http(listUseCouponByGoodsId, params).then((response) => {
+        if (response.data.code === 0) {
+          let data = response.data.body
+          if (data.length > 0) {
+            this.showCoupon = true
+            this.couponData = data
+            console.log(this.couponData)
+          }
+        }
+      })
     }
   },
   mounted () {
-    console.log(1111)
     this.initDeatils()
+    this.receiveCellInfo()
   }
 }
 </script>

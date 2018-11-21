@@ -18,7 +18,7 @@
 			</div>
 			<span class="cancelOper" @click="cancelOper">取消</span>
 		</div>
-		<div v-if="searchState" class="mask" @click="maskOper"></div>
+		<div v-if="searchState" class="mask" @click="maskOper" @touchmove.prevent></div>
 	</div>
 </template>
 <script>

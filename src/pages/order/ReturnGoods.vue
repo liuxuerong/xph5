@@ -35,7 +35,6 @@ export default {
   methods: {
     // 页面渲染
     returngoodsRender () {
-      console.log(666)
       let data = storage.getLocalStorage(aftersale)
       this.list = data
       console.log(data)

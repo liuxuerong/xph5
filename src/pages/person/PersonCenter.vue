@@ -10,8 +10,8 @@
       </div>
       <div class="perHeader">
         <div class="headerInfo">
-          <img v-if="list.memberHead === undefined" src="/static/images/memberHeader.png" class="headerImg"  @click="userDataSet">
-          <img v-else :src="imageUrl+list.memberHead" class="headerImg" @click="userDataSet">
+          <img v-if="list.memberHead" :src="imageUrl+list.memberHead" class="headerImg" @click="userDataSet">
+          <img v-else src="/static/images/memberHeader.png" class="headerImg"  @click="userDataSet">
           <div class="headerRightText">
             <h2 v-if="list.memberName" class="headerName" @click="userDataSet">{{list.memberName}}</h2>
             <h2 v-else class="headerName" @click="userDataSet">{{phone}}</h2>
@@ -88,7 +88,7 @@
               </div>
               <div class="activityTime">
                 <!-- 立即领取 可以领取 -->
-                <span v-if="item.useStatus == '1'" class="activityTime">领取时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
+                <span v-if="item.useStatus == '1' && item.activityStart" class="activityTime">领取时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
                 <!-- 立即使用  到达使用时间 -->
                 <span v-else-if="item.useStatus == '2' && item.display=='2'" class="countDown">{{item.invalidDay}}天后过期</span>
                 <!-- 立即使用 未到达使用时间 -->
