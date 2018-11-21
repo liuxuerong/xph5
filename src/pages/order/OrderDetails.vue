@@ -138,7 +138,9 @@ export default {
   },
   watch: {
     '$route' (to, from) {
-      this.$router.go(0)
+      if (to.name === 'orderDetails') {
+        this.orderDetailRender()
+      }
     }
   },
   methods: {

@@ -6,36 +6,64 @@
         <h3 class="userInfoTitle">个人中心</h3>
       </div>
       <div class="centerHeaderBot">
-        <img v-if="headImage === undefined" src="/static/images/memberHeader.png" class="headerImg">
-        <img v-else :src="imageUrl+headImage" class="headerImg">
+        <img v-if="list.headImage === undefined || list.headImage === null" src="/static/images/memberHeader.png" class="headerImg">
+        <img v-else :src="imageUrl+list.headImage" class="headerImg">
         <div class="headerInfoText">
-          <h3>{{name}}</h3>
+          <h3>{{list.name}}</h3>
           <span class="memberGrade">
-            <i class="memberGradeIcon memberGradeIcon01" v-if="memberLevelName === '普卡'"></i>
-            <i class="memberGradeIcon memberGradeIcon02" v-else-if="memberLevelName === '银卡'"></i>
-            <i class="memberGradeIcon memberGradeIcon03" v-else-if="memberLevelName === '金卡'"></i>
-            <i class="memberGradeIcon memberGradeIcon04" v-else-if="memberLevelName === '钻卡'"></i>
-            {{memberLevelName}}
+            <i class="memberGradeIcon" :class="'memberGradeIcon0' + memberLevelName"></i>
+            {{list.memberLevelName}}会员
           </span>
           <div class="stopTimeTips">
-            <p class="left">NO.370010100001</p>
-            <p class="rigth">2019年12月31日到期</p>
+            <p class="left">NO.{{list.cardNo}}</p>
+            <p class="rigth">{{expireTime}}</p>
           </div>
         </div>
       </div>
     </div>
-    <div class="gradeTips">您距离下一年延续 {{memberLevelName}}会员 还有<span>{{protectMemberLevel}} 元</span>的距离</div>
+    <div class="gradeTips" v-if="list.totalShoppingMoney > 10000">
+      <span v-if="list.totalShoppingMoney > 5000">您已成功延续下一年钻卡会员</span>
+      <span v-else>您距离下一年延续钻卡会员 还有<i>{{5000 - list.totalShoppingMoney}} 元</i>的距离</span>
+    </div>
+    <div class="gradeTips" v-else-if="list.totalShoppingMoney > 5000">
+      <span v-if="list.totalShoppingMoney > 3000">您已成功延续下一年金卡会员</span>
+      <span v-else>您距离下一年延续金卡会员 还有<i>{{3000 - list.totalShoppingMoney}} 元</i>的距离</span>
+    </div>
+    <div class="gradeTips" v-else-if="list.totalShoppingMoney > 2000">
+      <span v-if="list.totalShoppingMoney > 1000">您已成功延续下一年银卡会员</span>
+      <span v-else>您距离下一年延续银卡会员 还有<i>{{1000 - list.totalShoppingMoney}} 元</i>的距离</span>
+    </div>
+    <div class="gradeTips" v-else>您已成功延续下一年普卡会员</div>
     <div class="toolCon">
       <person-title content="我的会员成长" :moreShow="moreShow"></person-title>
-      <div class="inteShow">累计消费<span>{{integral}}</span>,还剩<span> {{upgradeIntegral}} </span>可升为 {{nextMemberLevelName}}</div>
-      <div ref="memberGrade" class="indexNavWrapper">
+      <div class="inteShow" v-if="list.totalShoppingMoney > 10000">累计消费<span>{{list.totalShoppingMoney}}</span>,当前已是钻卡会员</div>
+      <div class="inteShow" v-else-if="list.totalShoppingMoney > 5000">累计消费<span>{{list.totalShoppingMoney}}</span>,还剩<span> {{list.upMoney}} </span>可升为钻卡会员</div>
+      <div class="inteShow" v-else-if="list.totalShoppingMoney > 2000">累计消费<span>{{list.totalShoppingMoney}}</span>,还剩<span> {{list.upMoney}} </span>可升为金卡会员</div>
+      <div class="inteShow" v-else>累计消费<span>{{list.totalShoppingMoney}}</span>,还剩<span> {{list.upMoney}} </span>可升为银卡会员</div>
+      <!-- <div ref="memberGrade" class="indexNavWrapper">
         <ul class="memberGradeScroll">
-          <li :class="memberLevelName === '普卡'?'active':''"><i class="memberGradeIcon01"></i><span>普卡</span></li>
-          <li :class="memberLevelName === '银卡'?'active':''"><i class="memberGradeIcon02"></i><span>银卡</span></li>
-          <li :class="memberLevelName === '金卡'?'active':''"><i class="memberGradeIcon03"></i><span>金卡</span></li>
-          <li :class="memberLevelName === '钻卡'?'active':''"><i class="memberGradeIcon04"></i><span>钻卡</span></li>
+          <li :class="list.memberLevelName === '普卡'?'active':''"><i class="memberGradeIcon01"></i><span>普卡</span></li>
+          <li :class="list.memberLevelName === '银卡'?'active':''"><i class="memberGradeIcon02"></i><span>银卡</span></li>
+          <li :class="list.memberLevelName === '金卡'?'active':''"><i class="memberGradeIcon03"></i><span>金卡</span></li>
+          <li :class="list.memberLevelName === '钻卡'?'active':''"><i class="memberGradeIcon04"></i><span>钻卡</span></li>
         </ul>
-      </div>
+      </div> -->
+      <swiper ref="mySwiper" :options="swiperOption" class="memberGradeScroll">
+        <swiper-slide></swiper-slide>
+        <swiper-slide>
+          <div class="swiperItem" :class="list.memberLevelName === '普卡'?'active':''"><i class="memberGradeIcon01"></i><span>普卡</span></div>
+        </swiper-slide>
+        <swiper-slide>
+          <div class="swiperItem" :class="list.memberLevelName === '银卡'?'active':''"><i class="memberGradeIcon02"></i><span>银卡</span></div>
+        </swiper-slide>
+        <swiper-slide>
+          <div class="swiperItem" :class="list.memberLevelName === '金卡'?'active':''"><i class="memberGradeIcon03"></i><span>金卡</span></div>
+        </swiper-slide>
+        <swiper-slide>
+          <div class="swiperItem last" :class="list.memberLevelName === '钻卡'?'active':''"><i class="memberGradeIcon04"></i><span>钻卡</span></div>
+        </swiper-slide>
+        <swiper-slide></swiper-slide>
+      </swiper>
       <person-title content="会员福利及权益" :moreShow="moreShow"></person-title>
       <div class="memberActive">
         <div class="memberActiveItem">
@@ -59,7 +87,8 @@
     <div class="toolInte">
       <router-link class="toolInteItem border-bottom" to="/integralDetails">
         <h3>我的积分</h3>
-        <p>{{integral}} 积分</p>
+        <i class="aboutIcon"></i>
+        <p>{{list.integral}} 积分</p>
       </router-link>
     </div>
     <div class="memberGradeExplain">
@@ -71,28 +100,53 @@
   </div>
 </template>
 <script>
+import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import PersonTitle from './ComCenterSmillTitle'
-import BScroll from 'better-scroll'
-import {memberData} from 'util/netApi'
+// import BScroll from 'better-scroll'
+import {getMemberCenter} from 'util/netApi'
 import {http} from 'util/request'
 import { config } from 'util/config'
 export default {
   data () {
     return {
+      list: [],
+      memberLevels: [],
+      expireTime: '', // 到期时间
       moreShow: false,
-      name: '',
       integral: '', // 积分
       memberLevelName: '', // 会员等级
-      nextMemberLevelName: '', // 下一个等级
-      protectMemberLevel: Number, // 保级积分
-      upgradeIntegral: 0, // 升级积分
       active: '1',
       imageUrl: config.imageUrl, // 图片路径
-      headImage: ''
+      swiperOption: {
+        direction: 'horizontal',
+        spaceBetween: 90,
+        slidesPerView: 3,
+        on: {
+          init: function () {
+            this.emit('transitionEnd')
+          },
+          slideChangeTransitionEnd () {
+            if (this.activeIndex === 0 || this.activeIndex === 1) {
+              // alert('普卡银卡')
+            } else if (this.activeIndex === 2) {
+              // alert('金卡')
+            } else if (this.activeIndex === 3) {
+              // alert('钻卡')
+            }
+          }
+        }
+      }
+    }
+  },
+  computed: {
+    swiper () {
+      return this.$refs.mySwiper.swiper
     }
   },
   components: {
-    PersonTitle
+    PersonTitle,
+    swiper,
+    swiperSlide
   },
   methods: {
     // 返回上一级
@@ -101,48 +155,97 @@ export default {
     },
     // 页面初始化 渲染
     dataRender () {
-      http(memberData).then((response) => {
-        console.log(response)
-        let data = response.data.body
-        this.name = data.name
-        this.headImage = data.headImage
-        this.integral = data.integral
-        this.memberLevelName = data.memberLevelName
-        if (data.memberLevelName === '普卡') {
-          this.nextMemberLevelName = '银卡会员'
-          this.upgradeIntegral = (2000 - data.integral)
-          this.protectMemberLevel = 0
-        } else if (data.memberLevelName === '银卡') {
-          this.nextMemberLevelName = '金卡会员'
-          this.upgradeIntegral = 5000 - data.integral
-          this.protectMemberLevel = 1000 - data.integral
-        } else if (data.memberLevelName === '金卡') {
-          this.nextMemberLevelName = '钻石会员'
-          this.upgradeIntegral = 10000 - data.integral
-          this.protectMemberLevel = 3000 - data.integral
-        } else {
-          this.nextMemberLevelName = ''
-          this.protectMemberLevel = 5000 - data.integral
+      http(getMemberCenter).then((response) => {
+        console.log(response.data.body)
+        if (response.data.code === 0) {
+          let data = response.data.body
+          this.list = data
+          this.memberLevels = data.memberLevels
+          let expireTimeArr = (data.overdueDate.split('T')[0]).split('-')
+          this.expireTime = expireTimeArr[0] + '年' + expireTimeArr[1] + '月' + expireTimeArr[2] + '日到期'
+          if (data.memberLevelName === '普卡') {
+            this.memberLevelName = 1
+          } else if (data.memberLevelName === '银卡') {
+            this.memberLevelName = 2
+          } else if (data.memberLevelName === '金卡') {
+            this.memberLevelName = 3
+          } else {
+            this.memberLevelName = 4
+          }
         }
       })
     }
+
   },
   mounted () {
-    this.scroll = new BScroll(this.$refs.memberGrade, {
-      bounce: {
-        left: true,
-        right: true
-      },
-      scrollY: false,
-      scrollX: true,
-      click: true,
-      startX: 0
-    })
     this.dataRender()
   }
 }
 
 </script>
+<style lang="stylus">
+  @import "~styles/mixins.styl";
+  .memberGradeScroll
+    width 100%
+  .swiper-slide
+    width 33%
+    text-align center
+    .swiperItem
+      float left
+      width 160px
+      height 220px
+      margin-right 264px
+      box-sizing border-box
+      padding-top 20px
+      position relative
+      &:after
+        content ''
+        width 280px
+        height 8px
+        position absolute
+        left 158px
+        top 39%
+        background #E6E6E6
+        // background linear-gradient(90deg,rgba(201,158,135,1),rgba(237,198,162,1))
+      i
+        display block
+        width 116px
+        height 128px
+        margin 0 auto
+      .memberGradeIcon01
+        bgImage('/static/icons/menberGrade01')
+      .memberGradeIcon02
+        bgImage('/static/icons/menberGrade02')
+      .memberGradeIcon03
+        bgImage('/static/icons/menberGrade03')
+      .memberGradeIcon04
+        bgImage('/static/icons/menberGrade04')
+      span
+        width 100%
+        height 40px
+        font-size 36px
+        color #666666
+        line-height 40px
+        text-align center
+        position absolute
+        left 0
+        bottom 0
+    .swiperItem.last
+      &:after
+        display none
+    .swiperItem.active
+      i
+        width 152px
+        height 174px
+        position relative
+        top -20px
+      &:after
+        background linear-gradient(90deg,rgba(201,158,135,1),rgba(237,198,162,1))
+    .swiperItem.active
+      &:after
+        background #E6E6E6
+</style>
+
 <style lang="stylus" scoped>
   @import "~styles/mixins.styl";
   .wrapper
@@ -255,9 +358,12 @@ export default {
     box-shadow 0px 0px 6px 6px rgba(228,228,228,0.6)
     border-radius 0px 0px 12px 20px
     span
-      color #BA825A
-      box-sizing border-box
-      padding 0 20px
+      font-size 40px
+      color #262626
+      i
+        color #BA825A
+        box-sizing border-box
+        padding 0 20px
   .toolCon
     width 100%
     box-sizing border-box
@@ -274,10 +380,23 @@ export default {
     margin 70px auto
     background #F5F5F5
     border-radius 60px
+    position relative
     span
       color #BA825A
       box-sizing border-box
       padding 0 20px
+  .inteShow:after
+    display block
+    content ""
+    width 30px
+    height 30px
+    transform rotate(45deg)
+    position absolute
+    left 0
+    right 0
+    bottom -15px
+    margin auto
+    background #F5F5F5
   .memberActive
     display flex
     width 100%
@@ -328,64 +447,5 @@ export default {
         height 45px
         bgImage('/static/icons/enterNextGray')
         margin-top 70px
-  .indexNavWrapper
-    overflow hidden
-    .memberGradeScroll
-      width 1460px
-      width calc(280px*3 + 152px*4)
-      height 100%
-      li
-        float left
-        width 160px
-        height 220px
-        margin-right 264px
-        box-sizing border-box
-        padding-top 20px
-        position relative
-        &:after
-          content ''
-          width 280px
-          height 8px
-          position absolute
-          left 158px
-          top 39%
-          background linear-gradient(90deg,rgba(201,158,135,1),rgba(237,198,162,1))
-        i
-          display block
-          width 116px
-          height 128px
-          margin 0 auto
-        .memberGradeIcon01
-          bgImage('/static/icons/menberGrade01')
-        .memberGradeIcon02
-          bgImage('/static/icons/menberGrade02')
-        .memberGradeIcon03
-          bgImage('/static/icons/menberGrade03')
-        .memberGradeIcon04
-          bgImage('/static/icons/menberGrade04')
-        span
-          width 100%
-          height 40px
-          font-size 36px
-          color #666666
-          line-height 40px
-          text-align center
-          position absolute
-          left 0
-          bottom 0
-      li:last-child
-        margin-right 0
-        &:after
-          display none
-      li.active
-        i
-          width 152px
-          height 174px
-          position relative
-          top -20px
-        &:after
-          background #E6E6E6
-      li.active ~ li
-        &:after
-          background #E6E6E6
+        margin-left 30px
 </style>

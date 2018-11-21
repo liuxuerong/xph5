@@ -93,6 +93,7 @@ export default {
     // 获取页面资料信息
     getUserInfo () {
       http(memberData).then((response) => {
+        console.log(response)
         let data = response.data.body
         this.memberLevelName = data.memberLevelName
         this.name = data.name
@@ -240,6 +241,8 @@ export default {
   @import "~styles/mixins.styl";
   .vux-no-group-title
     margin-top 0!important
+  .dp-header .dp-item
+    font-size 46px!important
   .weui-cell
     p
       font-size 46px!important

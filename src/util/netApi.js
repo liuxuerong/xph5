@@ -61,6 +61,9 @@ export const setMemberData = { url: '/member/api/settingMemberBasics', method: '
 // 完善会员信息
 export const setPerfect = { url: '/member/api/perfect', method: 'PUT', version: v1 }
 
+// 会员中心
+export const getMemberCenter = { url: '/member/api/getMemberCenter	', method: 'GET', version: v1 }
+
 // 检查会员手机号码存在
 export const checkPhone = { url: '/member/api/check', method: 'GET', version: v1, join: true }
 

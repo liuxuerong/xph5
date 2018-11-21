@@ -1,7 +1,9 @@
 <template>
 	<div class="titleWrapper">
 		<div class="userInfoTop" v-if="!searchState">
-			<span class="prevOper" @click="backPrevOper"></span>
+			<span class="prevOper" @click="backPrevOper">
+				<i class="backOperIcon"></i>
+			</span>
 			<h3 class="userInfoTitle">{{title}}</h3>
 			<span v-if="oper == '1'" :class="oper == '1' ? 'comOperSearch' : ''" @click="comOperSearch"></span>
 			<!-- 评论完成提交 -->
@@ -9,7 +11,9 @@
 		</div>
 		<div class="userInfoTop clearfix" v-if="searchState">
 			<div class="searchInput clearfix">
-				<input type="serch" @keypress="searchGoods" v-model="searchName" name="" class="" placeholder="搜索">
+				<form action="javascript:return true;">
+					<input type="search" @keypress="searchGoods" v-model="searchName" name="" class="" placeholder="搜索订单">
+				</form>
 				<span class="comOperSearch"></span>
 			</div>
 			<span class="cancelOper" @click="cancelOper">取消</span>
@@ -60,15 +64,6 @@ export default {
         if (this.searchName !== '') {
           storage.setLocalStorage(searchorder, this.searchName)
           this.$router.push('/searchOrder')
-          // let params = {
-          //   searchName: '',
-          //   page: 1,
-          //   row: 100
-          // }
-
-          // http(orderSearch, params).then((response) => {
-          //   console.log(response)
-          // })
         }
       }
     }
@@ -108,23 +103,29 @@ export default {
 		background #f5f5f5
 		.comOperSearch
 			margin-top 20px
-		input
+		input[type='search']
 			float left
 			height 100%
+			height 100px
+			line-height 100px
 			width 90%
 			box-sizing border-box
 			padding 0 40px
 			background #f5f5f5
 	.prevOper
 		display block
-		width 32px
+		width 92px
 		height 58px
-		bgImage('/static/icons/back')
 		position absolute
 		left 50px
 		top 0
 		bottom 0
 		margin auto
+		.backOperIcon
+			display block
+			width 32px
+			height 58px
+			bgImage('/static/icons/back')
 	.userInfoTitle
 		width 60%
 		height 130px
@@ -142,8 +143,8 @@ export default {
 		margin auto
 	.comOperSearch
 		float right
-		width 60px
-		height 60px
+		width 80px
+		height 80px
 		margin-top 30px
 		bgImage('/static/icons/serch_icon')
 	.commentSubmit

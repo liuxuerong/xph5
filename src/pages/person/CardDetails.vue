@@ -32,9 +32,9 @@
           </div>
         </div>
         <div class="bottom" v-if="mainType == '0'">
-          <router-link to="/find" class="operBtn" v-if="type == '2'">立即使用</router-link>
-          <div class="operBtn" @click.stop="receiveCard(pastList.id)">立即领取</div>
-          <div class="operBtn gray" v-if="type == '3'">抢光了</div>
+          <router-link to="/find" class="operBtn" v-if="pastList.useStatus == '2'">立即使用</router-link>
+          <div class="operBtn" v-else-if="pastList.useStatus == '1'" @click.stop="receiveCard(pastList.id)">立即领取</div>
+          <div class="operBtn gray" v-else-if="pastList.useStatus == '3'">抢光了</div>
         </div>
         <div class="bottom grayBottom" v-else>
           <div class="operBtn" >立即使用</div>
@@ -159,6 +159,7 @@ export default {
       } else {
         let newList = storage.getLocalStorage('card')
         this.pastList = newList
+        console.log(newList)
       }
     },
     // 领取优惠券
