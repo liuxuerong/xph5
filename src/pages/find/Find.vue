@@ -33,7 +33,10 @@
               </router-link>
             </div>
           </div>
-          <index-nav/>
+          <index-limit :swiperData="timeLimitShoppings" v-if="timeLimitShoppings.length"/>
+          <index-new-products :swiperData="newProducts" v-if="newProducts.length"/>
+          <index-goods-label :goodsLabel="goodsLabel" v-if="goodsLabel"/>
+          <!-- <index-nav  :timeLimitShoppings="timeLimitShoppings" :newProducts="newProducts"/> -->
         </div>
         <div ref="xpStoryContent" class="xpStoryContent">
           <div>
@@ -60,14 +63,17 @@
 </template>
 
 <script>
-import PullTo from 'vue-pull-to'
+// import PullTo from 'vue-pull-to'
 import CommonNavSearch from 'common/commonHeader/CommonNavSearch'
 import CommonImgPrices from 'common/commonImgPrices/CommonImgPrices'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
 import CommonSearch from 'common/commonSearch/CommonSearch'
 import CommonHeader from 'common/commonHeader/CommonHeader'
 import IndexSwiper from './components/IndexSwiper'
-import IndexNav from './components/IndexNav'
+import IndexGoodsLabel from './components/IndexGoodsLabel'
+import IndexLimit from './components/IndexLimit'
+import IndexNewProducts from './components/IndexNewProducts'
+
 import {
   Tab,
   TabItem,
@@ -78,7 +84,8 @@ import {
 } from 'util/request'
 import {
   category,
-  goodsList
+  goodsList,
+  findData
 } from 'util/netApi'
 import {
   config
@@ -92,11 +99,13 @@ export default {
     Tab,
     TabItem,
     Divider,
-    IndexNav,
+    IndexGoodsLabel,
     CommonHeader,
     CommonSearch,
     IndexSwiper,
-    PullTo
+    // PullTo,
+    IndexLimit,
+    IndexNewProducts
   },
   props: {},
   data () {
@@ -113,6 +122,9 @@ export default {
       showScrollToTop: false,
       IndexSwiperShow: true,
       searchActive: false,
+      timeLimitShoppings: [],
+      newProducts: [],
+      goodsLabel: null,
       emptyObj: {
         emptyImg: '/static/images/commentEmptyGoods.png',
         emptyBold: '暂无商品',
@@ -134,6 +146,16 @@ export default {
           this.categoryId = this.tabbar[0].id
         }
         this.getGoodsList(this.categoryId, this.page)
+      })
+    },
+    getFindData () {
+      http(findData).then(res => {
+        console.log(res)
+        this.timeLimitShoppings = res.data.body.timeLimitShoppings
+        this.newProducts = res.data.body.newProducts
+        this.goodsLabel = res.data.body.goodsLabel
+      }).catch(err => {
+        console.log(err)
       })
     },
     onItemClick (index) {
@@ -182,6 +204,7 @@ export default {
   mounted () {
     this.getTabbar()
     this.changeStatus()
+    this.getFindData()
   }
 
 }

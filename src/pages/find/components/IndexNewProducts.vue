@@ -1,0 +1,127 @@
+<template>
+  <div class="indexNewProducts">
+    <h4>新品发布</h4>
+    <div class="swiperContainer">
+      <swiper :options="swiperOption">
+        <swiper-slide v-for="item in swiperData" :key="item.id">
+          <router-link :to="'/details/'+item.id" class="swiperHref">
+            <img v-lazy="imageUrl+item.coverImage" alt="">
+            <div class="indexContent">
+              <h5>
+                <span class="title">{{item.name}}</span>
+                <span class="price fr" v-if="item.minPrice!==0">{{item.minPrice}}元起</span>
+              </h5>
+              <div class="content">
+                {{item.subName}}
+              </div>
+            </div>
+          </router-link>
+        </swiper-slide>
+        <div class="swiper-pagination" slot="pagination"></div>
+      </swiper>
+    </div>
+  </div>
+</template>
+
+<script>
+import 'swiper/dist/css/swiper.css'
+import {
+  swiper,
+  swiperSlide
+} from 'vue-awesome-swiper'
+import {
+  config
+} from 'util/config.js'
+import IndexContent from './IndexContent'
+export default {
+  name: 'IndexNewProducts',
+  components: {
+    swiper,
+    swiperSlide,
+    IndexContent
+  },
+  props: {
+    swiperData: Array
+  },
+  data () {
+    return {
+      swiperOption: {
+        spaceBetween: 15,
+        slidesPerView: 1.1,
+        pagination: {
+          el: '.swiper-pagination',
+          type: 'fraction'
+        }
+      },
+      navSwiperData: {},
+      imageUrl: config.imageUrl
+    }
+  },
+  mounted () {}
+}
+</script>
+
+<style lang="stylus" scoped>
+@import "~styles/mixins.styl"
+.indexNewProducts
+  padding 0 50px 50px
+  border-bottom 10px solid #F5F5F5
+  margin-bottom 30px
+  h4
+    height 164px
+    line-height 164px
+    font-size 66px
+    color #333333
+    font-weight 600
+  .swiperContainer
+    position relative
+  .swiperHref
+    display block
+    width 100%
+    color #333
+    img
+      width 100%
+      height 512px
+
+.indexContent
+  padding 0 30px 30px
+  h5
+    height 140px
+    line-height 140px
+    font-size 46px
+    font-weight 600
+    display flex
+    .title
+      color #333
+      ellipsis()
+      flex 1
+      display inline-block
+    .price
+      font-size 40px
+  .content
+    color #808080
+    font-size 36px
+    line-height 60px
+    ellipsisM()
+    -webkit-line-clamp 2
+</style>
+<style lang="stylus">
+.indexNewProducts
+  .swiper-container
+    overflow visible
+  .swiper-pagination-fraction
+    top -125px
+    text-align right
+    color #333333
+    font-size 60px
+    height 60px
+    .swiper-pagination-current
+      font-size 60px
+      font-weight 500
+    .swiper-pagination-total
+       font-size 40px
+  .indexContent
+    margin-top 0
+  .swiper-slide
+    box-shadow:0px 2px 26px 0px rgba(0, 0, 0, 0.1);
+</style>

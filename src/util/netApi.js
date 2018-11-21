@@ -114,6 +114,7 @@ export const feedback = { url: '/view/feedback/api', method: 'POST', version: v1
 
 // 发现
 export const bannerList = { url: '/ad/api/ad-list', method: 'GET', version: v1, join: true } // banner
+export const findData = { url: '/index/app', method: 'GET', version: v1 }
 export const discoverTab = { url: '/article/api/outline', method: 'GET', version: v1, join: true } // 分类
 export const recommend = { url: '/article/api/find/recommend', method: 'GET', version: v1 } // 推荐
 export const hotel = { url: '/article/api/find/hotel', method: 'GET', version: v1 } // 酒店
