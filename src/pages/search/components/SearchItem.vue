@@ -59,7 +59,9 @@ export default {
     searchHistoryStorage: {
       handler (val) {
         console.log(888)
+        console.log(val)
         let searchVal = val[val.length - 1]
+        console.log(searchVal !== val[val.length - 2])
         if (searchVal !== val[val.length - 2]) {
           this.getGoodsList(searchVal, 1)
         }
@@ -80,7 +82,12 @@ export default {
             this.scroll.finishPullUp()
             this.noMore = true
           }
-          this.goodsList = [...this.goodsList, ...res.data.body.list]
+          if (page === 1) {
+            this.goodsList = res.data.body.list
+          } else {
+            this.goodsList = [...this.goodsList, ...res.data.body.list]
+          }
+
           this.scrollInit()
           this.emptyObj.emptyP = '没有找到关键字为“' + searchName + '”的产品'
         })
@@ -112,6 +119,7 @@ export default {
   },
   mounted () {
     let searchName = this.searchHistoryStorage[this.searchHistoryStorage.length - 1]
+    console.log(this.searchHistoryStorage)
     this.getGoodsList(searchName, 1)
   }
 }

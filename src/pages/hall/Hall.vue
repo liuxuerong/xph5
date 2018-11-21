@@ -70,17 +70,19 @@ export default {
         this.swiperOption.loopedSlides = this.swiperData.length
         storage.setLocalStorage(experience, res.data.body)
         this.$nextTick(function () {
-          this.mySwiper = new Swiper(this.$refs.swpierWrap, {
-            direction: 'vertical',
-            notNextTick: true,
-            mousewheelControl: true,
-            observeParents: true,
-            slidesPerView: 1.2,
-            loopedSlides: 8,
-            autoHeight: true,
-            speed: 400,
-            loop: true
-          })
+          setTimeout(() => {
+            this.mySwiper = new Swiper(this.$refs.swpierWrap, {
+              direction: 'vertical',
+              notNextTick: true,
+              mousewheelControl: true,
+              observeParents: true,
+              slidesPerView: 1.2,
+              loopedSlides: 8,
+              autoHeight: true,
+              speed: 400,
+              loop: true
+            })
+          }, 100)
         })
       }).catch(err => {
         console.log(err)

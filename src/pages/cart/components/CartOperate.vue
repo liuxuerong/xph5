@@ -54,9 +54,10 @@ export default {
   }),
   watch: {
     isAllSelect: function (v) {
-      if (!v) {
-        this.check = false
-      }
+      this.check = v
+    },
+    check: function (v) {
+      this.changeIsAllSelect(v)
     },
     $route (to, from) {
       this.$router.go(0)
@@ -86,7 +87,9 @@ export default {
       let goodsList = this.goodsList
       for (let i in goodsList) {
         if (this.check) {
-          goodsList[i].value = true
+          if (goodsList[i].stock !== 0) {
+            goodsList[i].value = true
+          }
           this.changeIsAllSelect(true)
         } else {
           this.changeIsAllSelect(false)
@@ -94,7 +97,6 @@ export default {
         }
       }
       this.changeGoodsList(goodsList)
-      console.log(this.goodsList)
     },
     delCheck () {
       let checkGoodsList = []
@@ -109,7 +111,6 @@ export default {
         }
       }
       id = id.substring(1, id.length)
-      console.log(id)
       if (checkGoodsList.length) {
         http(delCart, [id]).then(res => {
           if (res.data.code === 0) {
@@ -119,7 +120,6 @@ export default {
               position: 'center',
               duration: 1000
             })
-            console.log(this.goodsList)
             this.changeGoodsList(notCheckGoodsList)
           }
         }).catch(err => {

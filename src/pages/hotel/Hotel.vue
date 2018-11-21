@@ -24,7 +24,7 @@ import {
   http
 } from 'util/request'
 export default {
-  name: 'xpHotel',
+  name: 'Hotel',
   components: {
     CommonNavHeader,
     commonBanner,

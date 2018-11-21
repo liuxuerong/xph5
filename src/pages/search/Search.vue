@@ -21,7 +21,6 @@
 <script>
 import SearchHistory from './components/SearchHistory'
 import SearchItem from './components/SearchItem'
-
 import {searchHistory} from 'util/const'
 import {storage} from 'util/storage'
 export default {
@@ -58,6 +57,7 @@ export default {
 
     // 获取input的value
     getSearchVal () {
+      console.log(this.searchVal)
       this.hasSearch = true
       this.saveSearchHistory()
     },
@@ -70,7 +70,15 @@ export default {
     saveSearchHistory () {
       this.searchHistoryStorage = storage.getLocalStorageLong(searchHistory)
       this.searchHistoryStorage = this.searchHistoryStorage || []
+      let index = ''
+      console.log(this.searchVal)
       if (this.searchVal.trim() !== '') {
+        for (let i = 0; i < this.searchHistoryStorage.length; i++) {
+          if (this.searchVal === this.searchHistoryStorage[i]) {
+            index = i
+            this.searchHistoryStorage.splice(index, 1)
+          }
+        }
         this.searchHistoryStorage.push(this.searchVal)
         storage.setLocalStorage(searchHistory, this.searchHistoryStorage)
       }

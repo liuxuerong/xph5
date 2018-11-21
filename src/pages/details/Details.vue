@@ -19,7 +19,7 @@
         <router-link :to="'/comment/'+goodsId" class="commentRouter">
           <details-cell :cellInfo="cellInfo[2]" />
         </router-link>
-        <details-comment-swiper/>
+        <details-comment-swiper :goodsComment="goodsComment" v-if="goodsComment"/>
         <div class="seeMore">上拉查看更多详情</div>
         <details-img-text-desc class="isDetailsImgTextShow" ref="isDetailsImgTextShow" :desc="desc" v-if="desc.length" />
       </div>
@@ -93,6 +93,7 @@ export default {
       desc: '',
       goodsStatus: 1,
       goodsStatusText: '',
+      goodsComment: null,
       emptyTitle: '商品过期不存在',
       emptyObj: {
         emptyImg: '/static/images/commentEmptyGoods.png',
@@ -271,10 +272,10 @@ export default {
             this.goodsItems = res.data.body.goodsItems
             this.sku = this.pushKeys(res.data.body.goodsItems)
             this.swiperData = res.data.body.goodsPic
+            this.goodsComment = res.data.body.goodsComments
             this.changeNowPrice(res.data.body.goods.minPrice)
             storage.setLocalStorage(comment, res.data.body.goodsComments)
-            // this.changeComment(res.data.body.goodsComments)
-            console.log(res.data.body.goodsComments)
+            console.log(comment)
             let totals = res.data.body.goodsComments.totals
             if (totals >= 999) {
               totals = '999+'
@@ -290,7 +291,6 @@ export default {
     }
   },
   mounted () {
-    console.log(1111)
     this.initDeatils()
   }
 }

@@ -3,18 +3,20 @@
     <keep-alive>
       <div class="xpGoodsWrap">
         <common-nav-search :showCart="showCart">
+          {{title}}
         </common-nav-search>
         <div class="xpGoodsTop border-bottom" ref="xpGoodsTop">
           <div class="xpGoodsTopContent">
             <tab v-if="tabbar.length">
               <tab-item :selected="index==currentIndex" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.id" :id="item.id" ref="tabItem">{{item.catName}}</tab-item>
+              <!-- <tab-item></tab-item> -->
             </tab>
           </div>
         </div>
         <div ref="xpStoryContent" class="xpStoryContent">
           <div>
             <ul class="goodsContainer" v-if="goodsListData.length">
-              <li v-for="item in goodsListData" v-if="goodsListData.length" :key="item.id">
+                <li v-for="item in goodsListData" v-if="goodsListData.length" :key="item.id">
                 <common-img-prices :pricesData="item" />
               </li>
               <li class="emptyBox"></li>
@@ -33,6 +35,12 @@ import CommonNavSearch from 'common/commonHeader/CommonNavSearch'
 import CommonImgPrices from 'common/commonImgPrices/CommonImgPrices'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
 import {
+  storage
+} from 'util/storage'
+import {
+  goodsListData
+} from 'util/const'
+import {
   Tab,
   TabItem,
   Divider
@@ -41,7 +49,6 @@ import {
   http
 } from 'util/request'
 import {
-  category,
   goodsList
 } from 'util/netApi'
 import {
@@ -61,9 +68,10 @@ export default {
   data () {
     return {
       imageUrl: config.imageUrl,
-      goodsCategoryList: [],
       tabbar: [],
+      title: '',
       goodsListData: [],
+      currentList: [],
       page: 1,
       categoryId: '',
       noMore: false,
@@ -78,20 +86,11 @@ export default {
       }
     }
   },
-  computed: {},
+  computed: {
+
+  },
   methods: {
-    getTabbar () {
-      http(category).then(res => {
-        if (this.$route.params.index) {
-          this.currentIndex = this.$route.params.index
-        }
-        for (let i = 0; i < res.data.body.length; i++) {
-          this.tabbar.push(res.data.body[i])
-        }
-        this.categoryId = this.tabbar[this.currentIndex].id
-        this.getGoodsList(this.categoryId, this.page)
-      })
-    },
+
     onItemClick (index) {
       this.categoryId = this.$refs.tabItem[index].$el.id
       this.page = 1
@@ -107,15 +106,12 @@ export default {
         categoryId: categoryId
       }
       http(goodsList, param).then(res => {
-        console.log(res)
         this.goodsListData = this.goodsListData.concat(res.data.body.list)
         this.scrollInit()
-        console.log(res.data.body.list)
         if (this.page !== 1 && res.data.body.list.length === 0) {
           this.scroll.finishPullUp()
           this.noMore = true
         }
-        // this.scroll.refresh()
       })
     },
 
@@ -135,33 +131,31 @@ export default {
           }
         })
         this.scroll.on('pullingUp', () => {
-          console.log(this.page)
           this.page++
           this.getGoodsList(this.categoryId, this.page)
-          console.log(this.page)
         })
       } else {
         this.scroll.refresh()
         this.scroll.finishPullUp()
       }
-
-      // return this.scroll
     },
-    scrollInitTopBar () {
-      return (this.scrollTopBar = new BScroll(this.$refs.xpGoodsTop, {
-        scrollX: true,
-        scrollY: false,
-        click: true,
-        bounce: {
-          left: true,
-          right: true
-        }
-      }))
+    initData () {
+      let data = storage.getLocalStorage(goodsListData)
+      console.log(data)
+      let index = this.$route.params.index
+      let innerIndex = this.$route.params.innerIndex
+      this.currentList = data[index].children[innerIndex].children
+      for (let i = 0; i < this.currentList.length; i++) {
+        this.tabbar.push(this.currentList[i])
+      }
+      this.title = data[index].children[innerIndex].catName
+      this.categoryId = this.tabbar[this.currentIndex].id
+      this.getGoodsList(this.categoryId, this.page)
     }
 
   },
   mounted () {
-    this.getTabbar()
+    this.initData()
   }
 }
 </script>
@@ -191,6 +185,8 @@ export default {
     height 106px
     line-height 106px
     font-size 46px
+
+    // padding 0 14px
 .xpGoods
   height 100%
   padding-top 202px
@@ -209,6 +205,7 @@ export default {
     background-color #fff
   .xpStoryContent
     height 100%
+    background-color #fff
   h1.title
     font-size 56px
   .topBgImg

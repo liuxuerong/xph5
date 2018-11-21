@@ -228,7 +228,7 @@ export default {
             info.invoiceStyleValue = this.inputForm.invoiceStyleValue
             info.invoiceTypeValue = this.inputForm.invoiceTypeValue
             info.invoicingType = this.inputForm.invoicingType
-            info.shippingMethod = 1
+            // info.shippingMethod = 1
             storage.setLocalStorage(orderInfo, info)
             this.$router.push({path: '/createOrder/1'})
           }
@@ -239,7 +239,7 @@ export default {
             info.invoicingId = res.data.body.id
             info.invoiceStyleValue = this.inputForm.invoiceStyleValue
             info.invoiceTypeValue = this.inputForm.invoiceTypeValue
-            info.shippingMethod = 1
+            // info.shippingMethod = 1
             storage.setLocalStorage(orderInfo, info)
             this.$router.push({path: '/createOrder/1'})
           }

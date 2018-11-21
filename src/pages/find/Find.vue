@@ -27,7 +27,7 @@
                 <h2>活动精选</h2>
                 <h4>Featured</h4>
               </router-link>
-              <router-link to="/" class="item bottom">
+              <router-link to="/hotel" class="item bottom">
                 <h2>酒店用品</h2>
                 <h4>hotel supplies</h4>
               </router-link>
