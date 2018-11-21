@@ -36,18 +36,7 @@
     <div class="gradeTips" v-else>您已成功延续下一年普卡会员</div>
     <div class="toolCon">
       <person-title content="我的会员成长" :moreShow="moreShow"></person-title>
-      <div class="inteShow" v-if="list.totalShoppingMoney > 10000">累计消费<span>{{list.totalShoppingMoney}}</span>,当前已是钻卡会员</div>
-      <div class="inteShow" v-else-if="list.totalShoppingMoney > 5000">累计消费<span>{{list.totalShoppingMoney}}</span>,还剩<span> {{list.upMoney}} </span>可升为钻卡会员</div>
-      <div class="inteShow" v-else-if="list.totalShoppingMoney > 2000">累计消费<span>{{list.totalShoppingMoney}}</span>,还剩<span> {{list.upMoney}} </span>可升为金卡会员</div>
-      <div class="inteShow" v-else>累计消费<span>{{list.totalShoppingMoney}}</span>,还剩<span> {{list.upMoney}} </span>可升为银卡会员</div>
-      <!-- <div ref="memberGrade" class="indexNavWrapper">
-        <ul class="memberGradeScroll">
-          <li :class="list.memberLevelName === '普卡'?'active':''"><i class="memberGradeIcon01"></i><span>普卡</span></li>
-          <li :class="list.memberLevelName === '银卡'?'active':''"><i class="memberGradeIcon02"></i><span>银卡</span></li>
-          <li :class="list.memberLevelName === '金卡'?'active':''"><i class="memberGradeIcon03"></i><span>金卡</span></li>
-          <li :class="list.memberLevelName === '钻卡'?'active':''"><i class="memberGradeIcon04"></i><span>钻卡</span></li>
-        </ul>
-      </div> -->
+      <div class="inteShow">累计消费<span>{{list.totalShoppingMoney}}</span><p v-html="totalShoppingMoneyHTML"></p></div>
       <swiper ref="mySwiper" :options="swiperOption" class="memberGradeScroll">
         <swiper-slide></swiper-slide>
         <swiper-slide>
@@ -114,25 +103,18 @@ export default {
       expireTime: '', // 到期时间
       moreShow: false,
       integral: '', // 积分
-      memberLevelName: '', // 会员等级
+      memberLevelName: Number, // 会员等级
       active: '1',
+      totalShoppingMoneyHTML: '',
       imageUrl: config.imageUrl, // 图片路径
       swiperOption: {
         direction: 'horizontal',
         spaceBetween: 90,
         slidesPerView: 3,
+        notNextTick: true,
         on: {
-          init: function () {
-            this.emit('transitionEnd')
-          },
-          slideChangeTransitionEnd () {
-            if (this.activeIndex === 0 || this.activeIndex === 1) {
-              // alert('普卡银卡')
-            } else if (this.activeIndex === 2) {
-              // alert('金卡')
-            } else if (this.activeIndex === 3) {
-              // alert('钻卡')
-            }
+          slideChangeTransitionEnd: () => {
+            this.grandRender()
           }
         }
       }
@@ -172,8 +154,42 @@ export default {
           } else {
             this.memberLevelName = 4
           }
+          this.swiper.activeIndex = this.memberLevelName - 1
+          this.grandRender()
         }
       })
+    },
+    grandRender () {
+      console.log(this.memberLevelName)
+      console.log(this.swiper.activeIndex)
+      if (this.memberLevelName === 1) {
+        // 普卡银卡
+        if (this.swiper.activeIndex === 0 || this.swiper.activeIndex === 1) {
+          this.totalShoppingMoneyHTML = '还剩<span style="color:#BA825A"> ' + this.list.upMoney + ' </span>可升为银卡会员'
+        } else if (this.swiper.activeIndex === 2) {
+          this.totalShoppingMoneyHTML = '还剩<span color="#BA825A" style="color:#BA825A"> ' + (5000 - this.list.totalShoppingMoney) + ' </span>可升为金卡会员'
+        } else if (this.swiper.activeIndex === 3) {
+          this.totalShoppingMoneyHTML = '还剩<span style="color:#BA825A"> ' + (10000 - this.list.totalShoppingMoney) + ' </span>可升为钻卡会员'
+        }
+      } else if (this.memberLevelName === 2) {
+        if (this.swiper.activeIndex === 0) {
+          this.totalShoppingMoneyHTML = '当前已是银卡会员'
+        } else if (this.swiper.activeIndex === 1 || this.swiper.activeIndex === 2) {
+          this.totalShoppingMoneyHTML = '还剩<span style="color:#BA825A"> ' + (5000 - this.list.totalShoppingMoney) + ' </span>可升为金卡会员'
+        } else if (this.swiper.activeIndex === 3) {
+          this.totalShoppingMoneyHTML = '还剩<span style="color:#BA825A"> ' + (10000 - this.list.totalShoppingMoney) + ' </span>可升为钻卡会员'
+        }
+      } else if (this.memberLevelName === 3) {
+        // 金卡
+        if (this.swiper.activeIndex === 0 || this.swiper.activeIndex === 1) {
+          this.totalShoppingMoneyHTML = '当前已是金卡会员'
+        } else if (this.swiper.activeIndex === 2 || this.swiper.activeIndex === 3) {
+          this.totalShoppingMoneyHTML = '还剩<span style="color:#BA825A"> ' + this.list.upMoney + ' </span>可升为金卡会员'
+        }
+      } else if (this.memberLevelName === 4) {
+        // 钻卡
+        this.totalShoppingMoneyHTML = '当前已是钻卡会员'
+      }
     }
 
   },
@@ -381,6 +397,8 @@ export default {
     background #F5F5F5
     border-radius 60px
     position relative
+    p
+      display inline-block
     span
       color #BA825A
       box-sizing border-box

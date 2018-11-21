@@ -31,7 +31,9 @@
           title="出生日期"
           :readonly="readonly"
           v-model="age"
+          @on-clear="ageChangeShow"
           :min-year='1960'
+          @on-change="change"
           @on-show="ageChangeShow"
           @on-confirm="onConfirm"></datetime>
       </group>
@@ -109,7 +111,6 @@ export default {
           this.age = data.ageGroup
           if (data.birthdayStatus === 2) {
             this.birthdayStatus = 2
-            this.readonly = true
           }
         }
         if (data.sex !== '' && data.sex != null) {
@@ -154,13 +155,17 @@ export default {
       // 改变数据
       this.popData = ['男', '女', '保密']
     },
+    change (value) {
+      console.log('change', value)
+    },
     // 年龄选择
     ageChangeShow () {
       this.popType = 2
       if (this.birthdayStatus === 2) {
+        this.readonly = true
         Toast({
           message: '生日信息修改，请联系在线客服，谢谢',
-          position: 'bottom',
+          position: 'middle',
           duration: 2000
         })
       }

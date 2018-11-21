@@ -22,10 +22,10 @@
               <h3>{{item.name}}</h3>
               <div class="displayBtn">
                 <div v-if="item.condMoney != '0'" class="fullSub">
-                  <span v-if="item.range == '1'">满{{item.condMoney}}.0可用(限指定商品)</span>
-                  <span v-if="item.range == '2'">满{{item.condMoney}}.0可用(限指定门店)</span>
-                  <span v-if="item.range == '3'">满{{item.condMoney}}.0可用(限指定分类)</span>
-                  <span v-if="item.range == '4'">满{{item.condMoney}}.0可用</span>
+                  <span v-if="item.range == '1'">满 {{item.condMoney}}.0 可用(限指定商品)</span>
+                  <span v-else-if="item.range == '2'">满 {{item.condMoney}}.0 可用(限指定门店)</span>
+                  <span v-else-if="item.range == '3'">满 {{item.condMoney}}.0 可用(限指定分类)</span>
+                  <span v-else-if="item.range == '4'">满 {{item.condMoney}}.0 可用</span>
                 </div>
                 <div v-else class="fullSub">
                   <span>无门槛</span>

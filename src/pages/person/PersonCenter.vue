@@ -13,7 +13,8 @@
           <img v-if="list.memberHead === undefined" src="/static/images/memberHeader.png" class="headerImg"  @click="userDataSet">
           <img v-else :src="imageUrl+list.memberHead" class="headerImg" @click="userDataSet">
           <div class="headerRightText">
-            <h2 class="headerName" @click="userDataSet">{{list.memberName}}</h2>
+            <h2 v-if="list.memberName" class="headerName" @click="userDataSet">{{list.memberName}}</h2>
+            <h2 v-else class="headerName" @click="userDataSet">{{phone}}</h2>
             <span class="memberGrade" v-if="list.memberLevelName === '普卡'"><i class="memberGradeIcon01"></i>普卡会员</span>
             <span class="memberGrade" v-if="list.memberLevelName === '银卡'"><i class="memberGradeIcon02"></i>银卡会员</span>
             <span class="memberGrade" v-if="list.memberLevelName === '金卡'"><i class="memberGradeIcon03"></i>金卡会员</span>

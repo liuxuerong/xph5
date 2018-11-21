@@ -16,7 +16,7 @@
             <p v-if="pastList.applyType == '3'">门店专享</p>
           </div>
           <div class="right">
-            <h3>{{pastList.name}}-----1</h3>
+            <h3>{{pastList.name}}</h3>
             <div class="fullSub">
               <span v-if="pastList.condMoney != '0' && pastList.range == '1'">满 {{pastList.condMoney}}.0 可用</span>
               <span v-else-if="pastList.condMoney != '0' && pastList.range == '2'">满 {{pastList.condMoney}}.0 可用</span>
@@ -54,7 +54,7 @@
             <p v-if="list.applyType == '3'">门店专享</p>
           </div>
           <div class="right">
-            <h3>{{list.name}}-----2</h3>
+            <h3>{{list.name}}</h3>
             <div class="fullSub">
               <span v-if="list.condMoney != '0'&& list.range == '1'">满 {{list.condMoney}}.0 可用</span>
               <span v-else-if="list.condMoney != '0'&& list.range == '2'">满 {{list.condMoney}}.0 可用</span>
@@ -175,7 +175,7 @@ export default {
             position: 'bottom',
             duration: 5000
           })
-          this.headleTabsChange(0)
+          this.cardDetailsRender()
         }
       }).catch((err) => {
         console.log(err)
