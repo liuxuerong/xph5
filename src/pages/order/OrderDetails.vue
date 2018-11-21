@@ -56,8 +56,8 @@
       <ul class="orderOther">
         <li v-if="list.shippingMethod === '1'">配送方式：上门自提</li>
         <li v-if="list.shippingMethod === '2'">配送方式：快递配送</li>
-        <!-- <li>下单时间：{{list.createTime.split('T')[0]}}&nbsp;&nbsp;{{list.createTime.split('T')[1]}}</li> -->
-        <li>下单时间：{{list.createTime}}</li>
+        <li>下单时间：{{list.createTime.split('T')[0]}}&nbsp;&nbsp;{{list.createTime.split('T')[1]}}</li>
+        <!-- <li>下单时间：{{list.createTime}}</li> -->
         <li v-if="list.invoiceDesc === undefined || list.invoiceDesc === ''">发票：无发票</li>
         <li v-else>发票：{{list.invoiceDesc}}</li>
         <li v-if="list.desc === undefined || list.desc === ''">备注：无备注</li>

@@ -23,15 +23,15 @@
     </div>
     <div class="gradeTips" v-if="list.totalShoppingMoney > 10000">
       <span v-if="list.totalShoppingMoney > 5000">您已成功延续下一年钻卡会员</span>
-      <span v-else>您距离下一年延续钻卡会员 还有<i>{{5000 - list.totalShoppingMoney}} 元</i>的距离</span>
+      <span v-else>您距离下一年延续钻卡会员 还有<i>{{list.upMoney}} 元</i>的距离</span>
     </div>
     <div class="gradeTips" v-else-if="list.totalShoppingMoney > 5000">
       <span v-if="list.totalShoppingMoney > 3000">您已成功延续下一年金卡会员</span>
-      <span v-else>您距离下一年延续金卡会员 还有<i>{{3000 - list.totalShoppingMoney}} 元</i>的距离</span>
+      <span v-else>您距离下一年延续金卡会员 还有<i> {{list.upMoney}}元</i>的距离</span>
     </div>
     <div class="gradeTips" v-else-if="list.totalShoppingMoney > 2000">
       <span v-if="list.totalShoppingMoney > 1000">您已成功延续下一年银卡会员</span>
-      <span v-else>您距离下一年延续银卡会员 还有<i>{{1000 - list.totalShoppingMoney}} 元</i>的距离</span>
+      <span v-else>您距离下一年延续银卡会员 还有<i>{{list.upMoney}} 元</i>的距离</span>
     </div>
     <div class="gradeTips" v-else>您已成功延续下一年普卡会员</div>
     <div class="toolCon">
@@ -138,7 +138,6 @@ export default {
     // 页面初始化 渲染
     dataRender () {
       http(getMemberCenter).then((response) => {
-        console.log(response.data.body)
         if (response.data.code === 0) {
           let data = response.data.body
           this.list = data
@@ -160,31 +159,29 @@ export default {
       })
     },
     grandRender () {
-      console.log(this.memberLevelName)
-      console.log(this.swiper.activeIndex)
       if (this.memberLevelName === 1) {
         // 普卡银卡
         if (this.swiper.activeIndex === 0 || this.swiper.activeIndex === 1) {
           this.totalShoppingMoneyHTML = '还剩<span style="color:#BA825A"> ' + this.list.upMoney + ' </span>可升为银卡会员'
         } else if (this.swiper.activeIndex === 2) {
-          this.totalShoppingMoneyHTML = '还剩<span color="#BA825A" style="color:#BA825A"> ' + (5000 - this.list.totalShoppingMoney) + ' </span>可升为金卡会员'
+          this.totalShoppingMoneyHTML = '还剩<span color="#BA825A" style="color:#BA825A"> ' + (7000 - this.list.totalShoppingMoney) + ' </span>可升为金卡会员'
         } else if (this.swiper.activeIndex === 3) {
-          this.totalShoppingMoneyHTML = '还剩<span style="color:#BA825A"> ' + (10000 - this.list.totalShoppingMoney) + ' </span>可升为钻卡会员'
+          this.totalShoppingMoneyHTML = '还剩<span style="color:#BA825A"> ' + (17000 - this.list.totalShoppingMoney) + ' </span>可升为钻卡会员'
         }
       } else if (this.memberLevelName === 2) {
         if (this.swiper.activeIndex === 0) {
           this.totalShoppingMoneyHTML = '当前已是银卡会员'
         } else if (this.swiper.activeIndex === 1 || this.swiper.activeIndex === 2) {
-          this.totalShoppingMoneyHTML = '还剩<span style="color:#BA825A"> ' + (5000 - this.list.totalShoppingMoney) + ' </span>可升为金卡会员'
+          this.totalShoppingMoneyHTML = '还剩<span style="color:#BA825A"> ' + this.list.upMoney + ' </span>可升为金卡会员'
         } else if (this.swiper.activeIndex === 3) {
-          this.totalShoppingMoneyHTML = '还剩<span style="color:#BA825A"> ' + (10000 - this.list.totalShoppingMoney) + ' </span>可升为钻卡会员'
+          this.totalShoppingMoneyHTML = '还剩<span style="color:#BA825A"> ' + (17000 - this.list.totalShoppingMoney) + ' </span>可升为钻卡会员'
         }
       } else if (this.memberLevelName === 3) {
         // 金卡
         if (this.swiper.activeIndex === 0 || this.swiper.activeIndex === 1) {
           this.totalShoppingMoneyHTML = '当前已是金卡会员'
         } else if (this.swiper.activeIndex === 2 || this.swiper.activeIndex === 3) {
-          this.totalShoppingMoneyHTML = '还剩<span style="color:#BA825A"> ' + this.list.upMoney + ' </span>可升为金卡会员'
+          this.totalShoppingMoneyHTML = '还剩<span style="color:#BA825A"> ' + this.list.upMoney + ' </span>可升为钻卡会员'
         }
       } else if (this.memberLevelName === 4) {
         // 钻卡
