@@ -31,12 +31,12 @@
           <div class="refundItem" v-if="goodsInfo.orderItemStatusDesc == '退款失败'" :class="goodsInfo.orderItemStatusDesc == '退款失败'?'active':''">
             <i class="hookIcon" :class="goodsInfo.orderItemStatusDesc == '退款失败'?'hookActive':''"></i>
             <span class="refundState">退款失败</span>
-            <span v-if="goodsInfo.orderItemStatusDesc == '退款失败'" class="refundTime">{{list.allowPayTime.split('T')[0]}} {{list.allowPayTime.split('T')[1]}}</span>
+            <span v-if="goodsInfo.orderItemStatusDesc == '退款失败' && list.allowPayTime" class="refundTime">{{list.allowPayTime.split('T')[0]}} {{list.allowPayTime.split('T')[1]}}</span>
           </div>
           <div class="refundItem" v-else :class="goodsInfo.orderItemStatusDesc == '退款成功'?'active':''">
             <i class="hookIcon" :class="goodsInfo.orderItemStatusDesc == '退款成功'?'hookActive':''"></i>
             <span class="refundState">退款成功</span>
-            <span v-if="goodsInfo.orderItemStatusDesc == '退款成功'" class="refundTime">{{list.allowPayTime.split('T')[0]}} {{list.allowPayTime.split('T')[1]}}</span>
+            <span v-if="goodsInfo.orderItemStatusDesc == '退款成功' && list.allowPayTime" class="refundTime">{{list.allowPayTime.split('T')[0]}} {{list.allowPayTime.split('T')[1]}}</span>
           </div>
         </div>
       </div>
@@ -72,7 +72,7 @@
       <ul class="orderOther">
         <li v-if="list.shippingMethod === '1'">配送方式：上门自提</li>
         <li v-if="list.shippingMethod === '2'">配送方式：快递配送</li>
-        <li>下单时间：{{list.createTime.split('T')[0]}}&nbsp;&nbsp;{{list.createTime.split('T')[1]}}</li>
+        <li v-if="list.createTime">下单时间：{{list.createTime.split('T')[0]}}&nbsp;&nbsp;{{list.createTime.split('T')[1]}}</li>
         <!-- <li>下单时间：{{list.createTime}}</li> -->
         <li v-if="list.invoiceDesc === undefined || list.invoiceDesc === ''">发票：无发票</li>
         <li v-else>发票：{{list.invoiceDesc}}</li>
@@ -103,6 +103,13 @@ export default {
   },
   components: {
     SearchTitle
+  },
+  watch: {
+    '$route' (to, from) {
+      if (to.name === 'afterSaleOrder') {
+        this.afterSaleRender()
+      }
+    }
   },
   methods: {
     // 页面初始化数据

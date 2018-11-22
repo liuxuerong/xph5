@@ -28,7 +28,7 @@
                   <!-- 未使用 -->
                   <div class="cardVoucherOper">
                     <span class="operBtn newReceive" v-if="item.useStatus == '1'" @click.stop="receiveCard(item.id)">立即领取</span>
-                    <span class="operBtn newUse" v-if="item.useStatus == '2'">立即使用</span>
+                    <span class="operBtn noReceive" v-if="item.useStatus == '2'">已领取</span>
                     <span class="operBtn noReceive" v-if="item.useStatus == '3'">领光了</span>
                   </div>
                 </div>
@@ -42,7 +42,6 @@
                   <span v-else-if="item.useStatus == '2' && item.display=='1'">使用时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
                   <!-- 领光了 -->
                   <span v-if="item.useStatus == '3'" class="activityTime">领取时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
-                  <button class="cardDetails">详情&nbsp;></button>
                 </div>
               </div>
             </div>

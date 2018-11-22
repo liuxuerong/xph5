@@ -37,6 +37,7 @@
       <div class="uploadWrapper" v-if="type=='2'">
         <div class="uploadItem" v-for="(childImg,j) in objImgs" :key="j">
           <img :src="imageUrl+childImg" alt="">
+          <span class="deletePic" @click="deletePic(j)"></span>
         </div>
         <div class="uploadPicBtn" v-if="(!objImgs) || ( objImgs.length < 3)">
           <input name="file" @change="uploadPic($event)" ref="inputer"  type="file"/>
@@ -126,11 +127,16 @@ export default {
       axios.post(config.baseUrl + 'file/upload', formData, cf).then((response) => {
         if (response.data.code === 0) {
           this.objImgs.push(response.data.body.key)
-          console.log(this.objImgs)
         }
       }).catch((err) => {
         console.log(err)
       })
+    },
+    // 图片删除
+    deletePic (index) {
+      console.log(index)
+      this.objImgs.splice(index, 1)
+      console.log(this.objImgs)
     },
     // 退款数据提交
     sureRefundOper () {
@@ -358,6 +364,7 @@ export default {
     .uploadItem
       float left
       width auto
+      position relative
       height 190px
       img
         float left
@@ -366,4 +373,12 @@ export default {
         margin-right 24px
       img:nth-of-type
         margin-right 0px
+      .deletePic
+        display block
+        width 40px
+        height 40px
+        position absolute
+        right 5px
+        top -20px
+        bgImage('/static/icons/deletePic')
 </style>

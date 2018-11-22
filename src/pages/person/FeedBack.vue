@@ -19,6 +19,7 @@
         <div class="uploadWrapper">
           <div class="uploadItem" v-for="(childImg,j) in objImgs" :key="j">
             <img :src="imageUrl+childImg" alt="">
+            <span class="deletePic" @click="deletePic(j)"></span>
           </div>
           <div class="uploadPicBtn" v-if="(!objImgs) || ( objImgs.length < 3)">
             <input name="file" @change="uploadPic($event)" ref="inputer"  type="file"/>
@@ -85,6 +86,10 @@ export default {
       }).catch((err) => {
         console.log(err)
       })
+    },
+    // 图片删除
+    deletePic (index) {
+      this.objImgs.splice(index, 1)
     },
     // 意见反馈提交
     // pics 反馈图片
@@ -214,6 +219,7 @@ export default {
       float left
       width auto
       height 190px
+      position relative
       img
         float left
         width 180px
@@ -221,6 +227,14 @@ export default {
         margin-right 24px
       img:nth-of-type
         margin-right 0px
+      .deletePic
+        display block
+        width 40px
+        height 40px
+        position absolute
+        right 5px
+        top -20px
+        bgImage('/static/icons/deletePic')
   .feedbackSubmit
     width calc(100% - 100px)
     height 146px

@@ -32,6 +32,13 @@ export default {
     SearchTitle,
     goodsItem
   },
+  watch: {
+    '$route' (to, from) {
+      if (to.name === 'returnGoods') {
+        this.returngoodsRender()
+      }
+    }
+  },
   methods: {
     // 页面渲染
     returngoodsRender () {

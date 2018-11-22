@@ -42,7 +42,8 @@
           <div class="totalPrice" v-if="type === '5'">
             <span class="totalPayment"><p >退款</p>:￥ {{item.totalAmount}}</span>
             <span class="operState">{{item.afterSalesTypeDesc}}</span>
-            <span class="operState">{{item.memberOrderGoods[0].orderItemStatusDesc}}</span>
+            <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus === 6 || item.memberOrderGoods[0].orderItemStatus === 8">退款中</span>
+            <span class="operState" v-else>{{item.memberOrderGoods[0].orderItemStatusDesc}}</span>
           </div>
           <!-- 全部订单 顶单状态 -->
           <div class="totalPrice" v-if="type === '-1'">
@@ -60,12 +61,14 @@
               <span class="operState">{{item.afterSalesTypeDesc}}</span>
               <span class="operState">退款中</span>
             </p> -->
-            <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='6' || item.memberOrderGoods[0].orderItemStatus=='8' || item.memberOrderGoods[0].orderItemStatus=='9' || item.memberOrderGoods[0].orderItemStatus=='10'">交易关闭</span>
+            <!-- item.memberOrderGoods[0].orderItemStatus=='6' || item.memberOrderGoods[0].orderItemStatus=='8' -->
+            <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='6' || item.memberOrderGoods[0].orderItemStatus=='8'">交易成功</span>
+            <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='9' || item.memberOrderGoods[0].orderItemStatus=='10'">交易关闭</span>
             <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='7'">已评论</span>
             <!-- <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='8'">退款中</span> -->
             <!-- <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='9'">退款完成</span> -->
             <!-- <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='10'">退款失败</span> -->
-            <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='11'">待审核</span>
+            <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='11'">待发货</span>
             <span class="operState" v-if="item.status=='8'">订单失效</span>
             <span class="operState" v-if="item.status=='7'">订单取消</span>
           </div>
@@ -102,6 +105,10 @@
             <span class="operbtn immedPayment" v-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===undefined" @click="immedPayment(item.orderSn)">立即支付</span>
             <div v-else-if="item.memberOrderGoods[0].orderItemStatus=='5'">
               <span class="operbtn confirmGoods" @click="immedEvaluate(item.orderSn)">立即评价</span>
+              <span class="operbtn checkDetails" @click="watchLogistics(item.memberOrderGoods[0].logisticsName,item.memberOrderGoods[0].logisticsNo)">查看物流</span>
+            </div>
+            <div v-else-if="item.memberOrderGoods[0].orderItemStatus=='3'">
+              <span class="operbtn confirmGoods" v-if="item.shippingMethod == '2'" @click="confirmGoods(item.orderSn)">确认收货</span>
               <span class="operbtn checkDetails" @click="watchLogistics(item.memberOrderGoods[0].logisticsName,item.memberOrderGoods[0].logisticsNo)">查看物流</span>
             </div>
             <span class="operbtn checkDetails" v-else @click="orderDetails(item.orderSn,item.memberOrderGoods[0].orderItemStatus,item.memberOrderGoods[0].orderItemId)">查看详情</span>
@@ -188,12 +195,19 @@ export default {
     // 查看详情
     orderDetails (orderCode, state, orderId) {
       console.log(state)
-      if (state !== 6 && state !== 8 && state !== 9 && state !== 10) {
-        // 售前订单详情
+      let type = this.$route.params.type
+      if (type === '-1') {
+        console.log(666)
         this.$router.push('/orderDetails/' + this.type + '/' + orderCode)
       } else {
+        console.log(999)
+        if (state !== 6 && state !== 8 && state !== 9 && state !== 10) {
+        // 售前订单详情
+          this.$router.push('/orderDetails/' + this.type + '/' + orderCode)
+        } else {
         // 售后订单详情
-        this.$router.push('/afterSaleOrder/' + this.type + '/' + orderId)
+          this.$router.push('/afterSaleOrder/' + this.type + '/' + orderId)
+        }
       }
     },
     // 确认收货
