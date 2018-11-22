@@ -2,9 +2,9 @@
   <div class="xpSwiper" v-if="swiperData.length">
       <swiper :options="swiperOption">
         <swiper-slide v-for="item in swiperData" :key="item.id">
-            <img v-lazy="imageUrl+item.value" alt="">
+            <img v-lazy="imageUrl+item.value" alt="" class="lazyImg">
         </swiper-slide>
-        <div class="swiper-pagination" slot="pagination"></div>
+        <div class="swiper-pagination" slot="pagination" v-if="showPagination"></div>
       </swiper>
   </div>
 </template>
@@ -15,7 +15,11 @@ import { config } from 'util/config.js'
 export default {
   name: 'CommonSwiper',
   props: {
-    swiperData: Array
+    swiperData: Array,
+    showPagination: {
+      type: Boolean,
+      default: true
+    }
   },
   mounted () {
   },
@@ -55,6 +59,11 @@ export default {
       img
         width 100%
         height 1125px
+      .lazyImg[lazy=loading]
+        width 400px
+        height 400px
+        margin 350px auto
+        display block
   .swiper-container-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet
     margin 10px
   .swiper-pagination-bullet

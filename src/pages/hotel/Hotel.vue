@@ -3,8 +3,9 @@
     <common-nav-header :title="title"/>
       <div ref="wrapper" class="wrapper">
         <div>
-          <common-banner :bannerData="fiveStarQuality" :showContent="true" v-if="fiveStarQuality" />
-          <common-banner :bannerData="fiveStarHotel"  :showContent="false"  v-if="fiveStarHotel" :linkUrl="hotelDetails" />
+          <common-banner :bannerData="fiveStarQuality" v-if="fiveStarQuality" />
+          <!-- <common-banner :bannerData="fiveStarHotel" v-if="fiveStarHotel" :linkUrl="hotelDetails" /> -->
+          <hotel-swiper :bannerData="fiveStarHotel" v-if="fiveStarHotel"  />
           <divider>哎呀！底线到了</divider>
         </div>
       </div>
@@ -13,6 +14,7 @@
 <script>
 import CommonNavHeader from 'common/commonHeader/CommonNavHeader'
 import commonBanner from 'common/commonBanner/CommonBanner'
+import HotelSwiper from './components/HotelSwiper'
 import {
   Divider
 } from 'vux'
@@ -28,6 +30,7 @@ export default {
   components: {
     CommonNavHeader,
     commonBanner,
+    HotelSwiper,
     Divider
   },
   data () {

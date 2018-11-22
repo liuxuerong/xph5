@@ -5,7 +5,7 @@
       <swiper :options="swiperOption">
         <swiper-slide v-for="item in swiperData" :key="item.id">
           <router-link :to="'/details/'+item.id" class="swiperHref">
-            <img v-lazy="imageUrl+item.coverImage" alt="">
+            <img v-lazy="imageUrl+item.coverImage" alt="" class="lazyImg">
             <div class="indexContent">
               <h5>
                 <span class="title">{{item.name}}</span>
@@ -50,7 +50,6 @@ export default {
     return {
       swiperOption: {
         spaceBetween: 15,
-        // slidesPerView: 1.1,
         pagination: {
           el: '.swiper-pagination',
           type: 'fraction'
@@ -84,15 +83,20 @@ export default {
     display block
     width 100%
     color #333
+    min-height 600px
     img
       width 100%
       height 512px
-
+    .lazyImg[lazy=loading]
+      width 300px
+      height 300px
+      margin 90px auto
+      display block
 .indexContent
   padding 0 30px 30px
   h5
-    height 140px
-    line-height 140px
+    height 100px
+    line-height 100px
     font-size 46px
     font-weight 600
     display flex
@@ -115,7 +119,7 @@ export default {
   .promotionItem
     font-size 30px
     color #D54B4B
-    padding 22px 20px
+    padding 10px 20px
     border 1px solid #D54B4B
     display inline-block
     margin 0 30px 0 0
@@ -128,7 +132,6 @@ export default {
 
 <style lang="stylus">
 .indexNewProducts
-
   .swiper-container
     overflow visible
   .swiper-pagination-fraction
