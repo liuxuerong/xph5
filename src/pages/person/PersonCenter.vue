@@ -169,6 +169,13 @@ export default {
   computed: {
 
   },
+  watch: {
+    '$route' (to, from) {
+      if (to.name === 'personCenter') {
+        this.getUserInfo()
+      }
+    }
+  },
   methods: {
     // 基础信息加载
     getUserInfo () {
@@ -320,6 +327,7 @@ export default {
     width 100%
     box-sizing border-box
     padding-bottom 60px
+    overflow hidden
     background #fff
     .perTopbg
       width 100%

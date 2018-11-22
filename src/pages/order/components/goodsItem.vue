@@ -5,7 +5,7 @@
     <div class="orderText">
       <h3 class="goodsName">{{goodsData.goodsName}} {{goodsData.pic != ''}}</h3>
       <div class="goodsSpecWrapper clearfix">
-        <span class="goodsSpec" v-if="goodsData.spec" v-for="(spec,n) in JSON.parse(goodsData.spec)" :key="n">{{spec.value}}</span>
+        <span class="goodsSpec" v-if="goodsData.spec" v-for="(spec,n) in JSON.stringify(goodsData.spec)" :key="n">{{spec.value}}</span>
       </div>
       <span class="goodsPrice">￥ {{goodsData.price}}</span>
       <span class="goodsNum">×{{goodsData.num}}</span>

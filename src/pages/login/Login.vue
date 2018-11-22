@@ -144,6 +144,7 @@ export default {
             input
                 width 62%
                 height 100px
+                line-height 100px
                 background transparent
                 color #fff
                 outline none

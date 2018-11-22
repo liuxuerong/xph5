@@ -21,6 +21,7 @@
         <div class="uploadWrapper">
           <div class="uploadItem" v-for="(childImg,j) in objImgs[index]" :key="j">
             <img :src="imageUrl+childImg" alt="">
+            <span class="deletePic" @click="deletePic(index,j)"></span>
           </div>
           <div class="uploadPicBtn" v-if="(!objImgs[index]) || ( objImgs[index].length < 5)">
             <input name="file" @change="uploadPic($event,index)" ref="inputer"  type="file"/>
@@ -66,10 +67,8 @@ export default {
     evaluateRender () {
       let orderCode = this.$route.params.orderCode
       this.orderCode = orderCode
-      console.log(orderCode)
       http(subOrderDetail, [orderCode]).then((response) => {
         let data = response.data.body.memberOrderGoods
-        console.log(data)
         for (let i = 0; i < data.length; i++) {
           data[i].evaluateText = ''
         }
@@ -77,7 +76,6 @@ export default {
       })
     },
     uploadPic (e, index) {
-      console.log(index)
       let ss = e.target.files
       let formData = new FormData()
       formData.append('file', ss[0])
@@ -107,6 +105,10 @@ export default {
         console.log(err)
       })
     },
+    // 图片删除
+    deletePic (index, j) {
+      this.objImgs[index].splice(j, 1)
+    },
     // 评论数据提交
     commentSubmit () {
       let goodsComments = []
@@ -115,7 +117,6 @@ export default {
         con['goodsItemId'] = this.list[i].goodsItemId
         con['comments'] = this.list[i].evaluateText
         con['commentsPics'] = JSON.stringify(this.objImgs[i])
-        console.log(this.objImgs[i] !== undefined)
         if (this.objImgs[i] === undefined || this.objImgs[i] === '') {
           con['commentsPics'] = ''
         } else {
@@ -125,19 +126,20 @@ export default {
         con['start'] = ''
         goodsComments[i] = con
       }
-      console.log(goodsComments)
       let params = {
         orderItemSn: this.orderCode,
         goodsComments: goodsComments
       }
       console.log(params)
       http(comment, params).then((response) => {
+        console.log(response)
         if (response.data.body === true) {
           Toast({
             message: '评论成功',
             position: 'bottom',
             duration: 2000
           })
+          console.log(6666)
           this.$router.push('/personCenter')
         }
       })
@@ -230,6 +232,7 @@ export default {
     .uploadItem
       float left
       width auto
+      position relative
       height 190px
       img
         float left
@@ -238,6 +241,14 @@ export default {
         margin-right 24px
       img:nth-of-type
         margin-right 0px
+    .deletePic
+      display block
+      width 40px
+      height 40px
+      position absolute
+      right 5px
+      top -20px
+      bgImage('/static/icons/deletePic')
   ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
     font-size 36px
     color #999999

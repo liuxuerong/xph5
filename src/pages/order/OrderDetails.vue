@@ -1,6 +1,13 @@
 <template>
   <div class="wrapper">
-    <search-title v-if="orderStatus == '8'" title="支付超时"></search-title>
+    <!-- 交易完成 -->
+    <search-title v-if="orderStatus == 7" title="交易完成"></search-title>
+    <!-- 订单失效 -->
+    <search-title v-else-if="orderStatus == 8 || list.status === 8" title="支付超时"></search-title>
+    <!-- 交易成功 -->
+    <search-title v-else-if="orderStatus == 9" title="交易成功"></search-title>
+    <!-- 订单取消 -->
+    <search-title v-else-if="list.status == '7' || orderStatus == '10'" title="交易关闭"></search-title>
     <search-title v-else :title="title[type-1]"></search-title>
     <div class="orderDetatilCon">
       <div class="orderUserInfo">
@@ -10,7 +17,7 @@
           <span class="shopAddress">店铺地址：{{list.franchiseeDetailVO.province}}{{list.franchiseeDetailVO.city}}{{list.franchiseeDetailVO.area}}{{list.franchiseeDetailVO.address}}</span>
         </div>
         <div class="orderProvide" v-else-if="list.shippingMethod == '2'">
-          <span class="orderName">收货人：{{list.delivery.receiverName}}&nbsp;&nbsp;&nbsp;&nbsp;{{list.delivery.phone}}</span>
+          <span class="orderName" v-if="list.delivery.receiverName">收货人：{{list.delivery.receiverName}}&nbsp;&nbsp;&nbsp;&nbsp;{{list.delivery.phone}}</span>
           <span class="orderAddress">收货地址：{{list.delivery.province}}{{list.delivery.city}}{{list.delivery.area}}{{list.delivery.detailedAddr}}</span>
         </div>
       </div>
@@ -33,13 +40,14 @@
           <img v-if="item.pic != ''" :src="imageUrl+item.pic" alt="">
           <img v-else src="/static/images/personalHeader.png">
           <div class="orderText">
-            <h3 class="goodsName">{{item.goodsName}} {{item.pic != ''}}</h3>
+            <h3 class="goodsName">{{item.goodsName}}</h3>
             <div class="goodsSpecWrapper clearfix">
               <span class="goodsSpec" v-for="(spec,n) in JSON.parse(item.spec)" :key="n">{{spec.value}}</span>
             </div>
             <span class="goodsPrice">￥ {{item.price}}</span>
             <span class="goodsNum">×{{item.num}}</span>
-            <div class="afterSale" v-if="type=='4'" @click.stop.prevent="afterSale(item,list.orderSn)">申请售后</div>
+            <div class="afterSale" v-if="orderStatus===9" @click.stop.prevent="afterSale(item,list.orderSn)">申请售后</div>
+            <div class="afterSale" v-else-if="orderStatus==10" @click.stop.prevent="orderDetails(item.orderItemId)">查看售后</div>
           </div>
         </div>
       </div>
@@ -87,24 +95,25 @@
       <span @click="watchLogistics(list.memberOrderGoods[0].logisticsName,list.memberOrderGoods[0].logisticsNo)">查看物流</span>
       <span class="immedPaymentBtn" @click="immedEvaluate(list.orderSn)">立即评价</span>
     </div>
-    <!-- 4、待评价订单 已评价 -->
-    <!-- <div class="orderOperBtn orderOperBtn11 border-top" v-if="type == '4' && list.shippingMethod == '2'">
+    <!-- 交易完成 已评价 -->
+    <div class="orderOperBtn orderOperBtn11 border-top" v-if="orderStatus == 7">
       <span @click="watchLogistics(list.memberOrderGoods[0].logisticsName,list.memberOrderGoods[0].logisticsNo)">查看物流</span>
       <span>已评价</span>
-    </div> -->
+    </div>
 
-    <div class="orderOperBtn orderOperBtn8 border-top" v-if="orderStatus == '8'">支付超时</div>
-    <div class="orderOperBtn orderOperBtn8 border-top" v-if="orderStatus == '6'">交易关闭</div>
+    <div class="orderOperBtn orderOperBtn8 border-top" v-if="orderStatus == 8">支付超时</div>
+    <div class="orderOperBtn orderOperBtn8 border-top" v-if="orderStatus == 9">交易成功</div>
+    <div class="orderOperBtn orderOperBtn8 border-top" v-if="orderStatus == 10 || list.status == 7">交易关闭</div>
     <!-- 未发货退款 -->
     <!-- <div class="orderOperBtn orderOperBtn11 border-top" v-if="orderStatus == '11' || orderStatus == '1'">
       <span @click="unGoodsapplyRefund(list.orderSn)">申请退款</span>
       <span>已付款</span>
     </div> -->
     <!-- 已发货，分单退款 -->
-    <div class="orderOperBtn orderOperBtn11 border-top" v-if="orderStatus == '9' || orderStatus == '10'">
+    <!-- <div class="orderOperBtn orderOperBtn11 border-top" v-if="orderStatus == '9'">
       <span @click="unGoodsapplyRefund(list.orderId)">申请退款</span>
       <span>已付款</span>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -120,14 +129,15 @@ import { logistics, aftersale } from 'util/const'
 export default {
   data () {
     return {
-      title: ['待付款订单', '待发货订单', '待收货订单', '交易完成'],
+      title: ['待付款订单', '待发货订单', '待收货订单', '待评价订单'],
       type: '',
       list: [],
       imageUrl: config.imageUrl,
       orderStatus: Number,
       computedTime: 0,
       time: '',
-      codeValue: ''
+      codeValue: '',
+      timeout: false // 定时器
       // 1 立即支付
       // 7 查看详情 --- 交易关闭
     }
@@ -138,6 +148,7 @@ export default {
   },
   watch: {
     '$route' (to, from) {
+      // this.$router.go(0)
       if (to.name === 'orderDetails') {
         this.orderDetailRender()
       }
@@ -149,7 +160,6 @@ export default {
       let orderCode = this.$route.params.orderCode
       let type = this.$route.params.type
       this.type = type
-      console.log(6666)
       http(subOrderDetail, [orderCode]).then((response) => {
         console.log(response)
         let data = response.data.body
@@ -159,55 +169,56 @@ export default {
           this.type = '1'
         } else if (memberOrderGoods.orderItemStatus === 11) {
           this.type = '2'
-        } else if (memberOrderGoods.orderItemStatus === '3') {
+        } else if (memberOrderGoods.orderItemStatus === 3) {
           this.type = '3'
+        } else if (memberOrderGoods.orderItemStatus === 5) {
+          this.type = '4'
         }
-        console.log(this.type)
-        // if (data.status === 1) {
-        //   this.title = '待付款订单'
-        // } else if (data.status === 2) {
-        //   this.title = '待发货订单'
-        // } else if (data.status === 7) {
-        //   this.title = '交易关闭'
-        // } else if (data.status === 8) {
-        //   this.title = '支付超时'
-        // } else if (data.status === 4) {
-        //   this.title = '待评价订单'
-        // } else if (memberOrderGoods.orderItemStatus === 1) {
-        //   this.title = '待发货订单'
-        // }
         if (memberOrderGoods.orderItemStatus === undefined && data.status === 8) {
-          this.orderStatus = 8 // 交易关闭
+          this.orderStatus = 8 // 订单失效
         } else if (memberOrderGoods.orderItemStatus === 11) {
           this.orderStatus = 11 // 未发货退款
-        } else if (memberOrderGoods.orderItemStatus === 6) {
-          this.orderStatus = 6 // 交易关闭
-        } else if (memberOrderGoods.orderItemStatus === 1) {
-          this.orderStatus = 1
+        } else if (memberOrderGoods.orderItemStatus === 6 || memberOrderGoods.orderItemStatus === 8) {
+          this.orderStatus = 9 // 交易成功 --6 申请售后 8 退款中 √
+        } else if (memberOrderGoods.orderItemStatus === 9 || memberOrderGoods.orderItemStatus === 10) {
+          this.orderStatus = 10 // 交易关闭 --9 退款成功 10  退货失败 √
+        } else if (memberOrderGoods.orderItemStatus === 1 || memberOrderGoods.orderItemStatus === 2) {
+          this.orderStatus = 1 // 待发货
+        } else if (memberOrderGoods.orderItemStatus === 7) {
+          this.orderStatus = 7 // 交易完成  --- 已评论  √
         }
         // 立即支付倒计时
-        let newDate1 = data.allowPayTime.split('T')[0] + ' ' + data.allowPayTime.split('T')[1]
-        var time = new Date(newDate1).getTime() - new Date().getTime()
-        this.computedTime = time / 1000
-        this.timer = setInterval(() => {
-          this.computedTime--
-          let time1 = parseInt(this.computedTime / 3600)
-          if (time1 < 10) {
-            time1 = '0' + time1
-          }
-          let time2 = parseInt((this.computedTime % 3600) / 60)
-          if (time2 < 10) {
-            time2 = '0' + time2
-          }
-          let time3 = parseInt(this.computedTime % 60)
-          if (time3 < 10) {
-            time3 = '0' + time3
-          }
-          this.time = time1 + ' : ' + time2 + ' : ' + time3
-          if (this.computedTime === 0) {
-          }
-        }, 1000)
+        if (data.allowPayTime) {
+          this.timeout = true
+          clearInterval(this.timer)
+          let newDate1 = data.allowPayTime.split('T')[0] + ' ' + data.allowPayTime.split('T')[1]
+          var time = new Date(newDate1).getTime() - new Date().getTime()
+          this.computedTime = time / 1000
+          this.timer = setInterval(() => {
+            this.computedTime--
+            let time1 = parseInt(this.computedTime / 3600)
+            if (time1 < 10) {
+              time1 = '0' + time1
+            }
+            let time2 = parseInt((this.computedTime % 3600) / 60)
+            if (time2 < 10) {
+              time2 = '0' + time2
+            }
+            let time3 = parseInt(this.computedTime % 60)
+            if (time3 < 10) {
+              time3 = '0' + time3
+            }
+            this.time = time1 + ' : ' + time2 + ' : ' + time3
+            if (this.computedTime === 0) {
+            }
+          }, 1000)
+        }
       })
+    },
+    // 查看售后
+    orderDetails (orderId) {
+      console.log(orderId)
+      this.$router.push('/afterSaleOrder/5/' + orderId)
     },
     // 商品详情页面
     goodsDetails (goodsId) {
