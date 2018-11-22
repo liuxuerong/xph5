@@ -5,7 +5,7 @@
       <div class="commentItem border-bottom" v-for="(item,i) in comments.list" :key="item.id">
         <div class="top">
           <div class="name">{{item.memberName.substr(0, 3) + '****' + item.memberName.substr(7)}}</div>
-          <span class="time">{{item.createTime.split('T')[0]}}</span>
+          <span class="time" v-if="item.createTime">{{item.createTime.split('T')[0]}}</span>
         </div>
         <div class="text">{{item.comments}}</div>
         <div class="goodsItemSpec" v-for="(itemC,indexC) in JSON.parse(item.goodsItemSpec)" :key="indexC">

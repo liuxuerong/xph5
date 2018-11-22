@@ -33,6 +33,7 @@
 <script>
 import SearchTitle from './ComOrderSearchTitle'
 import { subOrderDetail, comment } from 'util/netApi'
+import Toast from 'mint-ui'
 import { http } from 'util/request'
 import { config } from 'util/config' // 图片路径
 import { storage } from 'util/storage.js'
@@ -89,7 +90,6 @@ export default {
           'Authorization': storage.getLocalStorage(accessToken)
         }
       }
-      // https://api.test.jdhoe.com/file/upload
       axios.post(config.baseUrl + 'file/upload', formData, cf).then((response) => {
         console.log(response)
         if (response.data.code === 0) {
@@ -111,7 +111,6 @@ export default {
     commentSubmit () {
       let goodsComments = []
       for (let i = 0; i < this.list.length; i++) {
-        console.log(i)
         let con = {}
         con['goodsItemId'] = this.list[i].goodsItemId
         con['comments'] = this.list[i].evaluateText
@@ -133,10 +132,13 @@ export default {
       }
       console.log(params)
       http(comment, params).then((response) => {
-        console.log(response)
-        if (response.body === true) {
-          location.reload() // 刷新页面
-          console.log('评论完成')
+        if (response.data.body === true) {
+          Toast({
+            message: '评论成功',
+            position: 'bottom',
+            duration: 2000
+          })
+          this.$router.push('/personCenter')
         }
       })
     }

@@ -63,7 +63,7 @@ export default {
         },
         {
           id: 'tabbar5',
-          to: '/PersonCenter',
+          to: '/personCenter',
           imgSrc: '/static/icons/person_icon_Tabbar@2x.png',
           imgSrcSelect: '/static/icons/person_icon_Tabbar_active@2x.png',
           text: '我',

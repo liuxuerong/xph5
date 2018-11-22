@@ -26,32 +26,40 @@ export default {
       code: ''
     }
   },
+  computed: {
+    // 判断手机号码
+    rightPhoneNumber: function () {
+      return /^1\d{10}$/gi.test(this.phone)
+    },
+    // 判断验证码
+    rightPhoneCode: function () {
+      return /^\d{6}$/gi.test(this.code)
+    }
+  },
   methods: {
     //   获取验证码
     ...mapMutations(['changeReturnVal']),
     obtainCodeBtn () {
-      if (this.rigthPhone) {
+      if (this.rightPhoneNumber) {
         let params = {
           request: this.phone
         }
         http(getVerifyCode, params).then((response) => {
           console.log(response)
-          if (response.data.code === 0) {
-            if (response.data.body === true) {
-              this.computedTime = 60
-              this.timer = setInterval(() => {
-                this.computedTime--
-                if (this.computedTime === 0) {
-                  clearInterval(this.timer)
-                }
-              }, 1000)
-            } else {
-              Toast({
-                message: '手机号码未注册',
-                position: 'bottom',
-                duration: 2000
-              })
-            }
+          if (response.data.body === true) {
+            this.computedTime = 60
+            this.timer = setInterval(() => {
+              this.computedTime--
+              if (this.computedTime === 0) {
+                clearInterval(this.timer)
+              }
+            }, 1000)
+          } else {
+            Toast({
+              message: '手机号码未注册',
+              position: 'bottom',
+              duration: 2000
+            })
           }
         })
       } else {
@@ -72,11 +80,6 @@ export default {
         }
         http(modifyPhone, param).then((response) => {
           if (response.data.code === 0) {
-            Toast({
-              message: '操作成功',
-              position: 'bottom',
-              duration: 2000
-            })
             _this.changeReturnVal(true)
           }
         })

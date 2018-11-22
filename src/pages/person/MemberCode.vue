@@ -4,8 +4,8 @@
     <div class="memberCodeCon">
       <div class="memberHeaderInfo">
         <dir class="top border-bottom">
-          <img v-if="list.memberHead === undefined" src="/static/images/memberHeader.png" class="headerImg">
-          <img v-else :src="imageUrl+list.memberHead" class="headerImg">
+          <img v-if="list.memberHead" :src="imageUrl+list.memberHead" class="headerImg">
+          <img v-else src="/static/images/memberHeader.png" class="headerImg">
           <div class="infoText">
             <h3>{{list.memberName}}</h3>
             <span class="memberNum">NO.{{list.cardNo}}</span>

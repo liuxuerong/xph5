@@ -6,8 +6,8 @@
         <h3 class="userInfoTitle">个人中心</h3>
       </div>
       <div class="centerHeaderBot">
-        <img v-if="list.headImage === undefined || list.headImage === null" src="/static/images/memberHeader.png" class="headerImg">
-        <img v-else :src="imageUrl+list.headImage" class="headerImg">
+        <img v-if="list.headImage" :src="imageUrl+list.headImage" class="headerImg">
+        <img v-else src="/static/images/memberHeader.png" class="headerImg">
         <div class="headerInfoText">
           <h3>{{list.name}}</h3>
           <span class="memberGrade">
@@ -129,6 +129,13 @@ export default {
     PersonTitle,
     swiper,
     swiperSlide
+  },
+  watch: {
+    '$route' (to, from) {
+      if (to.name === 'toolCenter') {
+        this.dataRender()
+      }
+    }
   },
   methods: {
     // 返回上一级
