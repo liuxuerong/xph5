@@ -11,8 +11,8 @@
             </div>
             <img v-lazy="imageUrl+item.appIcon" alt="">
           </div>
-            <ul class="classifyDetails" :class="{active:showIndex==index}" v-for="(goods,innerIndex) in item.children" :key="goods.id">
-              <li class="border-bottom">
+            <ul class="classifyDetails" :class="{active:showIndex==index}" >
+              <li class="border-bottom" v-for="(goods,innerIndex) in item.children" :key="goods.id">
                 <router-link :to="`/goods/${index}/${innerIndex}`" class="nav">{{goods.catName}}</router-link>
               </li>
             </ul>
@@ -124,6 +124,7 @@ export default {
     transform scale(1,0)
     overflow hidden
     height 0
+    transition all 0.3s ease
     transform-origin 0 0
     li
       line-height 148px
@@ -147,17 +148,7 @@ export default {
         height: 0.22444rem;
 
   .classifyDetails.active
-    height 100%
+    height auto
     transform scale(1,1)
-    animation: toggle 0.2s;
-   @keyframes toggle {
-     0% {
-       transform scale(1,0)
-       opacity 0
-     }
-     100%{
-       transform scale(1,1)
-       opacity 1
-     }
-   }
+    transition all 0.3s ease
     </style>

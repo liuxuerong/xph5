@@ -42,6 +42,7 @@ export default {
     getHotelData () {
       http(hotel)
         .then(res => {
+          console.log(res)
           this.fiveStarQuality = res.data.body.fiveStarQuality
           this.fiveStarHotel = res.data.body.fiveStarHotel
           this.scrollInit()

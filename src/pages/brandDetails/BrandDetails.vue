@@ -129,6 +129,7 @@ export default {
     font-size 66px
     font-weight 600
     padding-top 50px
+    margin-bottom 50px
     height 160px
     line-height 160px
     padding-left 50px
