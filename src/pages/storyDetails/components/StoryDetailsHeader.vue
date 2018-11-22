@@ -1,6 +1,6 @@
 <template>
   <div class="storyDetailsHeader border-bottom" >
-    <img :src="imageUrl+details.articleCoverImage" alt="">
+    <!-- <img :src="imageUrl+details.articleCoverImage" alt=""> -->
     <div class="titleCont">
       <p class="title">{{details.title}} <em v-if="details.subTitle !==''">|</em> {{details.subTitle}}</p>
       <common-collection class="collection"/>
@@ -33,6 +33,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+@import "~styles/mixins.styl";
 .storyDetailsHeader
     padding-bottom 60px
     img
@@ -51,6 +52,8 @@ export default {
       line-height 100px
       color #333
       flex 1
+      ellipsisM()
+      -webkit-line-clamp 2
     .summary
       color #808080
       font-size 36px

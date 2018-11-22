@@ -34,7 +34,6 @@
           </div>
         </div>
       </router-link>
-      <!-- <index-items :itemsData="item" v-if="showItems" /> -->
     </div>
   </div>
 </template>

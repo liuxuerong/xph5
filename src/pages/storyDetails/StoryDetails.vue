@@ -1,6 +1,6 @@
 <template>
   <div class="storyDetails">
-    <common-nav-header :title="details.title" v-if="details" />
+    <common-nav-header  v-if="details" />
     <div class="storyDetailsContent" ref="storyDetailsContent">
       <div>
         <story-details-header v-if="details" :details="details" />

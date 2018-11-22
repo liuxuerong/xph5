@@ -128,6 +128,7 @@ export default {
 
 <style lang="stylus">
 .indexNewProducts
+
   .swiper-container
     overflow visible
   .swiper-pagination-fraction

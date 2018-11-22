@@ -38,7 +38,7 @@ export default {
     img
       width 100%
       height 600px
-      margin 50px 0
+      margin-bottom 50px
      .title
       font-size 56px
       font-weight 600
