@@ -111,18 +111,23 @@ export default {
     // 不使用优惠券
     noCoupons () {
       let info = storage.getLocalStorage(orderInfo) || {}
+      console.log(info)
       info.couponId = null
       info.couponName = null
+      storage.setLocalStorage(orderInfo, info)
+      this.$router.push({path: '/createOrder/1'})
     }
   },
   mounted () {
     this.headleTabsChange()
+  },
+  watch: {
+    '$route' (to, from) {
+      if (to.name === 'chooseCoupons') {
+        this.headleTabsChange()
+      }
+    }
   }
-  // watch: {
-  //   '$route' (to, from) {
-  //     this.$router.go(0)
-  //   }
-  // }
 }
 </script>
 <style lang="stylus">

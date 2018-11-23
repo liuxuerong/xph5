@@ -147,7 +147,6 @@ body,html
 	left 0
 	width 100%
 	height 100%
-	background gray
 	overflow hidden
 	box-sizing border-box
 	padding-top 180px
@@ -187,12 +186,12 @@ body,html
 		.passwordIcon
 			bgImage('/static/icons/password')
 		input
-			width 62%
-			height 100px
+			width 52%
+      height 100px
       line-height 100px
-			background transparent
-			color #fff
-			outline none
+      background transparent
+      color #fff
+      outline none
 		.obtainCode
 			float right
 			color #fff

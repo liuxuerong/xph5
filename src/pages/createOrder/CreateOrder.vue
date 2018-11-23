@@ -127,12 +127,13 @@ export default {
       if (to.path === '/createOrder/1') {
         this.info = storage.getLocalStorage(orderInfo)
         console.log(this.info)
-        if (this.info.couponId) {
-          this.getDetails()
-        }
-        if (this.info.shippingMethod) {
-          this.getDetails()
-        }
+        this.getDetails()
+        // if (this.info.couponId) {
+
+        // }
+        // if (this.info.shippingMethod) {
+        //   this.getDetails()
+        // }
       } else if (to.path === '/createOrder') {
         storage.setLocalStorage(orderInfo, {})
       }
@@ -141,7 +142,7 @@ export default {
   methods: {
     getDetails () {
       const params = Object.assign({}, storage.getLocalStorage(goodsInfo), this.info)
-      if (this.info && this.info.couponId) {
+      if (this.info) {
         params.favorableId = this.info.couponId
       }
       console.log(params)
@@ -231,7 +232,7 @@ export default {
         }
       }
       storage.setLocalStorage(couponByGoods, this.couponArr)
-      // this.$router.push('/chooseCoupons')
+      this.$router.push('/chooseCoupons')
     }
   },
   created () {

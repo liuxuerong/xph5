@@ -7,7 +7,7 @@
         <li v-for="(tab,i) in activitysTab" :key="i" :class="{'active':activitysActive==i}" @click="activitysTabClick(i)">{{tab}}</li>
       </ul>
     </div>
-    <div class="activitysCon" v-if="activitysActive=='0'">
+    <div class="activitysCon" v-if="activitysActive == 0">
       <!-- 单品秒杀 -->
       <activitys-title v-if="activityGoods.length" :activitysTitle="activitysTitle[0]"></activitys-title>
       <activity-goods v-if="activityGoods.length" v-for="item in activityGoods" :key="item.goodsItemId" :activityGoods="item"></activity-goods>
@@ -15,7 +15,7 @@
       <activitys-title v-if="activityCategory.length" :activitysTitle="activitysTitle[1]"></activitys-title>
       <activity-category v-if="activityCategory.length"></activity-category>
     </div>
-    <div class="activitysCon" v-if="activitysActive=='1'">
+    <div class="activitysCon" v-if="activitysActive == 1">
       <activity-elies v-if="activityInfo.length" v-for="item in activityInfo" :key="item.eliesItems" :activityInfoData="item"></activity-elies>
     </div>
   </div>
@@ -33,7 +33,7 @@ export default {
     return {
       title: '活动精选',
       activitysTab: ['限时抢购', '门店活动'],
-      activitysActive: '',
+      activitysActive: Number,
       activitysTitle: [
         {'title': '单品秒杀', 'subTitle': '限时单品秒杀'},
         {'title': '品类秒杀', 'subTitle': '限时品类秒杀'}
@@ -53,8 +53,7 @@ export default {
   methods: {
     // 页面初始化加载
     activitysRender () {
-      let type = this.$route.params.type
-      console.log(type)
+      let type = Number(this.$route.params.type)
       this.activitysActive = type
       this.activitysCon(type)
     },
@@ -65,7 +64,7 @@ export default {
     },
     // 内容加载
     activitysCon (type) {
-      if (type === '0') {
+      if (type === 0) {
         // 商品
         http(activityElies).then((response) => {
           console.log(response)

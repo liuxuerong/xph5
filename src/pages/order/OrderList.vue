@@ -47,30 +47,21 @@
           </div>
           <!-- 全部订单 顶单状态 -->
           <div class="totalPrice" v-if="type === '-1'">
-            <span class="totalPayment" v-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===undefined"><p >未付</p>:￥ {{item.totalAmount}}</span>
-            <span class="totalPayment" v-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===6"><p >退款</p>:￥ {{item.totalAmount}}</span>
-            <span class="totalPayment" v-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===6"><p >退款</p>:￥ {{item.totalAmount}}</span>
-            <span class="totalPayment" v-if="item.status=='2' || item.status=='3' || item.status=='4' || item.status=='5'"><p >已付</p>:￥ {{item.totalAmount}}</span>
-            <span class="totalPayment" v-if="item.status=='6' || item.status=='7' || item.status=='8'"><p >未付</p>:￥ {{item.totalAmount}}</span>
             <span class="operState" v-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===undefined">待支付</span>
+            <span class="totalPayment" v-else-if="item.status=='7' || item.status=='8'"><p >未付</p>:￥ {{item.totalAmount}}</span>
+            <span class="totalPayment" v-else-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===6"><p >退款</p>:￥ {{item.totalAmount}}</span>
+            <span class="totalPayment" v-else-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===6"><p >退款</p>:￥ {{item.totalAmount}}</span>
+            <span class="totalPayment" v-else-if="item.status !=='1' || item.status !=='7' || item.status !=='8'"><p >已付</p>:￥ {{item.totalAmount}}</span>
             <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='1'">待发货</span>
-            <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='2'">打包配货</span>
-            <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='3'">已发货</span>
-            <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='5'">交易成功</span>
-            <!-- <p v-if="item.memberOrderGoods[0].orderItemStatus=='6'">
-              <span class="operState">{{item.afterSalesTypeDesc}}</span>
-              <span class="operState">退款中</span>
-            </p> -->
-            <!-- item.memberOrderGoods[0].orderItemStatus=='6' || item.memberOrderGoods[0].orderItemStatus=='8' -->
-            <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='6' || item.memberOrderGoods[0].orderItemStatus=='8'">交易成功</span>
-            <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='9' || item.memberOrderGoods[0].orderItemStatus=='10'">交易关闭</span>
-            <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='7'">已评论</span>
-            <!-- <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='8'">退款中</span> -->
-            <!-- <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='9'">退款完成</span> -->
-            <!-- <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='10'">退款失败</span> -->
-            <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='11'">待发货</span>
-            <span class="operState" v-if="item.status=='8'">订单失效</span>
-            <span class="operState" v-if="item.status=='7'">订单取消</span>
+            <span class="operState" v-else-if="item.memberOrderGoods[0].orderItemStatus=='2'">打包配货</span>
+            <span class="operState" v-else-if="item.memberOrderGoods[0].orderItemStatus=='3'">已发货</span>
+            <span class="operState" v-else-if="item.memberOrderGoods[0].orderItemStatus=='5'">交易成功</span>
+            <span class="operState" v-else-if="item.memberOrderGoods[0].orderItemStatus=='6' || item.memberOrderGoods[0].orderItemStatus=='8'">交易成功</span>
+            <span class="operState" v-else-if="item.memberOrderGoods[0].orderItemStatus=='9' || item.memberOrderGoods[0].orderItemStatus=='10'">交易关闭</span>
+            <span class="operState" v-else-if="item.memberOrderGoods[0].orderItemStatus=='7'">已评论</span>
+            <span class="operState" v-else-if="item.memberOrderGoods[0].orderItemStatus=='11'">待发货</span>
+            <span class="operState" v-else-if="item.status=='8'">订单失效</span>
+            <span class="operState" v-else-if="item.status=='7'">订单取消</span>
           </div>
 
           <!-- 操作按钮 -->
@@ -197,10 +188,8 @@ export default {
       console.log(state)
       let type = this.$route.params.type
       if (type === '-1') {
-        console.log(666)
         this.$router.push('/orderDetails/' + this.type + '/' + orderCode)
       } else {
-        console.log(999)
         if (state !== 6 && state !== 8 && state !== 9 && state !== 10) {
         // 售前订单详情
           this.$router.push('/orderDetails/' + this.type + '/' + orderCode)
