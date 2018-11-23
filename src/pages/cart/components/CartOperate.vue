@@ -141,7 +141,8 @@ export default {
           goodsObj.goodsItems.push({
             goodsId: this.goodsList[i].goodsId,
             goodsItemId: this.goodsList[i].goodsItemId,
-            num: this.goodsList[i].num
+            num: this.goodsList[i].num,
+            stock: this.goodsList[i].stock
           })
         }
       }

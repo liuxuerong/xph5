@@ -31,16 +31,6 @@ export default {
   props: {
     pricesData: {
       type: Object
-      // default () {
-      //   return {
-      //     pricesData: {
-      //       name: '',
-      //       minPrice: '',
-      //       activityLabel: [],
-      //       coverImage: ''
-      //     }
-      //   }
-      // }
     }
   },
   data () {
@@ -101,4 +91,5 @@ export default {
     color #262626
     height 60px
     line-height 60px
+
 </style>

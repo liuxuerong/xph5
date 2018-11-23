@@ -27,6 +27,7 @@ import CommonEmpty from 'common/commonEmpty/CommonEmpty'
 import CommonNavHeader from 'common/commonHeader/CommonNavHeader'
 import GoodsItem from './components/GoodsItem'
 import CartOperate from './components/CartOperate'
+
 import {
   Toast
 } from 'mint-ui'
