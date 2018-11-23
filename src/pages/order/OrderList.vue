@@ -7,7 +7,7 @@
           <img v-if="childItem.pic != ''" :src="imageUrl+childItem.pic" alt="">
           <img v-else src="/static/images/personalHeader.png">
           <div class="goodsinfo">
-            <h3>{{childItem.goodsName}}</h3>
+            <h3>{{childItem.goodsName}}----{{i}}</h3>
             <div class="goodsSpecWrapper clearfix">
               <span class="goodsSpec" v-for="(spec,n) in JSON.parse(childItem.spec)" :key="n">{{spec.value}}</span>
             </div>
@@ -24,23 +24,23 @@
           </div>
           <!-- 待发货：只有待发货和已付 -->
           <div class="totalPrice" v-if="type === '2'">
-            <span class="totalPayment"><p >已付</p>:￥ {{item.totalAmount}}</span>
+            <span class="totalPayment"><p >已付</p>:￥ {{item.needPayAmount}}</span>
             <span class="operState">待发货</span>
           </div>
           <!-- 待收货：待收货 和 已付 -->
           <div class="totalPrice" v-if="type === '3'">
-            <span class="totalPayment"><p >已付</p>:￥ {{item.totalAmount}}</span>
+            <span class="totalPayment"><p >已付</p>:￥ {{item.needPayAmount}}</span>
             <span class="operState">待收货</span>
           </div>
           <!-- 待评价 查看物流 立即评价 -->
           <div class="totalPrice" v-if="type === '4'">
-            <span class="totalPayment"><p >已付</p>:￥ {{item.totalAmount}}</span>
+            <span class="totalPayment"><p >已付</p>:￥ {{item.needPayAmount}}</span>
             <!-- <span class="operState">交易成功</span> -->
             <span class="operState">{{item.memberOrderGoods[0].orderItemStatusDesc}}</span>
           </div>
           <!-- 售后/退货 -->
           <div class="totalPrice" v-if="type === '5'">
-            <span class="totalPayment"><p >退款</p>:￥ {{item.totalAmount}}</span>
+            <span class="totalPayment"><p >退款</p>:￥ {{item.needPayAmount}}</span>
             <span class="operState">{{item.afterSalesTypeDesc}}</span>
             <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus === 6 || item.memberOrderGoods[0].orderItemStatus === 8">退款中</span>
             <span class="operState" v-else>{{item.memberOrderGoods[0].orderItemStatusDesc}}</span>
@@ -48,12 +48,12 @@
           <!-- 全部订单 顶单状态 -->
           <div class="totalPrice" v-if="type === '-1'">
             <span class="operState" v-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===undefined">待支付</span>
-            <span class="totalPayment" v-else-if="item.status=='7' || item.status=='8'"><p >未付</p>:￥ {{item.totalAmount}}</span>
-            <span class="totalPayment" v-else-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===6"><p >退款</p>:￥ {{item.totalAmount}}</span>
-            <span class="totalPayment" v-else-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===6"><p >退款</p>:￥ {{item.totalAmount}}</span>
-            <span class="totalPayment" v-else-if="item.status !=='1' || item.status !=='7' || item.status !=='8'"><p >已付</p>:￥ {{item.totalAmount}}</span>
-            <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='1'">待发货</span>
-            <span class="operState" v-else-if="item.memberOrderGoods[0].orderItemStatus=='2'">打包配货</span>
+            <span class="totalPayment" v-else-if="item.status=='7' || item.status=='8'"><p >未付</p>:￥ {{item.needPayAmount}}</span>
+            <span class="totalPayment" v-else-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===6"><p >退款</p>:￥ {{item.needPayAmount}}</span>
+            <span class="totalPayment" v-else-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===6"><p >退款</p>:￥ {{item.needPayAmount}}</span>
+            <span class="totalPayment" v-else-if="item.status !=='1' || item.status !=='7' || item.status !=='8'"><p >已付</p>:￥ {{item.needPayAmount}}</span>
+            <span class="totalPayment" v-else-if="item.status !=='1' || item.status !=='7' || item.status !=='8'"><p >已付</p>:￥ {{item.needPayAmount}}</span>
+            <span class="operState" v-if="item.memberOrderGoods[0].orderItemStatus=='1' || item.memberOrderGoods[0].orderItemStatus=='2'">待发货</span>
             <span class="operState" v-else-if="item.memberOrderGoods[0].orderItemStatus=='3'">已发货</span>
             <span class="operState" v-else-if="item.memberOrderGoods[0].orderItemStatus=='5'">交易成功</span>
             <span class="operState" v-else-if="item.memberOrderGoods[0].orderItemStatus=='6' || item.memberOrderGoods[0].orderItemStatus=='8'">交易成功</span>
@@ -93,6 +93,7 @@
 
           <!-- 全部订单 -->
           <div class="moreOperBtn clearfix" v-if="type === '-1'">
+            <!-- 立即支付  -->
             <span class="operbtn immedPayment" v-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===undefined" @click="immedPayment(item.orderSn)">立即支付</span>
             <div v-else-if="item.memberOrderGoods[0].orderItemStatus=='5'">
               <span class="operbtn confirmGoods" @click="immedEvaluate(item.orderSn)">立即评价</span>

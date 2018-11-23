@@ -1,13 +1,25 @@
 <template>
   <div id="app">
-    <keep-alive :exclude="['Details','Goods','Collect','StoryDetails']">
+    <keep-alive :exclude="['Details','Goods','Collect','StoryDetails','ImmedPayment']">
       <router-view/>
+      <router-view v-if="isRouterAlive"></router-view>
     </keep-alive>
   </div>
 </template>
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  data () {
+    return {
+      isRouterAlive: true
+    }
+  },
+  methods: {
+    reload () {
+      this.isRouterAlive = false
+      this.$nextTick(() => (this.$nextTick = true))
+    }
+  }
 }
 </script>
 

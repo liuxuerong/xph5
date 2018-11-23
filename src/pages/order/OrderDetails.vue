@@ -46,8 +46,8 @@
             </div>
             <span class="goodsPrice">￥ {{item.price}}</span>
             <span class="goodsNum">×{{item.num}}</span>
-            <div class="afterSale" v-if="orderStatus===9" @click.stop.prevent="afterSale(item,list.orderSn)">申请售后</div>
-            <div class="afterSale" v-else-if="orderStatus==10" @click.stop.prevent="orderDetails(item.orderItemId)">查看售后</div>
+            <div class="afterSale" v-if="orderStatus===5" @click.stop.prevent="afterSale(item,list.orderSn)">申请售后</div>
+            <div class="afterSale" v-if="orderStatus==10 || orderStatus===9" @click.stop.prevent="orderDetails(item.orderItemId)">查看售后</div>
           </div>
         </div>
       </div>
@@ -186,6 +186,8 @@ export default {
           this.orderStatus = 1 // 待发货
         } else if (memberOrderGoods.orderItemStatus === 7) {
           this.orderStatus = 7 // 交易完成  --- 已评论  √
+        } else if (memberOrderGoods.orderItemStatus === 5) {
+          this.orderStatus = 5 // 交易完成  --- 带评论
         }
         // 立即支付倒计时
         if (data.allowPayTime) {

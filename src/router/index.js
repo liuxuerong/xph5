@@ -184,6 +184,9 @@ const router = new Router({
       path: '/immedPayment/:orderCode',
       name: 'immedPayment',
       component: resolve => require(['@/pages/order/ImmedPayment'], resolve)
+      // meta: {
+      //   isKeepAlive: false
+      // }
     },
     {
       path: '/afterSaleOrder/:type/:orderId',

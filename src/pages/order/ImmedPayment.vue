@@ -42,6 +42,11 @@ export default {
   components: {
     SearchTitle
   },
+  watch: {
+    '$route' (to, from) {
+      this.$router.go(0)
+    }
+  },
   methods: {
     // 支付页面渲染
     paymentRender () {
