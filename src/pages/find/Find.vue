@@ -10,8 +10,8 @@
           </div>
         </div>
         <div class="index" :class="{searchTop:searchActive}" ref="index">
-          <div class="scrollTopTop" v-show="showScrollToTop" @click="scrollToTop">返回顶部</div>
-          <common-header ref="commonHeader"/>
+          <div class="scrollTopTop" v-show="showScrollToTop" @click="scrollToTop"></div>
+          <common-header ref="commonHeader" />
           <h2 class="indexHeader" ref="indexHeader">
             五星生活在等你哦~
           </h2>
@@ -33,11 +33,13 @@
               </router-link>
             </div>
           </div>
-          <index-limit :swiperData="timeLimitShoppings" v-if="timeLimitShoppings.length"/>
-          <index-new-products :swiperData="newProducts" v-if="newProducts.length"/>
-          <index-goods-label :goodsLabel="goodsLabel" v-if="goodsLabel"/>
+          <index-limit :swiperData="timeLimitShoppings" v-if="timeLimitShoppings.length" />
+          <index-new-products :swiperData="newProducts" v-if="newProducts.length" />
+          <index-goods-label :goodsLabel="goodsLabel" v-if="goodsLabel" />
           <!-- <index-nav  :timeLimitShoppings="timeLimitShoppings" :newProducts="newProducts"/> -->
         </div>
+        <h6 class="className">全品目录</h6>
+
         <div ref="xpStoryContent" class="xpStoryContent" :class="{fixed:isFixed}">
           <div>
             <div class="xpGoodsTop border-bottom" ref="xpGoodsTop" v-show="!isFixed">
@@ -47,14 +49,21 @@
                 </tab>
               </div>
             </div>
-            <ul class="goodsContainer" v-if="goodsListData.length" >
-              <li v-for="item in goodsListData" v-if="goodsListData.length" :key="item.id">
+            <ul class="goodsContainer" v-if="goodsListData.length">
+              <div class="classfiyBanner" ref="classfiyBanner">
+                <img src="/static/images/classfiyBanner.png" alt="">
+              </div>
+              <li v-for="item in goodsListData" v-if="goodsListData.length" :key="item.id" ref="goodsItem">
                 <common-img-prices :pricesData="item" />
               </li>
-              <li class="emptyBox"></li>
+              <li v-if="(noMore&&goodsListData.length%2!==0)||(goodsListData.length<20&&goodsListData.length>0&&goodsListData.length%2!==0)">
+                <div class="moreTip">
+                  更多新品<br>正在研发中...
+                </div>
+              </li>
             </ul>
+            <divider v-if="noMore">已经到达最底部</divider>
             <common-empty v-if="!noMore&&!goodsListData.length" :emptyObj="emptyObj" />
-            <divider v-if="noMore">哎呀！底线到了</divider>
           </div>
         </div>
       </div>
@@ -73,7 +82,6 @@ import IndexSwiper from './components/IndexSwiper'
 import IndexGoodsLabel from './components/IndexGoodsLabel'
 import IndexLimit from './components/IndexLimit'
 import IndexNewProducts from './components/IndexNewProducts'
-
 import {
   Tab,
   TabItem,
@@ -119,6 +127,11 @@ export default {
       categoryId: '',
       isFixed: false,
       noMore: false,
+      searchTop: null,
+      commonHeader: null,
+      index: null,
+      goodsItemH: 0,
+      classfiyBannerH: 0,
       showScrollToTop: false,
       IndexSwiperShow: true,
       searchActive: false,
@@ -150,9 +163,7 @@ export default {
     },
     getFindData () {
       http(findData).then(res => {
-        console.log(res)
         this.timeLimitShoppings = res.data.body.timeLimitShoppings
-
         this.newProducts = res.data.body.newProducts
         this.goodsLabel = res.data.body.goodsLabel
       }).catch(err => {
@@ -178,40 +189,58 @@ export default {
           if (this.page !== 1 && res.data.body.list.length === 0) {
             this.noMore = true
           }
+          console.log(res)
           this.goodsListData = this.goodsListData.concat(res.data.body.list)
+          this.$nextTick(function () {
+            setTimeout(() => {
+              this.searchTop = this.$refs.commonSearchDom.$el.offsetTop - this.$refs.commonSearchDom.$el.style.height
+              this.commonHeader = this.$refs.commonHeader.$el.offsetHeight
+              this.index = this.$refs.index
+              if (this.$refs.goodsItem.length) {
+                this.goodsItemH = this.$refs.goodsItem[0].offsetHeight
+                this.classfiyBannerH = this.$refs.classfiyBanner.offsetHeight
+              }
+              this.getTop(this.searchTop, this.commonHeader, this.index, this.goodsItemH)
+              this.changeStatus(this.searchTop, this.commonHeader, this.index, this.goodsItemH)
+            }, 20)
+          })
         })
       }
     },
-    changeStatus () {
+    changeStatus (searchTop, commonHeader, index, goodsItem) {
       const _this = this
-      const searchTop = this.$refs.commonSearchDom.$el.offsetTop - this.$refs.commonSearchDom.$el.style.height
-      const commonHeader = this.$refs.commonHeader.$el.offsetHeight
-      const index = this.$refs.index
       window.addEventListener('scroll', function () {
-        const goodsTop = index.offsetHeight
-        const documentScrollTop = window.pageYOffset || document.documentElement.scrollTop
-        _this.isFixed = documentScrollTop + commonHeader > goodsTop
-        _this.searchActive = !(searchTop > documentScrollTop)
-        _this.showScrollToTop = documentScrollTop > 800
-        if (document.documentElement.scrollHeight - documentScrollTop - 20 < document.documentElement.clientHeight) {
-          if (!_this.noMore && _this.goodsListData.length) {
-            _this.page++
-            _this.getGoodsList(_this.categoryId, _this.page)
-          }
-        }
+        _this.getTop(searchTop, commonHeader, index, goodsItem)
       })
+    },
+    getTop (searchTop, commonHeader, index, goodsItem) {
+      const goodsTop = index.offsetHeight
+      const documentScrollTop = window.pageYOffset || document.documentElement.scrollTop
+      this.isFixed = documentScrollTop + commonHeader > goodsTop
+      this.searchActive = !(searchTop > documentScrollTop)
+      this.showScrollToTop = documentScrollTop + commonHeader > goodsTop + goodsItem * 3 + this.classfiyBannerH
+      if (document.documentElement.scrollHeight - documentScrollTop - 20 < document.documentElement.clientHeight) {
+        if (!this.noMore && this.goodsListData.length) {
+          this.page++
+          this.getGoodsList(this.categoryId, this.page)
+        }
+      }
     }
   },
   mounted () {
     this.getTabbar()
-    this.changeStatus()
     this.getFindData()
   }
-
 }
 </script>
 
 <style lang="stylus" scoped>
+.className
+  padding-left 50px
+  color #333333
+  font-size 66px
+  margin-bottom 20px
+  font-weight: 600;
 .searchTop.index
   padding-top 266px
  .swipperTop.index
@@ -228,20 +257,15 @@ export default {
   line-height 168px
   padding 0 50px
 .scrollTopTop
-  height 80px
-  line-height 80px
-  width 260px
-  text-align center
-  border-radius 40px
+  width 110px
+  height 110px
+  border-radius 55px
   position fixed
-  top 380px
-  left 50%
-  transform  translateX(-50%)
+  bottom 296px
+  right 45px
   z-index 9999999
-  color #EFEFEF
-  font-size 36px
-  background rgba(0,0,0,1)
-  opacity 0.5
+  background url(/static/icons/scrollTop.png) no-repeat center center/50% 50%
+  background-color rgba(0,0,0,0.3)
 .xpGoodsTop>>>.vux-tab .vux-tab-item.vux-tab-selected
   color #333333
   border-bottom 8px solid #262626
@@ -286,7 +310,8 @@ export default {
     position relative !important
   .xpStoryContent
     height 100%
-    padding-bottom 200px
+  .xpStoryContent>div
+    padding-bottom 148px
   .xpStoryContent.fixed
     padding-top 108px
   .xpStoryContent.auto
@@ -306,9 +331,11 @@ export default {
   background-color #fff
   padding-top 50px
   li
-    margin-bottom 250px
+    padding-bottom 250px
   .emptyBox
     width 3.395556rem
+  .moreTip
+    padding-left 100px !important
 .border-bottom::before
   z-index 9999
 .xpGoods .xpStoryContent .xpGoodsTop
@@ -344,4 +371,10 @@ export default {
     .bottom
       background url("/static/images/hotel_bg.png") no-repeat center center/100% 100%
       flex 1
+.classfiyBanner
+  width 100%
+  padding 0 50px 100px
+  img
+    width 100%
+    height 360px
 </style>

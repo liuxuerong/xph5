@@ -87,9 +87,10 @@ export default {
       let goodsList = this.goodsList
       for (let i in goodsList) {
         if (this.check) {
-          if (goodsList[i].stock !== 0) {
-            goodsList[i].value = true
-          }
+          // if (goodsList[i].stock !== 0) {
+          //   goodsList[i].value = true
+          // }
+          goodsList[i].value = true
           this.changeIsAllSelect(true)
         } else {
           this.changeIsAllSelect(false)

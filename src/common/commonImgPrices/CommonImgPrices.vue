@@ -51,6 +51,7 @@ export default {
     font-size 40px
     width 382px
     font-weight 600
+    display inline-block
     .imgContainer
       width 382px
       height 382px
@@ -73,13 +74,14 @@ export default {
   .promotionItem
     font-size 30px
     color #D54B4B
-    padding 22px 20px
+    padding 0px 20px
     border 1px solid #D54B4B
     display inline-block
+    height 50px
+    line-height 50px
     margin 0 15px
     margin-top 23px
-  .promotionItem.active
-    background-color  #FED9D9
+    font-weight normal
   .promotionItem.gray
     background-color  #F5F5F5
     border none

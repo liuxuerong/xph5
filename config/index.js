@@ -10,8 +10,13 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {},
+<<<<<<< HEAD
     // host:'192.168.1.54',
     host:'localhost',
+=======
+    host:'192.168.1.22',
+    // host:'localhost',
+>>>>>>> 6c3c3cfef529d89be9f456a42bf0c7769142545f
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,

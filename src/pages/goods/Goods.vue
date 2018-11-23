@@ -19,7 +19,11 @@
                 <li v-for="item in goodsListData" v-if="goodsListData.length" :key="item.id">
                 <common-img-prices :pricesData="item" />
               </li>
-              <li class="emptyBox"></li>
+               <li v-if="(noMore&&goodsListData.length%2!==0)||(goodsListData.length<20&&goodsListData.length>0&&goodsListData.length%2!==0)">
+                <div class="moreTip">
+                  更多新品<br>正在研发中...
+                </div>
+              </li>
             </ul>
             <common-empty v-if="!noMore&&!goodsListData.length" :emptyObj="emptyObj" />
             <divider v-if="noMore">哎呀！底线到了</divider>
@@ -221,10 +225,15 @@ export default {
   display flex
   flex-wrap wrap
   justify-content space-around
-  padding-top 150px
+  padding-top 10px
   background-color #fff
   li
-    margin-bottom 250px
+    padding 100px 0
+    flex 1
+    text-align center
+    border-bottom 1px solid #e6e6e6
+  li:nth-child(2n)
+    border-left 1px solid #e6e6e6
   .emptyBox
     width 3.395556rem
 .border-bottom::before

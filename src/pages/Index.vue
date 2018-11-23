@@ -87,7 +87,7 @@ export default {
     display flex
     width 100%
     justify-content space-around
-    padding-top 16px
+    padding-top 26px
     a
       display inline-block
       width 160px
@@ -109,5 +109,5 @@ export default {
     a:nth-child(3)
       img
         width 114px
-        height 127px
+        height 117px
 </style>

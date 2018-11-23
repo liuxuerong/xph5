@@ -119,7 +119,9 @@ export default {
   .promotionItem
     font-size 30px
     color #D54B4B
-    padding 10px 20px
+    padding 0px 20px
+    height 50px
+    line-height 50px
     border 1px solid #D54B4B
     display inline-block
     margin 0 30px 0 0
