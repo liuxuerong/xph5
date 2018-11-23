@@ -26,9 +26,13 @@
         <span>退款原因</span>
         <input type="text" v-model="reason" placeholder="请选择" readonly>
       </div>
-      <div class="refundOper border-bottom">
-        <span>退款金额</span><span v-if="type=='1'">￥{{list.actualPrice}}</span><span v-else>￥{{list.needPayAmount}}</span>
-        <span>退款金额</span><span v-if="type=='2'">￥{{list.actualPrice}}</span><span v-else>￥{{list.totalAmount}}</span>
+      <div class="refundOper border-bottom" v-if="type=='1'">
+        <span>退款金额</span>
+        <span>￥{{list.needPayAmount}}</span>
+      </div>
+      <div class="refundOper border-bottom" v-else-if="type=='2'">
+        <span>退款金额</span>
+        <span>￥{{list.actualPrice}}</span>
       </div>
       <div class="refundOper border-bottom">
         <span>退款说明</span>
@@ -62,7 +66,7 @@
 <script>
 import SearchTitle from './ComOrderSearchTitle'
 import goodsItem from './components/goodsItem'
-import { deliverAfterSales, subOrderDetail } from 'util/netApi'
+import { deliverAfterSales, subOrderDetail, applyAfterSales} from 'util/netApi'
 import { http } from 'util/request'
 import { Popup, Toast } from 'mint-ui'
 import { config } from 'util/config' // 图片路径
@@ -90,8 +94,12 @@ export default {
     goodsItem,
     'mt-popup': Popup
   },
-  computed: {
-    // 非空判断方法
+  watch: {
+    '$route' (to, from) {
+      if (to.name === 'applyRefund') {
+        this.applyRefundRender()
+      }
+    }
   },
   methods: {
     // 页面初始化渲染
@@ -168,10 +176,8 @@ export default {
           })
         }
       } else {
-        console.log(this.objImgs)
-        let orderId = this.$route.params.orderId
         let params = {
-          orderItemId: orderId,
+          orderItemId: this.list.orderItemId,
           shouldRefund: this.list.actualPrice,
           num: this.list.num,
           reason: this.reason,
@@ -180,7 +186,7 @@ export default {
         }
         console.log(params)
         if (this.reason !== '') {
-          http(deliverAfterSales, params).then((response) => {
+          http(applyAfterSales, params).then((response) => {
             console.log(response)
             if (response.data.body === true) {
               Toast({

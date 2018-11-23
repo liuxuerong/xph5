@@ -46,8 +46,8 @@
             </div>
             <span class="goodsPrice">￥ {{item.price}}</span>
             <span class="goodsNum">×{{item.num}}</span>
-            <div class="afterSale" v-if="orderStatus===5" @click.stop.prevent="afterSale(item,list.orderSn)">申请售后</div>
-            <div class="afterSale" v-if="orderStatus==10 || orderStatus===9" @click.stop.prevent="orderDetails(item.orderItemId)">查看售后</div>
+            <div class="afterSale" v-if="item.orderItemStatus===5" @click.stop.prevent="afterSale(item,list.orderSn)">申请售后</div>
+            <div class="afterSale" v-if="item.orderItemStatus==6 || item.orderItemStatus==8 ||item.orderItemStatus==9 || item.orderItemStatus===10" @click.stop.prevent="orderDetails(item.orderItemId)">查看售后</div>
           </div>
         </div>
       </div>

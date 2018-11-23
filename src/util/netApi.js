@@ -140,8 +140,8 @@ export const comment = { url: '/comment', method: 'POST', version: v1 } // 新�
 export const commentList = { url: '/comment', method: 'GET', version: v1 } // 列表
 
 // 退货退款
-export const applyAfterSales = { url: '/afterSales/applyAfterSales', method: 'POST', version: v1 }
-export const submitLogic = { url: '/afterSales/deliveryAfterSales', method: 'POST', version: v1 }
+export const applyAfterSales = { url: '/afterSales/applyAfterSales', method: 'POST', version: v1 } // 退货退款
+export const submitLogic = { url: '/afterSales/deliveryAfterSales', method: 'POST', version: v1 } // 仅退款
 
 // 仅退款
 export const deliverAfterSales = { url: '/afterSales/deliverAfterSales', method: 'POST', version: v1 }
