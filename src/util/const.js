@@ -10,3 +10,4 @@ export const couponByGoods = 'COUPONBYGOODS' // 创建订单选择相关优惠�
 export const logistics = 'LOGISTICS' // 物流订单
 export const aftersale = 'AFTERSALE' // 售后
 export const searchorder = 'SEARCHORDER' // 订单搜索
+export const retrunLogistics = 'RETRUNLOGISTICS' // 退货物流

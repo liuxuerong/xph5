@@ -118,7 +118,7 @@ export default {
           this.orderId = data.orderId
         })
       } else if (type === '2') {
-        this.title = '退货退款'
+        this.title = '退货退款1'
         let data = storage.getLocalStorage(aftersale)
         this.list = data
       }

@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <userinfo-header title="我的地址1" :oper="oper" @operComplete="onOperComplete"></userinfo-header>
+    <userinfo-header title="我的地址" :oper="oper" @operComplete="onOperComplete"></userinfo-header>
     <div class="addressCon">
       <div class="addressItem border-bottom" v-if="addList.length > 0" v-for="item in addList" :key="item.id">
         <div class="addressInfo clearfix">
@@ -35,7 +35,7 @@ export default {
       addList: [],
       oper: '',
       emptyObj: {
-        emptyImg: '/static/images/emptyAddress.png',
+        emptyImg: '/static/images/enptyAddress.png',
         emptyBold: '暂无地址',
         emptyP: '您还没有添加收货地址~',
         buttonText: '立即添加',
