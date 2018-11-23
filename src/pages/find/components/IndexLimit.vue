@@ -3,15 +3,16 @@
     <h4>限时抢购</h4>
     <div class="swiperContainer">
       <swiper :options="swiperOption">
-        <swiper-slide v-for="item in swiperData" :key="item.id">
+        <swiper-slide v-for="(item,index) in swiperData" :key="item.id">
           <router-link :to="'/details/'+item.goodsId" class="swiperHref">
-            <img v-lazy="imageUrl+item.goodsPicture" alt="">
+            <img v-lazy="imageUrl+item.goodsPicture" alt="" class="lazyImg">
             <div class="cutDown">
               <h6>{{item.goodsName}}</h6>
               <div class="price">
                 <em class="goodsPrice">￥{{item.goodsActivityPrice}}</em>
                 <del>￥{{item.goodsOriginalPrice}}</del>
-                <em class="tag">距结束{{item.endDay}}<i v-if="item.showTimeType ==1">天</i></em>
+                <em class="tag" v-if="item.showTimeType ==1">距结束{{item.endDay}}天</em>
+                <em class="tag" v-else>距结束{{time[index]}}</em>
               </div>
             </div>
           </router-link>
@@ -47,16 +48,51 @@ export default {
       swiperOption: {
         spaceBetween: 15,
         slidesPerView: 1.5,
+
         pagination: {
           el: '.swiper-pagination',
           type: 'fraction'
         }
       },
-      navSwiperData: {},
+      beginTime: 0,
+      time: [],
+      timer: null,
       imageUrl: config.imageUrl
     }
   },
-  mounted () {
+  methods: {
+    countDown (t) {
+      let hours = parseInt((t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+      hours = hours > 9 ? hours : '0' + hours
+      let minutes = parseInt((t % (1000 * 60 * 60)) / (1000 * 60))
+      minutes = minutes > 9 ? minutes : '0' + minutes
+      let seconds = (t % (1000 * 60)) / 1000
+      seconds = seconds > 9 ? seconds : '0' + seconds
+      return hours + ' : ' + minutes + ' : ' + seconds
+    },
+    setNewSwiperData () {
+      this.beginTime += 1000
+      this.time = []
+
+      for (let key in this.swiperData) {
+        let t = this.swiperData[key].activityEndTime
+        if (t) {
+          t = -t - this.beginTime
+          this.time.push(this.countDown(t))
+        } else {
+          this.time.push('')
+        }
+      }
+    }
+  },
+  created () {
+    this.setNewSwiperData()
+    this.timer = setInterval(() => {
+      this.setNewSwiperData()
+    }, 1000)
+  },
+  beforeDestroy () {
+    this.timer = null
   }
 }
 </script>
@@ -90,6 +126,11 @@ export default {
     img
       width 100%
       height 440px
+    .lazyImg[lazy=loading]
+      width 300px
+      height 300px
+      margin 90px auto
+      display block
 .cutDown
   height 220px
   padding 0 38px

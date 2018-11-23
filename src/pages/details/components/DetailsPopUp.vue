@@ -87,7 +87,6 @@ export default {
   methods: {
     ...mapMutations(['changeNowPrice', 'changeMaxCount']),
     addCount () {
-      console.log(this.maxCount)
       this.cartCount++
       if (this.cartCount > this.maxCount) {
         this.cartCount = this.maxCount
@@ -183,8 +182,8 @@ export default {
     isContained (a, b) {
       if (!(a instanceof Array) || !(b instanceof Array)) return false
       if (a.length !== b.length) return false
-      var aStr = a.toString()
-      for (var i = 0, len = b.length; i < len; i++) {
+      let aStr = a.toString()
+      for (let i = 0, len = b.length; i < len; i++) {
         if (aStr.indexOf(b[i]) === -1) return false
       }
       return true
@@ -498,12 +497,9 @@ export default {
     this.coverImage = this.goods.coverImage
     this.name = this.goods.name
     this.goodsId = this.goods.id
-    console.log(this.maxCount)
     if (typeof (this.maxCount) === 'number' && this.maxCount === 0) {
       this.goodsEmpty = true
     }
-    // { console.log(typeof (this.maxCount)) }
-    // if(typeof(this.maxCount))
   }
 }
 </script>

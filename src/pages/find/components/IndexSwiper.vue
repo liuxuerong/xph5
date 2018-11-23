@@ -3,7 +3,7 @@
       <swiper :options="swiperOption">
         <swiper-slide v-for="item in swiperData" :key="item.adId">
           <router-link :to="'/details/'+item.linkId" class="swiperHref">
-            <img v-lazy="imageUrl+item.image" alt="">
+            <img v-lazy="imageUrl+item.image" alt="" class="lazyImg">
           </router-link>
         </swiper-slide>
         <div class="swiper-pagination" slot="pagination"></div>
@@ -59,6 +59,11 @@ export default {
     img
       width 100%
       height 100%
+    .lazyImg[lazy=loading]
+      width 300px
+      height 300px
+      margin 90px auto
+      display block
 </style>
 <style lang="stylus">
 .xpSwiperIndex

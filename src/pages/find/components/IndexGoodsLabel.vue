@@ -27,11 +27,7 @@ import {
 export default {
   name: 'IndexGoodsLabel',
   components: {
-    // IndexNavSwiper,
     CommonImgPrices
-    // IndexNavBanner,
-    // IndexContent
-    // CommonEmpty
   },
   props: {
     goodsLabel: Object

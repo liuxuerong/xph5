@@ -38,7 +38,7 @@
           <index-goods-label :goodsLabel="goodsLabel" v-if="goodsLabel"/>
           <!-- <index-nav  :timeLimitShoppings="timeLimitShoppings" :newProducts="newProducts"/> -->
         </div>
-        <div ref="xpStoryContent" class="xpStoryContent">
+        <div ref="xpStoryContent" class="xpStoryContent" :class="{fixed:isFixed}">
           <div>
             <div class="xpGoodsTop border-bottom" ref="xpGoodsTop" v-show="!isFixed">
               <div class="xpGoodsTopContent">
@@ -47,7 +47,7 @@
                 </tab>
               </div>
             </div>
-            <ul class="goodsContainer" v-if="goodsListData.length">
+            <ul class="goodsContainer" v-if="goodsListData.length" >
               <li v-for="item in goodsListData" v-if="goodsListData.length" :key="item.id">
                 <common-img-prices :pricesData="item" />
               </li>
@@ -152,6 +152,7 @@ export default {
       http(findData).then(res => {
         console.log(res)
         this.timeLimitShoppings = res.data.body.timeLimitShoppings
+
         this.newProducts = res.data.body.newProducts
         this.goodsLabel = res.data.body.goodsLabel
       }).catch(err => {
@@ -264,7 +265,8 @@ export default {
 .xpGoodsTop>>>.vux-tab .vux-tab-item
   height 106px
   line-height 106px
-  font-size 46px
+  font-size 42px
+  margin-right 60px
 .xpGoods
   height 100%
   background-color #fff
@@ -283,8 +285,10 @@ export default {
   .isFixed
     position relative !important
   .xpStoryContent
-    // height 100%
+    height 100%
     padding-bottom 200px
+  .xpStoryContent.fixed
+    padding-top 108px
   .xpStoryContent.auto
     height auto
   h1.title

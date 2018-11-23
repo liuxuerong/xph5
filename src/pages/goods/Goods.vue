@@ -7,7 +7,7 @@
         </common-nav-search>
         <div class="xpGoodsTop border-bottom" ref="xpGoodsTop">
           <div class="xpGoodsTopContent">
-            <tab v-if="tabbar.length">
+            <tab v-if="tabbar.length" :scroll-threshold="2">
               <tab-item :selected="index==currentIndex" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.id" :id="item.id" ref="tabItem">{{item.catName}}</tab-item>
               <!-- <tab-item></tab-item> -->
             </tab>
@@ -181,12 +181,15 @@ export default {
     height 106px
 .xpGoodsTop>>>.vux-tab
     height 106px
+.xpGoodsTop>>>.scrollable .vux-tab-item
+  flex 0 0 30%
 .xpGoodsTop>>>.vux-tab .vux-tab-item
     height 106px
     line-height 106px
-    font-size 46px
-
-    // padding 0 14px
+    font-size 42px
+    margin-right 40px
+    // flex auto
+    width auto
 .xpGoods
   height 100%
   padding-top 202px
@@ -200,7 +203,7 @@ export default {
     position fixed
     width 100%
     top 120px
-    z-index 9999999
+    z-index 999999
     padding 0 50px
     background-color #fff
   .xpStoryContent

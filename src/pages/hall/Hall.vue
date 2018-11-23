@@ -1,22 +1,22 @@
 <template>
   <div class="xpHall">
     <common-header/>
-    <div class="swiper-container "  ref="swpierWrap" style="height:100%">
-       <div class="swiper-wrapper">
-      <div class="swiper-slide" v-for="(item,index) in swiperData" :key="item.id">
-        <router-link :to="'/hallDetails/'+index">
-          <img :src="imageUrl+item.experienceCoverImage" alt="" class="swiperImg" >
-          <div class="infoContainer">
-            <div class="left">
-              <div class="title">{{item.categoryName}}</div>
-              <div class="summary">{{item.summary}}</div>
+    <div class="swiper-container " ref="swpierWrap" style="height:100%">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide" v-for="(item,index) in swiperData" :key="item.id">
+          <router-link :to="'/hallDetails/'+index" class="navIndex">
+            <img v-lazy="imageUrl+item.experienceCoverImage" alt="" class="swiperImg">
+            <div class="infoContainer">
+              <div class="left">
+                <div class="title">{{item.categoryName}}</div>
+                <div class="summary">{{item.summary}}</div>
+              </div>
+              <div class="experienceGoods"><img src="/static/icons/outsidelabel_icon.png" alt="">{{item.experienceGoods.length}}</div>
             </div>
-            <div class="experienceGoods"><img src="/static/icons/outsidelabel_icon.png" alt="">{{item.experienceGoods.length}}</div>
-          </div>
-        </router-link>
-       </div>
-       </div>
-       </div>
+          </router-link>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -76,6 +76,7 @@ export default {
               notNextTick: true,
               mousewheelControl: true,
               observeParents: true,
+              observer: true,
               slidesPerView: 1.2,
               loopedSlides: 8,
               autoHeight: true,
@@ -130,6 +131,11 @@ export default {
         height 30px
         margin-left 25px
         margin-right 20px
+  .swiper-slide
+    .navIndex
+      display block
+      width 100%
+      height 100%
 </style>
 
 <style lang="stylus">

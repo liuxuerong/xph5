@@ -342,6 +342,7 @@ export default {
     right 194px
   .share
     bgImage("/static/icons/share_icon")
+    background-size 110% 110%
     right 64px
     &::before
       content:''
