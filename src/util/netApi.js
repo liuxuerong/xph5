@@ -152,3 +152,7 @@ export const logisticsCompany = { url: '/logisticsCompany/list-logisticsCompany-
 
 // 客服接口
 export const customerService = 'http://jdhoe.udesk.cn/im_client/?web_plugin_id=59329'
+
+// 活动
+export const activityInfo = { url: '/article/api/activity/info', method: 'GET', version: v1 } // 限时购活动
+export const activityElies = { url: '/activity/api/elies', method: 'GET', version: v1 } // 限时购商品

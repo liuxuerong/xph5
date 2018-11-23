@@ -19,7 +19,7 @@
         <div class="operShow">
           <!-- 待付款: 待支付 和 待付-->
           <div class="totalPrice" v-if="type === '1'">
-            <span class="totalPayment"><p >待付</p>:￥ {{item.totalAmount}}</span>
+            <span class="totalPayment"><p >待付</p>:￥ {{item.needPayAmount}}</span>
             <span class="operState">待支付</span>
           </div>
           <!-- 待发货：只有待发货和已付 -->

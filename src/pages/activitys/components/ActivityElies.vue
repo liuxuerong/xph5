@@ -1,0 +1,53 @@
+<template>
+  <div class="eliesItem">
+    <img :src="imageUrl+activityInfoData.pcArticleCoverImage" alt="">
+    <h3 class="activityTitle">{{activityInfoData.title}}</h3>
+    <span class="activitySummary" v-if="activityInfoData.summary">{{activityInfoData.summary}}</span>
+  </div>
+</template>
+<script>
+import { config } from 'util/config'
+export default {
+  props: {
+    activityInfoData: Object
+  },
+  components: {
+    name: 'activityElies'
+  },
+  data () {
+    return {
+      imageUrl: config.imageUrl // 图片路径
+    }
+  }
+}
+</script>
+
+<style lang="stylus" scoped>
+  .eliesItem
+    width 100%
+    box-sizing border-box
+    padding-bottom 52px
+    margin-bottom 50px
+    box-shadow 0px 2px 26px 0px rgba(0, 0, 0, 0.1)
+    img
+      display block
+      width 100%
+      height 574px
+      margin-bottom 20px
+    .activityTitle
+      width 100%
+      height 120px
+      box-sizing border-box
+      padding 0 50px
+      line-height 120px
+      font-size 56px
+      color #333333
+    .activitySummary
+      display block
+      width 100%
+      box-sizing border-box
+      padding 0 50px
+      line-height 60px
+      font-size 36px
+      color #808080
+</style>

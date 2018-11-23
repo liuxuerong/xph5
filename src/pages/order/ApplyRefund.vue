@@ -27,6 +27,7 @@
         <input type="text" v-model="reason" placeholder="请选择" readonly>
       </div>
       <div class="refundOper border-bottom">
+        <span>退款金额</span><span v-if="type=='1'">￥{{list.actualPrice}}</span><span v-else>￥{{list.needPayAmount}}</span>
         <span>退款金额</span><span v-if="type=='2'">￥{{list.actualPrice}}</span><span v-else>￥{{list.totalAmount}}</span>
       </div>
       <div class="refundOper border-bottom">

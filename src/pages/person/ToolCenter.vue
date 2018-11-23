@@ -91,7 +91,6 @@
 <script>
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import PersonTitle from './ComCenterSmillTitle'
-// import BScroll from 'better-scroll'
 import {getMemberCenter} from 'util/netApi'
 import {http} from 'util/request'
 import { config } from 'util/config'

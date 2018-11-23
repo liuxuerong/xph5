@@ -104,8 +104,10 @@
         6666
         <div  class="enptyCoupons"></div>
       </div> -->
-      <person-title content="可能感兴趣的活动" :moreShow="moreShow"></person-title>
-      <div class="emptyAmusingBg"></div>
+      <person-title content="可能感兴趣的活动" :moreShow="activitys.length > 0"></person-title>
+      <activitys-details v-if="activitys.length > 0" :activitysData="activitys"></activitys-details>
+      <div v-else class="emptyAmusingBg"></div>
+
       <person-title content="必备工具" :moreShow="moreShow"></person-title>
       <div class="toolCen">
         <div class="toolItem">
@@ -135,6 +137,7 @@ import { accessToken } from 'util/const.js'
 import {memberCenter, listDelivery, goodscollectionList, cartNum, customerService} from 'util/netApi'
 import {http} from 'util/request'
 import PersonTitle from './ComCenterSmillTitle'
+import ActivitysDetails from './components/ActivitysSwiper'
 import OrderIndex from '../order/OrderIndex'
 import { config } from 'util/config'
 import BScroll from 'better-scroll'
@@ -158,13 +161,15 @@ export default {
       orderNum: null, // 订单数量
       scrolled: false, // 滚动
       count: 0, // 购物车数量
-      cardScrollWidth: 0
+      cardScrollWidth: 0,
+      activitys: [] // 活动
     }
   },
   created () {},
   components: {
     PersonTitle,
-    OrderIndex
+    OrderIndex,
+    ActivitysDetails
   },
   computed: {
 
@@ -180,18 +185,22 @@ export default {
     // 基础信息加载
     getUserInfo () {
       http(memberCenter).then((response) => {
+        console.log(response.data.body)
         let data = response.data.body
         if (data.coupons.length > 0) {
           this.coupons = data.coupons
           this.cardScrollWidth = (this.coupons.length * 970 - 50) / 112.5
           // this.$refs.cardScrollWidth.style.width = (this.coupons.length * 970 - 50) / 112.5 + 'rem'
         }
+
         this.list = response.data.body
         this.name = data.memberName
         this.orderNum = data.orderCount
         this.memberHead = data.memberHead
         // 商品收藏
         this.collNum = data.collections.collectionCounts
+        // 活动
+        this.activitys = data.activitys.articles
         let goodsArr = data.collections.collectionGoods
         if (goodsArr.length > 0) {
           if (goodsArr.length > 3) {
@@ -225,6 +234,7 @@ export default {
             if (data.list[i].idDefault === 1) {
               this.addName = data.list[i].receiverName
               this.phone = data.list[i].phone.substring(0, 3) + '****' + data.list[i].phone.substring(7, 11)
+              // console.log(this.phone)
               if (data.list[i].province === '上海' || data.list[i].province === '重庆' || data.list[i].province === '北京' || data.list[i].province === '天津') {
                 this.address = data.list[i].city + data.list[i].area + data.list[i].detailedAddr
               } else {
@@ -472,7 +482,7 @@ export default {
     padding 100px 50px 150px
     .couponsScroll
       width 100%
-      height 320px
+      height 370px
       overflow hidden
   .addressBox,.collectBox
     width 100%
