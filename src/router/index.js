@@ -189,6 +189,9 @@ const router = new Router({
       path: '/immedPayment/:orderCode',
       name: 'immedPayment',
       component: resolve => require(['@/pages/order/ImmedPayment'], resolve)
+      // meta: {
+      //   isKeepAlive: false
+      // }
     },
     {
       path: '/afterSaleOrder/:type/:orderId',
@@ -294,6 +297,12 @@ const router = new Router({
       path: '/paymentSucc',
       name: 'paymentSucc',
       component: resolve => require(['@/pages/order/PaymentSucc'], resolve)
+    },
+    // ActivitysList
+    {
+      path: '/activitysList/:type',
+      name: 'activitysList',
+      component: resolve => require(['@/pages/activitys/ActivitysList'], resolve)
     }
   ]
 })

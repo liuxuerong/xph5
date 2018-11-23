@@ -142,12 +142,12 @@ export default {
             .passwordIcon
                 bgImage('/static/icons/password')
             input
-                width 62%
-                height 100px
-                line-height 100px
-                background transparent
-                color #fff
-                outline none
+              width 52%
+              height 100px
+              line-height 100px
+              background transparent
+              color #fff
+              outline none
             .passWordOper
                 float right
                 color #fff
@@ -178,7 +178,8 @@ export default {
         text-align center
         font-size 36px
         color #E6E6E6
-        margin-top 34%
+        position absolute
+        bottom 8%
     ::-webkit-input-placeholder {
         color: #fff;
     }

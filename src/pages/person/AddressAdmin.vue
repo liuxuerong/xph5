@@ -1,8 +1,8 @@
 <template>
   <div class="wrapper">
-    <userinfo-header title="我的地址" oper="新增地址" @operComplete="onOperComplete"></userinfo-header>
+    <userinfo-header title="我的地址1" :oper="oper" @operComplete="onOperComplete"></userinfo-header>
     <div class="addressCon">
-      <div class="addressItem border-bottom" v-for="item in addList" :key="item.id">
+      <div class="addressItem border-bottom" v-if="addList.length > 0" v-for="item in addList" :key="item.id">
         <div class="addressInfo clearfix">
           <div class="left" @click="selectGoodsAddress(item.id)">
             <div class="top clearfix">
@@ -16,11 +16,14 @@
           </div>
         </div>
       </div>
+      <div class="addressItem border-bottom" v-if="addList.length == 0">
+        <common-empty :emptyObj="emptyObj"></common-empty>
+      </div>
     </div>
   </div>
 </template>
 <script>
-import router from '@/router/index.js'
+import CommonEmpty from 'common/commonEmpty/CommonEmpty'
 import UserinfoHeader from './components/ComUserSetHeader'
 import { listDelivery } from 'util/netApi'
 import {http} from 'util/request'
@@ -29,11 +32,20 @@ import {orderInfo} from 'util/const.js'
 export default {
   data () {
     return {
-      addList: []
+      addList: [],
+      oper: '',
+      emptyObj: {
+        emptyImg: '/static/images/emptyAddress.png',
+        emptyBold: '暂无地址',
+        emptyP: '您还没有添加收货地址~',
+        buttonText: '立即添加',
+        buttonRouter: '/goodsAddress/1'
+      }
     }
   },
   components: {
-    UserinfoHeader
+    UserinfoHeader,
+    CommonEmpty
   },
   methods: {
     // 页面渲染
@@ -45,6 +57,9 @@ export default {
       http(listDelivery, params).then((response) => {
         console.log(response)
         this.addList = response.data.body.list
+        if (this.addList.length > 0) {
+          this.oper = '新增地址'
+        }
         console.log(this.addList)
         // // 判断默认地址
         // for (var i = 0; i < data.list.length; i++) {
@@ -62,11 +77,11 @@ export default {
     },
     // 新增地址
     onOperComplete (id) {
-      router.push('./goodsAddress/1')
+      this.$router.push('/goodsAddress/1')
     },
     // 修改地址
     modifyAddress (id) {
-      router.push('./goodsAddress/2/' + id)
+      this.$router.push('/goodsAddress/2/' + id)
     },
     // 选择地址
     selectGoodsAddress (id) {

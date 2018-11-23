@@ -141,8 +141,8 @@ export const comment = { url: '/comment', method: 'POST', version: v1 } // 新�
 export const commentList = { url: '/comment', method: 'GET', version: v1 } // 列表
 
 // 退货退款
-export const applyAfterSales = { url: '/afterSales/applyAfterSales', method: 'POST', version: v1 }
-export const submitLogic = { url: '/afterSales/deliveryAfterSales', method: 'POST', version: v1 }
+export const applyAfterSales = { url: '/afterSales/applyAfterSales', method: 'POST', version: v1 } // 退货退款
+export const submitLogic = { url: '/afterSales/deliveryAfterSales', method: 'POST', version: v1 } // 仅退款
 
 // 仅退款
 export const deliverAfterSales = { url: '/afterSales/deliverAfterSales', method: 'POST', version: v1 }
@@ -153,3 +153,7 @@ export const logisticsCompany = { url: '/logisticsCompany/list-logisticsCompany-
 
 // 客服接口
 export const customerService = 'http://jdhoe.udesk.cn/im_client/?web_plugin_id=59329'
+
+// 活动
+export const activityInfo = { url: '/article/api/activity/info', method: 'GET', version: v1 } // 限时购活动
+export const activityElies = { url: '/activity/api/elies', method: 'GET', version: v1 } // 限时购商品
