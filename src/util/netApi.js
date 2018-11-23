@@ -36,6 +36,7 @@ export const categoryTree = { url: '/goods/categorys/tree', method: 'GET', versi
 // 更多商品
 export const goodsList = { url: '/goods/list', method: 'GET', version: v1 }// 列表
 export const goodsDetail = { url: '/goods/details', method: 'GET', version: v1, join: true }// 列表
+export const hotGoods = { url: '/goodsLabel/hot', method: 'GET', version: v1 }// 口碑爆款
 
 // 购物车
 export const addCart = { url: '/cart/add', method: 'POST', version: v1 } // 添加购物车

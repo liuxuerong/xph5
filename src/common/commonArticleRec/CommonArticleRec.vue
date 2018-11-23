@@ -3,7 +3,7 @@
     <ul>
       <li v-for="item in articleRecommends" :key="item.id">
         <router-link :to="linkTo+item.id" class="routerDetailes">
-        <img v-lazy="imageUrl+item.articleCoverImage" alt="">
+        <img v-lazy="imageUrl+item.articleCoverImage" alt="" class="lazyImg">
         <p class="title">{{item.title}} <em v-if="item.subTitle">|</em> {{item.subTitle}}</p>
         <slot></slot>
         <div class="summary">{{item.summary}}</div>
@@ -35,6 +35,7 @@ export default {
     padding-bottom 100px
     .routerDetailes
       display inline-block
+      width 100%
     img
       width 100%
       height 600px
@@ -50,4 +51,9 @@ export default {
       font-size 36px
       line-height 50px
       padding 0 50px
+  .lazyImg[lazy=loading]
+    width 400px
+    height 400px
+    margin 100px auto
+    display block
 </style>

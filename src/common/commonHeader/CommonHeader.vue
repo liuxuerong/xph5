@@ -1,5 +1,5 @@
 <template>
-  <div class="header border-bottom">
+  <div class="header">
     <div class="scan" v-if="isScan">
     </div>
     <router-link to="/search"  v-else>
@@ -62,6 +62,7 @@ export default {
   top 0
   display flex
   justify-content space-between
+  border-bottom 1px solid #e6e6e6
   .scan
     width 60px
     height 60px

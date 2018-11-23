@@ -4,7 +4,7 @@
         <div class="checkIcon">
             <check-icon :value.sync="goodsItem.value">
             </check-icon>
-            <div class="shadow" v-if="goodsItem.stock==0&&goodsItem.status==1"></div>
+            <!-- <div class="shadow" v-if="goodsItem.stock==0&&goodsItem.status==1"></div> -->
           </div>
           <div class="goodsItemMain">
             <router-link :to="'/details/'+goodsItem.goodsId" class="linkDetails">

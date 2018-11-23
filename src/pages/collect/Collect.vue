@@ -186,10 +186,8 @@ export default {
     // this.getContent(this.page)
     this.showWhich = this.$route.params.index
     if (this.$route.params.index === '0') {
-      console.log(789)
       this.getGoods(this.page)
     } else {
-      console.log(123)
       this.getContent(this.page)
     }
   }
