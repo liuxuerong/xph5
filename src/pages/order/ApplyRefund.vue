@@ -66,7 +66,7 @@
 <script>
 import SearchTitle from './ComOrderSearchTitle'
 import goodsItem from './components/goodsItem'
-import { deliverAfterSales, subOrderDetail, applyAfterSales} from 'util/netApi'
+import {deliverAfterSales, subOrderDetail, applyAfterSales} from 'util/netApi'
 import { http } from 'util/request'
 import { Popup, Toast } from 'mint-ui'
 import { config } from 'util/config' // 图片路径
