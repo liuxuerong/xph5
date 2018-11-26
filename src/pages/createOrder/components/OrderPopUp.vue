@@ -4,7 +4,7 @@
       <div class="title">抱歉，您购买的以下{{unsatisfactoryData.length}}件商品，购买的数量 超出了限制
       </div>
       <ul>
-        <li v-for="goods in unsatisfactoryData" :key="goods.id">
+        <li v-for="goods in unsatisfactoryData" :key="goods.id" class="goodsItem">
           <img v-lazy="imageUrl+goods.pic" alt="">
           <div class="info">
             <p class="name">
@@ -57,7 +57,6 @@ export default {
   methods: {
     // 传给父元素id集合
     remove () {
-      console.log(11)
       this.$emit('remove')
     }
   },
@@ -149,4 +148,6 @@ export default {
     text-align center
     color #BA825A
     background-color #E6E6E6
+.goodsItem
+  margin-bottom 50px
 </style>

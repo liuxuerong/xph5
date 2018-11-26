@@ -40,7 +40,8 @@ import {
 } from 'util/netApi'
 import {
   mapState,
-  mapMutations
+  mapMutations,
+  mapActions
 } from 'vuex'
 export default {
   name: 'Cart',
@@ -81,6 +82,7 @@ export default {
     '$route' (to, from) {
       if (to.name === 'Cart') {
         this.getCartList()
+        console.log(24225)
       }
     }
   },
@@ -89,6 +91,7 @@ export default {
   }),
   methods: {
     ...mapMutations(['changeGoodsList']),
+    ...mapActions(['refreshCart']),
     scrollInit () {
       if (!this.scroll) {
         this.scroll = new BScroll(this.$refs.goodsWrap, {
@@ -116,8 +119,10 @@ export default {
               this.disabledCartList.push(cartList[i])
             }
           }
-          this.changeGoodsList(cartList)
+          // this.changeGoodsList(cartList)
+          this.refreshCart({isAllSelect: false, goodsList: cartList, clearNum: []})
         }
+
         this.scrollInit()
       }).catch(err => {
         console.log(err)
@@ -154,8 +159,8 @@ export default {
     }
   },
   mounted () {
-    console.log(789)
     this.getCartList()
+    console.log(5454)
   }
 }
 </script>

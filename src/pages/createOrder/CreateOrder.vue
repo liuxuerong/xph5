@@ -125,28 +125,41 @@ export default {
 
     }
   },
-  computed: {
-
-  },
   watch: {
     '$route' (to, from) {
       if (to.path === '/createOrder/1') {
         this.info = storage.getLocalStorage(orderInfo)
-        this.getDetails()
+        // this.getDetails()
       } else if (to.path === '/createOrder') {
         storage.setLocalStorage(orderInfo, {})
       }
+      this.getDetails()
     }
   },
   methods: {
     remove () {
-      this.unsatisfactoryData = []
-      // this.getDetails()
+      if (this.pricesData.length > this.unsatisfactoryData.length) {
+        this.unsatisfactoryData = []
+        let goodsInfoCart = storage.getLocalStorage(goodsInfo)
+        goodsInfoCart.goodsItems = []
+        for (let i = 0; i < this.pricesData.length; i++) {
+          if (this.pricesData[i].num <= this.pricesData[i].stock) {
+            goodsInfoCart.goodsItems.push(this.pricesData[i])
+          }
+        }
+        storage.setLocalStorage(goodsInfo, goodsInfoCart)
+        this.getDetails()
+      } else {
+        this.$router.push('/cart')
+      }
     },
     getDetails () {
       let goodsInfoCart = storage.getLocalStorage(goodsInfo)
+      this.unsatisfactoryData = []
       console.log(storage.getLocalStorage(goodsInfo))
-      const params = Object.assign({}, goodsInfoCart, this.info)
+      let params = {}
+      params = Object.assign({}, goodsInfoCart)
+      console.log(params, 'params')
       if (this.info) {
         params.favorableId = this.info.couponId
       }
@@ -174,22 +187,22 @@ export default {
               this.unsatisfactoryData.push(this.pricesData[i])
             }
           }
-          let pricesDataNew = []
-          for (let i = 0; i < this.pricesData.length; i++) {
-            if (this.pricesData[i].num <= this.pricesData[i].stock) {
-              pricesDataNew.push(this.pricesData[i])
+          let goodsItems = res.data.body.orderGoodsItems
+          let goodsItemsNew = []
+          for (let index in goodsItems) {
+            for (let k in this.pricesData) {
+              if (goodsItems[index].id === this.pricesData[k].id) {
+                goodsItems[index].goodsItemId = goodsItems[index].id
+                goodsItemsNew.push(goodsItems[index])
+              }
             }
           }
-          this.pricesData = pricesDataNew
-          let goodsItems = res.data.body.orderGoodsItems
-          for (let index in goodsItems) {
-            goodsItems[index].goodsItemId = goodsItems[index].id
-          }
-          storage.setLocalStorage(goodsInfo, params)
+          // console.log(goodsItemsNew)
           this.params.key = res.data.body.key
-          this.params.goodsItems = goodsItems
+          this.params.goodsItems = goodsItemsNew
           this.totalPric = res.data.body.totalPrice
           this.needPayPrice = res.data.body.needPayPrice
+          storage.setLocalStorage(goodsInfo, params)
         }
       }).catch(err => {
         console.log(err)
@@ -205,7 +218,6 @@ export default {
     createOrder () {
       let params = {}
       const info = storage.getLocalStorage(goodsInfo)
-      console.log(info)
       const orderInfoData = storage.getLocalStorage(orderInfo)
       params.fromCart = info.fromCart || false
       params.deliveryId = orderInfoData.addressId
