@@ -117,7 +117,7 @@
   </div>
 </template>
 <script>
-import { subOrderDetail, cancelOrder, confirmGoods } from 'util/netApi'
+import { subOrderDetail, cancelOrder, confirmGoods, refundOrderDetail } from 'util/netApi'
 import { http } from 'util/request'
 import SearchTitle from './ComOrderSearchTitle'
 import { config } from 'util/config' // 图片路径
@@ -161,7 +161,6 @@ export default {
       let type = this.$route.params.type
       this.type = type
       http(subOrderDetail, [orderCode]).then((response) => {
-        console.log(response)
         let data = response.data.body
         this.list = data
         let memberOrderGoods = data.memberOrderGoods[0]
@@ -219,8 +218,16 @@ export default {
     },
     // 查看售后
     orderDetails (orderId) {
-      console.log(orderId)
-      this.$router.push('/afterSaleOrder/5/' + orderId)
+      let _this = this
+      http(refundOrderDetail, [orderId]).then((response) => {
+        if (response.data.code === 0) {
+          if (response.data.body.afterSalesType === 1) {
+            _this.$router.push('/afterSaleOrder/5/' + orderId)
+          } else {
+            _this.$router.push('/returnGoodsMoney/5/' + orderId)
+          }
+        }
+      })
     },
     // 商品详情页面
     goodsDetails (goodsId) {
@@ -234,9 +241,7 @@ export default {
     // 取消订单
     cancelOrder (orderId) {
       let _this = this
-      console.log(orderId)
       http(cancelOrder, [orderId]).then((response) => {
-        console.log(response)
         if (response.data.code === 0) {
           notice.confirm('取消订单', '是否取消此订单', function () {
             _this.$router.push('/orderList/1')
@@ -250,7 +255,6 @@ export default {
     },
     // 确认收货
     confirmGoods (orderCode) {
-      console.log(orderCode)
       notice.confirm('您确定收到货物？', '否则可能钱财两空', function () {
         http(confirmGoods, [orderCode]).then((response) => {
           if (response.data.body === true) {

@@ -1,46 +1,56 @@
 <template>
   <div class="wrapper">
     <search-title :title="title"></search-title>
-    <div class="orderDetatilCon">
+    <div class="orderDetatilCon" v-if="list">
       <div class="orderUserInfo">
         <div class="orderCode border-bottom">订单编号：{{list.orderSn}}</div>
-        <div class="orderProvide" v-if="list.shippingMethod === '1'">
-          <span class="shopName">提货店铺：{{list.franchiseeDetailVO.name}}  {{list.franchiseeDetailVO.phone}}</span>
-          <span class="shopAddress">店铺地址：{{list.franchiseeDetailVO.province}}{{list.franchiseeDetailVO.city}}{{list.franchiseeDetailVO.area}}{{list.franchiseeDetailVO.address}}</span>
-        </div>
-        <div class="orderProvide" v-else-if="list.shippingMethod === '2'">
+        <div class="orderProvide" v-if="list.shippingMethod === '2'">
           <span class="orderName">收货人：{{list.delivery.receiverName}}   {{list.delivery.phone}}</span>
           <span class="orderAddress">收货地址：{{list.delivery.province}}{{list.delivery.city}}{{list.delivery.area}}{{list.delivery.detailedAddr}}</span>
         </div>
       </div>
+      <!-- 填写物流单号 -->
+      <router-link to="/returnLogistics" class="returnLogistics" v-if="afterSales && afterSales.status == 2">
+        <span class="logisticsName" v-if="logisticsName">{{logisticsName}}</span>
+        <span v-else class="logisticsName">填写物流单号</span>
+        <i class="softSetIcon"></i>
+        <span class="logisticsNum" v-if="logisticsNum">{{logisticsNum}}</span>
+        <span class="logisticsNum" v-else>请填写物流单号</span>
+      </router-link>
       <!-- 退款进度详情 -->
-      <div class="refundSpeed" v-if="goodsInfo.orderItemStatus !='6'">
+      <div class="refundSpeed" v-if="afterSales && (afterSales.status == 4 || afterSales.status == 5 || afterSales.status == 6)">
         <h3 class="border-bottom">退款详情</h3>
         <div class="refundCon">
           <div class="refundItem active">
-            <!-- hookIcon hookGreen hookActive  -->
             <i class="hookIcon hookGreen"></i>
             <span class="refundState">卖家退款</span>
             <span v-if="list.confirmTime" class="refundTime">{{list.createTime.split('T')[0]}} {{list.createTime.split('T')[1]}}</span>
           </div>
           <div class="refundItem active">
-            <i class="hookIcon" :class="goodsInfo.orderItemStatusDesc == '退款中'?'hookActive':'hookGreen'"></i>
+            <i class="hookIcon" :class="afterSales.status == 4?'hookActive':'hookGreen'"></i>
             <span class="refundState">退款中</span>
             <span v-if="list.confirmTime" class="refundTime">{{list.confirmTime.split('T')[0]}} {{list.confirmTime.split('T')[1]}}</span>
           </div>
-          <div class="refundItem" v-if="goodsInfo.orderItemStatusDesc == '退款失败'" :class="goodsInfo.orderItemStatusDesc == '退款失败'?'active':''">
-            <i class="hookIcon" :class="goodsInfo.orderItemStatusDesc == '退款失败'?'hookActive':''"></i>
+          <div class="refundItem" v-if="afterSales.status == 6" :class="afterSales.status == 6?'active':''">
+            <i class="hookIcon" :class="afterSales.status == 6?'hookActive':''"></i>
             <span class="refundState">退款失败</span>
-            <span v-if="goodsInfo.orderItemStatusDesc == '退款失败' && list.allowPayTime" class="refundTime">{{list.allowPayTime.split('T')[0]}} {{list.allowPayTime.split('T')[1]}}</span>
+            <span v-if="afterSales.status == 6 && list.allowPayTime" class="refundTime">{{list.allowPayTime.split('T')[0]}} {{list.allowPayTime.split('T')[1]}}</span>
           </div>
-          <div class="refundItem" v-else :class="goodsInfo.orderItemStatusDesc == '退款成功'?'active':''">
-            <i class="hookIcon" :class="goodsInfo.orderItemStatusDesc == '退款成功'?'hookActive':''"></i>
+          <div class="refundItem" v-else :class="afterSales.status == 5?'active':''">
+            <i class="hookIcon" :class="afterSales.status == 5?'hookActive':''"></i>
             <span class="refundState">退款成功</span>
-            <span v-if="goodsInfo.orderItemStatusDesc == '退款成功' && list.allowPayTime" class="refundTime">{{list.allowPayTime.split('T')[0]}} {{list.allowPayTime.split('T')[1]}}</span>
+            <span v-if="afterSales.status == 5 && list.allowPayTime" class="refundTime">{{list.allowPayTime.split('T')[0]}} {{list.allowPayTime.split('T')[1]}}</span>
           </div>
         </div>
       </div>
-      <div class="orderGoodsInfo">
+      <div class="orderGoodsInfo" v-if="afterSales">
+        <div class="returnAddress" v-if="afterSales.status == 2">
+          <span>寄回地址：{{afterSales.returnAddress}}</span>
+          <span>联系电话：{{afterSales.returnMobile}}</span>
+        </div>
+        <div class="returnTips" v-if="afterSales.status && afterSales.status == 2">
+          <span>温馨提示：</span>寄回物品时应不影响我司进行二次销售，即商品及包装保持出售时原状且配件齐全(含发票)，方可享受全额退货服务。若您对我们退换货政策还有任何疑问，欢迎联系我们在线客服。
+        </div>
         <div class="orderGoods clearfix" v-for="(item,index) in list.memberOrderGoods" :key="index">
           <img v-if="item.pic !=''" :src="imageUrl+item.pic" alt="">
           <img v-else src="/static/images/personalHeader.png">
@@ -65,40 +75,46 @@
         </div>
       </div>
       <!-- 物流信息 -->
-      <!-- <div class="logisticsInfo">
-        <span>物流单号</span>
-        <p>{{list.v}}</p>
-      </div> -->
+      <div class="returnLogistics" v-if="afterSales && (afterSales.status == 3 || afterSales.status == 4)">
+        <span class="logisticsName">物流单号</span>
+        <span class="logisticsNum">{{afterSales.logisticsName}}&nbsp;&nbsp;&nbsp;&nbsp;{{afterSales.logisticsNo}}</span>
+      </div>
       <ul class="orderOther">
         <li v-if="list.shippingMethod === '1'">配送方式：上门自提</li>
         <li v-if="list.shippingMethod === '2'">配送方式：快递配送</li>
         <li v-if="list.createTime">下单时间：{{list.createTime.split('T')[0]}}&nbsp;&nbsp;{{list.createTime.split('T')[1]}}</li>
-        <!-- <li>下单时间：{{list.createTime}}</li> -->
         <li v-if="list.invoiceDesc === undefined || list.invoiceDesc === ''">发票：无发票</li>
         <li v-else>发票：{{list.invoiceDesc}}</li>
         <li v-if="list.desc === undefined || list.desc === ''">备注：无备注</li>
         <li v-else>备注：{{list.desc}}</li>
       </ul>
     </div>
-    <!-- <div class="orderOperBtn orderOperBtn8 border-top" v-if="goodsInfo.orderItemStatus === 6">审核中</div> -->
-    <div class="orderOperBtn orderOperBtn8 border-top" v-if="goodsInfo.orderItemStatusDesc == '退款中'">退款中</div>
-    <div class="orderOperBtn orderOperBtn8 border-top" v-else-if="goodsInfo.orderItemStatusDesc == '退款成功'">退款成功</div>
-    <div class="orderOperBtn orderOperBtn8 border-top" v-else-if="goodsInfo.orderItemStatusDesc == '退款失败'">退款失败</div>
-    <div class="orderOperBtn orderOperBtn8 border-top" v-else>审核中</div>
+    <div class="orderOperBtn orderOperBtn9 border-top" v-if="afterSales && afterSales.status == 2" @click="returnSubmit(afterSales.id)">提交</div>
+    <div class="orderOperBtn orderOperBtn8 border-top" v-else-if="afterSales && afterSales.status == 1">审核中</div>
+    <div class="orderOperBtn orderOperBtn8 border-top" v-else-if="afterSales && afterSales.status == 3">等待卖家收货</div>
+    <div class="orderOperBtn orderOperBtn8 border-top" v-else-if="afterSales && afterSales.status == 4">退款中</div>
+    <div class="orderOperBtn orderOperBtn8 border-top" v-else-if="afterSales && afterSales.status == 5">退款成功</div>
+    <div class="orderOperBtn orderOperBtn8 border-top" v-else-if="afterSales && afterSales.status == 6">退款失败</div>
   </div>
 </template>
 <script>
-import { refundOrderDetail } from 'util/netApi'
+import { refundOrderDetail, submitLogic } from 'util/netApi'
+import {Toast} from 'mint-ui'
 import { http } from 'util/request'
 import SearchTitle from './ComOrderSearchTitle'
 import { config } from 'util/config' // 图片路径
+import {storage} from 'util/storage'
+import {retrunLogistics} from 'util/const.js'
 export default {
   data () {
     return {
-      title: '',
-      list: [],
+      title: '退款订单',
+      list: null,
+      afterSales: null,
       imageUrl: config.imageUrl,
-      goodsInfo: []
+      goodsInfo: [],
+      logisticsName: '',
+      logisticsNum: ''
     }
   },
   components: {
@@ -106,7 +122,7 @@ export default {
   },
   watch: {
     '$route' (to, from) {
-      if (to.name === 'afterSaleOrder') {
+      if (to.name === 'returnGoodsMoney') {
         this.afterSaleRender()
       }
     }
@@ -115,13 +131,51 @@ export default {
     // 页面初始化数据
     afterSaleRender () {
       let orderId = this.$route.params.orderId
+      console.log(orderId)
       http(refundOrderDetail, [orderId]).then((response) => {
+        console.log(response.data.body)
         if (response.data.code === 0) {
           this.title = response.data.body.afterSalesTypeDesc
           this.list = response.data.body
+          this.afterSales = response.data.body.afterSales
           this.goodsInfo = response.data.body.memberOrderGoods[0]
         }
       })
+      let logistics = storage.getLocalStorage(retrunLogistics)
+      if (logistics) {
+        this.logisticsName = logistics.logisticsName
+        this.logisticsNum = logistics.logisticsNum
+      }
+    },
+    // 退款提交
+    returnSubmit (orderId) {
+      console.log(orderId)
+      let _this = this
+      if (this.logisticsName && this.logisticsNum) {
+        let params = {
+          afterSalesId: orderId, // 售后订单id
+          logisticsName: this.logisticsName, // 物流公司名称
+          logisticsNo: this.logisticsNum // 物流单号
+        }
+        console.log(params)
+        http(submitLogic, params).then((response) => {
+          console.log(response)
+          if (response.data.code === 0) {
+            Toast({
+              message: '提交成功',
+              position: 'bottom',
+              duration: 2000
+            })
+            _this.$router.go(0)
+          }
+        })
+      } else {
+        Toast({
+          message: '请选择物流',
+          position: 'bottom',
+          duration: 2000
+        })
+      }
     }
   },
   mounted () {
@@ -129,20 +183,21 @@ export default {
   }
 }
 </script>
+<style lang="stylus">
+body,html
+    position relative
+    background #F5F5F5!important
+</style>
 <style lang="stylus" scoped>
   @import "~styles/mixins.styl";
-  body,html
-    position relative
-    background #F5F5F5
   .wrapper
     width 100%
     box-sizing border-box
     padding-top 130px
+    padding-bottom 148px
     background #F5F5F5
   .orderDetatilCon
     width 100%
-    box-sizing border-box
-    padding-bottom 148px
   .orderUserInfo
     width 100%
     background #fff
@@ -269,6 +324,11 @@ export default {
     font-size 46px
     color #999999
     background #F0F0F0
+  .orderOperBtn9
+    text-align center
+    font-size 46px
+    background #F0F0F0
+    color #BA825A
   .goodsSpecWrapper
     width 100%
     margin-bottom 30px
@@ -367,4 +427,53 @@ export default {
     .refundItem.active
       .refundState
         color #262626
+  .returnLogistics
+    display block
+    width 100%
+    height 148px
+    line-height 148px
+    margin-bottom 30px
+    box-sizing border-box
+    padding 0 50px
+    background #fff
+    .logisticsName
+      float left
+      width auto
+      font-size 40px
+      color #262626
+    .logisticsNum
+      float right
+      font-size 40px
+      color #999999
+    .logisticsNum.active
+      color #262626
+    .softSetIcon
+        float right
+        width 24px
+        height 45px
+        margin-left 30px
+        margin-top 50px
+        bgImage('/static/icons/enterNextGray')
+  .returnAddress
+    width 100%
+    box-sizing border-box
+    padding 50px 50px 20px
+    span
+      width 100%
+      display block
+      line-height 60px
+      font-size 40px
+      color #808080
+      margin-bottom 30px
+  .returnTips
+    width 100%
+    height 280px
+    box-sizing border-box
+    padding 50px
+    line-height 60px
+    font-size 36px
+    color #808080
+    background #f5f5f5
+    span
+      color #BA8258
 </style>

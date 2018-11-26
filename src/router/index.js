@@ -303,6 +303,16 @@ const router = new Router({
       path: '/activitysList/:type',
       name: 'activitysList',
       component: resolve => require(['@/pages/activitys/ActivitysList'], resolve)
+    },
+    {
+      path: '/returnGoodsMoney/:type/:orderId',
+      name: 'returnGoodsMoney',
+      component: resolve => require(['@/pages/order/ReturnGoodsMoney'], resolve)
+    },
+    {
+      path: '/returnLogistics',
+      name: 'returnLogistics',
+      component: resolve => require(['@/pages/order/ReturnLogistics'], resolve)
     }
   ]
 })

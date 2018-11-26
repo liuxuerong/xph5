@@ -14,6 +14,8 @@ export default {
 <style lang="stylus" scoped>
   .activitysTitle
     width 100%
+    box-sizing border-box
+    padding 0 50px
     height 160px
     h3
       display inline-block

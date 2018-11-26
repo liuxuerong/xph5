@@ -280,7 +280,7 @@ export default {
     line-height 148px
     font-size 46px
     color #262626
-  .setIcon
+  .
     float right
     width 24px
     height 45px

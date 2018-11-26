@@ -34,7 +34,7 @@
 <script>
 import SearchTitle from './ComOrderSearchTitle'
 import { subOrderDetail, comment } from 'util/netApi'
-import Toast from 'mint-ui'
+import {Toast} from 'mint-ui'
 import { http } from 'util/request'
 import { config } from 'util/config' // 图片路径
 import { storage } from 'util/storage.js'
@@ -73,6 +73,7 @@ export default {
           data[i].evaluateText = ''
         }
         this.list = data
+        console.log(this.list)
       })
     },
     uploadPic (e, index) {
@@ -89,7 +90,6 @@ export default {
         }
       }
       axios.post(config.baseUrl + 'file/upload', formData, cf).then((response) => {
-        console.log(response)
         if (response.data.code === 0) {
           if (this.objImgs[index]) {
             let childArr = this.objImgs[index]
@@ -111,6 +111,7 @@ export default {
     },
     // 评论数据提交
     commentSubmit () {
+      let _this = this
       let goodsComments = []
       for (let i = 0; i < this.list.length; i++) {
         let con = {}
@@ -139,8 +140,7 @@ export default {
             position: 'bottom',
             duration: 2000
           })
-          console.log(6666)
-          this.$router.push('/personCenter')
+          _this.$router.push('/personCenter')
         }
       })
     }

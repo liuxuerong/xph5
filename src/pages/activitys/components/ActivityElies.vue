@@ -1,5 +1,5 @@
 <template>
-  <div class="eliesItem">
+  <div class="eliesItem" @click="activityInfoDetails(activityInfoData.id)">
     <img :src="imageUrl+activityInfoData.pcArticleCoverImage" alt="">
     <h3 class="activityTitle">{{activityInfoData.title}}</h3>
     <span class="activitySummary" v-if="activityInfoData.summary">{{activityInfoData.summary}}</span>
@@ -18,6 +18,17 @@ export default {
     return {
       imageUrl: config.imageUrl // 图片路径
     }
+  },
+  methods: {
+    // 详情跳转
+    // storyDetails/474986986709450752
+    // articleCategoryId id
+    activityInfoDetails (id) {
+      this.$router.push('/storyDetails/' + id)
+    }
+  },
+  mounted () {
+    console.log(this.activityInfoData)
   }
 }
 </script>
