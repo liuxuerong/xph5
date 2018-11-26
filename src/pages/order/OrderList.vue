@@ -191,6 +191,7 @@ export default {
           // 仅退款
           this.$router.push('/afterSaleOrder/' + this.type + '/' + item.memberOrderGoods[0].orderItemId)
         } else if (item.afterSalesType === 2) {
+          console.log(666)
           // 退货退款
           this.$router.push('/returnGoodsMoney/' + this.type + '/' + item.memberOrderGoods[0].orderItemId)
         }

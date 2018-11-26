@@ -9,11 +9,13 @@
     </div>
     <div class="activitysCon" v-if="activitysActive == 0">
       <!-- 单品秒杀 -->
-      <activitys-title v-if="activityGoods.length" :activitysTitle="activitysTitle[0]"></activitys-title>
-      <activity-goods v-if="activityGoods.length" v-for="item in activityGoods" :key="item.goodsItemId" :activityGoods="item"></activity-goods>
+      <!--<activitys-title v-if="activityGoods.length" :activitysTitle="activitysTitle[0]"></activitys-title>
+      <activity-goods v-if="activityGoods.length" v-for="item in activityGoods" :key="item.goodsItemId" :activityGoods="item"></activity-goods>-->
+      <activitys-title :activitysTitle="activitysTitle[0]"></activitys-title>
+      <activity-goods v-for="item in 2" :key="item.goodsItemId" :activityGoods="item"></activity-goods>
       <!-- 品类秒杀 -->
       <activitys-title v-if="activityCategory.length" :activitysTitle="activitysTitle[1]"></activitys-title>
-      <activity-category v-if="activityCategory.length"></activity-category>
+      <activity-category v-if="activityCategory.length" v-for="item in activityCategory" :key="item.goodsCategoryId" :activityCategory="item"></activity-category>
     </div>
     <div class="activitysCon" v-if="activitysActive == 1">
       <activity-elies v-if="activityInfo.length" v-for="item in activityInfo" :key="item.eliesItems" :activityInfoData="item"></activity-elies>
@@ -49,6 +51,13 @@ export default {
     ActivityElies,
     ActivityGoods,
     ActivityCategory
+  },
+  watch: {
+    '$route' (to, from) {
+      if (to.name === 'activitysList') {
+        this.activitysRender()
+      }
+    }
   },
   methods: {
     // 页面初始化加载
@@ -133,7 +142,7 @@ export default {
   .activitysCon
     width 100%
     box-sizing border-box
-    padding 70px 50px
+    padding 70px 0
     border-radius 50px
     position relative
     top -50px

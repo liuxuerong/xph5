@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <search-title :title="title"></search-title>
-    <div class="orderDetatilCon">
+    <div class="orderDetatilCon" v-if="list">
       <div class="orderUserInfo">
         <div class="orderCode border-bottom">订单编号：{{list.orderSn}}</div>
         <div class="orderProvide" v-if="list.shippingMethod === '2'">
@@ -10,7 +10,7 @@
         </div>
       </div>
       <!-- 填写物流单号 -->
-      <router-link to="/returnLogistics" class="returnLogistics" v-if="list.afterSales.status && list.afterSales.status == 2">
+      <router-link to="/returnLogistics" class="returnLogistics" v-if="afterSales && afterSales.status == 2">
         <span class="logisticsName" v-if="logisticsName">{{logisticsName}}</span>
         <span v-else class="logisticsName">填写物流单号</span>
         <i class="softSetIcon"></i>
@@ -18,7 +18,7 @@
         <span class="logisticsNum" v-else>请填写物流单号</span>
       </router-link>
       <!-- 退款进度详情 -->
-      <div class="refundSpeed" v-if="list.afterSales.status == 4 || list.afterSales.status == 5 || list.afterSales.status == 6">
+      <div class="refundSpeed" v-if="afterSales && (afterSales.status == 4 || afterSales.status == 5 || afterSales.status == 6)">
         <h3 class="border-bottom">退款详情</h3>
         <div class="refundCon">
           <div class="refundItem active">
@@ -27,28 +27,28 @@
             <span v-if="list.confirmTime" class="refundTime">{{list.createTime.split('T')[0]}} {{list.createTime.split('T')[1]}}</span>
           </div>
           <div class="refundItem active">
-            <i class="hookIcon" :class="goodsInfo.orderItemStatusDesc == '退款中'?'hookActive':'hookGreen'"></i>
+            <i class="hookIcon" :class="afterSales.status == 4?'hookActive':'hookGreen'"></i>
             <span class="refundState">退款中</span>
             <span v-if="list.confirmTime" class="refundTime">{{list.confirmTime.split('T')[0]}} {{list.confirmTime.split('T')[1]}}</span>
           </div>
-          <div class="refundItem" v-if="goodsInfo.orderItemStatusDesc == '退款失败'" :class="goodsInfo.orderItemStatusDesc == '退款失败'?'active':''">
-            <i class="hookIcon" :class="goodsInfo.orderItemStatusDesc == '退款失败'?'hookActive':''"></i>
+          <div class="refundItem" v-if="afterSales.status == 6" :class="afterSales.status == 6?'active':''">
+            <i class="hookIcon" :class="afterSales.status == 6?'hookActive':''"></i>
             <span class="refundState">退款失败</span>
-            <span v-if="goodsInfo.orderItemStatusDesc == '退款失败' && list.allowPayTime" class="refundTime">{{list.allowPayTime.split('T')[0]}} {{list.allowPayTime.split('T')[1]}}</span>
+            <span v-if="afterSales.status == 6 && list.allowPayTime" class="refundTime">{{list.allowPayTime.split('T')[0]}} {{list.allowPayTime.split('T')[1]}}</span>
           </div>
-          <div class="refundItem" v-else :class="goodsInfo.orderItemStatusDesc == '退款成功'?'active':''">
-            <i class="hookIcon" :class="goodsInfo.orderItemStatusDesc == '退款成功'?'hookActive':''"></i>
+          <div class="refundItem" v-else :class="afterSales.status == 5?'active':''">
+            <i class="hookIcon" :class="afterSales.status == 5?'hookActive':''"></i>
             <span class="refundState">退款成功</span>
-            <span v-if="goodsInfo.orderItemStatusDesc == '退款成功' && list.allowPayTime" class="refundTime">{{list.allowPayTime.split('T')[0]}} {{list.allowPayTime.split('T')[1]}}</span>
+            <span v-if="afterSales.status == 5 && list.allowPayTime" class="refundTime">{{list.allowPayTime.split('T')[0]}} {{list.allowPayTime.split('T')[1]}}</span>
           </div>
         </div>
       </div>
-      <div class="orderGoodsInfo">
-        <div class="returnAddress" v-if="list.afterSales.status && list.afterSales.status == 2">
-          <span>寄回地址：{{list.afterSales.returnAddress}}</span>
-          <span>联系电话：{{list.afterSales.returnMobile}}</span>
+      <div class="orderGoodsInfo" v-if="afterSales">
+        <div class="returnAddress" v-if="afterSales.status == 2">
+          <span>寄回地址：{{afterSales.returnAddress}}</span>
+          <span>联系电话：{{afterSales.returnMobile}}</span>
         </div>
-        <div class="returnTips" v-if="list.afterSales.status && list.afterSales.status == 2">
+        <div class="returnTips" v-if="afterSales.status && afterSales.status == 2">
           <span>温馨提示：</span>寄回物品时应不影响我司进行二次销售，即商品及包装保持出售时原状且配件齐全(含发票)，方可享受全额退货服务。若您对我们退换货政策还有任何疑问，欢迎联系我们在线客服。
         </div>
         <div class="orderGoods clearfix" v-for="(item,index) in list.memberOrderGoods" :key="index">
@@ -75,9 +75,9 @@
         </div>
       </div>
       <!-- 物流信息 -->
-      <div class="returnLogistics" v-if="list.afterSales.status && list.afterSales.status == 3">
+      <div class="returnLogistics" v-if="afterSales && (afterSales.status == 3 || afterSales.status == 4)">
         <span class="logisticsName">物流单号</span>
-        <span class="logisticsNum">{{logisticsName}}&nbsp;&nbsp;&nbsp;&nbsp;{{logisticsNum}}</span>
+        <span class="logisticsNum">{{afterSales.logisticsName}}&nbsp;&nbsp;&nbsp;&nbsp;{{afterSales.logisticsNo}}</span>
       </div>
       <ul class="orderOther">
         <li v-if="list.shippingMethod === '1'">配送方式：上门自提</li>
@@ -89,12 +89,12 @@
         <li v-else>备注：{{list.desc}}</li>
       </ul>
     </div>
-    <div class="orderOperBtn orderOperBtn9 border-top" v-if="list.afterSales.status && list.afterSales.status == 2" @click="returnSubmit(list.afterSales.id)">提交</div>
-    <div class="orderOperBtn orderOperBtn8 border-top" v-else-if="list.afterSales.status && list.afterSales.status == 1">审核中</div>
-    <div class="orderOperBtn orderOperBtn8 border-top" v-else-if="list.afterSales.status && list.afterSales.status == 3">等待卖家收货</div>
-    <div class="orderOperBtn orderOperBtn8 border-top" v-else-if="list.afterSales.status && list.afterSales.status == 4">退款中</div>
-    <div class="orderOperBtn orderOperBtn8 border-top" v-else-if="list.afterSales.status && list.afterSales.status == 5">退款成功</div>
-    <div class="orderOperBtn orderOperBtn8 border-top" v-else-if="list.afterSales.status && list.afterSales.status == 6">退款失败</div>
+    <div class="orderOperBtn orderOperBtn9 border-top" v-if="afterSales && afterSales.status == 2" @click="returnSubmit(afterSales.id)">提交</div>
+    <div class="orderOperBtn orderOperBtn8 border-top" v-else-if="afterSales && afterSales.status == 1">审核中</div>
+    <div class="orderOperBtn orderOperBtn8 border-top" v-else-if="afterSales && afterSales.status == 3">等待卖家收货</div>
+    <div class="orderOperBtn orderOperBtn8 border-top" v-else-if="afterSales && afterSales.status == 4">退款中</div>
+    <div class="orderOperBtn orderOperBtn8 border-top" v-else-if="afterSales && afterSales.status == 5">退款成功</div>
+    <div class="orderOperBtn orderOperBtn8 border-top" v-else-if="afterSales && afterSales.status == 6">退款失败</div>
   </div>
 </template>
 <script>
@@ -109,12 +109,12 @@ export default {
   data () {
     return {
       title: '退款订单',
-      list: [],
+      list: null,
+      afterSales: null,
       imageUrl: config.imageUrl,
       goodsInfo: [],
       logisticsName: '',
       logisticsNum: ''
-
     }
   },
   components: {
@@ -137,6 +137,7 @@ export default {
         if (response.data.code === 0) {
           this.title = response.data.body.afterSalesTypeDesc
           this.list = response.data.body
+          this.afterSales = response.data.body.afterSales
           this.goodsInfo = response.data.body.memberOrderGoods[0]
         }
       })
