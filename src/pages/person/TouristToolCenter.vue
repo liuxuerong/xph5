@@ -1,55 +1,33 @@
 <template>
   <div class="wrapper">
-    <div class="centerHeader">
-      <div class="userInfoTop">
-        <span class="prevOper" @click="backPrevOper">&lt;</span>
-        <h3 class="userInfoTitle">个人中心</h3>
-      </div>
-      <div class="centerHeaderBot">
-        <img v-if="list.headImage" :src="imageUrl+list.headImage" class="headerImg">
-        <img v-else src="/static/images/memberHeader.png" class="headerImg">
-        <div class="headerInfoText">
-          <h3>{{list.name}}</h3>
-          <span class="memberGrade">
-            <i class="memberGradeIcon" :class="'memberGradeIcon0' + memberLevelName"></i>
-            {{list.memberLevelName}}会员
-          </span>
-          <div class="stopTimeTips">
-            <p class="left">NO.{{list.cardNo}}</p>
-            <p class="rigth">{{expireTime}}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="gradeTips" v-if="list.totalShoppingMoney > 10000">
-      <span v-if="list.totalShoppingMoney > 5000">您已成功延续下一年钻卡会员</span>
-      <span v-else>您距离下一年延续钻卡会员 还有<i>{{list.upMoney}} 元</i>的距离</span>
-    </div>
-    <div class="gradeTips" v-else-if="list.totalShoppingMoney > 5000">
-      <span v-if="list.totalShoppingMoney > 3000">您已成功延续下一年金卡会员</span>
-      <span v-else>您距离下一年延续金卡会员 还有<i> {{list.upMoney}}元</i>的距离</span>
-    </div>
-    <div class="gradeTips" v-else-if="list.totalShoppingMoney > 2000">
-      <span v-if="list.totalShoppingMoney > 1000">您已成功延续下一年银卡会员</span>
-      <span v-else>您距离下一年延续银卡会员 还有<i>{{list.upMoney}} 元</i>的距离</span>
-    </div>
-    <div class="gradeTips" v-else>您已成功延续下一年普卡会员</div>
+    <userinfo-header :title="title" oper=""></userinfo-header>
     <div class="toolCon">
       <person-title content="我的会员成长" :moreShow="moreShow"></person-title>
-      <div class="inteShow">累计消费<span>{{list.totalShoppingMoney}}</span><p v-html="totalShoppingMoneyHTML"></p></div>
+      <div class="inteShow" v-if="active === 0">
+        <span>免费注册</span>, 即可成为普卡会员
+      </div>
+      <div class="inteShow" v-if="active === 1">
+        普卡累计消费<span>2000</span>，可升级为银卡
+      </div>
+      <div class="inteShow" v-if="active === 2">
+        银卡累计消费<span>5000</span>，可升级为金卡
+      </div>
+      <div class="inteShow" v-if="active === 3">
+        金卡累计消费<span>10000</span>，可升级为钻卡
+      </div>
       <swiper ref="mySwiper" :options="swiperOption" class="memberGradeScroll">
         <swiper-slide></swiper-slide>
         <swiper-slide>
-          <div class="swiperItem" :class="list.memberLevelName === '普卡'?'active':''"><i class="memberGradeIcon01"></i><span>普卡</span></div>
+          <div class="swiperItem active"><i class="memberGradeIcon01"></i><span>普卡</span></div>
         </swiper-slide>
         <swiper-slide>
-          <div class="swiperItem" :class="list.memberLevelName === '银卡'?'active':''"><i class="memberGradeIcon02"></i><span>银卡</span></div>
+          <div class="swiperItem"><i class="memberGradeIcon02"></i><span>银卡</span></div>
         </swiper-slide>
         <swiper-slide>
-          <div class="swiperItem" :class="list.memberLevelName === '金卡'?'active':''"><i class="memberGradeIcon03"></i><span>金卡</span></div>
+          <div class="swiperItem"><i class="memberGradeIcon03"></i><span>金卡</span></div>
         </swiper-slide>
         <swiper-slide>
-          <div class="swiperItem last" :class="list.memberLevelName === '钻卡'?'active':''"><i class="memberGradeIcon04"></i><span>钻卡</span></div>
+          <div class="swiperItem last"><i class="memberGradeIcon04"></i><span>钻卡</span></div>
         </swiper-slide>
         <swiper-slide></swiper-slide>
       </swiper>
@@ -74,10 +52,9 @@
       </div>
     </div>
     <div class="toolInte">
-      <router-link class="toolInteItem border-bottom" to="/integralDetails">
-        <h3>我的积分</h3>
+      <router-link class="toolInteItem border-bottom" to="/integralRule">
+        <h3>积分规则</h3>
         <i class="aboutIcon"></i>
-        <p>{{list.integral}} 积分</p>
       </router-link>
     </div>
     <div class="memberGradeExplain">
@@ -89,23 +66,16 @@
   </div>
 </template>
 <script>
+import UserinfoHeader from './components/ComUserSetHeader'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import PersonTitle from './ComCenterSmillTitle'
-import {getMemberCenter} from 'util/netApi'
-import {http} from 'util/request'
-import { config } from 'util/config'
 export default {
   data () {
     return {
-      list: [],
-      memberLevels: [],
-      expireTime: '', // 到期时间
+      title: '会员福利',
       moreShow: false,
-      integral: '', // 积分
-      memberLevelName: Number, // 会员等级
-      active: '1',
+      active: Number,
       totalShoppingMoneyHTML: '',
-      imageUrl: config.imageUrl, // 图片路径
       swiperOption: {
         direction: 'horizontal',
         spaceBetween: 90,
@@ -125,17 +95,11 @@ export default {
     }
   },
   components: {
-    name: 'ToolCenter',
+    name: 'TouristToolCenter',
     PersonTitle,
     swiper,
-    swiperSlide
-  },
-  watch: {
-    '$route' (to, from) {
-      if (to.name === 'toolCenter') {
-        this.dataRender()
-      }
-    }
+    swiperSlide,
+    UserinfoHeader
   },
   methods: {
     // 返回上一级
@@ -144,67 +108,36 @@ export default {
     },
     // 页面初始化 渲染
     dataRender () {
-      http(getMemberCenter).then((response) => {
-        if (response.data.code === 0) {
-          let data = response.data.body
-          this.list = data
-          this.memberLevels = data.memberLevels
-          let expireTimeArr = (data.overdueDate.split('T')[0]).split('-')
-          this.expireTime = expireTimeArr[0] + '年' + expireTimeArr[1] + '月' + expireTimeArr[2] + '日到期'
-          if (data.memberLevelName === '普卡') {
-            this.memberLevelName = 1
-          } else if (data.memberLevelName === '银卡') {
-            this.memberLevelName = 2
-          } else if (data.memberLevelName === '金卡') {
-            this.memberLevelName = 3
-          } else {
-            this.memberLevelName = 4
-          }
-          this.swiper.activeIndex = this.memberLevelName - 1
-          this.grandRender()
-        }
-      })
+      this.swiper.activeIndex = 0
+      this.grandRender()
     },
     grandRender () {
-      if (this.memberLevelName === 1) {
-        // 普卡银卡
-        if (this.swiper.activeIndex === 0 || this.swiper.activeIndex === 1) {
-          this.totalShoppingMoneyHTML = '还剩<span style="color:#BA825A"> ' + this.list.upMoney + ' </span>可升为银卡会员'
-        } else if (this.swiper.activeIndex === 2) {
-          this.totalShoppingMoneyHTML = '还剩<span color="#BA825A" style="color:#BA825A"> ' + (7000 - this.list.totalShoppingMoney) + ' </span>可升为金卡会员'
-        } else if (this.swiper.activeIndex === 3) {
-          this.totalShoppingMoneyHTML = '还剩<span style="color:#BA825A"> ' + (17000 - this.list.totalShoppingMoney) + ' </span>可升为钻卡会员'
-        }
-      } else if (this.memberLevelName === 2) {
-        if (this.swiper.activeIndex === 0) {
-          this.totalShoppingMoneyHTML = '当前已是银卡会员'
-        } else if (this.swiper.activeIndex === 1 || this.swiper.activeIndex === 2) {
-          this.totalShoppingMoneyHTML = '还剩<span style="color:#BA825A"> ' + this.list.upMoney + ' </span>可升为金卡会员'
-        } else if (this.swiper.activeIndex === 3) {
-          this.totalShoppingMoneyHTML = '还剩<span style="color:#BA825A"> ' + (17000 - this.list.totalShoppingMoney) + ' </span>可升为钻卡会员'
-        }
-      } else if (this.memberLevelName === 3) {
-        // 金卡
-        if (this.swiper.activeIndex === 0 || this.swiper.activeIndex === 1) {
-          this.totalShoppingMoneyHTML = '当前已是金卡会员'
-        } else if (this.swiper.activeIndex === 2 || this.swiper.activeIndex === 3) {
-          this.totalShoppingMoneyHTML = '还剩<span style="color:#BA825A"> ' + this.list.upMoney + ' </span>可升为钻卡会员'
-        }
-      } else if (this.memberLevelName === 4) {
-        // 钻卡
-        this.totalShoppingMoneyHTML = '当前已是钻卡会员'
-      }
+      this.active = this.swiper.activeIndex
     }
-
   },
   mounted () {
     this.dataRender()
   }
 }
-
 </script>
 <style lang="stylus">
+html,body,#app
+  position absolute
+  width 100%
+  left 0
+  right 0
+  bottom 0
+  top 0
+  height 0
+  background #fff!important
+</style>
+
+<style lang="stylus" scoped>
   @import "~styles/mixins.styl";
+  .wrapper
+    width 100%
+    box-sizing border-box
+    padding-top 132px
   .memberGradeScroll
     width 100%
   .swiper-slide

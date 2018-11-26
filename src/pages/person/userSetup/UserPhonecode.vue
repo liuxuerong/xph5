@@ -11,6 +11,7 @@
 import UserinfoHeader from './../components/ComUserSetHeader'
 import PhoneCode from '@/pages/login/components/ComPhonecode'
 import { mapState } from 'vuex'
+import {Toast} from 'mint-ui'
 export default {
   data () {
     return {
@@ -43,14 +44,18 @@ export default {
     },
     // 下一步  完成
     operBtnClick () {
+      let _this = this
       this.$refs.phoneCode.submitCode()
       if (this.returnVal) {
         if (this.type === '0') {
-          console.log('绑定新手机')
-          this.$router.push('/accountSecurity')
+          Toast({
+            message: '修改成功',
+            position: 'bottom',
+            duration: 2000
+          })
+          _this.$router.push('/accountSecurity')
         } else {
-          console.log('下一步修改密码')
-          this.$router.push('/userPassword/2')
+          _this.$router.push('/userPassword/2')
         }
       }
     }

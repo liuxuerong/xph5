@@ -13,7 +13,7 @@
 <script>
 import UserinfoHeader from './components/ComUserSetHeader'
 import notice from 'util/notice.js'
-import {storage} from 'util/storage.js'
+import { storage } from 'util/storage.js'
 import { accessToken } from 'util/const.js'
 export default {
   data () {

@@ -18,7 +18,7 @@
           <common-search ref="commonSearchDom" :class="{searchActive:searchActive}" />
           <index-swiper ref="indexSwiper" v-if="IndexSwiperShow" />
           <div class="navBox">
-            <router-link to="/" class="item wrap left">
+            <router-link to="/touristToolCenter" class="item wrap left">
               <h2>会员福利</h2>
               <h4>material comforts</h4>
             </router-link>

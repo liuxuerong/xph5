@@ -157,6 +157,7 @@ export default {
   methods: {
     // 订单列表页面渲染
     orderDetailRender () {
+      let _this = this
       let orderCode = this.$route.params.orderCode
       let type = this.$route.params.type
       this.type = type
@@ -190,27 +191,29 @@ export default {
         }
         // 立即支付倒计时
         if (data.allowPayTime) {
-          this.timeout = true
+          _this.timeout = true
           clearInterval(this.timer)
           let newDate1 = data.allowPayTime.split('T')[0] + ' ' + data.allowPayTime.split('T')[1]
+          newDate1 = newDate1.replace(/-/gi, '/')
           var time = new Date(newDate1).getTime() - new Date().getTime()
-          this.computedTime = time / 1000
-          this.timer = setInterval(() => {
-            this.computedTime--
-            let time1 = parseInt(this.computedTime / 3600)
+          _this.computedTime = time / 1000
+          _this.timer = setInterval(() => {
+            _this.computedTime--
+            let time1 = parseInt(_this.computedTime / 3600)
             if (time1 < 10) {
               time1 = '0' + time1
             }
-            let time2 = parseInt((this.computedTime % 3600) / 60)
+            let time2 = parseInt((_this.computedTime % 3600) / 60)
             if (time2 < 10) {
               time2 = '0' + time2
             }
-            let time3 = parseInt(this.computedTime % 60)
+            let time3 = parseInt(_this.computedTime % 60)
             if (time3 < 10) {
               time3 = '0' + time3
             }
-            this.time = time1 + ' : ' + time2 + ' : ' + time3
-            if (this.computedTime === 0) {
+            _this.time = time1 + ' : ' + time2 + ' : ' + time3
+            // console.log(time1)
+            if (_this.computedTime === 0) {
             }
           }, 1000)
         }

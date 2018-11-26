@@ -14,29 +14,29 @@
         </div>
       </div>
       <!-- 退款进度详情 -->
-      <div class="refundSpeed" v-if="goodsInfo.orderItemStatus !='6'">
+      <div class="refundSpeed" v-if="afterSales && (afterSales.status == 4 || afterSales.status == 5 || afterSales.status == 6)">
         <h3 class="border-bottom">退款详情</h3>
         <div class="refundCon">
           <div class="refundItem active">
             <!-- hookIcon hookGreen hookActive  -->
             <i class="hookIcon hookGreen"></i>
             <span class="refundState">卖家退款</span>
-            <span v-if="list.confirmTime" class="refundTime">{{list.createTime.split('T')[0]}} {{list.createTime.split('T')[1]}}</span>
+            <span class="refundTime">{{afterSales.createTime.split('T')[0]}} {{afterSales.createTime.split('T')[1]}}</span>
           </div>
           <div class="refundItem active">
-            <i class="hookIcon" :class="goodsInfo.orderItemStatusDesc == '退款中'?'hookActive':'hookGreen'"></i>
+            <i class="hookIcon" :class="afterSales.status == 4?'hookActive':'hookGreen'"></i>
             <span class="refundState">退款中</span>
-            <span v-if="list.confirmTime" class="refundTime">{{list.confirmTime.split('T')[0]}} {{list.confirmTime.split('T')[1]}}</span>
+            <span class="refundTime">{{afterSales.receiptsTime.split('T')[0]}} {{afterSales.receiptsTime.split('T')[1]}}</span>
           </div>
-          <div class="refundItem" v-if="goodsInfo.orderItemStatusDesc == '退款失败'" :class="goodsInfo.orderItemStatusDesc == '退款失败'?'active':''">
-            <i class="hookIcon" :class="goodsInfo.orderItemStatusDesc == '退款失败'?'hookActive':''"></i>
+          <div class="refundItem" v-if="afterSales.status == 6" :class="afterSales.status == 6?'active':''">
+            <i class="hookIcon" :class="afterSales.status == 6?'hookActive':''"></i>
             <span class="refundState">退款失败</span>
-            <span v-if="goodsInfo.orderItemStatusDesc == '退款失败' && list.allowPayTime" class="refundTime">{{list.allowPayTime.split('T')[0]}} {{list.allowPayTime.split('T')[1]}}</span>
+            <span class="refundTime">{{afterSales.refundTime.split('T')[0]}} {{afterSales.refundTime.split('T')[1]}}</span>
           </div>
-          <div class="refundItem" v-else :class="goodsInfo.orderItemStatusDesc == '退款成功'?'active':''">
-            <i class="hookIcon" :class="goodsInfo.orderItemStatusDesc == '退款成功'?'hookActive':''"></i>
+          <div class="refundItem" v-else :class="afterSales.status == 5?'active':''">
+            <i class="hookIcon" :class="afterSales.status == 5?'hookActive':''"></i>
             <span class="refundState">退款成功</span>
-            <span v-if="goodsInfo.orderItemStatusDesc == '退款成功' && list.allowPayTime" class="refundTime">{{list.allowPayTime.split('T')[0]}} {{list.allowPayTime.split('T')[1]}}</span>
+            <span class="refundTime">{{afterSales.refundTime.split('T')[0]}} {{afterSales.refundTime.split('T')[1]}}</span>
           </div>
         </div>
       </div>
@@ -60,7 +60,10 @@
           <span class="goodsDiscount">优惠金额<p>￥ {{list.offerAmount}}</p></span>
           <span class="goodsDiscount">运费<p>￥ {{list.shippingAmount}}</p></span>
         </div>
-        <div class="orderTotalPrice">
+        <div class="orderTotalPrice" v-if="afterSales && afterSales.status == 5">
+          实退：￥{{list.needPayAmount}}
+        </div>
+        <div class="orderTotalPrice" v-else>
           实付：￥{{list.needPayAmount}}
         </div>
       </div>
@@ -81,9 +84,9 @@
       </ul>
     </div>
     <!-- <div class="orderOperBtn orderOperBtn8 border-top" v-if="goodsInfo.orderItemStatus === 6">审核中</div> -->
-    <div class="orderOperBtn orderOperBtn8 border-top" v-if="goodsInfo.orderItemStatusDesc == '退款中'">退款中</div>
-    <div class="orderOperBtn orderOperBtn8 border-top" v-else-if="goodsInfo.orderItemStatusDesc == '退款成功'">退款成功</div>
-    <div class="orderOperBtn orderOperBtn8 border-top" v-else-if="goodsInfo.orderItemStatusDesc == '退款失败'">退款失败</div>
+    <div class="orderOperBtn orderOperBtn8 border-top" v-if="afterSales.status == 4">退款中</div>
+    <div class="orderOperBtn orderOperBtn8 border-top" v-else-if="afterSales.status == 5">退款成功</div>
+    <div class="orderOperBtn orderOperBtn8 border-top" v-else-if="afterSales.status == 6">退款失败</div>
     <div class="orderOperBtn orderOperBtn8 border-top" v-else>审核中</div>
   </div>
 </template>
@@ -98,7 +101,8 @@ export default {
       title: '',
       list: [],
       imageUrl: config.imageUrl,
-      goodsInfo: []
+      goodsInfo: [],
+      afterSales: ''
     }
   },
   components: {
@@ -116,9 +120,11 @@ export default {
     afterSaleRender () {
       let orderId = this.$route.params.orderId
       http(refundOrderDetail, [orderId]).then((response) => {
+        console.log(response)
         if (response.data.code === 0) {
           this.title = response.data.body.afterSalesTypeDesc
           this.list = response.data.body
+          this.afterSales = response.data.body.afterSales
           this.goodsInfo = response.data.body.memberOrderGoods[0]
         }
       })

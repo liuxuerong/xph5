@@ -24,22 +24,22 @@
           <div class="refundItem active">
             <i class="hookIcon hookGreen"></i>
             <span class="refundState">卖家退款</span>
-            <span v-if="list.confirmTime" class="refundTime">{{list.createTime.split('T')[0]}} {{list.createTime.split('T')[1]}}</span>
+            <span class="refundTime">{{afterSales.createTime.split('T')[0]}} {{afterSales.createTime.split('T')[1]}}</span>
           </div>
           <div class="refundItem active">
             <i class="hookIcon" :class="afterSales.status == 4?'hookActive':'hookGreen'"></i>
             <span class="refundState">退款中</span>
-            <span v-if="list.confirmTime" class="refundTime">{{list.confirmTime.split('T')[0]}} {{list.confirmTime.split('T')[1]}}</span>
+            <span class="refundTime">{{afterSales.receiptsTime.split('T')[0]}} {{afterSales.receiptsTime.split('T')[1]}}</span>
           </div>
           <div class="refundItem" v-if="afterSales.status == 6" :class="afterSales.status == 6?'active':''">
             <i class="hookIcon" :class="afterSales.status == 6?'hookActive':''"></i>
             <span class="refundState">退款失败</span>
-            <span v-if="afterSales.status == 6 && list.allowPayTime" class="refundTime">{{list.allowPayTime.split('T')[0]}} {{list.allowPayTime.split('T')[1]}}</span>
+            <span class="refundTime">{{afterSales.refundTime.split('T')[0]}} {{afterSales.refundTime.split('T')[1]}}</span>
           </div>
           <div class="refundItem" v-else :class="afterSales.status == 5?'active':''">
             <i class="hookIcon" :class="afterSales.status == 5?'hookActive':''"></i>
             <span class="refundState">退款成功</span>
-            <span v-if="afterSales.status == 5 && list.allowPayTime" class="refundTime">{{list.allowPayTime.split('T')[0]}} {{list.allowPayTime.split('T')[1]}}</span>
+            <span class="refundTime">{{afterSales.refundTime.split('T')[0]}} {{afterSales.refundTime.split('T')[1]}}</span>
           </div>
         </div>
       </div>
@@ -110,7 +110,7 @@ export default {
     return {
       title: '退款订单',
       list: null,
-      afterSales: null,
+      afterSales: '',
       imageUrl: config.imageUrl,
       goodsInfo: [],
       logisticsName: '',
@@ -166,6 +166,7 @@ export default {
               position: 'bottom',
               duration: 2000
             })
+            storage.delLocalStorage(retrunLogistics)
             _this.$router.go(0)
           }
         })

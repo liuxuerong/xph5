@@ -1,21 +1,20 @@
 <template>
-    <div class="wrapper">
-        <div class="userTop">
-            <span class="prevOper" @click="prevOperBtn">&lt;</span>
-            <span class="passwordNext" @click="setPasswordNext">下一步</span>
-        </div>
-        <div class="userContent">
-            <h3>设置密码</h3>
-            <span>6-12位的英文或数字</span>
-            <div class="border-bottom userNameInput">
-                <input type="text" name="" id="" v-model="password">
-            </div>
-        </div>
-        <router-link to="/userName" class="nextOper" v-if="type=='1'">跳过</router-link>
+  <div class="wrapper">
+    <div class="userTop">
+      <span class="prevOper" @click="prevOperBtn"></span>
+      <span class="passwordNext" @click="setPasswordNext">下一步</span>
     </div>
+    <div class="userContent">
+      <h3>设置密码</h3>
+      <span>6-12位的英文或数字</span>
+      <div class="border-bottom userNameInput">
+        <input type="text" name="" id="" v-model="password">
+      </div>
+    </div>
+    <router-link to="/userName" class="nextOper" v-if="type=='1'">跳过</router-link>
+  </div>
 </template>
 <script type = "text/javascript">
-import router from '@/router/index.js'
 import { Toast } from 'mint-ui'
 import { modifyPassword } from 'util/netApi'
 import { http } from 'util/request'
@@ -44,7 +43,9 @@ export default {
         // 修改或者忘记密码 不可跳过
       }
     },
-    setPasswordNext: function () {
+    setPasswordNext () {
+      console.log(this.type)
+      let _this = this
       // 设置密码下一步
       if (this.rightPassword) {
         let params = {
@@ -52,9 +53,17 @@ export default {
         }
         if (storage.getLocalStorage(accessToken)) {
           http(modifyPassword, params).then((response) => {
-            console.log(response)
             if (response.data.code === 0) {
-              router.push('/userName')
+              Toast({
+                message: '设置成功',
+                position: 'bottom',
+                duration: 5000
+              })
+              if (_this.type === '1') {
+                _this.$router.push('/userName')
+              } else {
+                _this.$router.push('/')
+              }
             } else {
               Toast({
                 message: '密码设置失败，请重新设置密码',
@@ -80,30 +89,31 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+    @import "~styles/mixins.styl";
     body,html
-        width 100%
-        height 100%
-        position relative
+      width 100%
+      height 100%
+      position relative
     .wrapper
-        position absolute
-        left 0
-        top 0
-        width 100%
-        height 100%
-        background #fff
-        box-sizing border-box
-        padding-top 130px
+      position absolute
+      left 0
+      top 0
+      width 100%
+      height 100%
+      background #fff
+      box-sizing border-box
+      padding-top 80px
     .userTop
         width 100%
         height 52px
+        box-sizing border-box
+        padding 0 50px
         line-height 52px
         .prevOper
-            float left
-            width 10%
-            font-size 60px
-            font-weight 600
-            color #282828
-            text-align center
+          float left
+          width 32px
+          height 58px
+          bgImage('/static/icons/back')
         .passwordNext
             float right
             width 18%

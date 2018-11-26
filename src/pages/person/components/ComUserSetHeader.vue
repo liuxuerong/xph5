@@ -17,9 +17,14 @@ export default {
   methods: {
     // 返回上一步
     backPrevOper: function () {
-      this.$router.back(-1)
+      let path = this.$route.path
+      if (path === '/addressAdmin') {
+        this.$router.push('/userInfoSet')
+      } else {
+        this.$router.back(-1)
+      }
     },
-    perCompleteOper: function () {
+    perCompleteOper () {
       this.$emit('operComplete')
     },
     titleScroll () {
