@@ -87,14 +87,14 @@ export default {
     display flex
     width 100%
     justify-content space-around
-    padding-top 26px
+    padding-top 16px
     a
       display inline-block
       width 160px
       text-align center
     img
-      width 60px
-      height 60px
+      width 82px
+      height 82px
       display block
       margin 0 auto
     span

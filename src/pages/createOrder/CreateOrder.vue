@@ -157,8 +157,10 @@ export default {
       let goodsInfoCart = storage.getLocalStorage(goodsInfo)
       this.unsatisfactoryData = []
       console.log(storage.getLocalStorage(goodsInfo))
+      const orderInfoData = storage.getLocalStorage(orderInfo)
+      console.log(orderInfoData, 'orderInfoData')
       let params = {}
-      params = Object.assign({}, goodsInfoCart)
+      params = Object.assign({}, goodsInfoCart, orderInfoData)
       console.log(params, 'params')
       if (this.info) {
         params.favorableId = this.info.couponId
@@ -203,6 +205,15 @@ export default {
           this.totalPric = res.data.body.totalPrice
           this.needPayPrice = res.data.body.needPayPrice
           storage.setLocalStorage(goodsInfo, params)
+        } else {
+          Toast({
+            message: res.data.message,
+            position: 'center',
+            duration: 1000
+          })
+          setTimeout(() => {
+            this.$router.push('/cart')
+          }, 1000)
         }
       }).catch(err => {
         console.log(err)

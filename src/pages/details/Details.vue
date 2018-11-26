@@ -3,7 +3,7 @@
     <div v-show="goodsStatus!==4">
       <common-nav-header>
       <router-link to="/" class="icon home" ></router-link>
-      <span class="icon share"></span>
+      <!-- <span class="icon share"></span> -->
     </common-nav-header>
     <div class="xpDetailsWrap" ref="xpDetailsWrap">
       <div class="xpDetailsScroll">
@@ -339,10 +339,12 @@ export default {
     top 24px
   .home
     bgImage("/static/icons/home_icon")
-    right 194px
+    right 50px
   .share
     bgImage("/static/icons/share_icon")
-    background-size 110% 110%
+    background-size 100% 100%
+    width 58px
+    height 58px
     right 64px
     &::before
       content:''

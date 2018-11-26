@@ -61,7 +61,6 @@ export default {
     },
     $route (to, from) {
       this.$router.go(0)
-      console.log(7777)
     },
     clearNum: {
       handler (v, oldVal) {
@@ -86,7 +85,6 @@ export default {
     ...mapMutations(['changeGoodsList', 'changeIsAllSelect']),
 
     checkAll () {
-      console.log(8888)
       let goodsList = this.goodsList
       for (let i in goodsList) {
         if (this.check) {
