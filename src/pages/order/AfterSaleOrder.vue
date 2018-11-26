@@ -115,17 +115,11 @@ export default {
     // 页面初始化数据
     afterSaleRender () {
       let orderId = this.$route.params.orderId
-      console.log(orderId)
       http(refundOrderDetail, [orderId]).then((response) => {
-        console.log(response.data.body)
         if (response.data.code === 0) {
           this.title = response.data.body.afterSalesTypeDesc
           this.list = response.data.body
           this.goodsInfo = response.data.body.memberOrderGoods[0]
-          let type = this.$route.params.type
-          if (type === '-1') {
-            // console.log(666)
-          }
         }
       })
     }

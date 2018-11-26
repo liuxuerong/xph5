@@ -75,7 +75,7 @@
           </div>
           <!-- 带发货 -->
           <div class="moreOperBtn clearfix" v-if="type === '2'">
-            <span class="operbtn checkDetails" @click="orderDetails(item.orderSn,item.memberOrderGoods[0].orderItemStatus,item.memberOrderGoods[0].orderItemId)">查看详情</span>
+            <span class="operbtn checkDetails" @click="orderDetails(item)">查看详情</span>
           </div>
           <!-- 待收货 查看物流   -->
           <div class="moreOperBtn clearfix" v-if="type === '3'">
@@ -83,7 +83,7 @@
             <span class="operbtn confirmGoods" v-if="item.shippingMethod == '2'" @click="confirmGoods(item.orderSn)">确认收货</span>
             <span v-if="item.shippingMethod == '2'" class="operbtn checkDetails" @click="watchLogistics(item.memberOrderGoods[0].logisticsName,item.memberOrderGoods[0].logisticsNo)">查看物流</span>
             <!-- 上门自提 -->
-            <span class="operbtn confirmGoods" v-if="item.shippingMethod == '1'" @click="orderDetails(item.orderSn,item.memberOrderGoods[0].orderItemStatus,item.memberOrderGoods[0].orderItemId)">上门自提</span>
+            <span class="operbtn confirmGoods" v-if="item.shippingMethod == '1'" @click="orderDetails(item)">上门自提</span>
           </div>
           <!-- 待评价 查看详情 立即评价-->
           <div class="moreOperBtn clearfix" v-if="type === '4'">
@@ -92,7 +92,7 @@
           </div>
           <!-- 退款/售后 -->
           <div class="moreOperBtn clearfix" v-if="type === '5'">
-            <span class="operbtn checkDetails" @click="orderDetails(item.orderSn,item.memberOrderGoods[0].orderItemStatus,item.memberOrderGoods[0].orderItemId)">查看详情</span>
+            <span class="operbtn checkDetails" @click="orderDetails(item)">查看详情</span>
           </div>
 
           <!-- 全部订单 -->
@@ -107,7 +107,7 @@
               <span class="operbtn confirmGoods" v-if="item.shippingMethod == '2'" @click="confirmGoods(item.orderSn)">确认收货</span>
               <span class="operbtn checkDetails" @click="watchLogistics(item.memberOrderGoods[0].logisticsName,item.memberOrderGoods[0].logisticsNo)">查看物流</span>
             </div>
-            <span class="operbtn checkDetails" v-else @click="orderDetails(item.orderSn,item.memberOrderGoods[0].orderItemStatus,item.memberOrderGoods[0].orderItemId)">查看详情</span>
+            <span class="operbtn checkDetails" v-else @click="orderDetails(item)">查看详情</span>
           </div>
         </div>
       </div>
@@ -174,26 +174,23 @@ export default {
       http(OrderList, params).then((response) => {
         if (response.data.code === 0) {
           this.list = response.data.body.list
-          console.log(this.list)
         }
       })
     },
     // 查看详情
     orderDetails (item) {
-      console.log(item)
+      let _this = this
       let type = this.$route.params.type
-      if (type === '-1') {
-        this.$router.push('/orderDetails/' + this.type + '/' + item.orderSn)
+      if (type !== '5') {
+        _this.$router.push('/orderDetails/' + this.type + '/' + item.orderSn)
       } else if (type === '5') {
         // 申请售后
-        console.log(5)
         if (item.afterSalesType === 1) {
           // 仅退款
-          this.$router.push('/afterSaleOrder/' + this.type + '/' + item.memberOrderGoods[0].orderItemId)
+          _this.$router.push('/afterSaleOrder/' + this.type + '/' + item.memberOrderGoods[0].orderItemId)
         } else if (item.afterSalesType === 2) {
-          console.log(666)
           // 退货退款
-          this.$router.push('/returnGoodsMoney/' + this.type + '/' + item.memberOrderGoods[0].orderItemId)
+          _this.$router.push('/returnGoodsMoney/' + this.type + '/' + item.memberOrderGoods[0].orderItemId)
         }
       }
     },

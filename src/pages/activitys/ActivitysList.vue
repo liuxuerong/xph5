@@ -9,16 +9,18 @@
     </div>
     <div class="activitysCon" v-if="activitysActive == 0">
       <!-- 单品秒杀 -->
-      <!--<activitys-title v-if="activityGoods.length" :activitysTitle="activitysTitle[0]"></activitys-title>
-      <activity-goods v-if="activityGoods.length" v-for="item in activityGoods" :key="item.goodsItemId" :activityGoods="item"></activity-goods>-->
-      <activitys-title :activitysTitle="activitysTitle[0]"></activitys-title>
-      <activity-goods v-for="item in 2" :key="item.goodsItemId" :activityGoods="item"></activity-goods>
+      <div class="activityGoodsBox">
+        <activitys-title v-if="activityGoods" :activitysTitle="activitysTitle[0]"></activitys-title>
+        <activity-goods v-if="activityGoods" v-for="item in activityGoods" :key="item.goodsId" :activityGoods="item"></activity-goods>
+      </div>
       <!-- 品类秒杀 -->
-      <activitys-title v-if="activityCategory.length" :activitysTitle="activitysTitle[1]"></activitys-title>
-      <activity-category v-if="activityCategory.length" v-for="item in activityCategory" :key="item.goodsCategoryId" :activityCategory="item"></activity-category>
+      <div class="activityCategoryBox">
+        <activitys-title v-if="activityCategory" :activitysTitle="activitysTitle[1]"></activitys-title>
+        <activity-category v-if="activityCategory" v-for="item in activityCategory" :key="item.goodsCategoryId" :activityCategory="item"></activity-category>
+      </div>
     </div>
     <div class="activitysCon" v-if="activitysActive == 1">
-      <activity-elies v-if="activityInfo.length" v-for="item in activityInfo" :key="item.eliesItems" :activityInfoData="item"></activity-elies>
+      <activity-elies v-if="activityInfo" v-for="item in activityInfo" :key="item.eliesItems" :activityInfoData="item"></activity-elies>
     </div>
   </div>
 </template>
@@ -40,9 +42,9 @@ export default {
         {'title': '单品秒杀', 'subTitle': '限时单品秒杀'},
         {'title': '品类秒杀', 'subTitle': '限时品类秒杀'}
       ],
-      activityInfo: [], // 活动分类
-      activityGoods: [], // 单品抢购
-      activityCategory: [] // 活动品类
+      activityInfo: null, // 活动分类
+      activityGoods: null, // 单品抢购
+      activityCategory: null // 活动品类
     }
   },
   components: {
@@ -73,6 +75,7 @@ export default {
     },
     // 内容加载
     activitysCon (type) {
+      this.$router.push('/activitysList/' + type)
       if (type === 0) {
         // 商品
         http(activityElies).then((response) => {
@@ -86,11 +89,10 @@ export default {
       } else {
         // 活动
         http(activityInfo).then((response) => {
-          console.log(response)
           if (response.data.code === 0) {
             let data = response.data.body
-            console.log(data)
-            this.activityInfo = [...this.activityInfo, ...data.articles]
+            // this.activityInfo = [...this.activityInfo, ...data.articles]
+            this.activityInfo = data.articles
           }
         })
       }
@@ -102,6 +104,7 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
+  @import "~styles/mixins.styl";
   .activitysWrapper
     width 100%
     overflow hidden
@@ -112,7 +115,7 @@ export default {
     width 100%
     height 430px
     position relative
-    background red
+    bgImage('/static/images/activitysListBg')
     img
       display block
       width 100%
@@ -146,5 +149,13 @@ export default {
     border-radius 50px
     position relative
     top -50px
+    background #fff
+  .activityGoodsBox,
+    width 100%
+    box-sizing border-box
+    padding-bottom 50px
+    background #fff
+  .activityCategoryBox
+    width 100%
     background #fff
 </style>

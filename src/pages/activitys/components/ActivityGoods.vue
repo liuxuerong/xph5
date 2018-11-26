@@ -1,29 +1,36 @@
 <template>
-  <div class="activityGoodsItem">
-    <img src="" class="goodsImg">
+  <div class="activityGoodsItem" @click="activityGoodsDetails(activityGoods.goodsId)">
+    <img :src="imageUrl+activityGoods.goodsPicture" class="goodsImg">
     <div class="goodsText">
-      <h3 class="goodsName">商品名称</h3>
+      <h3 class="goodsName">{{activityGoods.goodsName}}</h3>
       <div class="goodsPrice">
-        <span>￥ 179.9 </span>
-        <del>￥549</del>
-        <div class="stopTime">距结束28:56:58</div>
+        <span>￥ {{activityGoods.goodsActivityPrice}}</span>
+        <del>￥ {{activityGoods.goodsOriginalPrice}}</del>
+        <div class="stopTime">距结束{{activityGoods.endDay}}天</div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { config } from 'util/config'
 export default {
   props: ['activityGoods'],
   data () {
     return {
-
+      imageUrl: config.imageUrl // 图片路径
     }
   },
   components: {
     name: 'ActivityGoods'
   },
+  methods: {
+    // 商品详情
+    activityGoodsDetails (goodsId) {
+      this.$router.push('/details/' + goodsId)
+    }
+  },
   mounted () {
-    // console.log(this.activityGoods)
+    console.log(this.activityGoods)
   }
 }
 </script>
@@ -32,11 +39,12 @@ export default {
     width calc(100% - 100px)
     margin 0 auto 30px
     height 750px
-    background pink
+    box-shadow 0px 2px 26px 0px rgba(0, 0, 0, 0.1)
+    background #fff
     .goodsImg
+      display block
       width 100%
       height 512px
-      background #000
     .goodsText
       width 100%
       position relative
@@ -66,4 +74,6 @@ export default {
         padding 0 20px
         color #BA825A
         background #F2ECE8
+  .activityGoodsItem:last-child
+    margin-bottom 50px
 </style>
