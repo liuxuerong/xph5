@@ -162,7 +162,6 @@ export default {
     },
     // 领取优惠券
     receiveCard (id) {
-      let _this = this
       let params = {
         couponId: id
       }
@@ -174,7 +173,7 @@ export default {
             position: 'bottom',
             duration: 5000
           })
-          _this.cardDetailsRender()
+          this.$router.push('/cardDetails/2/0/' + id)
         }
       }).catch((err) => {
         console.log(err)

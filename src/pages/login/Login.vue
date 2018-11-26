@@ -63,9 +63,6 @@ export default {
     }
   },
   methods: {
-    loginRender () {
-
-    },
     loginBtnClick () {
       let _this = this
       let param = {
@@ -94,10 +91,6 @@ export default {
         }
       })
     }
-  },
-  mounted () {
-    console.log('666')
-    this.loginRender()
   }
 }
 </script>
