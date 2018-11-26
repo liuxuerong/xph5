@@ -136,6 +136,9 @@ export default {
       display block
       width 100%
       height 100%
+.swiper-container
+  background-color pink
+  width 100%
 </style>
 
 <style lang="stylus">
@@ -158,4 +161,5 @@ export default {
         display block !important
         font-size 36px
         line-height 60px
+
 </style>

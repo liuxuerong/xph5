@@ -9,13 +9,14 @@
             </tab>
           </div>
         </div>
-        <div class="index" :class="{searchTop:searchActive}" ref="index">
+        <div class="index searchActive"  ref="index">
           <div class="scrollTopTop" v-show="showScrollToTop" @click="scrollToTop"></div>
           <common-header ref="commonHeader" />
-          <h2 class="indexHeader" ref="indexHeader">
+          <!-- <h2 class="indexHeader" ref="indexHeader">
             五星生活在等你哦~
-          </h2>
-          <common-search ref="commonSearchDom" :class="{searchActive:searchActive}" />
+          </h2> -->
+          <common-search ref="commonSearchDom" class="searchActive" />
+          <div ref="topScroll" style="opacity:0;width:0;heigth:0"></div>
           <index-swiper ref="indexSwiper" v-if="IndexSwiperShow" />
           <div class="navBox">
             <router-link to="/" class="item wrap left">
@@ -36,9 +37,9 @@
           <index-limit :swiperData="timeLimitShoppings" v-if="timeLimitShoppings.length" />
           <index-new-products :swiperData="newProducts" v-if="newProducts.length" />
           <index-goods-label :goodsLabel="goodsLabel" v-if="goodsLabel" />
+          <h6 class="className">全品目录</h6>
           <!-- <index-nav  :timeLimitShoppings="timeLimitShoppings" :newProducts="newProducts"/> -->
         </div>
-        <h6 class="className">全品目录</h6>
 
         <div ref="xpStoryContent" class="xpStoryContent" :class="{fixed:isFixed}">
           <div>
@@ -127,7 +128,7 @@ export default {
       categoryId: '',
       isFixed: false,
       noMore: false,
-      searchTop: null,
+      // searchTop: null,
       commonHeader: null,
       index: null,
       goodsItemH: 0,
@@ -138,6 +139,7 @@ export default {
       timeLimitShoppings: [],
       newProducts: [],
       goodsLabel: null,
+      timer: '',
       emptyObj: {
         emptyImg: '/static/images/commentEmptyGoods.png',
         emptyBold: '暂无商品',
@@ -150,7 +152,7 @@ export default {
   computed: {},
   methods: {
     scrollToTop () {
-      this.$refs.indexHeader.scrollIntoView()
+      this.$refs.topScroll.scrollIntoView()
     },
     getTabbar () {
       http(category).then(res => {
@@ -189,36 +191,34 @@ export default {
           if (this.page !== 1 && res.data.body.list.length === 0) {
             this.noMore = true
           }
-          console.log(res)
           this.goodsListData = this.goodsListData.concat(res.data.body.list)
           this.$nextTick(function () {
-            setTimeout(() => {
-              this.searchTop = this.$refs.commonSearchDom.$el.offsetTop - this.$refs.commonSearchDom.$el.style.height
+            this.timer = setTimeout(() => {
+              // this.searchTop = this.$refs.commonSearchDom.$el.offsetTop - this.$refs.commonSearchDom.$el.style.height
               this.commonHeader = this.$refs.commonHeader.$el.offsetHeight
               this.index = this.$refs.index
               if (this.$refs.goodsItem.length) {
                 this.goodsItemH = this.$refs.goodsItem[0].offsetHeight
                 this.classfiyBannerH = this.$refs.classfiyBanner.offsetHeight
               }
-              this.getTop(this.searchTop, this.commonHeader, this.index, this.goodsItemH)
-              this.changeStatus(this.searchTop, this.commonHeader, this.index, this.goodsItemH)
+              this.changeStatus()
+              // this.getTop(this.searchTop, this.commonHeader, this.index, this.goodsItemH)
+              // this.changeStatus(this.searchTop, this.commonHeader, this.index, this.goodsItemH)
             }, 20)
           })
         })
       }
     },
-    changeStatus (searchTop, commonHeader, index, goodsItem) {
+    changeStatus () {
       const _this = this
-      window.addEventListener('scroll', function () {
-        _this.getTop(searchTop, commonHeader, index, goodsItem)
-      })
+      window.addEventListener('scroll', _this.getTop)
     },
-    getTop (searchTop, commonHeader, index, goodsItem) {
-      const goodsTop = index.offsetHeight
+    getTop () {
+      const goodsTop = this.index.offsetHeight
       const documentScrollTop = window.pageYOffset || document.documentElement.scrollTop
-      this.isFixed = documentScrollTop + commonHeader > goodsTop
-      this.searchActive = !(searchTop > documentScrollTop)
-      this.showScrollToTop = documentScrollTop + commonHeader > goodsTop + goodsItem * 3 + this.classfiyBannerH
+      this.isFixed = documentScrollTop + this.commonHeader > goodsTop
+      // this.searchActive = !(searchTop > documentScrollTop)
+      this.showScrollToTop = documentScrollTop + this.commonHeader > goodsTop + this.goodsItemH * 3 + this.classfiyBannerH
       if (document.documentElement.scrollHeight - documentScrollTop - 20 < document.documentElement.clientHeight) {
         if (!this.noMore && this.goodsListData.length) {
           this.page++
@@ -230,6 +230,11 @@ export default {
   mounted () {
     this.getTabbar()
     this.getFindData()
+  },
+  destroyed () {
+    this.timer = null
+    const _this = this
+    window.removeEventListener('scroll', _this.getTop)
   }
 }
 </script>
@@ -241,8 +246,6 @@ export default {
   font-size 66px
   margin-bottom 20px
   font-weight: 600;
-.searchTop.index
-  padding-top 266px
  .swipperTop.index
   padding-top 355px
 .index

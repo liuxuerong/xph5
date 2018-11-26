@@ -122,8 +122,8 @@ body, html, #app{
 }
 
 .weui-dialog {
-  width: 620px !important;
-  height: 320px !important;
+  width: 810px !important;
+  height: 500px !important;
   max-width: 100% !important;
   border-radius: 20px !important;
   display: flex;
@@ -133,35 +133,41 @@ body, html, #app{
 
 .weui-dialog .weui-dialog__title {
   color: #262626;
-  font-size: 34px;
+  font-size: 56px;
   font-weight: 600;
 }
-
+.weui-dialog .weui-dialog__hd{
+  padding-top: 107px;
+}
+.weui-dialog .weui-dialog__bd>div{
+  font-size: 40px;
+  color: #262626;
+}
+.weui-dialog .weui-dialog__btn{
+  font-size: 50px;
+}
 .weui-dialog__ft {
-  height: 88px !important;
+  height: 150px !important;
   position: absolute !important;
   bottom: 0;
   width: 100%;
 }
 .weui-dialog__btn{
-  line-height: 88px;
+  line-height: 150px;
 }
 
 .weui-dialog__btn_primary {
   color: #BA825A !important;
-  font-size: 34px !important;
-  height: 88px !important;
-  line-height: 88px !important;
+  font-size: 50px !important;
+  height: 150px !important;
+  line-height: 150px !important;
 }
 
 .weui-dialog__ft:after {
   border-top: 0.008889rem solid #cccccc !important;
   color: #cccccc !important;
 }
-.weui-dialog__bd>div{
-    color: #262626;
-    font-size: 28px;
-}
+
 .weui-mask{
   z-index: 9999998 !important;
 }

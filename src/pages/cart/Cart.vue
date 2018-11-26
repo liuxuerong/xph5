@@ -8,12 +8,13 @@
     <div class="goodsWrap" ref="goodsWrap">
       <div>
         <div v-if="cartList.length">
-          <goods-item  v-for="(item,index) in cartList" :key="index" :goodsItem="item" :showModify="showModify"></goods-item>
+          <goods-item  v-for="item in cartList" :key="item.id" :goodsItem="item" :showModify="showModify"></goods-item>
         </div>
         <div class="disabledWrap" v-if="disabledCartList.length" >
           <div class="empty" @click="emptyNoInventory">清空失效商品</div>
           <goods-item  v-for="item in disabledCartList" :key="item.id" :goodsItem="item" :disabled="true"></goods-item>
         </div>
+        <divider v-if="noMore">哎呀！底线到了</divider>
       </div>
       <common-empty v-if="goodsList.length<1" :emptyObj="emptyObj"/>
     </div>
@@ -32,6 +33,9 @@ import {
   Toast
 } from 'mint-ui'
 import {
+  Divider
+} from 'vux'
+import {
   http
 } from 'util/request'
 import {
@@ -49,7 +53,8 @@ export default {
     CommonEmpty,
     CommonNavHeader,
     GoodsItem,
-    CartOperate
+    CartOperate,
+    Divider
   },
   data () {
     return {
@@ -64,7 +69,9 @@ export default {
       cartList: [],
       disabledCartList: [],
       showModify: false,
-      text: '编辑'
+      text: '编辑',
+      page: 1,
+      noMore: false
     }
   },
   watch: {
@@ -81,8 +88,8 @@ export default {
     },
     '$route' (to, from) {
       if (to.name === 'Cart') {
-        this.getCartList()
-        console.log(24225)
+        this.page = 0
+        this.getCartList(this.page)
       }
     }
   },
@@ -97,36 +104,55 @@ export default {
         this.scroll = new BScroll(this.$refs.goodsWrap, {
           scrollY: true,
           click: true,
+          pullUpLoad: {
+            threshold: -50,
+            moreTxt: '加载更多',
+            noMoreTxt: '没有更多数据了'
+          },
           bounce: {
             top: true,
             bottom: true
           }
         })
+
+        this.scroll.on('pullingUp', () => {
+          this.page++
+          this.getCartList(this.page)
+        })
       } else {
         this.scroll.refresh()
+        this.scroll.finishPullUp()
       }
     },
-    getCartList () {
-      http(listCart).then(res => {
-        console.log(res)
-        if (res.data.code === 0) {
-          let cartList = res.data.body
-          for (let i = 0; i < cartList.length; i++) {
-            cartList[i].value = false
-            if (cartList[i].status === '1') {
-              this.cartList.push(cartList[i])
-            } else {
-              this.disabledCartList.push(cartList[i])
+    getCartList (page) {
+      let parmas = {
+        page: page,
+        rows: 20
+      }
+      if (!this.noMore) {
+        http(listCart, parmas).then(res => {
+          if (res.data.code === 0) {
+            if (this.page !== 1 && res.data.body.length === 0) {
+              this.scroll.finishPullUp()
+              this.noMore = true
+              return
             }
+            let cartList = res.data.body
+            for (let i = 0; i < cartList.length; i++) {
+              cartList[i].value = false
+              if (cartList[i].status === '1') {
+                this.cartList.push(cartList[i])
+              } else {
+                this.disabledCartList.push(cartList[i])
+              }
+            }
+            this.refreshCart({isAllSelect: false, goodsList: this.cartList, clearNum: []})
           }
-          // this.changeGoodsList(cartList)
-          this.refreshCart({isAllSelect: false, goodsList: cartList, clearNum: []})
-        }
-
-        this.scrollInit()
-      }).catch(err => {
-        console.log(err)
-      })
+          this.scrollInit()
+        }).catch(err => {
+          console.log(err)
+        })
+      }
     },
     changeShowModify () {
       this.showModify = !this.showModify
@@ -159,8 +185,7 @@ export default {
     }
   },
   mounted () {
-    this.getCartList()
-    console.log(5454)
+    this.getCartList(this.page)
   }
 }
 </script>

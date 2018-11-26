@@ -1,8 +1,8 @@
 <template>
   <div class="header">
-    <div class="scan" v-if="isScan">
-    </div>
-    <router-link to="/search"  v-else>
+    <!-- <div class="scan" v-if="isScan">
+    </div> -->
+    <router-link to="/search"  v-if="!isScan">
     <div class="search ">
     </div>
     </router-link>
@@ -60,8 +60,8 @@ export default {
   background-color #fff
   z-index 9999
   top 0
-  display flex
-  justify-content space-between
+  // display flex
+  // justify-content space-between
   border-bottom 1px solid #e6e6e6
   .scan
     width 60px
@@ -79,13 +79,15 @@ export default {
     margin-top 20px
   .car
     width 60px
+    top 20px
+    right 50px
     height 60px
     bgImage("/static/icons/car")
     margin-top 13px
-    position relative
+    position absolute
     .num
       position absolute
-      width 46px
+      min-width 46px
       height 46px
       line-height 46px
       text-align center

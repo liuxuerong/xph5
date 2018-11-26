@@ -47,10 +47,10 @@ export default {
 .search.searchActive
   height 100px
   line-height 100px
-  width 820px
+  width 1020px
   position fixed
   top 18px
-  left 150px
+  left 0px
   z-index 9999
   transition all 0.2s linear
   animation opa 0.2s linear

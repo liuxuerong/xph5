@@ -16,15 +16,18 @@
                 <span class="color" v-for="(item,index) in specs" :key="index">{{item}}</span>
                  x <em class="num">{{goodsItem.num}}</em>
               </div>
-              <div class="inventory" v-if="goodsItem.stock<5&&goodsItem.stock>0&&goodsItem.status==1">
+              <div class="inventory" v-if="goodsItem.stock<5&&goodsItem.stock>0&&goodsItem.status==1&&goodsItem.stock>=goodsItem.num">
                 库存紧张
               </div>
                <div class="inventory" v-if="goodsItem.stock==0&&goodsItem.status==1">
                 无库存
               </div>
+              <div class="inventory notEnough" v-if="goodsItem.stock<goodsItem.num&&goodsItem.stock!=0">
+                库存不足
+              </div>
               <div class="bottom clearfix">
                 <span class="tag fl" v-if="goodsItem.status!=1">已失效</span>
-                <span class="modify" v-show="showModify">
+                <span class="modify" v-if="showModify">
                   <x-number :min="1" :max="goodsItem.stock" v-model="goodsItem.num" :fillable="true" @on-change="changeCartNum"></x-number>
                   <div class="shadow" v-if="goodsItem.stock==0&&goodsItem.status==1"></div>
                 </span>
@@ -233,6 +236,8 @@ export default {
   padding 0 10px
   color #BA825A
   margin-bottom 20px
+.inventory.notEnough
+  color #D54B4B
 </style>
 
 <style lang="stylus">

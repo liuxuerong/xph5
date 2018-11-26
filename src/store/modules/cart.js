@@ -14,24 +14,20 @@ const cart = {
       state.from = from
     },
     changeClearNum (state, clearNum) {
-      console.log(clearNum)
       state.clearNum = clearNum
     },
     changeGoodsList (state, goodsList) {
       state.goodsList = goodsList
-      console.log(goodsList)
     },
     // changeNotCheckGoodsList (state, goodsList) {
     //   state.goodsList = goodsList
     // },
     changeIsAllSelect (state, isAllSelect) {
-      console.log(isAllSelect)
       state.isAllSelect = isAllSelect
     }
   },
   actions: {
     refreshCart ({ commit }, {isAllSelect, goodsList, clearNum}) {
-      console.log(goodsList)
       commit('changeIsAllSelect', isAllSelect)
       commit('changeGoodsList', goodsList)
       commit('changeClearNum', clearNum)
