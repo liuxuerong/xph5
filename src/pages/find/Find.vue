@@ -336,6 +336,8 @@ export default {
     width 3.395556rem
   .moreTip
     padding-left 100px !important
+  .moreTip::after
+    left:104px
 .border-bottom::before
   z-index 9999
 .xpGoods .xpStoryContent .xpGoodsTop

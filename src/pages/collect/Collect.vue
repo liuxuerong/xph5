@@ -79,7 +79,7 @@ export default {
         emptyBold: '暂无商品',
         emptyP: '您还没有收藏任何商品',
         buttonText: '去看看',
-        buttonRouter: '/goods'
+        buttonRouter: '/find'
       },
       emptyContent: {
         emptyImg: '/static/images/commentEmptyCollect.png',

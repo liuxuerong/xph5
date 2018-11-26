@@ -59,12 +59,14 @@
       <div class="price">￥{{needPayPrice}}</div>
       <span class="pay" @click="createOrder">立即支付</span>
     </div>
+    <order-pop-up :unsatisfactoryData="unsatisfactoryData" v-if="unsatisfactoryData.length" @remove="remove"/>
   </div>
 </template>
 
 <script>
 // import router from '@/router/index.js'
 import CommonNavHeader from 'common/commonHeader/CommonNavHeader'
+import OrderPopUp from './components/OrderPopUp'
 import OrderItem from './components/OrderItem'
 import {
   Toast
@@ -78,6 +80,7 @@ import {
 import {
   goodOrderData,
   createOrderData
+  // cartListGoods
 } from 'util/netApi'
 import {
   storage
@@ -92,7 +95,8 @@ export default {
   components: {
     CommonNavHeader,
     OrderItem,
-    Popover
+    Popover,
+    OrderPopUp
   },
   data () {
     return {
@@ -106,9 +110,11 @@ export default {
       totalPric: '',
       shippingAmount: '',
       couponArr: [],
+      unsatisfactoryData: [],
       info: null,
       needPayPrice: '',
       offerAmount: '',
+      cartList: '',
       params: {
         favorableId: '',
         key: '',
@@ -119,58 +125,84 @@ export default {
 
     }
   },
-  computed: {
-
-  },
   watch: {
     '$route' (to, from) {
       if (to.path === '/createOrder/1') {
         this.info = storage.getLocalStorage(orderInfo)
-        console.log(this.info)
-        this.getDetails()
-        // if (this.info.couponId) {
-
-        // }
-        // if (this.info.shippingMethod) {
-        //   this.getDetails()
-        // }
+        // this.getDetails()
       } else if (to.path === '/createOrder') {
         storage.setLocalStorage(orderInfo, {})
       }
+      this.getDetails()
     }
   },
   methods: {
+    remove () {
+      if (this.pricesData.length > this.unsatisfactoryData.length) {
+        this.unsatisfactoryData = []
+        let goodsInfoCart = storage.getLocalStorage(goodsInfo)
+        goodsInfoCart.goodsItems = []
+        for (let i = 0; i < this.pricesData.length; i++) {
+          if (this.pricesData[i].num <= this.pricesData[i].stock) {
+            goodsInfoCart.goodsItems.push(this.pricesData[i])
+          }
+        }
+        storage.setLocalStorage(goodsInfo, goodsInfoCart)
+        this.getDetails()
+      } else {
+        this.$router.push('/cart')
+      }
+    },
     getDetails () {
-      const params = Object.assign({}, storage.getLocalStorage(goodsInfo), this.info)
+      let goodsInfoCart = storage.getLocalStorage(goodsInfo)
+      this.unsatisfactoryData = []
+      console.log(storage.getLocalStorage(goodsInfo))
+      let params = {}
+      params = Object.assign({}, goodsInfoCart)
+      console.log(params, 'params')
       if (this.info) {
         params.favorableId = this.info.couponId
       }
-      console.log(params)
       http(goodOrderData, params).then(res => {
         console.log(res)
         if (res.data.code === 0) {
           params.key = res.data.body.key
           this.availableCoupon = res.data.body.availableCoupon
           this.pricesData = res.data.body.orderGoodsItems
-          console.log(res.data.body.shippingAmount)
           this.shippingAmount = res.data.body.shippingAmount
           this.offerAmount = res.data.body.offerAmount
           for (let i = 0; i < this.pricesData.length; i++) {
+            // 库存不满足商品过滤
             let spec = JSON.parse(this.pricesData[i].spec)
             this.pricesData[i].spec = []
             for (let j = 0; j < spec.length; j++) {
               this.pricesData[i].spec.push(spec[j].value)
             }
+            for (let j = 0; j < goodsInfoCart.goodsItems.length; j++) {
+              if (this.pricesData[i].goodsId === goodsInfoCart.goodsItems[j].goodsId) {
+                this.pricesData[i].stock = goodsInfoCart.goodsItems[j].stock
+              }
+            }
+            if (this.pricesData[i].num > this.pricesData[i].stock) {
+              this.unsatisfactoryData.push(this.pricesData[i])
+            }
           }
           let goodsItems = res.data.body.orderGoodsItems
+          let goodsItemsNew = []
           for (let index in goodsItems) {
-            goodsItems[index].goodsItemId = goodsItems[index].id
+            for (let k in this.pricesData) {
+              if (goodsItems[index].id === this.pricesData[k].id) {
+                goodsItems[index].goodsItemId = goodsItems[index].id
+                goodsItemsNew.push(goodsItems[index])
+              }
+            }
           }
-          storage.setLocalStorage(goodsInfo, params)
+          // console.log(goodsItemsNew)
           this.params.key = res.data.body.key
-          this.params.goodsItems = goodsItems
+          this.params.goodsItems = goodsItemsNew
           this.totalPric = res.data.body.totalPrice
           this.needPayPrice = res.data.body.needPayPrice
+          storage.setLocalStorage(goodsInfo, params)
         }
       }).catch(err => {
         console.log(err)

@@ -14,7 +14,7 @@ import 'styles/common.css'
 import 'styles/border.css'
 import { AlertPlugin, LoadingPlugin, Confirm, ConfirmPlugin, ToastPlugin } from 'vux'
 /* eslint-disable no-unused-vars */
-// import vConsole from '@/assets/vconsole.js'
+import vConsole from '@/assets/vconsole.js'
 Vue.use(AlertPlugin)
 
 Vue.use(LoadingPlugin)
