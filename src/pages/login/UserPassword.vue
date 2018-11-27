@@ -8,10 +8,10 @@
       <h3>设置密码</h3>
       <span>6-12位的英文或数字</span>
       <div class="border-bottom userNameInput">
-        <input type="text" name="" id="" v-model="password">
+        <input type="password" name="" id="" v-model="password">
       </div>
     </div>
-    <router-link to="/userName" class="nextOper" v-if="type=='1'">跳过</router-link>
+    <router-link to="/userName" class="nextOper" v-if="type === '1'">跳过</router-link>
   </div>
 </template>
 <script type = "text/javascript">
@@ -37,14 +37,8 @@ export default {
     setPasswordRender () {
       let type = this.$route.params.type
       this.type = type
-      if (type === '1') {
-        // 设置密码  可跳过
-      } else {
-        // 修改或者忘记密码 不可跳过
-      }
     },
     setPasswordNext () {
-      console.log(this.type)
       let _this = this
       // 设置密码下一步
       if (this.rightPassword) {
@@ -53,6 +47,7 @@ export default {
         }
         if (storage.getLocalStorage(accessToken)) {
           http(modifyPassword, params).then((response) => {
+            console.log(response)
             if (response.data.code === 0) {
               Toast({
                 message: '设置成功',
@@ -84,6 +79,9 @@ export default {
     prevOperBtn: function () {
       this.$router.back(-1)
     }
+  },
+  mounted () {
+    this.setPasswordRender()
   }
 }
 </script>
