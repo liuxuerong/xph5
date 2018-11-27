@@ -16,19 +16,16 @@
                 <span class="color" v-for="(item,index) in specs" :key="index">{{item}}</span>
                  x <em class="num">{{goodsItem.num}}</em>
               </div>
-              <div class="inventory" v-if="goodsItem.stock<5&&goodsItem.stock>0&&goodsItem.status==1&&goodsItem.stock>=goodsItem.num">
+              <div class="inventory" v-if="goodsItem.stock<5&&goodsItem.stock>0&&goodsItem.status==1">
                 库存紧张
               </div>
                <div class="inventory" v-if="goodsItem.stock==0&&goodsItem.status==1">
                 无库存
               </div>
-              <div class="inventory notEnough" v-if="goodsItem.stock<goodsItem.num&&goodsItem.stock!=0">
-                库存不足
-              </div>
               <div class="bottom clearfix">
                 <span class="tag fl" v-if="goodsItem.status!=1">已失效</span>
-                <span class="modify" v-if="showModify">
-                  <x-number :min="1" :max="goodsItem.stock" v-model="goodsItem.num" :fillable="true" @click="changeCartNum"></x-number>
+                <span class="modify" v-show="showModify">
+                  <x-number :min="1" :max="goodsItem.stock" v-model="goodsItem.num" :fillable="true" @on-change="changeCartNum"></x-number>
                   <div class="shadow" v-if="goodsItem.stock==0&&goodsItem.status==1"></div>
                 </span>
                 <i class="price fr">￥{{goodsItem.price.toFixed(2)}}</i>
@@ -80,25 +77,33 @@ export default {
   },
   computed: mapState({
     clearNum: state => state.cart.clearNum,
-    goodsList: state => state.cart.goodsList,
-    isAllSelect: state => state.cart.isAllSelect
+    goodsList: state => state.cart.goodsList
   }),
   watch: {
     goodsItem: {
       handler (newVal, oldVal) {
-        let goodsList = this.goodsList
-        this.changeGoodsList(goodsList)
-        let clearNum = []
-        for (let i = 0; i < this.goodsList.length; i++) {
-          if (this.goodsList[i].status === '1') {
-            if (this.goodsList[i].value) {
-              clearNum.push(this.goodsList[i])
+        if (this.clearNum.length > 0) {
+          let index = this.clearNum.indexOf(this.goodsItem)
+          if (newVal.value) {
+            if (index !== -1) {
+              this.clearNum[index] = this.goodsItem
             } else {
-              this.changeIsAllSelect(false)
+              this.clearNum.push(this.goodsItem)
+            }
+          } else {
+            if (index !== -1) {
+              this.clearNum.splice(index, 1)
             }
           }
+          let goodsList = this.goodsList
+          this.changeGoodsList(goodsList)
+        } else {
+          if (newVal.value) {
+            this.clearNum.push(this.goodsItem)
+          }
         }
-        this.changeClearNum(clearNum)
+        this.changeClearNum(this.clearNum)
+        this.changeIsAllSelect(false)
       },
       deep: true,
       immediate: true
@@ -228,8 +233,6 @@ export default {
   padding 0 10px
   color #BA825A
   margin-bottom 20px
-.inventory.notEnough
-  color #D54B4B
 </style>
 
 <style lang="stylus">

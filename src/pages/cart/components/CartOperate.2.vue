@@ -61,6 +61,7 @@ export default {
     },
     $route (to, from) {
       this.$router.go(0)
+      console.log(7777)
     },
     clearNum: {
       handler (v, oldVal) {
@@ -83,8 +84,8 @@ export default {
   },
   methods: {
     ...mapMutations(['changeGoodsList', 'changeIsAllSelect']),
-
     checkAll () {
+      console.log(8888)
       let goodsList = this.goodsList
       for (let i in goodsList) {
         if (this.check) {
@@ -135,15 +136,13 @@ export default {
       }
       goodsObj.goodsItems = []
       for (let i = 0; i < this.goodsList.length; i++) {
-        if (this.goodsList[i].status === '1') {
-          if (this.goodsList[i].value) {
-            goodsObj.goodsItems.push({
-              goodsId: this.goodsList[i].goodsId,
-              goodsItemId: this.goodsList[i].goodsItemId,
-              num: this.goodsList[i].num,
-              stock: this.goodsList[i].stock
-            })
-          }
+        if (this.goodsList[i].value) {
+          goodsObj.goodsItems.push({
+            goodsId: this.goodsList[i].goodsId,
+            goodsItemId: this.goodsList[i].goodsItemId,
+            num: this.goodsList[i].num,
+            stock: this.goodsList[i].stock
+          })
         }
       }
       storage.setLocalStorage(goodsInfo, goodsObj)

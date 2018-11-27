@@ -1,24 +1,24 @@
 <template>
   <div class="xpCart">
     <common-nav-header :title="title">
-      <div class="edit"  v-if="goodsList.length" @click.prevent="changeShowModify()">
+      <div class="edit" v-if="goodsList.length" @click.prevent="changeShowModify()">
         {{text}}
       </div>
     </common-nav-header>
     <div class="goodsWrap" ref="goodsWrap">
       <div>
         <div v-if="cartList.length">
-          <goods-item  v-for="item in cartList" :key="item.id" :goodsItem="item" :showModify="showModify"></goods-item>
+          <goods-item v-for="item in cartList" :key="item.id" :goodsItem="item" :showModify="showModify"></goods-item>
         </div>
-        <div class="disabledWrap" v-if="disabledCartList.length" >
+        <div class="disabledWrap" v-if="disabledCartList.length">
           <div class="empty" @click="emptyNoInventory">清空失效商品</div>
-          <goods-item  v-for="item in disabledCartList" :key="item.id" :goodsItem="item" :disabled="true"></goods-item>
+          <goods-item v-for="item in disabledCartList" :key="item.id" :goodsItem="item" :disabled="true"></goods-item>
         </div>
         <divider v-if="noMore&&goodsList.length">哎呀！底线到了</divider>
       </div>
-      <common-empty v-if="goodsList.length<1" :emptyObj="emptyObj"/>
+      <common-empty v-if="goodsList.length<1" :emptyObj="emptyObj" />
     </div>
-    <cart-operate  v-if="goodsList.length" :showModify="showModify"/>
+    <cart-operate v-if="goodsList.length" :showModify="showModify" />
   </div>
 </template>
 
@@ -66,41 +66,51 @@ export default {
         buttonText: '去购物',
         buttonRouter: '/find'
       },
+      allList: [],
       cartList: [],
       disabledCartList: [],
       showModify: false,
       text: '编辑',
       page: 1,
-      noMore: false,
+      rows: 5,
       totals: 0,
-      rows: 20
+      noMore: false,
+      allGoods: []
     }
   },
   watch: {
-    goodsList: function (v) {
-      this.cartList = []
-      this.disabledCartList = []
-      for (let i = 0; i < v.length; i++) {
-        if (v[i].status === '1') {
-          this.cartList.push(v[i])
-        } else {
-          this.disabledCartList.push(v[i])
+    goodsList: {
+      handler (v, oldVal) {
+        this.cartList = []
+        this.disabledCartList = []
+        for (let i = 0; i < v.length; i++) {
+          if (v[i].status === '1') {
+            if (this.isAllSelect) {
+              v[i].value = true
+            }
+            this.cartList.push(v[i])
+          } else {
+            this.disabledCartList.push(v[i])
+          }
         }
-      }
-    },
-    '$route' (to, from) {
-      if (to.name === 'Cart') {
-        this.page = 0
-        this.getCartList()
-      }
+      },
+      deep: true,
+      immediate: true
     },
     isAllSelect (v) {
+      console.log(v)
       if (v) {
         this.rows = this.totals
         this.page = 1
         this.getCartList()
       } else {
-        this.rows = 20
+        this.rows = 5
+      }
+    },
+    '$route' (to, from) {
+      if (to.name === 'Cart') {
+        this.page = 1
+        this.getCartList()
       }
     }
   },
@@ -110,7 +120,7 @@ export default {
     isAllSelect: state => state.cart.isAllSelect
   }),
   methods: {
-    ...mapMutations(['changeGoodsList', 'changeClearNum', 'changeIsAllSelect']),
+    ...mapMutations(['changeGoodsList']),
     ...mapActions(['refreshCart']),
     scrollInit () {
       if (!this.scroll) {
@@ -135,7 +145,7 @@ export default {
         })
       } else {
         this.scroll.refresh()
-        this.scroll.finishPullUp()
+        // this.scroll.finishPullUp()
       }
     },
     getCartList () {
@@ -143,36 +153,63 @@ export default {
         page: this.page,
         rows: this.rows
       }
+      // if (this.rows === this.totals) {
+      //   if (this.allGoods.length) {
+      //     this.allList = this.allGoods
+      //     this.cartList = []
+      //     this.disabledCartList = []
+      //     let cartList = this.allList
+      //     for (let i = 0; i < cartList.length; i++) {
+      //       cartList[i].value = false
+      //       if (cartList[i].status === '1') {
+      //         this.cartList.push(cartList[i])
+      //       } else {
+      //         this.disabledCartList.push(cartList[i])
+      //       }
+      //     }
+
+      //     console.log(this.allList, 'this.allList')
+      //     this.refreshCart({goodsList: this.allList, clearNum: this.clearNum})
+      //     this.scrollInit()
+      //     return true
+      //   }
+      // }
+
       if (!this.noMore) {
         http(listCart, parmas).then(res => {
+          console.log(res)
           if (res.data.code === 0) {
             this.totals = res.data.body.totals
-            console.log(res.data.body.list)
             if (this.page !== 1 && res.data.body.list.length === 0) {
               this.scroll.finishPullUp()
               this.noMore = true
               return
             }
-            let cartList = res.data.body.list
-            for (let i = 0; i < cartList.length; i++) {
-              if (!this.isAllSelect) {
-                cartList[i].value = false
-              } else {
-                cartList[i].value = true
-              }
 
+            if (this.isAllSelect) {
+              this.allGoods = this.allList
+              this.allList = res.data.body.list
+            } else {
+              this.allList = [...this.allList, ...res.data.body.list]
+            }
+            this.cartList = []
+            this.disabledCartList = []
+            let cartList = this.allList
+            for (let i = 0; i < cartList.length; i++) {
+              cartList[i].value = false
               if (cartList[i].status === '1') {
                 this.cartList.push(cartList[i])
               } else {
                 this.disabledCartList.push(cartList[i])
               }
             }
-            if (!this.isAllSelect) {
-              cartList = [...this.goodsList, ...cartList]
-            }
-            this.changeGoodsList(cartList)
-            this.scrollInit()
+            console.log(this.allList, 'this.allList')
+            this.refreshCart({
+              goodsList: this.allList,
+              clearNum: this.clearNum
+            })
           }
+          this.scrollInit()
         }).catch(err => {
           console.log(err)
         })
@@ -210,10 +247,7 @@ export default {
   },
   mounted () {
     this.getCartList()
-    this.refreshCart({isAllSelect: false, goodsList: [], clearNum: []})
-  },
-  destroyed () {
-    this.refreshCart({isAllSelect: false, goodsList: [], clearNum: []})
+    console.log('刷新')
   }
 }
 </script>
@@ -222,7 +256,6 @@ export default {
   .xpCart
     height 100%
     padding-top 120px
-    // background-color #F5F5F5
     padding-bottom 148px
     .edit
       font-size 40px

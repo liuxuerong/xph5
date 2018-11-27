@@ -139,7 +139,6 @@ export default {
       width 100%
       height 100%
 .swiper-container
-  background-color pink
   width 100%
 </style>
 

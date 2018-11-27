@@ -17,7 +17,6 @@ const cart = {
       state.clearNum = clearNum
     },
     changeGoodsList (state, goodsList) {
-      console.log(goodsList)
       state.goodsList = goodsList
     },
     changeIsAllSelect (state, isAllSelect) {
@@ -25,8 +24,8 @@ const cart = {
     }
   },
   actions: {
-    refreshCart ({ commit }, {goodsList, clearNum}) {
-      // commit('changeIsAllSelect', isAllSelect)
+    refreshCart ({ commit }, {isAllSelect, goodsList, clearNum}) {
+      commit('changeIsAllSelect', isAllSelect)
       commit('changeGoodsList', goodsList)
       commit('changeClearNum', clearNum)
     }

@@ -17,6 +17,7 @@
         <divider v-if="noMore&&goodsList.length">哎呀！底线到了</divider>
       </div>
       <common-empty v-if="goodsList.length<1" :emptyObj="emptyObj"/>
+
     </div>
     <cart-operate  v-if="goodsList.length" :showModify="showModify"/>
   </div>
@@ -28,13 +29,12 @@ import CommonEmpty from 'common/commonEmpty/CommonEmpty'
 import CommonNavHeader from 'common/commonHeader/CommonNavHeader'
 import GoodsItem from './components/GoodsItem'
 import CartOperate from './components/CartOperate'
-
-import {
-  Toast
-} from 'mint-ui'
 import {
   Divider
 } from 'vux'
+import {
+  Toast
+} from 'mint-ui'
 import {
   http
 } from 'util/request'
@@ -64,16 +64,16 @@ export default {
         emptyBold: '购物车是空的',
         emptyP: '好多新上架的商品在等着您哟~',
         buttonText: '去购物',
-        buttonRouter: '/find'
+        buttonRouter: '/goods'
       },
       cartList: [],
       disabledCartList: [],
       showModify: false,
       text: '编辑',
       page: 1,
+      rows: 5,
       noMore: false,
-      totals: 0,
-      rows: 20
+      allCartList: []
     }
   },
   watch: {
@@ -90,27 +90,16 @@ export default {
     },
     '$route' (to, from) {
       if (to.name === 'Cart') {
-        this.page = 0
         this.getCartList()
-      }
-    },
-    isAllSelect (v) {
-      if (v) {
-        this.rows = this.totals
-        this.page = 1
-        this.getCartList()
-      } else {
-        this.rows = 20
+        console.log(24225)
       }
     }
   },
   computed: mapState({
-    goodsList: state => state.cart.goodsList,
-    clearNum: state => state.cart.clearNum,
-    isAllSelect: state => state.cart.isAllSelect
+    goodsList: state => state.cart.goodsList
   }),
   methods: {
-    ...mapMutations(['changeGoodsList', 'changeClearNum', 'changeIsAllSelect']),
+    ...mapMutations(['changeGoodsList']),
     ...mapActions(['refreshCart']),
     scrollInit () {
       if (!this.scroll) {
@@ -127,11 +116,9 @@ export default {
             bottom: true
           }
         })
-
         this.scroll.on('pullingUp', () => {
           this.page++
           this.getCartList()
-          this.scroll.refresh()
         })
       } else {
         this.scroll.refresh()
@@ -145,34 +132,27 @@ export default {
       }
       if (!this.noMore) {
         http(listCart, parmas).then(res => {
+          console.log(res)
           if (res.data.code === 0) {
-            this.totals = res.data.body.totals
-            console.log(res.data.body.list)
             if (this.page !== 1 && res.data.body.list.length === 0) {
               this.scroll.finishPullUp()
               this.noMore = true
-              return
             }
-            let cartList = res.data.body.list
+            this.allCartList = [...this.allCartList, ...res.data.body.list]
+            let cartList = this.allCartList
             for (let i = 0; i < cartList.length; i++) {
-              if (!this.isAllSelect) {
-                cartList[i].value = false
-              } else {
-                cartList[i].value = true
-              }
-
+              cartList[i].value = false
               if (cartList[i].status === '1') {
                 this.cartList.push(cartList[i])
               } else {
                 this.disabledCartList.push(cartList[i])
               }
             }
-            if (!this.isAllSelect) {
-              cartList = [...this.goodsList, ...cartList]
-            }
-            this.changeGoodsList(cartList)
-            this.scrollInit()
+            // this.changeGoodsList(cartList)
+            this.refreshCart({isAllSelect: false, goodsList: cartList, clearNum: []})
           }
+
+          this.scrollInit()
         }).catch(err => {
           console.log(err)
         })
@@ -210,10 +190,7 @@ export default {
   },
   mounted () {
     this.getCartList()
-    this.refreshCart({isAllSelect: false, goodsList: [], clearNum: []})
-  },
-  destroyed () {
-    this.refreshCart({isAllSelect: false, goodsList: [], clearNum: []})
+    console.log(5454)
   }
 }
 </script>
