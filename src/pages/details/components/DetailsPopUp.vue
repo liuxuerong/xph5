@@ -4,10 +4,10 @@
       <DetailsImgPrice :goods="goods" />
       <div class="cutOffLine"></div>
       <div id="goodsinfo">
-        <div class="num">
-          <span class="sub fl" @click="subCount">_</span>
+        <div class="num" ref="num">
+          <span class="sub fl" @click="subCount" ref="sub">_</span>
           <input type="text" class="fl" v-model="cartCount">
-          <span class="add fr" @click="addCount">+</span>
+          <span class="add fr" @click="addCount" ref="add">+</span>
         </div>
         <div ref="tabWrap" class="tabWrap">
           <div class="tabContent" v-for="(item,index) in sku.keys" :key="index">
@@ -21,7 +21,7 @@
         <span class="addCart" @click="addCart()" v-if="!goodsEmpty&&goodsStatus==1">
           加入购物车
         </span>
-        <div class="goodsEmpty" v-if="goodsEmpty||goodsStatus!=1">{{goodsEmpty}}{{goodsStatus}}暂无可售商品</div>
+        <div class="goodsEmpty" v-if="goodsEmpty||goodsStatus!=1">暂无可售商品</div>
       </div>
       <div class="goodsInfoBottm border-top" v-else-if="from==2">
         <div class="addSure" @click="addCart()">确认加入</div>
@@ -87,15 +87,18 @@ export default {
   methods: {
     ...mapMutations(['changeNowPrice', 'changeMaxCount']),
     addCount () {
-      this.cartCount++
       if (this.cartCount > this.maxCount) {
-        this.cartCount = this.maxCount
         Toast({
           message: '商品库存不足',
           position: 'center',
           duration: 500
         })
+        if (this.maxCount === 0) {
+          return
+        }
+        this.cartCount = this.maxCount
       }
+      this.cartCount++
     },
 
     subCount () {
@@ -526,10 +529,13 @@ export default {
       line-height 92px
       font-size 80px
       text-align center
+      color #808080
     .sub
       margin-top -36px
     .add
       margin-top 6px
+    .span.disable
+      color #ccc
     input
       width 190px
       border-left 1px solid #CCCCCC

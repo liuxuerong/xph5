@@ -14,7 +14,7 @@
           <div class="empty" @click="emptyNoInventory">清空失效商品</div>
           <goods-item  v-for="item in disabledCartList" :key="item.id" :goodsItem="item" :disabled="true"></goods-item>
         </div>
-        <divider v-if="noMore">哎呀！底线到了</divider>
+        <divider v-if="noMore&&goodsList.length">哎呀！底线到了</divider>
       </div>
       <common-empty v-if="goodsList.length<1" :emptyObj="emptyObj"/>
     </div>
@@ -64,7 +64,7 @@ export default {
         emptyBold: '购物车是空的',
         emptyP: '好多新上架的商品在等着您哟~',
         buttonText: '去购物',
-        buttonRouter: '/goods'
+        buttonRouter: '/find'
       },
       cartList: [],
       disabledCartList: [],
@@ -76,6 +76,7 @@ export default {
   },
   watch: {
     goodsList: function (v) {
+      console.log(v)
       this.cartList = []
       this.disabledCartList = []
       for (let i = 0; i < v.length; i++) {
@@ -144,9 +145,11 @@ export default {
                 this.cartList.push(cartList[i])
               } else {
                 this.disabledCartList.push(cartList[i])
+                console.log(this.disabledCartList)
               }
             }
-            this.refreshCart({isAllSelect: false, goodsList: this.cartList, clearNum: []})
+            // this.changeGoodsList(cartList)
+            this.refreshCart({isAllSelect: false, goodsList: cartList, clearNum: []})
           }
           this.scrollInit()
         }).catch(err => {

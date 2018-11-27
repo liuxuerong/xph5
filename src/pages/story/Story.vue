@@ -1,7 +1,7 @@
 <template>
   <div class="xpStory">
     <common-header :isScan="false" ref="commonHeader">
-      <h1 class="title fl">故事</h1>
+      故事
     </common-header>
     <div class="top">
       <tab v-if="tabbar.length>1">

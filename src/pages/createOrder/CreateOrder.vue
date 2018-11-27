@@ -156,12 +156,9 @@ export default {
     getDetails () {
       let goodsInfoCart = storage.getLocalStorage(goodsInfo)
       this.unsatisfactoryData = []
-      console.log(storage.getLocalStorage(goodsInfo))
       const orderInfoData = storage.getLocalStorage(orderInfo)
-      console.log(orderInfoData, 'orderInfoData')
       let params = {}
       params = Object.assign({}, goodsInfoCart, orderInfoData)
-      console.log(params, 'params')
       if (this.info) {
         params.favorableId = this.info.couponId
       }
@@ -199,7 +196,6 @@ export default {
               }
             }
           }
-          // console.log(goodsItemsNew)
           this.params.key = res.data.body.key
           this.params.goodsItems = goodsItemsNew
           this.totalPric = res.data.body.totalPrice

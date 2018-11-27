@@ -2,7 +2,7 @@
   <div class="header">
     <!-- <div class="scan" v-if="isScan">
     </div> -->
-    <router-link to="/search"  v-if="!isScan">
+    <router-link to="/search"  v-if="!isScan" class="searchLink">
     <div class="search ">
     </div>
     </router-link>
@@ -60,8 +60,9 @@ export default {
   background-color #fff
   z-index 9999
   top 0
-  // display flex
-  // justify-content space-between
+  text-align center
+  font-size 56px
+  color #333
   border-bottom 1px solid #e6e6e6
   .scan
     width 60px
@@ -70,13 +71,17 @@ export default {
     margin-right 40px
     vertical-align middle
     margin-top 10px
+  .searchLink
+    position absolute
+    left 50px
   .search
     width 60px
     height 60px
     bgImage("/static/icons/search_black")
     margin-right 40px
+    margin-top 0
     vertical-align middle
-    margin-top 20px
+    display inline-block
   .car
     width 60px
     top 20px
