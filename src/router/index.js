@@ -147,7 +147,7 @@ const router = new Router({
     //   component: resolve => require(['@/pages/person/PersonCenter'], resolve)
     // },
     {
-      path: '/userInfoSet',
+      path: '/userInfoSet/:type?',
       name: 'userInfoSet',
       meta: { requireLogin: true },
       component: resolve => require(['@/pages/person/UserDataSet'], resolve)
@@ -343,6 +343,11 @@ const router = new Router({
       path: '/touristToolCenter',
       name: 'touristToolCenter',
       component: resolve => require(['@/pages/person/TouristToolCenter'], resolve)
+    },
+    {
+      path: '/userNamePer',
+      name: 'userNamePer',
+      component: resolve => require(['@/pages/person/UserNamePer'], resolve)
     }
   ]
 })

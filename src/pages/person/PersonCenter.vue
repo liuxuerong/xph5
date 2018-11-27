@@ -99,10 +99,6 @@
           </li>
         </ul>
       </div>
-      <!-- <div v-else class="emptyDiscountBg">
-        6666
-        <div  class="enptyCoupons"></div>
-      </div> -->
       <person-title content="可能感兴趣的活动" :moreShow="activitys.length > 0"></person-title>
       <activitys-details v-if="activitys.length > 0" :activitysData="activitys"></activitys-details>
       <div v-else class="emptyAmusingBg"></div>
@@ -130,7 +126,6 @@
   </div>
 </template>
 <script>
-import router from '@/router/index.js'
 import {storage} from 'util/storage'
 import { accessToken } from 'util/const.js'
 import {memberCenter, listDelivery, goodscollectionList, cartNum, customerService} from 'util/netApi'
@@ -184,22 +179,19 @@ export default {
     // 基础信息加载
     getUserInfo () {
       http(memberCenter).then((response) => {
-        console.log(response.data.body)
         let data = response.data.body
         if (data.coupons.length > 0) {
           this.coupons = data.coupons
           this.cardScrollWidth = (this.coupons.length * 970 - 50) / 112.5
           // this.$refs.cardScrollWidth.style.width = (this.coupons.length * 970 - 50) / 112.5 + 'rem'
         }
-        let operPhone = Number(data.memberName)
-        if ((/^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/.test(operPhone))) {
+        let operPhone = data.memberName
+        if ((/^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/.test(Number(operPhone)))) {
           this.phone = operPhone.toString().substring(0, 3) + '****' + operPhone.toString().substring(7, 11)
         } else {
           this.phone = operPhone
         }
         this.list = response.data.body
-        console.log(typeof Number(data.memberName))
-        this.name = data.memberName
         this.orderNum = data.orderCount
         this.memberHead = data.memberHead
         // 商品收藏
@@ -222,7 +214,7 @@ export default {
     },
     // 基础资料设置
     userDataSet () {
-      router.push('/userInfoSet')
+      this.$router.push('/userInfoSet')
     },
     // 我的地址
     goodsAddress () {
@@ -238,8 +230,6 @@ export default {
           for (var i = 0; i < data.list.length; i++) {
             if (data.list[i].idDefault === 1) {
               this.addName = data.list[i].receiverName
-
-              // console.log(this.phone)
               if (data.list[i].province === '上海' || data.list[i].province === '重庆' || data.list[i].province === '北京' || data.list[i].province === '天津') {
                 this.address = data.list[i].city + data.list[i].area + data.list[i].detailedAddr
               } else {
@@ -274,22 +264,22 @@ export default {
     // 必备工具跳转
     toolSpecific (type) {
       if (type === 1) {
-        router.push('./toolCenter')
+        this.$router.push('./toolCenter')
       } else if (type === 2) {
-        router.push('./integralDetails')
+        this.$router.push('./integralDetails')
       } else if (type === 3) {
-        router.push('./ToolStore')
+        this.$router.push('./ToolStore')
       } else {
         window.location.href = customerService
       }
     },
     // 优惠卡券
     cardVoucher () {
-      router.push('./cardVoucher')
+      this.$router.push('./cardVoucher')
     },
     // 商品详情
     goodsDetails (id) {
-      router.push('/details/' + id)
+      this.$router.push('/details/' + id)
     },
     // 滚动监听
     handleScroll () {
@@ -326,7 +316,7 @@ export default {
     // 判断账号是够登录
     if (!storage.getLocalStorage(accessToken)) {
       // 还未登录
-      router.push('./login')
+      this.$router.push('./login')
     } else {
       // 基础信息加载
       this.getUserInfo()

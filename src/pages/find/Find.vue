@@ -19,10 +19,10 @@
           <div ref="topScroll" style="opacity:0;width:0;heigth:0"></div>
           <index-swiper ref="indexSwiper" v-if="IndexSwiperShow" />
           <div class="navBox">
-            <router-link to="/touristToolCenter" class="item wrap left">
+            <div class="item wrap left" @click="touristToolCenter">
               <h2>会员福利</h2>
               <h4>material comforts</h4>
-            </router-link>
+            </div>
             <div class="right wrap">
               <router-link to="/activitysList/0" class="item top">
                 <h2>活动精选</h2>
@@ -99,6 +99,8 @@ import {
 import {
   config
 } from 'util/config.js'
+import {storage} from 'util/storage'
+import {accessToken} from 'util/const'
 export default {
   name: 'Find',
   components: {
@@ -224,6 +226,14 @@ export default {
           this.page++
           this.getGoodsList(this.categoryId, this.page)
         }
+      }
+    },
+    // 会员福利
+    touristToolCenter () {
+      if (storage.getLocalStorage(accessToken)) {
+        this.$router.push('/toolCenter')
+      } else {
+        this.$router.push('/touristToolCenter')
       }
     }
   },

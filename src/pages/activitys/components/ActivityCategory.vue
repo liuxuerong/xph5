@@ -3,46 +3,104 @@
     <div class="categoryInfo">
       <img class="categoryImg" :src="imageUrl+activityCategory.picture" alt="">
       <dir class="categoryName">
-        <h3 class="name">{{activityCategory.name}} <span class="stopTime">距结束 {{activityCategory.endDay}} 天</span> </h3>
+        <h3 class="name">{{activityCategory.name}}
+          <span v-if="activityCategory.showTimeType ===1" class="stopTime">距结束 {{activityCategory.endDay}} 天</span>
+          <span v-else class="stopTime">距结束 {{activityCategory.endDay}} 小时</span>
+        </h3>
         <div class="subName">{{activityCategory.activityDescribe}}</div>
       </dir>
     </div>
     <div class="goodsInfo">
       <div class="goodsInfoBox clearfix">
-        <div class="goodsInfoItem" v-for="goods in activityCategory.goodsDetails" :key="goods.id" @click="activityGoodsDetails(goods.id)">
+        <div class="goodsInfoItem" v-if="activityCategoryGoods" v-for="goods in activityCategoryGoods" :key="goods.id" @click="activityGoodsDetails(goods.id)">
           <img :src="imageUrl+goods.coverImage" alt="">
           <div class="goodsInfoText">
             <h3>{{goods.name}}</h3>
             <p>￥{{goods.minPrice}}<del>￥{{goods.marketPrice}}</del></p>
-            <span class="label">5规格可选</span>
+            <span class="label" v-if="goods.activityLabels.length > 1 && goods.activityLabels.length < 5">{{goods.activityLabels.length}}规格可选</span>
+            <span class="label" v-else-if="goods.activityLabels.length < 0">多规格可选</span>
           </div>
         </div>
       </div>
-      <div class="goodsMore" v-if="activityCategory.goodsDetails.length > 3">查看全部商品</div>
+      <div class="goodsMore" v-if="activityCategoryGoods.length > 2" @click="activityGoodsMore(activityCategory.goodsCategoryId)" v-html="activityMoreText"></div>
     </div>
   </div>
 </template>
 <script>
 import { config } from 'util/config'
+import { goodsList } from 'util/netApi'
+import {http} from 'util/request'
 export default {
   props: {
     activityCategory: Object
   },
   data () {
     return {
-      imageUrl: config.imageUrl // 图片路径
+      imageUrl: config.imageUrl, // 图片路径
+      beginTime: 0,
+      time: '',
+      activityCategoryGoods: '',
+      activityMoreText: '查看全部商品'
     }
   },
   components: {
     name: 'ActivityCategory'
   },
   methods: {
+    // 页面数据渲染
+    activityCategoryRender () {
+      this.activityCategoryGoods = this.activityCategory.goodsDetails
+    },
+    // 商品详情
     activityGoodsDetails (id) {
       this.$router.push('/details/' + id)
+    },
+    // 查看更多
+    activityGoodsMore (goodsCategoryId) {
+      if (this.activityMoreText === '查看全部商品') {
+        let params = {
+          categoryId: goodsCategoryId,
+          sortOrder: 'DESC'
+        }
+        http(goodsList, params).then((response) => {
+          console.log(response)
+          if (response.data.code === 0) {
+            this.activityCategoryGoods = response.data.body.list
+            this.activityMoreText = '隐藏部分商品'
+          }
+        })
+      } else {
+        this.activityMoreText = '查看全部商品'
+        this.activityCategoryRender()
+      }
+    },
+    // 倒计时
+    countDown (t) {
+      t = new Date(t)
+      let h = t.getHours() > 9 ? t.getHours() : '0' + t.getHours()
+      let m = t.getMinutes() > 9 ? t.getMinutes() : '0' + t.getMinutes()
+      let s = t.getSeconds() > 9 ? t.getSeconds() : '0' + t.getSeconds()
+      return `${h}:${m}:${s}`
+    },
+    setNewSwiperData () {
+      this.beginTime += 1000
+      this.time = []
+      let t = this.activityCategory.activityEndTime
+      if (t) {
+        t = this.countDown(t - this.beginTime)
+        this.time.push(t)
+      } else {
+        this.time.push('')
+      }
+      this.time = this.time + ''
     }
   },
   mounted () {
-    // console.log(this.activityCategory)
+    this.activityCategoryRender()
+    this.setNewSwiperData()
+    this.timer = setInterval(() => {
+      this.setNewSwiperData()
+    }, 1000)
   }
 }
 </script>
@@ -108,11 +166,14 @@ export default {
       float left
       margin-right 30px
       width 31%
+      box-sizing border-box
+      padding-bottom 80px
       img
         display block
         width 100%
         height 302px
         margin-bottom 30px
+        background #F5F5F5
     .goodsInfoText
       width 100%
       box-sizing border-box

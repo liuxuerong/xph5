@@ -4,9 +4,9 @@
       <router-link class="cellLink" to="/addressAdmin/need" replace>
         <div class="text">快递配送</div>
       </router-link>
-        <router-link class="cellLink" to="/storeAddress" replace>
+        <!-- <router-link class="cellLink" to="/storeAddress" replace>
         <div class="text">上门自提</div>
-      </router-link>
+      </router-link> -->
   </div>
 </template>
 <script>

@@ -11,7 +11,7 @@
       <!-- 单品秒杀 -->
       <div class="activityGoodsBox">
         <activitys-title v-if="activityGoods" :activitysTitle="activitysTitle[0]"></activitys-title>
-        <activity-goods v-if="activityGoods" v-for="item in activityGoods" :key="item.goodsId" :activityGoods="item"></activity-goods>
+        <activity-goods v-if="activityGoods" v-for="item in activityGoods" :key="item.goodsItemId" :activityGoods="item"></activity-goods>
       </div>
       <!-- 品类秒杀 -->
       <div class="activityCategoryBox">
@@ -24,6 +24,7 @@
     </div>
   </div>
 </template>
+<script src="https://unpkg.com/dsbridge/dist/dsbridge.js"></script>
 <script>
 import UserinfoHeader from '@/pages/person/components/ComUserSetHeader'
 import ActivitysTitle from './components/ActivitysTitle'
