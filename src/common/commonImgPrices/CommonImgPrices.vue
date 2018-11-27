@@ -1,8 +1,8 @@
 <template>
   <div class="commonImgPrices">
     <router-link :to="'/details/'+pricesData.id">
-      <div class="imgContainer">
-        <img v-lazy="imageUrl+pricesData.coverImage"  alt="">
+      <div class="imgContainer" v-if="img">
+        <img v-lazy="imageUrl+img"  alt="">
       </div>
       <p class="name">
         {{pricesData.name}}
@@ -35,10 +35,29 @@ export default {
   },
   data () {
     return {
-      imageUrl: config.imageUrl
+      imageUrl: config.imageUrl,
+      img: null
+    }
+  },
+  methods: {
+    getImg (img) {
+      if (typeof (img) === 'string') {
+        this.img = img.split(',')[0]
+      } else {
+        this.img = img[0].value
+      }
     }
   },
   mounted () {
+    if (this.pricesData.goodsPics) {
+      this.getImg(this.pricesData.goodsPics)
+    } else {
+      this.getImg(this.pricesData.goodsImage)
+    }
+
+    // if (typeof (this.pricesData.goodsPics) === 'string') {
+    //   this.img =
+    // }
   }
 
 }

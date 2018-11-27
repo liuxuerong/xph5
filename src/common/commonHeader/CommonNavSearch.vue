@@ -83,7 +83,7 @@ export default {
       top 30px
     .back:after
       border-right 30px solid #fff
-      left -26px
+      left -24px
     .search
       width 60px
       height 60px

@@ -89,6 +89,7 @@ export default {
     margin-bottom 140px
   .moreGoods
     width 382px
+    min-height 500px
     a
       display block
       width 252px

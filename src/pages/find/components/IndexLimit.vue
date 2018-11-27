@@ -62,23 +62,20 @@ export default {
   },
   methods: {
     countDown (t) {
-      let hours = parseInt((t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-      hours = hours > 9 ? hours : '0' + hours
-      let minutes = parseInt((t % (1000 * 60 * 60)) / (1000 * 60))
-      minutes = minutes > 9 ? minutes : '0' + minutes
-      let seconds = (t % (1000 * 60)) / 1000
-      seconds = seconds > 9 ? seconds : '0' + seconds
-      return hours + ' : ' + minutes + ' : ' + seconds
+      t = new Date(t)
+      let h = t.getHours() > 9 ? t.getHours() : '0' + t.getHours()
+      let m = t.getMinutes() > 9 ? t.getMinutes() : '0' + t.getMinutes()
+      let s = t.getSeconds() > 9 ? t.getSeconds() : '0' + t.getSeconds()
+      return `${h}:${m}:${s}`
     },
     setNewSwiperData () {
       this.beginTime += 1000
       this.time = []
-
       for (let key in this.swiperData) {
         let t = this.swiperData[key].activityEndTime
         if (t) {
-          t = -t - this.beginTime
-          this.time.push(this.countDown(t))
+          t = this.countDown(t - this.beginTime)
+          this.time.push(t)
         } else {
           this.time.push('')
         }
@@ -91,7 +88,7 @@ export default {
       this.setNewSwiperData()
     }, 1000)
   },
-  beforeDestroy () {
+  destroyed () {
     this.timer = null
   }
 }

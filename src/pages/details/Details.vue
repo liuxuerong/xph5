@@ -2,7 +2,7 @@
   <div class="xpDetails">
     <div v-show="goodsStatus!==4">
       <common-nav-header>
-      <router-link to="/" class="icon home" ></router-link>
+      <router-link to="/find" class="icon home" ></router-link>
       <!-- <span class="icon share"></span> -->
     </common-nav-header>
     <div class="xpDetailsWrap" ref="xpDetailsWrap">
@@ -151,8 +151,18 @@ export default {
   methods: {
     ...mapMutations(['changePopupVisible', 'changeNowPrice', 'changeFrom', 'changeMaxCount', 'changeCoupponVisible']),
     pushKeys (arr) {
+      console.log(arr)
       if (arr.length === 1) {
         this.changeMaxCount(arr[0].stock)
+      }
+      let flag = true
+      for (let i in arr) {
+        if (arr[i].stock) {
+          flag = false
+        }
+      }
+      if (flag) {
+        this.changeMaxCount(0)
       }
       // 处理返回数据
       let sku = {}

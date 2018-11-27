@@ -8,6 +8,9 @@ import {
   hasCollection,
   doCollection
 } from '@/func/collection'
+import {
+  Toast
+} from 'mint-ui'
 export default {
   name: 'CommonCollection',
   props: {
@@ -23,12 +26,6 @@ export default {
       params: null
     }
   },
-  computed: {
-
-  },
-  watch: {
-
-  },
   methods: {
     hasCollection (params) {
       let fnType = Object.prototype.toString.call(hasCollection(params)).slice(8, -1)
@@ -42,6 +39,12 @@ export default {
     },
     doCollection (params) {
       doCollection(params).then(res => {
+        let message = this.collect ? '取消成功' : '收藏成功'
+        Toast({
+          message: message,
+          position: 'top',
+          duration: 1000
+        })
         this.hasCollection(params)
       }).catch(err => {
         console.log(err)

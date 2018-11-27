@@ -66,36 +66,52 @@ export default {
         buttonText: '去购物',
         buttonRouter: '/find'
       },
+      allList: [],
       cartList: [],
       disabledCartList: [],
       showModify: false,
       text: '编辑',
       page: 1,
-      noMore: false
+      rows: 5,
+      totals: 0,
+      noMore: false,
+      allGoods: []
     }
   },
   watch: {
     goodsList: function (v) {
-      console.log(v)
-      this.cartList = []
-      this.disabledCartList = []
       for (let i = 0; i < v.length; i++) {
         if (v[i].status === '1') {
-          this.cartList.push(v[i])
+          if (this.isAllSelect) {
+            v[i].value = true
+          }
+          // this.cartList.push(v[i])
         } else {
-          this.disabledCartList.push(v[i])
+          // this.disabledCartList.push(v[i])
         }
+      }
+    },
+    isAllSelect (v) {
+      console.log(v)
+      if (v) {
+        this.rows = this.totals
+        this.page = 1
+        this.getCartList()
+      } else {
+        this.rows = 5
       }
     },
     '$route' (to, from) {
       if (to.name === 'Cart') {
-        this.page = 0
-        this.getCartList(this.page)
+        this.page = 1
+        this.getCartList()
       }
     }
   },
   computed: mapState({
-    goodsList: state => state.cart.goodsList
+    goodsList: state => state.cart.goodsList,
+    clearNum: state => state.cart.clearNum,
+    isAllSelect: state => state.cart.isAllSelect
   }),
   methods: {
     ...mapMutations(['changeGoodsList']),
@@ -118,38 +134,71 @@ export default {
 
         this.scroll.on('pullingUp', () => {
           this.page++
-          this.getCartList(this.page)
+          this.getCartList()
+          this.scroll.refresh()
         })
       } else {
         this.scroll.refresh()
-        this.scroll.finishPullUp()
+        // this.scroll.finishPullUp()
       }
     },
-    getCartList (page) {
+    getCartList () {
       let parmas = {
-        page: page,
-        rows: 20
+        page: this.page,
+        rows: this.rows
       }
+      // if (this.rows === this.totals) {
+      //   if (this.allGoods.length) {
+      //     this.allList = this.allGoods
+      //     this.cartList = []
+      //     this.disabledCartList = []
+      //     let cartList = this.allList
+      //     for (let i = 0; i < cartList.length; i++) {
+      //       cartList[i].value = false
+      //       if (cartList[i].status === '1') {
+      //         this.cartList.push(cartList[i])
+      //       } else {
+      //         this.disabledCartList.push(cartList[i])
+      //       }
+      //     }
+
+      //     console.log(this.allList, 'this.allList')
+      //     this.refreshCart({goodsList: this.allList, clearNum: this.clearNum})
+      //     this.scrollInit()
+      //     return true
+      //   }
+      // }
+
       if (!this.noMore) {
         http(listCart, parmas).then(res => {
+          console.log(res)
           if (res.data.code === 0) {
-            if (this.page !== 1 && res.data.body.length === 0) {
+            this.totals = res.data.body.totals
+            if (this.page !== 1 && res.data.body.list.length === 0) {
               this.scroll.finishPullUp()
               this.noMore = true
               return
             }
-            let cartList = res.data.body
+
+            if (this.isAllSelect) {
+              this.allGoods = this.allList
+              this.allList = res.data.body.list
+            } else {
+              this.allList = [...this.allList, ...res.data.body.list]
+            }
+            this.cartList = []
+            this.disabledCartList = []
+            let cartList = this.allList
             for (let i = 0; i < cartList.length; i++) {
               cartList[i].value = false
               if (cartList[i].status === '1') {
                 this.cartList.push(cartList[i])
               } else {
                 this.disabledCartList.push(cartList[i])
-                console.log(this.disabledCartList)
               }
             }
-            // this.changeGoodsList(cartList)
-            this.refreshCart({isAllSelect: false, goodsList: cartList, clearNum: []})
+            console.log(this.allList, 'this.allList')
+            this.refreshCart({goodsList: this.allList, clearNum: this.clearNum})
           }
           this.scrollInit()
         }).catch(err => {
@@ -188,7 +237,8 @@ export default {
     }
   },
   mounted () {
-    this.getCartList(this.page)
+    this.getCartList()
+    console.log('刷新')
   }
 }
 </script>
@@ -197,7 +247,6 @@ export default {
   .xpCart
     height 100%
     padding-top 120px
-    // background-color #F5F5F5
     padding-bottom 148px
     .edit
       font-size 40px

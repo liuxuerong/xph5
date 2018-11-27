@@ -1,6 +1,7 @@
 
 // 版本号
 const v1 = 'v1'
+const v2 = 'v2'
 /**
  * 接口文件，按需加载某个/多个接口
  * url     接口连接
@@ -42,7 +43,7 @@ export const hotGoods = { url: '/goodsLabel/hot', method: 'GET', version: v1 }//
 export const addCart = { url: '/cart/add', method: 'POST', version: v1 } // 添加购物车
 export const updateCart = { url: '/cart', method: 'PUT', version: v1 } // 修改购物车数量
 export const delCart = { url: '/cart', method: 'DELETE', version: v1, join: true } // 删除购物车商品
-export const listCart = { url: '/cart/carts', method: 'GET', version: v1 } // 购物车列表
+export const listCart = { url: '/cart/carts', method: 'GET', version: v2 } // 购物车列表
 
 // 获取订单详情
 export const goodOrderData = { url: '/order/detail', method: 'POST', version: v1 }

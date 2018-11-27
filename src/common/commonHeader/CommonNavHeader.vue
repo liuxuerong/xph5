@@ -51,6 +51,6 @@ export default {
       top 30px
     .back:after
       border-right 30px solid #fff
-      left -26px
+      left -24px
 
 </style>

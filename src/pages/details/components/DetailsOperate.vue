@@ -23,10 +23,12 @@ import {
   mapState,
   mapMutations
 } from 'vuex'
-
 import {
   http
 } from 'util/request'
+import {
+  Toast
+} from 'mint-ui'
 import {
   cartNum,
   customerService
@@ -78,6 +80,12 @@ export default {
     },
     doCollection (params) {
       doCollection(params).then(res => {
+        let message = this.collect ? '取消成功' : '收藏成功'
+        Toast({
+          message: message,
+          position: 'bottom',
+          duration: 1000
+        })
         this.hasCollection(params)
       }).catch(err => {
         console.log(err)

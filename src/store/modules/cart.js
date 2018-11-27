@@ -1,10 +1,10 @@
 const cart = {
   state: {
-    cartNum: 0,
+    cartNum: 0, // 商品数量
     from: 1,
-    goodsList: [],
-    clearNum: [],
-    isAllSelect: false
+    goodsList: [], // 所以的有效商品
+    clearNum: [], // 选择的goods
+    isAllSelect: false// 全选
   },
   mutations: {
     changeCartNum (state, cartNum) {
@@ -17,18 +17,16 @@ const cart = {
       state.clearNum = clearNum
     },
     changeGoodsList (state, goodsList) {
+      console.log(goodsList)
       state.goodsList = goodsList
     },
-    // changeNotCheckGoodsList (state, goodsList) {
-    //   state.goodsList = goodsList
-    // },
     changeIsAllSelect (state, isAllSelect) {
       state.isAllSelect = isAllSelect
     }
   },
   actions: {
-    refreshCart ({ commit }, {isAllSelect, goodsList, clearNum}) {
-      commit('changeIsAllSelect', isAllSelect)
+    refreshCart ({ commit }, {goodsList, clearNum}) {
+      // commit('changeIsAllSelect', isAllSelect)
       commit('changeGoodsList', goodsList)
       commit('changeClearNum', clearNum)
     }

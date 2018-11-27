@@ -5,9 +5,9 @@
       <div class="cutOffLine"></div>
       <div id="goodsinfo">
         <div class="num" ref="num">
-          <span class="sub fl" @click="subCount" ref="sub">_</span>
+          <span class="sub fl" @click="subCount" :class="{disable:subDisabled}">_</span>
           <input type="text" class="fl" v-model="cartCount">
-          <span class="add fr" @click="addCount" ref="add">+</span>
+          <span class="add fr" @click="addCount" ref="add" :class="{disable:addDisabled}">+</span>
         </div>
         <div ref="tabWrap" class="tabWrap">
           <div class="tabContent" v-for="(item,index) in sku.keys" :key="index">
@@ -76,7 +76,17 @@ export default {
       name: '',
       goodsId: '',
       newHaveChangedId: '',
-      goodsEmpty: false
+      goodsEmpty: false,
+      subDisabled: false,
+      addDisabled: false
+    }
+  },
+  watch: {
+    cartCount (v) {
+      this.changeStyle(v)
+    },
+    maxCount () {
+      this.changeStyle(this.cartCount)
     }
   },
   computed: mapState({
@@ -85,9 +95,10 @@ export default {
     from: state => state.cart.from
   }),
   methods: {
-    ...mapMutations(['changeNowPrice', 'changeMaxCount']),
+    ...mapMutations(['changeNowPrice', 'changeMaxCount', 'changePopupVisible']),
     addCount () {
-      if (this.cartCount > this.maxCount) {
+      this.cartCount++
+      if (this.cartCount >= this.maxCount) {
         Toast({
           message: '商品库存不足',
           position: 'center',
@@ -98,13 +109,30 @@ export default {
         }
         this.cartCount = this.maxCount
       }
-      this.cartCount++
     },
 
     subCount () {
       this.cartCount--
       if (this.cartCount < 2) {
         this.cartCount = 1
+        Toast({
+          message: '不能再少了',
+          position: 'center',
+          duration: 500
+        })
+      }
+    },
+    changeStyle (v) {
+      console.log(this.maxCount)
+      if (v >= this.maxCount) {
+        this.addDisabled = true
+      } else {
+        this.addDisabled = false
+      }
+      if (v === 1) {
+        this.subDisabled = true
+      } else {
+        this.subDisabled = false
       }
     },
     isAllCheck () {
@@ -169,7 +197,7 @@ export default {
               position: 'bottom',
               duration: 500
             })
-            // this.getCartNum()
+            this.changePopupVisible(false)
           } else {
             Toast({
               message: res.data.message,
@@ -316,7 +344,6 @@ export default {
           aResult.push(aComb)
         }
       }
-
       return aResult
     },
 
@@ -500,8 +527,12 @@ export default {
     this.coverImage = this.goods.coverImage
     this.name = this.goods.name
     this.goodsId = this.goods.id
-    if (typeof (this.maxCount) === 'number' && this.maxCount === 0) {
-      this.goodsEmpty = true
+    console.log(this.sku.data)
+    if (typeof (this.maxCount) === 'number') {
+      this.changeStyle(1)
+      if (this.maxCount === 0) {
+        this.goodsEmpty = true
+      }
     }
   }
 }
@@ -534,7 +565,7 @@ export default {
       margin-top -36px
     .add
       margin-top 6px
-    .span.disable
+    span.disable
       color #ccc
     input
       width 190px

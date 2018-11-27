@@ -1,7 +1,7 @@
 <template>
   <div class="cartOperate border-top">
     <div class="checkIcon"><check-icon :value.sync="check" @click.native="checkAll"> </check-icon></div>
-    <span class="all" >全选</span>
+    <span class="all" >全选{{check}}</span>
     <span class="price" v-if="!showModify">￥{{price.toFixed(2)}}</span>
     <span class="btn" :class="{active:clearBtn}" v-if="!showModify" @click="buy">去结算</span>
     <span class="btn delBtn" :class="{active:clearBtn}" v-else @click="delCheck">删除所选</span>
@@ -54,9 +54,11 @@ export default {
   }),
   watch: {
     isAllSelect: function (v) {
+      console.log(v, '操作isAllSelect')
       this.check = v
     },
     check: function (v) {
+      console.log(v, '操作check')
       this.changeIsAllSelect(v)
     },
     $route (to, from) {
@@ -83,14 +85,11 @@ export default {
   },
   methods: {
     ...mapMutations(['changeGoodsList', 'changeIsAllSelect']),
-
     checkAll () {
       let goodsList = this.goodsList
       for (let i in goodsList) {
+        console.log(goodsList)
         if (this.check) {
-          // if (goodsList[i].stock !== 0) {
-          //   goodsList[i].value = true
-          // }
           goodsList[i].value = true
           this.changeIsAllSelect(true)
         } else {
@@ -101,6 +100,7 @@ export default {
       this.changeGoodsList(goodsList)
     },
     delCheck () {
+      // 删除所选
       let checkGoodsList = []
       let notCheckGoodsList = []
       let id = ''

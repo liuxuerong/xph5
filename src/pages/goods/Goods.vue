@@ -80,7 +80,7 @@ export default {
       categoryId: '',
       noMore: false,
       showCart: false,
-      currentIndex: 0,
+      currentIndex: 1,
       emptyObj: {
         emptyImg: '/static/images/commentEmptyGoods.png',
         emptyBold: '暂无商品',
@@ -89,9 +89,6 @@ export default {
         buttonRouter: null
       }
     }
-  },
-  computed: {
-
   },
   methods: {
 
@@ -145,14 +142,16 @@ export default {
     },
     initData () {
       let data = storage.getLocalStorage(goodsListData)
-      console.log(data)
       let index = this.$route.params.index
       let innerIndex = this.$route.params.innerIndex
+      let all = data[index].children[innerIndex]
+      this.title = all.catName
+      all.catName = '全部'
+      this.tabbar.push(all)
       this.currentList = data[index].children[innerIndex].children
       for (let i = 0; i < this.currentList.length; i++) {
         this.tabbar.push(this.currentList[i])
       }
-      this.title = data[index].children[innerIndex].catName
       this.categoryId = this.tabbar[this.currentIndex].id
       this.getGoodsList(this.categoryId, this.page)
     }
