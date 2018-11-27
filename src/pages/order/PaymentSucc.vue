@@ -4,7 +4,7 @@
     <div class="paymentSuccCon">
       <div class="paymentImg"></div>
       <span class="paymentText">支付成功</span>
-      <p class="paymentNum">￥2357</p>
+      <p class="paymentNum" v-if="immedPaymentMony">￥{{immedPaymentMony}}</p>
       <div class="paymentBtn clearfix">
         <router-link class="pageJump" to="/orderList/2">查看订单</router-link>
         <router-link class="pageJump" to="/find">返回首页</router-link>
@@ -14,14 +14,25 @@
 </template>
 <script>
 import SearchTitle from './ComOrderSearchTitle'
+import {
+  storage
+} from 'util/storage'
 export default {
   data () {
     return {
-
+      immedPaymentMony: ''
     }
   },
   components: {
     SearchTitle
+  },
+  methods: {
+    immedPaymentRender () {
+      this.immedPaymentMony = storage.getLocalStorage('immedPaymentMony')
+    }
+  },
+  mounted () {
+    this.immedPaymentRender()
   }
 }
 </script>

@@ -6,7 +6,8 @@
       <div class="goodsPrice">
         <span>￥ {{activityGoods.goodsActivityPrice}}</span>
         <del>￥ {{activityGoods.goodsOriginalPrice}}</del>
-        <div class="stopTime">距结束{{activityGoods.endDay}}天</div>
+        <div class="stopTime" v-if="activityGoods.showTimeType ===1">距结束{{activityGoods.endDay}}天</div>
+        <div class="stopTime" v-else>距结束{{time}}</div>
       </div>
     </div>
   </div>
@@ -17,7 +18,9 @@ export default {
   props: ['activityGoods'],
   data () {
     return {
-      imageUrl: config.imageUrl // 图片路径
+      imageUrl: config.imageUrl, // 图片路径
+      beginTime: 0,
+      time: ''
     }
   },
   components: {
@@ -27,10 +30,32 @@ export default {
     // 商品详情
     activityGoodsDetails (goodsId) {
       this.$router.push('/details/' + goodsId)
+    },
+    countDown (t) {
+      t = new Date(t)
+      let h = t.getHours() > 9 ? t.getHours() : '0' + t.getHours()
+      let m = t.getMinutes() > 9 ? t.getMinutes() : '0' + t.getMinutes()
+      let s = t.getSeconds() > 9 ? t.getSeconds() : '0' + t.getSeconds()
+      return `${h}:${m}:${s}`
+    },
+    setNewSwiperData () {
+      this.beginTime += 1000
+      this.time = []
+      let t = this.activityGoods.activityEndTime
+      if (t) {
+        t = this.countDown(t - this.beginTime)
+        this.time.push(t)
+      } else {
+        this.time.push('')
+      }
+      this.time = this.time + ''
     }
   },
   mounted () {
-    console.log(this.activityGoods)
+    this.setNewSwiperData()
+    this.timer = setInterval(() => {
+      this.setNewSwiperData()
+    }, 1000)
   }
 }
 </script>

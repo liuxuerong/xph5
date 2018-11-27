@@ -27,6 +27,9 @@
   </div>
 </template>
 <script>
+import {
+  storage
+} from 'util/storage'
 import SearchTitle from './ComOrderSearchTitle'
 import {payMoney, subOrderDetail} from 'util/netApi'
 import {http} from 'util/request'
@@ -82,6 +85,7 @@ export default {
               dom.innerHTML = response.data.body
               document.body.appendChild(dom)
               document.forms[0].submit()
+              storage.setLocalStorage('immedPaymentMony', this.readioActive)
             } else if (this.readioActive === 5) {
               window.location.href = 'weixin://wap/pay?appid=' + response.data.body.appid + '&noncestr=' + response.data.body.noncestr + '&package=' + response.data.body.package + '&prepayid=' + response.data.body.prepayid + '&sign=' + response.data.body.sign + '&timestamp=' + response.data.body.timestamp
             }

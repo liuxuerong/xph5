@@ -159,3 +159,4 @@ export const customerService = 'http://jdhoe.udesk.cn/im_client/?web_plugin_id=5
 // 活动
 export const activityInfo = { url: '/article/api/activity/info', method: 'GET', version: v1 } // 限时购活动
 export const activityElies = { url: '/activity/api/elies', method: 'GET', version: v1 } // 限时购商品
+export const goodsGroup = { url: '/goods/list/group', method: 'GET', version: v1, join: true } // 限时购商品查看更多

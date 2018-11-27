@@ -8,35 +8,37 @@
         <div class="headerSet border-bottom">
           <span class="setProperty">头像</span>
           <div class="headerImg">
-            <img v-if="headImage === ''" src="/static/images/personalHeader.png">
+            <img v-if="!headImage" src="/static/images/personalHeader.png">
             <img v-else :src="imageUrl+headImage">
             <input type="file" name="" class="headerImgFile" @change="headerUpfile($event)">
           </div>
         </div>
-        <userinfo-popset setPro="会员等级" :inputData="memberLevelName+'会员'" @click.native="memberGrade"></userinfo-popset>
-        <userinfo-popset setPro="我的收货地址" @click.native="addressAdmin"></userinfo-popset>
+        <div class="setItemPop border-bottom" v-for="(item,index) in title1" :key="index" @click="greadAddress(index)">
+          <span class="setProperty">{{item.name}}</span>
+          <input type="text" class="setInfoInput" v-if="index===0" v-model="memberLevelName" readonly>
+          <i class="setIcon" v-if="item.showIcon"></i>
+        </div>
       </div>
-
       <!-- 基础设置 -->
-      <userinfo-popset setPro="绑定手机号" :inputData="phone"></userinfo-popset>
-      <div class="setItemPop border-bottom">
-        <span class="setProperty">昵称</span>
-        <input type="text" class="setInfoInput" v-model="name">
+      <div class="setItemPop border-bottom" v-for="(item,index) in title2" :key="index" @click="userBasicInfo(index)">
+        <span class="setProperty">{{item.name}}</span>
+        <i class="setIcon" v-if="index!==0"></i>
+        <input type="text" class="setInfoInput" v-if="index===0" v-model="phone" readonly>
+        <input type="text" class="setInfoInput" v-if="index===1" v-model="modifyName" readonly>
+        <input type="text" class="setInfoInput" v-if="index===2" v-model="sex" readonly>
+        <input type="text" class="setInfoInput" v-if="index===3" v-model="age" readonly>
       </div>
-      <userinfo-popset setPro="性别" :inputData="sex" @click.native="sexChangeShow"></userinfo-popset>
-      <!-- <userinfo-popset setPro="出生日期" :inputData="age" @click.native="ageChangeShow"></userinfo-popset> -->
-      <group class="setBirthdayPop">
-        <datetime
-          class="setBirthday"
-          title="出生日期"
-          :readonly="readonly"
-          v-model="age"
-          @on-clear="ageChangeShow"
-          :min-year='1960'
-          @on-change="change"
-          @on-show="ageChangeShow"
-          @on-confirm="onConfirm"></datetime>
-      </group>
+      <mt-datetime-picker
+        type="date"
+        ref="picker"
+        year-format="{value} 年"
+        month-format="{value} 月"
+        date-format="{value} 日"
+        @confirm="handleConfirm"
+        :startDate="startDate"
+        :endDate="endDate"
+        >
+      </mt-datetime-picker>
       <mt-popup
         class="sexPopWrapper"
         v-model="popupVisible"
@@ -44,41 +46,55 @@
         popup-transition="popup-fade"
         position="bottom"
         popup >
-        <change-item v-for="(item , index) of popData" :key="index" :content="item" :index="index" @sendValueToParent = "getValueFromChild"></change-item>
+        <change-item v-for="(item , index) of popData" :key="index" :content="item" :index="index" @sendValueToParent="getValueFromChild"></change-item>
       </mt-popup>
     </div>
   </div>
 </template>
 <script>
-import router from '@/router/index.js'
 import UserinfoHeader from './components/ComUserSetHeader'
 import UserinfoPopset from './ComSetInfoPop'
 import ChangeItem from './ComChangeItem'
 import CropperHeader from './ComCropperHeader'
-import { Datetime, Group } from 'vux'
 import { setMemberData, memberData } from 'util/netApi'
 import { http } from 'util/request'
 import { Popup, DatetimePicker, Toast } from 'mint-ui'
+import moment from 'moment'// 格式化时间
 import notice from 'util/notice.js'
 import { config } from 'util/config' // 图片路径
+import {
+  storage
+} from 'util/storage'
 import axios from 'axios'
 import {uploadPic} from '@/func/upload'
 export default {
   data () {
     return {
       name: '',
-      imageUrl: config.imageUrl,
       headImage: '',
       sexIndex: '',
       phone: '',
       sex: '', // 1、男 2、女 3、保密
       age: '',
+      modifyName: '',
       popupVisible: false,
-      popType: 0,
       popData: [],
       memberLevelName: '',
-      readonly: false,
-      birthdayStatus: 1
+      birthdayStatus: 1,
+      imageUrl: config.imageUrl,
+      startDate: new Date('1940-01-01'),
+      endDate: new Date(),
+      list: [],
+      title1: [
+        {name: '会员等级', inputShow: true, showIcon: false},
+        {name: '我的收货地址', inputShow: false, showIcon: true}
+      ],
+      title2: [
+        {name: '绑定手机号', inputShow: false},
+        {name: '昵称', inputShow: true},
+        {name: '性别', inputShow: true},
+        {name: '出生日期', inputShow: true}
+      ]
     }
   },
   components: {
@@ -87,8 +103,6 @@ export default {
     UserinfoPopset,
     'change-item': ChangeItem,
     CropperHeader,
-    Datetime,
-    Group,
     'mt-datetime-picker': DatetimePicker
   },
   methods: {
@@ -97,17 +111,21 @@ export default {
       http(memberData).then((response) => {
         console.log(response)
         let data = response.data.body
-        this.memberLevelName = data.memberLevelName
+        this.memberLevelName = data.memberLevelName + '会员'
         this.name = data.name
+        let type = this.$route.params.type
+        if (type === undefined) {
+          this.modifyName = this.name
+        } else {
+          this.modifyName = storage.getLocalStorage('modifyName')
+        }
         if (data.headImage !== '' && data.headImage != null) {
           this.headImage = data.headImage
         }
         if (data.phone !== '' && data.phone != null) {
-          this.phoneShow = true
           this.phone = data.phone.substring(0, 3) + '****' + data.phone.substring(7, 11)
         }
         if (data.ageGroup !== '' && data.ageGroup != null) {
-          this.ageShow = true
           this.age = data.ageGroup
           if (data.birthdayStatus === 2) {
             this.birthdayStatus = 2
@@ -120,6 +138,7 @@ export default {
         }
       })
     },
+    // 头像上传
     headerUpfile (e) {
       let fileKey = uploadPic(e, axios.post)
       let key = ''
@@ -127,65 +146,51 @@ export default {
         key = res.data.body.key
         this.headImage = key
       })
-
-      // this.headImage = fileKey.data.key
-      // console.log(fileKey)
-      // let ss = e.target.files
-      // let formData = new FormData()
-      // formData.append('file', ss[0])
-      // let cf = {
-      //   headers: {
-      //     'Content-Type': 'multipart/form-data',
-      //     'Authorization': storage.getLocalStorage(accessToken)
-      //   }
-      // }
-      // axios.post(config.baseUrl + 'file/upload', formData, cf).then((response) => {
-      //   if (response.data.code === 0) {
-      //     this.headImage = response.data.body.key
-      //   }
-      // }).catch((err) => {
-      //   console.log(err)
-      // })
     },
-    // 性别选择
-    sexChangeShow () {
-      // 弹窗显示
-      this.popupVisible = true
-      this.popType = 1
-      // 改变数据
-      this.popData = ['男', '女', '保密']
-    },
-    change (value) {
-      console.log('change', value)
-    },
-    // 年龄选择
-    ageChangeShow () {
-      this.popType = 2
-      if (this.birthdayStatus === 2) {
-        this.readonly = true
-        Toast({
-          message: '生日信息修改，请联系在线客服，谢谢',
-          position: 'middle',
-          duration: 2000
-        })
+    // 会员等级 收货地址
+    greadAddress (index) {
+      if (index === 0) {
+        this.$router.push('/toolCenter')
+      } else if (index === 1) {
+        this.$router.push('/addressAdmin')
       }
     },
-    onConfirm (val) {
-      this.popType = 2
-      this.ageGroup = val
+    openPicker () {
+      this.$refs.picker.open()
     },
-    // 收货地址
-    addressAdmin () {
-      router.push('/addressAdmin')
+    handleConfirm (data) {
+      let date = moment(data).format('YYYY-MM-DD')
+      this.age = date
+    },
+    // 手机号 昵称 性别 出生日期
+    userBasicInfo (index) {
+      console.log(index)
+      if (index === 0) {
+        // 手机号显示
+      } else if (index === 1) {
+        // 昵称
+        this.$router.push('/userNamePer')
+      } else if (index === 2) {
+        // 性别
+        this.popupVisible = true
+        this.popData = ['男', '女', '保密']
+      } else if (index === 3) {
+        // 出生日期
+        if (this.birthdayStatus === 1) {
+          this.openPicker()
+        } else {
+          Toast({
+            message: '生日信息修改，请联系在线客服，谢谢',
+            position: 'middle',
+            duration: 2000
+          })
+        }
+      }
     },
     // 获取弹窗子组件数据选择
     getValueFromChild (val1, val2, val3) {
-      if (this.popType === 1) {
-        this.sexIndex = val1
-        this.sex = val2
-      } else if (this.popType === 2) {
-        this.age = val2
-      }
+      this.sex = val2
+      this.sexIndex = val1
       this.popupVisible = val3
     },
     // 完善资料信心  完成点击事件
@@ -193,20 +198,17 @@ export default {
       let _this = this
       let param = {
         headImage: this.headImage,
-        name: this.name,
+        name: this.modifyName,
         sex: this.sexIndex,
         ageGroup: this.age
       }
       http(setMemberData, param).then((response) => {
         if (response.data.code === 0) {
           notice.toast('设置成功', '2000', 'success')
-          _this.$router.push('./personCenter')
+          storage.delLocalStorage('modifyName')
+          _this.$router.push('/personCenter')
         }
       })
-    },
-    // 会员等级页面跳转
-    memberGrade () {
-      this.$router.push('/toolCenter')
     }
   },
   // 事件监听
@@ -215,59 +217,25 @@ export default {
       if (to.name === 'userInfoSet') {
         this.getUserInfo()
       }
-    },
-    sex: {
-      handler (val, oldVal) {
-        if (this.sex !== '' && this.sex != null) {
-          this.sexShow = true
-        }
-      }
-    },
-    age: {
-      handler (val, oldVal) {
-        if (this.age !== '' && this.age != null) {
-          this.ageShow = true
-        }
-      }
     }
   },
   mounted () {
     this.getUserInfo()
-  },
-  // 计算属性
-  computed: {
-    p: {
-      get () {
-        return this.num
-      }
-    }
   }
 }
 </script>
 <style lang="stylus">
   @import "~styles/mixins.styl";
-  .vux-no-group-title
-    margin-top 0!important
-  .dp-header .dp-item
-    font-size 46px!important
-  .weui-cell
-    p
-      font-size 46px!important
-      color #262626!important
-    .vux-cell-value
-      font-size 46px!important
-      color #808080!important
-  .weui-cell_access .weui-cell__ft:after
-    display none!important
-  .dp-container
+  .picker-toolbar
     width 100%
-    height 500px!important
-  .dp-header
     height 130px
     line-height 130px
+    .mint-datetime-action
+      height 130px
+      line-height 130px
+      font-size 46px
+  .picker-item
     font-size 46px!important
-    box-sizing border-box
-    padding 0 50px
   .setItemPop
     width 100%
     height 148px
@@ -282,12 +250,6 @@ export default {
     line-height 148px
     font-size 46px
     color #262626
-  .
-    float right
-    width 24px
-    height 45px
-    bgImage('/static/icons/enterNextGray')
-    margin-top 51px
   .setInfoInput
     width auto
     height 146px
@@ -326,11 +288,19 @@ export default {
 
 </style>
 <style lang="stylus" scoped>
+@import "~styles/mixins.styl";
 .wrapper
   width 100%
   box-sizing border-box
   padding-top 132px
   background #fff
+  .setIcon
+    float right
+    width 24px
+    height 45px
+    margin-left 30px
+    margin-top 50px
+    bgImage('/static/icons/enterNextGray')
 .userInfoSetCon
   width 100%
   background #F5F5F5
