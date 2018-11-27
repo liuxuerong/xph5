@@ -11,7 +11,7 @@
       <span v-show="!computedTime" @click="obtainCodeBtn">获取验证码</span>
       <span v-show="computedTime">已发送 {{computedTime}} s</span>
     </div>
-</div>
+  </div>
 </template>
 <script>
 import {Toast} from 'mint-ui'

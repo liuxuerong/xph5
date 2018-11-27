@@ -15,7 +15,8 @@ export const getOpenId = { url: '/auth/token', method: 'GET', version: '' } // �
 export const verifySms = { url: '/sms', method: 'GET', version: v1, join: true } // 短信验证
 export const restPassword = { url: '/member/api/rest/password', method: 'PUT', version: v1 } // 重置密码
 export const modifyPassword = { url: '/member/api/updateMemberPassword', method: 'PUT', version: v1 } // 修改密码
-export const modifyPhone = { url: '/member/api/verificationPhone	', method: 'POST', version: v1 } // 修改密码
+export const modifyPhone = { url: '/member/api/verificationPhone', method: 'POST', version: v1 } // 修改密码
+export const forgetPassword = { url: '/member/obtain-password', method: 'POST', version: v1 }
 
 // 收货地址
 export const addDelivery = { url: '/delivery/api', method: 'POST', version: v1 } // 新增地址

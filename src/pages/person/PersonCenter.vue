@@ -13,8 +13,7 @@
           <img v-if="list.memberHead" :src="imageUrl+list.memberHead" class="headerImg" @click="userDataSet">
           <img v-else src="/static/images/memberHeader.png" class="headerImg"  @click="userDataSet">
           <div class="headerRightText">
-            <h2 v-if="list.memberName" class="headerName" @click="userDataSet">{{list.memberName}}</h2>
-            <h2 v-else class="headerName" @click="userDataSet">{{phone}}</h2>
+            <h2 class="headerName" @click="userDataSet">{{phone}}</h2>
             <span class="memberGrade" v-if="list.memberLevelName === '普卡'"><i class="memberGradeIcon01"></i>普卡会员</span>
             <span class="memberGrade" v-if="list.memberLevelName === '银卡'"><i class="memberGradeIcon02"></i>银卡会员</span>
             <span class="memberGrade" v-if="list.memberLevelName === '金卡'"><i class="memberGradeIcon03"></i>金卡会员</span>
@@ -192,8 +191,14 @@ export default {
           this.cardScrollWidth = (this.coupons.length * 970 - 50) / 112.5
           // this.$refs.cardScrollWidth.style.width = (this.coupons.length * 970 - 50) / 112.5 + 'rem'
         }
-
+        let operPhone = Number(data.memberName)
+        if ((/^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/.test(operPhone))) {
+          this.phone = operPhone.toString().substring(0, 3) + '****' + operPhone.toString().substring(7, 11)
+        } else {
+          this.phone = operPhone
+        }
         this.list = response.data.body
+        console.log(typeof Number(data.memberName))
         this.name = data.memberName
         this.orderNum = data.orderCount
         this.memberHead = data.memberHead
@@ -233,7 +238,7 @@ export default {
           for (var i = 0; i < data.list.length; i++) {
             if (data.list[i].idDefault === 1) {
               this.addName = data.list[i].receiverName
-              this.phone = data.list[i].phone.substring(0, 3) + '****' + data.list[i].phone.substring(7, 11)
+
               // console.log(this.phone)
               if (data.list[i].province === '上海' || data.list[i].province === '重庆' || data.list[i].province === '北京' || data.list[i].province === '天津') {
                 this.address = data.list[i].city + data.list[i].area + data.list[i].detailedAddr

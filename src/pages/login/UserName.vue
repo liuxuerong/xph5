@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <div class="userTop">
-            <span class="prevOper" @click="prevOperBtn">&lt;</span>
+            <span class="prevOper" @click="prevOperBtn"></span>
             <span class="usernameNext" @click="setUserNameNext">下一步</span>
         </div>
         <div class="userContent">
@@ -60,6 +60,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  @import "~styles/mixins.styl";
     body,html
         width 100%
         height 100%
@@ -77,13 +78,13 @@ export default {
         width 100%
         height 52px
         line-height 52px
+        box-sizing border-box
+        padding 0 50px
         .prevOper
-            float left
-            width 10%
-            font-size 60px
-            font-weight 600
-            color #282828
-            text-align center
+          float left
+          width 32px
+          height 58px
+          bgImage('/static/icons/back')
         .usernameNext
             float right
             width 18%

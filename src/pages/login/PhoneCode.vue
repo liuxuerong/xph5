@@ -70,7 +70,7 @@ export default {
         http(getVerifyCode, params).then((response) => {
           console.log(response)
           if (response.data.code === 0) {
-            this.computedTime = 60
+            this.computedTime = 90
             this.timer = setInterval(() => {
               this.computedTime--
               if (this.computedTime === 0) {
@@ -96,11 +96,9 @@ export default {
           type: 2,
           userType: 1
         }
-        console.log(666)
         http(getLogin, params).then((response) => {
-          console.log(response)
           if (response.data.code === 0) {
-            if (response.data.body.create) {
+            if (response.data.code === 0) {
               storage.setLocalStorage('userId', response.data.body.user_id)
               storage.setLocalStorage(accessToken, 'Bearer ' + response.data.body.access_token)
               _this.$router.push('/')
