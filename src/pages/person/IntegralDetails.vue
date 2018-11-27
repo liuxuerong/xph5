@@ -89,7 +89,7 @@ export default {
     background #F5F5F5
   .commonEmpty
     background-color #fff!important
-    padding-top 400px!important
+    padding-top 160px!important
     .router
      background #fff!important
 </style>

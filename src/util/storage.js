@@ -33,7 +33,7 @@ const storage = {
   },
   // 删除本地存储
   delLocalStorage (name) {
-    localStorage.removeItem('name')
+    localStorage.removeItem(name)
   }
 }
 

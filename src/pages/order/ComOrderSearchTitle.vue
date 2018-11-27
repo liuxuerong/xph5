@@ -28,7 +28,8 @@ export default {
   data () {
     return {
       searchState: false,
-      searchName: ''
+      searchName: '',
+      path: Number
     }
   },
   // 接受父级数据
@@ -39,7 +40,16 @@ export default {
   methods: {
     // 返回上一步
     backPrevOper () {
-      this.$router.back(-1)
+      console.log(this.$route.path)
+      let path = this.$route.path
+      if (path === '/paymentSucc') {
+        // 支付成功返回个人中心
+        this.$router.push('/personCenter')
+      } else if (path === '/paymentSucc') {
+        console.log(666)
+      } else {
+        this.$router.back(-1)
+      }
     },
     // 评论提交
     commentSubmit () {

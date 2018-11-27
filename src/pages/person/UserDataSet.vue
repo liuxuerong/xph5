@@ -190,6 +190,7 @@ export default {
     },
     // 完善资料信心  完成点击事件
     onOperComplete () {
+      let _this = this
       let param = {
         headImage: this.headImage,
         name: this.name,
@@ -199,6 +200,7 @@ export default {
       http(setMemberData, param).then((response) => {
         if (response.data.code === 0) {
           notice.toast('设置成功', '2000', 'success')
+          _this.$router.push('./personCenter')
         }
       })
     },

@@ -1,14 +1,14 @@
 <template>
-    <div class="wrapper">
-        <div class="userTop">
-            <span class="prevOper" @click="prevOperBtn">&lt;</span>
-            <span class="remberPassword" @click="remberPasswordNext">下一步</span>
-        </div>
-        <div class="userContent">
-            <h3>找回密码</h3>
-            <phone-code ref="phoneCode"></phone-code>
-        </div>
-    </div>
+	<div class="wrapper">
+		<div class="userTop">
+			<span class="prevOper" @click="prevOperBtn"></span>
+			<span class="remberPassword" @click="remberPasswordNext">下一步</span>
+		</div>
+		<div class="userContent">
+			<h3>找回密码</h3>
+			<phone-code ref="phoneCode" :type = '1'></phone-code>
+		</div>
+	</div>
 </template>
 <script type="text/javascript">
 import PhoneCode from './components/ComPhonecode'
@@ -20,6 +20,11 @@ export default {
   components: {
     PhoneCode
   },
+  watch: {
+    '$route.path': function (newVal, oldVal) {
+      // console.log(newVal, oldVal)
+    }
+  },
   computed: mapState({
     returnVal: state => state.returnVal.returnVal
   }),
@@ -27,6 +32,7 @@ export default {
     remberPasswordNext () {
       let _this = this
       this.$refs.phoneCode.submitCode()
+      console.log(this.returnVal)
       if (this.returnVal) {
         _this.$router.push('/userPassword/2')
       }
@@ -39,6 +45,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+	@import "~styles/mixins.styl";
 	body,html
 		width 100%
 		height 100%
@@ -54,15 +61,15 @@ export default {
 		padding-top 40px
 	.userTop
 		width 100%
+		box-sizing border-box
+		padding 0 50px
 		height 52px
 		line-height 52px
 		.prevOper
 			float left
-			width 10%
-			font-size 60px
-			font-weight 600
-			color #282828
-			text-align center
+			width 32px
+			height 58px
+			bgImage('/static/icons/back')
 		.remberPassword
 			float right
 			width 18%

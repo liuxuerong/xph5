@@ -7,7 +7,7 @@
           <img v-if="childItem.pic != ''" :src="imageUrl+childItem.pic" alt="">
           <img v-else src="/static/images/personalHeader.png">
           <div class="goodsinfo">
-            <h3>{{childItem.goodsName}}----{{i}}</h3>
+            <h3>{{childItem.goodsName}}</h3>
             <div class="goodsSpecWrapper clearfix">
               <span class="goodsSpec" v-for="(spec,n) in JSON.parse(childItem.spec)" :key="n">{{spec.value}}</span>
             </div>
@@ -49,8 +49,7 @@
           <div class="totalPrice" v-if="type === '-1'">
             <span class="totalPayment" v-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===undefined">待付:￥ {{item.needPayAmount}}</span>
             <span class="totalPayment" v-else-if="item.status=='7' || item.status=='8'"><p >未付</p>:￥ {{item.needPayAmount}}</span>
-            <span class="totalPayment" v-else-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===6"><p >退款</p>:￥ {{item.needPayAmount}}</span>
-            <span class="totalPayment" v-else-if="item.status=='1' && item.memberOrderGoods[0].orderItemStatus===6"><p >退款</p>:￥ {{item.needPayAmount}}</span>
+            <span class="totalPayment" v-else-if="item.memberOrderGoods[0].orderItemStatus && item.memberOrderGoods[0].orderItemStatus===9"><p >退款</p>:￥ {{item.needPayAmount}}</span>
             <span class="totalPayment" v-else-if="item.status !=='1' || item.status !=='7' || item.status !=='8'"><p >已付</p>:￥ {{item.needPayAmount}}</span>
             <span class="totalPayment" v-else-if="item.status !=='1' || item.status !=='7' || item.status !=='8'"><p >已付</p>:￥ {{item.needPayAmount}}</span>
             <!-- 状态 -->
@@ -172,6 +171,7 @@ export default {
         status: type
       }
       http(OrderList, params).then((response) => {
+        console.log(response)
         if (response.data.code === 0) {
           this.list = response.data.body.list
         }

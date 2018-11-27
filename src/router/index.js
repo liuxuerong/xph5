@@ -149,21 +149,25 @@ const router = new Router({
     {
       path: '/userInfoSet',
       name: 'userInfoSet',
+      meta: { requireLogin: true },
       component: resolve => require(['@/pages/person/UserDataSet'], resolve)
     },
     {
       path: '/goodsAddress/:type/:id?',
       name: 'goodsAddress',
+      meta: { requireLogin: true },
       component: resolve => require(['@/pages/person/GoodsAddress'], resolve)
     },
     {
       path: '/addressAdmin/:need?',
       name: 'addressAdmin',
+      meta: { requireLogin: true },
       component: resolve => require(['@/pages/person/AddressAdmin'], resolve)
     },
     {
       path: '/toolCenter',
       name: 'toolCenter',
+      meta: { requireLogin: true },
       component: resolve => require(['@/pages/person/ToolCenter'], resolve)
     },
     {
@@ -173,21 +177,25 @@ const router = new Router({
     }, {
       path: '/orderIndex',
       name: 'orderIndex',
+      meta: { requireLogin: true },
       component: resolve => require(['@/pages/order/OrderIndex'], resolve)
     },
     {
       path: '/orderList/:type',
       name: 'orderList',
+      meta: { requireLogin: true },
       component: resolve => require(['@/pages/order/OrderList'], resolve)
     },
     {
       path: '/orderDetails/:type/:orderCode',
       name: 'orderDetails',
+      meta: { requireLogin: true },
       component: resolve => require(['@/pages/order/OrderDetails'], resolve)
     },
     {
       path: '/immedPayment/:orderCode',
       name: 'immedPayment',
+      meta: { requireLogin: true },
       component: resolve => require(['@/pages/order/ImmedPayment'], resolve)
       // meta: {
       //   isKeepAlive: false
@@ -196,21 +204,25 @@ const router = new Router({
     {
       path: '/afterSaleOrder/:type/:orderId',
       name: 'afterSaleOrder',
+      meta: { requireLogin: true },
       component: resolve => require(['@/pages/order/AfterSaleOrder'], resolve)
     },
     {
       path: '/applyRefund/:type/:orderId',
       name: 'applyRefund',
+      meta: { requireLogin: true },
       component: resolve => require(['@/pages/order/ApplyRefund'], resolve)
     },
     {
       path: '/immedEvaluate/:orderCode',
       name: 'immedEvaluate',
+      meta: { requireLogin: true },
       component: resolve => require(['@/pages/order/ImmedEvaluate'], resolve)
     },
     {
       path: '/softwareSeting',
       name: 'softwareSeting',
+      meta: { requireLogin: true },
       component: resolve => require(['@/pages/person/SoftwareSeting'], resolve)
     },
     {
@@ -221,21 +233,25 @@ const router = new Router({
     {
       path: '/feedBack',
       name: 'feedBack',
+      meta: { requireLogin: true },
       component: resolve => require(['@/pages/person/FeedBack'], resolve)
     },
     {
       path: '/aboutUs',
       name: 'aboutUs',
+      meta: { requireLogin: true },
       component: resolve => require(['@/pages/person/AboutUs'], resolve)
     },
     {
       path: '/memberCode',
       name: 'memberCode',
+      meta: { requireLogin: true },
       component: resolve => require(['@/pages/person/MemberCode'], resolve)
     },
     {
       path: '/integralDetails',
       name: 'integralDetails',
+      meta: { requireLogin: true },
       component: resolve => require(['@/pages/person/IntegralDetails'], resolve)
     },
     {
@@ -246,26 +262,31 @@ const router = new Router({
     {
       path: '/cardVoucher',
       name: 'cardVoucher',
+      meta: { requireLogin: true },
       component: resolve => require(['@/pages/person/CardVoucher'], resolve)
     },
     {
       path: '/cardDetails/:type/:mainType/:id',
       name: 'cardDetails',
+      meta: { requireLogin: true },
       component: resolve => require(['@/pages/person/CardDetails'], resolve)
     },
     {
       path: '/chooseCoupons',
       name: 'chooseCoupons',
+      meta: { requireLogin: true },
       component: resolve => require(['@/pages/createOrder/ChooseCoupons'], resolve)
     },
     {
       path: '/toolStore',
       name: 'toolStore',
+      meta: { requireLogin: true },
       component: resolve => require(['@/pages/person/ToolStore'], resolve)
     },
     {
       path: '/watchLogistics',
       name: 'watchLogistics',
+      meta: { requireLogin: true },
       component: resolve => require(['@/pages/order/WatchLogistics'], resolve)
     },
     {
@@ -276,6 +297,7 @@ const router = new Router({
     {
       path: '/returnGoods/:orderId',
       name: 'returnGoods',
+      meta: { requireLogin: true },
       component: resolve => require(['@/pages/order/ReturnGoods'], resolve)
     },
     {
@@ -296,6 +318,7 @@ const router = new Router({
     {
       path: '/paymentSucc',
       name: 'paymentSucc',
+      meta: { requireLogin: true },
       component: resolve => require(['@/pages/order/PaymentSucc'], resolve)
     },
     // ActivitysList
@@ -307,12 +330,19 @@ const router = new Router({
     {
       path: '/returnGoodsMoney/:type/:orderId',
       name: 'returnGoodsMoney',
+      meta: { requireLogin: true },
       component: resolve => require(['@/pages/order/ReturnGoodsMoney'], resolve)
     },
     {
       path: '/returnLogistics',
       name: 'returnLogistics',
+      meta: { requireLogin: true },
       component: resolve => require(['@/pages/order/ReturnLogistics'], resolve)
+    },
+    {
+      path: '/touristToolCenter',
+      name: 'touristToolCenter',
+      component: resolve => require(['@/pages/person/TouristToolCenter'], resolve)
     }
   ]
 })

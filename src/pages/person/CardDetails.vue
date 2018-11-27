@@ -16,7 +16,7 @@
             <p v-if="pastList.applyType == '3'">门店专享</p>
           </div>
           <div class="right">
-            <h3>{{pastList.name}}</h3>
+            <h3>{{pastList.name}}---1</h3>
             <div class="fullSub">
               <span v-if="pastList.condMoney != '0' && pastList.range == '1'">满 {{pastList.condMoney}}.0 可用</span>
               <span v-else-if="pastList.condMoney != '0' && pastList.range == '2'">满 {{pastList.condMoney}}.0 可用</span>
@@ -25,7 +25,7 @@
               <span v-else>无门槛</span>
               <!-- 领取状态(1-未领取 2-已领取 3-领光了) -->
               <!-- 未使用 -->
-              <span class="activityTime" v-if="list.activityStart && list.activityEnd">{{pastList.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{pastList.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
+              <span class="activityTime" v-if="pastList.activityStart && pastList.activityEnd">{{pastList.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{pastList.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
               <!-- 已使用  已过期-->
               <!-- <span v-else class="activityTime">{{pastList.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{pastList.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span> -->
             </div>
@@ -173,7 +173,7 @@ export default {
             position: 'bottom',
             duration: 5000
           })
-          this.cardDetailsRender()
+          this.$router.push('/cardDetails/2/0/' + id)
         }
       }).catch((err) => {
         console.log(err)

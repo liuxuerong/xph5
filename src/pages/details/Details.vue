@@ -10,7 +10,7 @@
         <common-swiper :swiperData="swiperData" v-if="swiperData.length" />
         <details-des :goods="goods" :activityLabel="activityLabel" v-if="goods" />
         <div class="cutOffLine"></div>
-        <details-cell :cellInfo="cellInfo[0]" v-if="showCoupon" @click.native="changeCoupponVisible(true)"/>
+        <details-cell :cellInfo="cellInfo[0]" v-if="showCoupon" @click.native="receiveCoupons"/>
         <div class="cutOffLine"></div>
 
         <details-cell :cellInfo="cellInfo[1]" @click.native="changePopupVisible(true), changeFrom(1)" />
@@ -50,7 +50,7 @@ import DetailsOperate from './components/DetailsOperate'
 import DetailsImgTextDesc from './components/DetailsImgTextDesc'
 import DetailsCommentSwiper from './components/DetailsCommentSwiper'
 import DetailsCoupon from './components/DetailsCoupon'
-
+import { accessToken } from 'util/const.js'
 import BScroll from 'better-scroll'
 import {
   mapMutations,
@@ -299,23 +299,36 @@ export default {
     },
     // 领取优惠券
     receiveCellInfo () {
-      let params = {
-        goodsId: this.$route.params.goodsId
-      }
-      http(listUseCouponByGoodsId, params).then((response) => {
-        if (response.data.code === 0) {
-          let data = response.data.body
-          if (data.length > 0) {
-            this.showCoupon = true
-            this.couponData = data
-            console.log(this.couponData)
-          }
+      if (storage.getLocalStorage(accessToken)) {
+        let params = {
+          goodsId: this.$route.params.goodsId
         }
-      })
+        http(listUseCouponByGoodsId, params).then((response) => {
+          if (response.data.code === 0) {
+            let data = response.data.body
+            if (data.length > 0) {
+              this.showCoupon = true
+              this.couponData = data
+              console.log(this.couponData)
+            }
+          }
+        })
+      }
+    },
+    // 优惠券弹窗
+    receiveCoupons () {
+      if (storage.getLocalStorage(accessToken)) {
+        this.changeCoupponVisible(true)
+      } else {
+        this.$router.push('/login')
+      }
     }
   },
   mounted () {
     this.initDeatils()
+    if (!storage.getLocalStorage(accessToken)) {
+      this.showCoupon = true
+    }
     this.receiveCellInfo()
   }
 }

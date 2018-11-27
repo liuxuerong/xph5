@@ -3,7 +3,7 @@
     <userinfo-header title="关于会员卡" oper=""></userinfo-header>
     <div class="aboutMemberCon">
       <h3 class="aboutTitle">会员等级介绍</h3>
-      <p class="introduceText">星品优汇会员成长体系包括4个等级：分别为普卡、银卡、金卡、钻卡，银卡、金卡、钻卡有效期说明：办理日起至次年12月31日。</p>
+      <p class="introduceText">星品优汇会员成长体系包括4个等级：分别为普卡、银卡、金卡、钻卡。<br />银卡、金卡、钻卡有效期说明：办理日起至次年12月31日。</p>
       <table class="aboutGroup">
         <thead>
           <tr>
@@ -94,6 +94,7 @@ export default {
     }
   },
   components: {
+    name: 'AboutMember',
     UserinfoHeader
   }
 }
@@ -102,6 +103,8 @@ export default {
   @import "~styles/mixins.styl";
   .wrapper
     width 100%
+    box-sizing border-box
+    padding-top 132px
     background #fff
   .aboutMemberCon
     width 100%

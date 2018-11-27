@@ -1,9 +1,6 @@
 <template>
   <div class="loginWrapper">
-    <div class="loginTop">
-      <span>欢迎回来</span>
-      <router-link to="/" class="backIndex">回到首页</router-link>
-    </div>
+    <login-back />
     <div class="loginInfo">
       <form id="loginInfoForm">
         <div class="loginInput userName border-bottom">
@@ -12,7 +9,7 @@
         </div>
         <div class="loginInput passWord">
           <i class="loginIcon passwordIcon"></i>
-          <input type="password" placeholder="密码" name="password" maxlength="12" v-model="password" />
+          <input type="password" autocomplete="new-password" placeholder="密码" name="password" maxlength="12" v-model="password" />
           <router-link to="/remberPassword" class="passWordOper">忘记密码？</router-link>
         </div>
       </form>
@@ -24,7 +21,7 @@
 </template>
 
 <script type="text/javascript">
-import router from '@/router/index.js'
+import LoginBack from './components/LoginBack'
 import {
   Toast
 } from 'mint-ui'
@@ -47,18 +44,27 @@ export default {
       password: ''
     }
   },
+  components: {
+    LoginBack
+  },
+  watch: {
+    $route (to, from) {
+      this.$router.go(0)
+    }
+  },
   computed: {
     // 判断手机号码
-    rightPhoneNumber: function () {
+    rightPhoneNumber () {
       return /^1\d{10}$/gi.test(this.username)
     },
     // 密码验证
-    rightPassword: function () {
+    rightPassword () {
       return /[0-9A-Za-z]{6,12}/gi.test(this.password)
     }
   },
   methods: {
-    loginBtnClick: function () {
+    loginBtnClick () {
+      let _this = this
       let param = {
         username: this.username,
         password: this.password,
@@ -66,7 +72,6 @@ export default {
         userType: 1
       }
       http(getLogin, param).then((response) => {
-        console.log(response)
         if (response.data.code === 0) {
           console.log(response.data.body.access_token)
           storage.setLocalStorage('userId', response.data.body.user_id)
@@ -76,7 +81,7 @@ export default {
             position: 'bottom',
             duration: 2000
           })
-          router.push('./')
+          _this.$router.push('./')
         } else {
           Toast({
             message: '账号和密码不匹配，请重新输入',
@@ -86,12 +91,9 @@ export default {
         }
       })
     }
-  },
-  mounted: function () {
   }
 }
 </script>
-
 <style lang="stylus" scoped>
     @import "~styles/mixins.styl";
     body,html
@@ -106,18 +108,6 @@ export default {
         height 100%
         bgImage('/static/images/loginBg')
         overflow hidden
-    .loginTop
-        height 72px
-        line-height 72px
-        box-sizing border-box
-        padding 100px 44px 0
-        span
-            font-size 76px
-            color #fff
-        .backIndex
-            float right
-            font-size 36px
-            color #fff
     .loginInfo
         width 88%
         height 530px
@@ -146,6 +136,7 @@ export default {
               height 100px
               line-height 100px
               background transparent
+              font-size 46px
               color #fff
               outline none
             .passWordOper
@@ -173,13 +164,12 @@ export default {
         color #fff
         text-decoration underline
     .loginTipText
-        display block
-        width 100%
-        text-align center
-        font-size 36px
-        color #E6E6E6
-        position absolute
-        bottom 8%
+      display block
+      width 100%
+      text-align center
+      font-size 36px
+      color #E6E6E6
+      margin-top 20%
     ::-webkit-input-placeholder {
         color: #fff;
     }
