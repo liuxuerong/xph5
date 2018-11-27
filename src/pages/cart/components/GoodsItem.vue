@@ -28,7 +28,7 @@
               <div class="bottom clearfix">
                 <span class="tag fl" v-if="goodsItem.status!=1">已失效</span>
                 <span class="modify" v-if="showModify">
-                  <x-number :min="1" :max="goodsItem.stock" v-model="goodsItem.num" :fillable="true" @on-change="changeCartNum"></x-number>
+                  <x-number :min="1" :max="goodsItem.stock" v-model="goodsItem.num" :fillable="true" @click="changeCartNum"></x-number>
                   <div class="shadow" v-if="goodsItem.stock==0&&goodsItem.status==1"></div>
                 </span>
                 <i class="price fr">￥{{goodsItem.price.toFixed(2)}}</i>

@@ -1,6 +1,8 @@
 <template>
   <div class="xpHall">
-    <common-header/>
+    <common-header>
+      体验馆
+    </common-header>
     <div class="swiper-container " ref="swpierWrap" style="height:100%">
       <div class="swiper-wrapper">
         <div class="swiper-slide" v-for="(item,index) in swiperData" :key="item.id">
