@@ -127,6 +127,9 @@ export default {
       }
     },
     buy () {
+      if (this.clearNum.length === 0) {
+        return
+      }
       let goodsObj = {
         key: '',
         shippingMethod: '',
@@ -134,14 +137,14 @@ export default {
         fromCart: true
       }
       goodsObj.goodsItems = []
-      for (let i = 0; i < this.goodsList.length; i++) {
-        if (this.goodsList[i].status === '1') {
-          if (this.goodsList[i].value) {
+      for (let i = 0; i < this.clearNum.length; i++) {
+        if (this.clearNum[i].status === '1') {
+          if (this.clearNum[i].value) {
             goodsObj.goodsItems.push({
-              goodsId: this.goodsList[i].goodsId,
-              goodsItemId: this.goodsList[i].goodsItemId,
-              num: this.goodsList[i].num,
-              stock: this.goodsList[i].stock
+              goodsId: this.clearNum[i].goodsId,
+              goodsItemId: this.clearNum[i].goodsItemId,
+              num: this.clearNum[i].num,
+              stock: this.clearNum[i].stock
             })
           }
         }

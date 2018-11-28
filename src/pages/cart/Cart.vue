@@ -73,7 +73,7 @@ export default {
       page: 1,
       noMore: false,
       totals: 0,
-      rows: 20
+      rows: 5
     }
   },
   watch: {
@@ -100,7 +100,7 @@ export default {
         this.page = 1
         this.getCartList()
       } else {
-        this.rows = 20
+        this.rows = 5
       }
     }
   },
