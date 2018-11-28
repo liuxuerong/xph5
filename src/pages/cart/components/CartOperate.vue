@@ -1,7 +1,9 @@
 <template>
   <div class="cartOperate border-top">
-    <div class="checkIcon"><check-icon :value.sync="check" @click.native="checkAll"> </check-icon></div>
-    <span class="all" >全选</span>
+    <div class="checkIcon">
+      <check-icon :value.sync="check" @click.native="checkAll"> </check-icon>
+    </div>
+    <span class="all">全选</span>
     <span class="price" v-if="!showModify">￥{{price.toFixed(2)}}</span>
     <span class="btn" :class="{active:clearBtn}" v-if="!showModify" @click="buy">去结算</span>
     <span class="btn delBtn" :class="{active:clearBtn}" v-else @click="delCheck">删除所选</span>
@@ -13,7 +15,7 @@ import {
   storage
 } from 'util/storage'
 import {
-  goodsInfo
+  goodsInfo, cartGoods
 } from 'util/const.js'
 import {
   http
@@ -34,7 +36,9 @@ import {
 export default {
   name: 'CartOperate',
   props: {
-    showModify: Boolean
+    showModify: Boolean,
+    page: Number,
+    roews: Number
   },
   components: {
     CheckIcon,
@@ -130,6 +134,7 @@ export default {
       if (this.clearNum.length === 0) {
         return
       }
+
       let goodsObj = {
         key: '',
         shippingMethod: '',
@@ -150,6 +155,7 @@ export default {
         }
       }
       storage.setLocalStorage(goodsInfo, goodsObj)
+      storage.setLocalStorage(cartGoods, {goodsList: this.goodsList, page: this.page, rows: this.rows})
       this.$router.push('/createOrder')
     }
   }

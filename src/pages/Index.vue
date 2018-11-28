@@ -80,7 +80,7 @@ export default {
   .tabbar
     position fixed
     bottom 0
-    z-index 9999999
+    z-index 9999997
     background-color #fff
     height 148px
     line-height 148px
