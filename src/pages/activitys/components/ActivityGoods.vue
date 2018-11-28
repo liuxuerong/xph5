@@ -13,6 +13,8 @@
   </div>
 </template>
 <script>
+// var dsBridge=require("dsbridge")
+import dsBridge from 'dsbridge'
 import { config } from 'util/config'
 export default {
   props: ['activityGoods'],
@@ -29,12 +31,10 @@ export default {
   methods: {
     // 商品详情
     activityGoodsDetails (goodsId) {
-      console.log(999)
-      // console.log(dsbridge)
       // this.$router.push('/details/' + goodsId)
-      // dsBridge.call('goodsDetail', goodsId, function (v) {
-      //   console.log(v)
-      // })
+      dsBridge.call('goodsDetail', goodsId, function (v) {
+        console.log(v)
+      })
     },
     countDown (t) {
       t = new Date(t)

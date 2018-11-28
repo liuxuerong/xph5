@@ -67,7 +67,7 @@
       <div class="orderTotal" v-for="(item,index) in list.memberOrderGoods" :key="index">
         <div class="orderCount border-bottom">
           <span class="goodsCount">商品金额<p>￥ {{item.actualPrice}}</p></span>
-          <span class="goodsDiscount">优惠金额<p>￥ {{list.offerAmount}}</p></span>
+          <span class="goodsDiscount">优惠金额<p>-￥ {{list.offerAmount}}</p></span>
           <span class="goodsDiscount">运费<p>￥ {{list.shippingAmount}}</p></span>
         </div>
         <div class="orderTotalPrice">

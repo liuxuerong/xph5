@@ -1,11 +1,11 @@
 <template>
   <div class="storyDetailsHeader border-bottom">
-    <!-- <img :src="imageUrl+details.articleCoverImage" alt=""> -->
+    <img v-if="articleShow" :src="imageUrl+details.articleCoverImage" alt="">
     <div class="titleCont">
       <p class="title">{{details.title}} <em v-if="details.subTitle !==''">|</em> {{details.subTitle}}</p>
-      <common-collection class="collection" />
+      <common-collection class="collection" v-if="!articleShow" />
     </div>
-     <div class="bottom">
+     <div class="bottom" v-if="!articleShow">
         <div class="author fl">{{details.author}}</div>
         <div class="time fl">{{details.updateTime.split('T')[0]}}</div>
         <div class="browse fr"><i class="icon"></i>{{details.browse}}</div>
@@ -20,6 +20,9 @@ import CommonCollection from '@/common/commonCollection/CommonCollection'
 import {
   config
 } from 'util/config.js'
+import {
+  detailsEnum
+} from 'util/enum.js'
 export default {
   name: 'StoryDetailsHeader',
   props: {
@@ -31,8 +34,21 @@ export default {
   },
   data () {
     return {
-      imageUrl: config.imageUrl
+      imageUrl: config.imageUrl,
+      articleShow: false
     }
+  },
+  methods: {
+    storyDetailsHeaderRender () {
+      console.log(detailsEnum.articleCategoryId)
+      if (this.details.articleCategoryId === detailsEnum.articleCategoryId) {
+        this.articleShow = true
+      }
+    }
+  },
+  mounted () {
+    this.storyDetailsHeaderRender()
+    console.log(this.details)
   }
 }
 </script>
@@ -43,11 +59,11 @@ export default {
     img
       width 100%
       height 600px
-      margin 50px 0
+      margin-bottom 50px
     .titleCont
       display flex
       justify-content space-between
-      padding 0 50px
+      padding 0 50px 40px
       .collection
         margin-top 30px
     .title

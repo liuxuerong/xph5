@@ -54,7 +54,7 @@
       <div class="orderTotal">
         <div class="orderCount border-bottom">
           <span class="goodsCount">商品金额<p>￥ {{list.totalAmount}}</p></span>
-          <span class="goodsDiscount">优惠金额<p>￥ {{list.offerAmount}}</p></span>
+          <span class="goodsDiscount">优惠金额<p>-￥ {{list.offerAmount}}</p></span>
           <span v-if="list.shippingAmount != '0' || list.shippingAmount != ''" class="goodsDiscount">运费<p>￥ {{list.shippingAmount}}</p></span>
         </div>
         <div class="orderTotalPrice">

@@ -41,12 +41,10 @@ export default {
     // 返回上一步
     backPrevOper () {
       console.log(this.$route.path)
-      let path = this.$route.path
-      if (path === '/paymentSucc') {
-        // 支付成功返回个人中心
+      let path = this.$route.path.split('/')[1]
+      console.log(path)
+      if (path === 'paymentSucc' || path === 'orderList') {
         this.$router.push('/personCenter')
-      } else if (path === '/paymentSucc') {
-        console.log(666)
       } else {
         this.$router.back(-1)
       }
