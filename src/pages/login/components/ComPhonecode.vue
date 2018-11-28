@@ -7,7 +7,7 @@
       </div>
     </div>
     <div class="userPhoneCode border-bottom">
-      <input type="text" placeholder="验证码" name="" v-model="code">
+      <input type="text" placeholder="验证码" name="" maxlength="6" v-model="code">
       <span v-show="!computedTime" @click="obtainCodeBtn">获取验证码</span>
       <span v-show="computedTime">已发送 {{computedTime}} s</span>
     </div>
@@ -90,6 +90,14 @@ export default {
           duration: 2000
         })
         _this.changeReturnVal(false)
+      }
+    }
+  },
+  watch: {
+    code: function (val) {
+      let _this = this
+      if (val.length === 6) {
+        _this.submitCode()
       }
     }
   }

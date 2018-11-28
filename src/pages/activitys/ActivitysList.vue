@@ -2,7 +2,7 @@
   <div class="activitysWrapper">
     <userinfo-header :title="title" oper=""></userinfo-header>
     <div class="wrapperBg">
-      <img src="" alt="">
+      <img src="" alt="" id="ceshiId">
       <ul class="activitysTab">
         <li v-for="(tab,i) in activitysTab" :key="i" :class="{'active':activitysActive==i}" @click="activitysTabClick(i)">{{tab}}</li>
       </ul>
@@ -10,13 +10,13 @@
     <div class="activitysCon" v-if="activitysActive == 0">
       <!-- 单品秒杀 -->
       <div class="activityGoodsBox">
-        <activitys-title v-if="activityGoods" :activitysTitle="activitysTitle[0]"></activitys-title>
-        <activity-goods v-if="activityGoods" v-for="item in activityGoods" :key="item.goodsItemId" :activityGoods="item"></activity-goods>
+        <activitys-title v-if="activityGoods.length" :activitysTitle="activitysTitle[0]"></activitys-title>
+        <activity-goods v-if="activityGoods.length" v-for="item in activityGoods" :key="item.goodsItemId" :activityGoods="item"></activity-goods>
       </div>
       <!-- 品类秒杀 -->
       <div class="activityCategoryBox">
-        <activitys-title v-if="activityCategory" :activitysTitle="activitysTitle[1]"></activitys-title>
-        <activity-category v-if="activityCategory" v-for="item in activityCategory" :key="item.goodsCategoryId" :activityCategory="item"></activity-category>
+        <activitys-title v-if="activityCategory.length" :activitysTitle="activitysTitle[1]"></activitys-title>
+        <activity-category v-if="activityCategory.length" v-for="item in activityCategory" :key="item.goodsCategoryId" :activityCategory="item"></activity-category>
       </div>
     </div>
     <div class="activitysCon" v-if="activitysActive == 1">
@@ -24,7 +24,7 @@
     </div>
   </div>
 </template>
-<script src="https://unpkg.com/dsbridge/dist/dsbridge.js"></script>
+
 <script>
 import UserinfoHeader from '@/pages/person/components/ComUserSetHeader'
 import ActivitysTitle from './components/ActivitysTitle'
@@ -44,8 +44,8 @@ export default {
         {'title': '品类秒杀', 'subTitle': '限时品类秒杀'}
       ],
       activityInfo: null, // 活动分类
-      activityGoods: null, // 单品抢购
-      activityCategory: null // 活动品类
+      activityGoods: [], // 单品抢购
+      activityCategory: [] // 活动品类
     }
   },
   components: {

@@ -29,7 +29,12 @@ export default {
   methods: {
     // 商品详情
     activityGoodsDetails (goodsId) {
-      this.$router.push('/details/' + goodsId)
+      console.log(999)
+      // console.log(dsbridge)
+      // this.$router.push('/details/' + goodsId)
+      // dsBridge.call('goodsDetail', goodsId, function (v) {
+      //   console.log(v)
+      // })
     },
     countDown (t) {
       t = new Date(t)

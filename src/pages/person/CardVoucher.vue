@@ -50,7 +50,8 @@
                 <!-- 立即领取 可以领取-->
                 <span v-if="item.useStatus == '1'" class="activityTime">领取时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
                 <!-- 立即使用  到达使用时间-->
-                <span v-else-if="item.useStatus == '2' && item.display=='2'" class="countDown">{{item.invalidDay}}天后过期</span>
+                <span v-else-if="item.useStatus == '2' && item.display=='2' && item.invalidDay > 0" class="countDown">{{item.invalidDay}}天后过期</span>
+                  <span v-else-if="item.useStatus == '2' && item.display=='2' && item.invalidDay === 0" class="countDown">1天后过期</span>
                 <!-- 立即使用 未到达使用时间 -->
                 <span v-else-if="item.useStatus == '2' && item.display=='1'">使用时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
                 <!-- 领光了 -->

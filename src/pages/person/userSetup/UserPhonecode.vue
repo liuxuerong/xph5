@@ -44,8 +44,7 @@ export default {
     },
     // 下一步  完成
     operBtnClick () {
-      let _this = this
-      this.$refs.phoneCode.submitCode()
+      console.log(this.returnVal)
       if (this.returnVal) {
         if (this.type === '0') {
           Toast({
@@ -53,10 +52,16 @@ export default {
             position: 'bottom',
             duration: 2000
           })
-          _this.$router.push('/accountSecurity')
+          this.$router.push('/accountSecurity')
         } else {
-          _this.$router.push('/userPassword/2')
+          this.$router.push('/userPassword/2')
         }
+      } else {
+        Toast({
+          message: '验证失败',
+          position: 'bottom',
+          duration: 2000
+        })
       }
     }
   },
