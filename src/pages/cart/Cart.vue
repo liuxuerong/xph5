@@ -239,7 +239,6 @@ export default {
   .xpCart
     height 100%
     padding-top 120px
-    // background-color #F5F5F5
     padding-bottom 148px
     .edit
       font-size 40px
