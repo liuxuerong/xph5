@@ -71,6 +71,7 @@ export default {
         this.swiperData = res.data.body
         this.swiperOption.loopedSlides = this.swiperData.length
         storage.setLocalStorage(experience, res.data.body)
+        console.log(res)
         this.$nextTick(function () {
           setTimeout(() => {
             this.mySwiper = new Swiper(this.$refs.swpierWrap, {

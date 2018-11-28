@@ -1,12 +1,17 @@
 <template>
-  <div class="storyDetailsHeader border-bottom" >
+  <div class="storyDetailsHeader border-bottom">
     <!-- <img :src="imageUrl+details.articleCoverImage" alt=""> -->
     <div class="titleCont">
       <p class="title">{{details.title}} <em v-if="details.subTitle !==''">|</em> {{details.subTitle}}</p>
-      <common-collection class="collection"/>
+      <common-collection class="collection" />
     </div>
-    <div class="summary">{{details.summary}}
-    </div>
+     <div class="bottom">
+        <div class="author fl">{{details.author}}</div>
+        <div class="time fl">{{details.updateTime.split('T')[0]}}</div>
+        <div class="browse fr"><i class="icon"></i>{{details.browse}}</div>
+      </div>
+    <!-- <div class="summary">{{details.summary}}
+    </div> -->
   </div>
 </template>
 
@@ -35,7 +40,6 @@ export default {
 <style lang="stylus" scoped>
 @import "~styles/mixins.styl";
 .storyDetailsHeader
-    padding-bottom 60px
     img
       width 100%
       height 600px
@@ -59,4 +63,20 @@ export default {
       font-size 36px
       line-height 50px
       padding 0 50px
+  .bottom
+    height 140px
+    line-height 140px
+    font-size 40px
+    color #666666
+    padding 0 50px
+   .author
+      color #262626
+      margin-right 50px
+      font-weight bold
+    .icon
+      width 50px
+      height 30px
+      display inline-block
+      background url('/static/icons/browse_icon.png') no-repeat center center/100% 100%
+      margin-right 35px
 </style>

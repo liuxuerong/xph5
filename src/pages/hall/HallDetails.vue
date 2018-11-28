@@ -19,7 +19,6 @@
             </div>
           </div>
         </router-link>
-
       </popup>
     </div>
     <div v-transfer-dom>
@@ -34,7 +33,7 @@
             <p class="name">{{itemObj.goodName}}</p>
             <div class="priceWrap">
               <span class="price">￥{{itemObj.minPrice}}起</span>
-              <em class="collect" :class="{active:itemObj.collected}" @click.stop="doCollection(index,itemObj.goodId)"></em>
+              <em class="collect" :class="{active:itemObj.collected==='1'}" @click.stop="doCollection(index,itemObj.goodId)"></em>
             </div>
           </div>
         </div>
@@ -51,9 +50,11 @@ import {
   TransferDom
 } from 'vux'
 import {
-  hasCollection,
   doCollection
 } from '@/func/collection'
+import {
+  Toast
+} from 'mint-ui'
 import CommonNavHeader from '@/common/commonHeader/CommonNavHeader'
 import PinchZoom from '@/func/pinch-zoom'
 import {
@@ -84,7 +85,6 @@ export default {
       itemObj: null,
       params: {
         collectionType: 1
-      // collectionDataId:
       }
     }
   },
@@ -120,28 +120,24 @@ export default {
         this.$refs.tag[i].classList.remove('active')
       }
       this.$refs.tag[index].classList.add('active')
-
       this.itemObj = this.experienceObj.experienceGoods[index]
     },
     showAllDetails () {
       this.show = true
     },
-    hasCollection (params, index) {
-      let fnType = Object.prototype.toString.call(hasCollection(params)).slice(8, -1)
-      if (fnType === 'Promise') {
-        hasCollection(params).then(res => {
-          let goods = this.experienceObj.experienceGoods[index]
-          goods.collected = res.data.body
-          this.$set(this.experienceObj.experienceGoods, index, goods)
-        }).catch(err => {
-          console.log(err)
-        })
-      }
-    },
     doCollection (index, goodId) {
+      console.log(7889)
       let params = Object.assign({}, this.params, {collectionDataId: goodId})
       doCollection(params).then(res => {
-        this.hasCollection(params, index)
+        if (res.data.code === 0) {
+          this.experienceObj.experienceGoods[index].collected = this.experienceObj.experienceGoods[index].collected === '1' ? '0' : '1'
+          let message = this.experienceObj.experienceGoods[index].collected === '0' ? '取消成功' : '收藏成功'
+          Toast({
+            message: message,
+            position: 'bottom',
+            duration: 1000
+          })
+        }
       }).catch(err => {
         console.log(err)
       })
@@ -169,18 +165,19 @@ export default {
     const _this = this
 
     if (!storage.getLocalStorage(experience)) {
-      notice.errorModal('未授权，请重新登录', function () {
+      notice.errorModal('请返回体验馆主页', function () {
         _this.$router.push({
-          path: '/login'
+          path: '/hall'
         })
       })
     } else {
       this.experienceObj = storage.getLocalStorage(experience)[this.index]
-      let goods = this.experienceObj.experienceGoods
-      for (let i = 0; i < goods.length; i++) {
-        let params = Object.assign({}, this.params, {collectionDataId: goods[i].goodId})
-        this.hasCollection(params, i)
-      }
+      console.log(this.experienceObj)
+      // let goods = this.experienceObj.experienceGoods
+      // for (let i = 0; i < goods.length; i++) {
+      //   let params = Object.assign({}, this.params, {collectionDataId: goods[i].goodId})
+      //   this.hasCollection(params, i)
+      // }
     }
   },
   mounted () {

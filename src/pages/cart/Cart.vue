@@ -18,7 +18,7 @@
       </div>
       <common-empty v-if="goodsList.length<1" :emptyObj="emptyObj"/>
     </div>
-    <cart-operate  v-if="goodsList.length" :showModify="showModify"/>
+    <cart-operate  v-if="goodsList.length" :showModify="showModify" :page="page" :rows="rows"/>
   </div>
 </template>
 
@@ -47,6 +47,8 @@ import {
   mapMutations,
   mapActions
 } from 'vuex'
+import { cartGoods } from 'util/const'
+import {storage} from 'util/storage'
 export default {
   name: 'Cart',
   components: {
@@ -209,8 +211,23 @@ export default {
     }
   },
   mounted () {
-    this.getCartList()
     this.refreshCart({isAllSelect: false, goodsList: [], clearNum: []})
+    let goods = storage.getLocalStorage(cartGoods)
+    if (goods) {
+      for (let i in goods.goodsList) {
+        if (goods.goodsList[i].num > goods.goodsList[i].stock) {
+          goods.goodsList[i].value = false
+        }
+      }
+      this.changeGoodsList(goods.goodsList)
+      this.page = goods.page
+      this.rows = goods.rows
+      storage.delLocalStorage(cartGoods)
+      this.scrollInit()
+      this.noMore = true
+    } else {
+      this.getCartList()
+    }
   },
   destroyed () {
     this.refreshCart({isAllSelect: false, goodsList: [], clearNum: []})
