@@ -4,7 +4,7 @@
     <div class="logisticsCon">
       <div class="logisticsInfo">
         <span>物流公司：<i>{{params.code}}</i></span>
-        <span>物流公司：<i>{{params.logino}}</i></span>
+        <span>物流单号：<i>{{params.logino}}</i></span>
       </div>
       <!-- 是否有物流信息 -->
       <div class="logisticsList" v-if="list.length > 0">

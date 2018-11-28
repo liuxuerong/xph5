@@ -30,6 +30,9 @@
 import {
   storage
 } from 'util/storage'
+import {
+  immedPaymentMony
+} from 'util/const.js'
 import SearchTitle from './ComOrderSearchTitle'
 import {payMoney, subOrderDetail} from 'util/netApi'
 import {http} from 'util/request'
@@ -81,11 +84,11 @@ export default {
             console.log(this.readioActive)
             // 支付宝
             if (this.readioActive === 2) {
+              storage.setLocalStorage(immedPaymentMony, this.list.needPayAmount)
               let dom = document.createElement('div')
               dom.innerHTML = response.data.body
               document.body.appendChild(dom)
               document.forms[0].submit()
-              storage.setLocalStorage('immedPaymentMony', this.readioActive)
             } else if (this.readioActive === 5) {
               window.location.href = 'weixin://wap/pay?appid=' + response.data.body.appid + '&noncestr=' + response.data.body.noncestr + '&package=' + response.data.body.package + '&prepayid=' + response.data.body.prepayid + '&sign=' + response.data.body.sign + '&timestamp=' + response.data.body.timestamp
             }
