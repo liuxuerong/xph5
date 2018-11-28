@@ -1,6 +1,6 @@
 <template>
-  <div class="activitysWrapper">
-    <userinfo-header :title="title" oper=""></userinfo-header>
+  <div class="activitysWrapper" :class="{wrapperTitle:!titleShow}">
+    <userinfo-header v-if="titleShow" :title="title" oper=""></userinfo-header>
     <div class="wrapperBg">
       <img src="" alt="" id="ceshiId">
       <ul class="activitysTab">
@@ -37,6 +37,7 @@ export default {
   data () {
     return {
       title: '活动精选',
+      titleShow: false,
       activitysTab: ['限时抢购', '门店活动'],
       activitysActive: Number,
       activitysTitle: [
@@ -66,6 +67,10 @@ export default {
     // 页面初始化加载
     activitysRender () {
       let type = Number(this.$route.params.type)
+      let platform = this.$route.params.platform
+      if (platform === undefined) {
+        this.titleShow = true
+      }
       this.activitysActive = type
       this.activitysCon(type)
     },
@@ -106,6 +111,8 @@ export default {
 </script>
 <style lang="stylus" scoped>
   @import "~styles/mixins.styl";
+  .activitysWrapper.wrapperTitle
+    padding-top 0
   .activitysWrapper
     width 100%
     overflow hidden

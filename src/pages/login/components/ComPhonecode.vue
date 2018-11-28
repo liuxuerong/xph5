@@ -8,7 +8,7 @@
     </div>
     <div class="userPhoneCode border-bottom">
       <input type="text" placeholder="验证码" name="" maxlength="6" v-model="code">
-      <span v-show="!computedTime" @click="obtainCodeBtn">获取验证码{{types}}</span>
+      <span v-show="!computedTime" @click="obtainCodeBtn">获取验证码</span>
       <span v-show="computedTime">已发送 {{computedTime}} s</span>
     </div>
   </div>
@@ -172,7 +172,7 @@ export default {
       outline  none
 .userPhoneCode
   input
-      width 76%
+      width 74%
       height 140px
       line-height 140px
       font-size 40px
