@@ -1,7 +1,7 @@
 <template>
   <div class="cartOperate border-top">
     <div class="checkIcon"><check-icon :value.sync="check" @click.native="checkAll"> </check-icon></div>
-    <span class="all" >全选{{check}}</span>
+    <span class="all" >全选</span>
     <span class="price" v-if="!showModify">￥{{price.toFixed(2)}}</span>
     <span class="btn" :class="{active:clearBtn}" v-if="!showModify" @click="buy">去结算</span>
     <span class="btn delBtn" :class="{active:clearBtn}" v-else @click="delCheck">删除所选</span>
@@ -54,11 +54,9 @@ export default {
   }),
   watch: {
     isAllSelect: function (v) {
-      console.log(v, '操作isAllSelect')
       this.check = v
     },
     check: function (v) {
-      console.log(v, '操作check')
       this.changeIsAllSelect(v)
     },
     $route (to, from) {
@@ -85,10 +83,10 @@ export default {
   },
   methods: {
     ...mapMutations(['changeGoodsList', 'changeIsAllSelect']),
+
     checkAll () {
       let goodsList = this.goodsList
       for (let i in goodsList) {
-        console.log(goodsList)
         if (this.check) {
           goodsList[i].value = true
           this.changeIsAllSelect(true)
@@ -100,7 +98,6 @@ export default {
       this.changeGoodsList(goodsList)
     },
     delCheck () {
-      // 删除所选
       let checkGoodsList = []
       let notCheckGoodsList = []
       let id = ''
@@ -130,6 +127,9 @@ export default {
       }
     },
     buy () {
+      if (this.clearNum.length === 0) {
+        return
+      }
       let goodsObj = {
         key: '',
         shippingMethod: '',
@@ -137,14 +137,16 @@ export default {
         fromCart: true
       }
       goodsObj.goodsItems = []
-      for (let i = 0; i < this.goodsList.length; i++) {
-        if (this.goodsList[i].value) {
-          goodsObj.goodsItems.push({
-            goodsId: this.goodsList[i].goodsId,
-            goodsItemId: this.goodsList[i].goodsItemId,
-            num: this.goodsList[i].num,
-            stock: this.goodsList[i].stock
-          })
+      for (let i = 0; i < this.clearNum.length; i++) {
+        if (this.clearNum[i].status === '1') {
+          if (this.clearNum[i].value) {
+            goodsObj.goodsItems.push({
+              goodsId: this.clearNum[i].goodsId,
+              goodsItemId: this.clearNum[i].goodsItemId,
+              num: this.clearNum[i].num,
+              stock: this.clearNum[i].stock
+            })
+          }
         }
       }
       storage.setLocalStorage(goodsInfo, goodsObj)

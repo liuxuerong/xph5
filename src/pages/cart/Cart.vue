@@ -66,45 +66,41 @@ export default {
         buttonText: '去购物',
         buttonRouter: '/find'
       },
-      allList: [],
       cartList: [],
       disabledCartList: [],
       showModify: false,
       text: '编辑',
       page: 1,
-      rows: 5,
-      totals: 0,
       noMore: false,
-      allGoods: []
+      totals: 0,
+      rows: 5
     }
   },
   watch: {
     goodsList: function (v) {
+      this.cartList = []
+      this.disabledCartList = []
       for (let i = 0; i < v.length; i++) {
         if (v[i].status === '1') {
-          if (this.isAllSelect) {
-            v[i].value = true
-          }
-          // this.cartList.push(v[i])
+          this.cartList.push(v[i])
         } else {
-          // this.disabledCartList.push(v[i])
+          this.disabledCartList.push(v[i])
         }
       }
     },
+    '$route' (to, from) {
+      if (to.name === 'Cart') {
+        this.page = 0
+        this.getCartList()
+      }
+    },
     isAllSelect (v) {
-      console.log(v)
       if (v) {
         this.rows = this.totals
         this.page = 1
         this.getCartList()
       } else {
         this.rows = 5
-      }
-    },
-    '$route' (to, from) {
-      if (to.name === 'Cart') {
-        this.page = 1
-        this.getCartList()
       }
     }
   },
@@ -114,7 +110,7 @@ export default {
     isAllSelect: state => state.cart.isAllSelect
   }),
   methods: {
-    ...mapMutations(['changeGoodsList']),
+    ...mapMutations(['changeGoodsList', 'changeClearNum', 'changeIsAllSelect']),
     ...mapActions(['refreshCart']),
     scrollInit () {
       if (!this.scroll) {
@@ -139,7 +135,7 @@ export default {
         })
       } else {
         this.scroll.refresh()
-        // this.scroll.finishPullUp()
+        this.scroll.finishPullUp()
       }
     },
     getCartList () {
@@ -147,60 +143,36 @@ export default {
         page: this.page,
         rows: this.rows
       }
-      // if (this.rows === this.totals) {
-      //   if (this.allGoods.length) {
-      //     this.allList = this.allGoods
-      //     this.cartList = []
-      //     this.disabledCartList = []
-      //     let cartList = this.allList
-      //     for (let i = 0; i < cartList.length; i++) {
-      //       cartList[i].value = false
-      //       if (cartList[i].status === '1') {
-      //         this.cartList.push(cartList[i])
-      //       } else {
-      //         this.disabledCartList.push(cartList[i])
-      //       }
-      //     }
-
-      //     console.log(this.allList, 'this.allList')
-      //     this.refreshCart({goodsList: this.allList, clearNum: this.clearNum})
-      //     this.scrollInit()
-      //     return true
-      //   }
-      // }
-
       if (!this.noMore) {
         http(listCart, parmas).then(res => {
-          console.log(res)
           if (res.data.code === 0) {
             this.totals = res.data.body.totals
+            console.log(res.data.body.list)
             if (this.page !== 1 && res.data.body.list.length === 0) {
               this.scroll.finishPullUp()
               this.noMore = true
               return
             }
-
-            if (this.isAllSelect) {
-              this.allGoods = this.allList
-              this.allList = res.data.body.list
-            } else {
-              this.allList = [...this.allList, ...res.data.body.list]
-            }
-            this.cartList = []
-            this.disabledCartList = []
-            let cartList = this.allList
+            let cartList = res.data.body.list
             for (let i = 0; i < cartList.length; i++) {
-              cartList[i].value = false
+              if (!this.isAllSelect) {
+                cartList[i].value = false
+              } else {
+                cartList[i].value = true
+              }
+
               if (cartList[i].status === '1') {
                 this.cartList.push(cartList[i])
               } else {
                 this.disabledCartList.push(cartList[i])
               }
             }
-            console.log(this.allList, 'this.allList')
-            this.refreshCart({goodsList: this.allList, clearNum: this.clearNum})
+            if (!this.isAllSelect) {
+              cartList = [...this.goodsList, ...cartList]
+            }
+            this.changeGoodsList(cartList)
+            this.scrollInit()
           }
-          this.scrollInit()
         }).catch(err => {
           console.log(err)
         })
@@ -238,7 +210,10 @@ export default {
   },
   mounted () {
     this.getCartList()
-    console.log('刷新')
+    this.refreshCart({isAllSelect: false, goodsList: [], clearNum: []})
+  },
+  destroyed () {
+    this.refreshCart({isAllSelect: false, goodsList: [], clearNum: []})
   }
 }
 </script>
@@ -247,6 +222,7 @@ export default {
   .xpCart
     height 100%
     padding-top 120px
+    // background-color #F5F5F5
     padding-bottom 148px
     .edit
       font-size 40px

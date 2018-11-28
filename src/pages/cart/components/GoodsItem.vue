@@ -3,7 +3,6 @@
     <label for="" class="border-bottom">
         <div class="checkIcon">
             <check-icon :value.sync="goodsItem.value">
-              {{goodsItem.value}}
             </check-icon>
             <!-- <div class="shadow" v-if="goodsItem.stock==0&&goodsItem.status==1"></div> -->
           </div>
@@ -17,19 +16,19 @@
                 <span class="color" v-for="(item,index) in specs" :key="index">{{item}}</span>
                  x <em class="num">{{goodsItem.num}}</em>
               </div>
-              <div class="inventory" v-if="goodsItem.stock<5&&goodsItem.stock>0&&goodsItem.status==1">
+              <div class="inventory" v-if="goodsItem.stock<5&&goodsItem.stock>0&&goodsItem.status==1&&goodsItem.stock>=goodsItem.num">
                 库存紧张
               </div>
                <div class="inventory" v-if="goodsItem.stock==0&&goodsItem.status==1">
                 无库存
               </div>
-              <div class="inventory notEnough" v-if="goodsItem.stock<goodsItem.num&&goodsItem.stock!=0&&goodsItem.status==1&&goodsItem.stock>5">
+              <div class="inventory notEnough" v-if="goodsItem.stock<goodsItem.num&&goodsItem.stock!=0">
                 库存不足
               </div>
               <div class="bottom clearfix">
                 <span class="tag fl" v-if="goodsItem.status!=1">已失效</span>
                 <span class="modify" v-if="showModify">
-                  <x-number :min="1"  v-model="goodsItem.num" :fillable="true" @on-change="changeCartNum"></x-number>
+                  <x-number :min="1" :max="goodsItem.stock" v-model="goodsItem.num" :fillable="true" @click="changeCartNum"></x-number>
                   <div class="shadow" v-if="goodsItem.stock==0&&goodsItem.status==1"></div>
                 </span>
                 <i class="price fr">￥{{goodsItem.price.toFixed(2)}}</i>
@@ -81,37 +80,25 @@ export default {
   },
   computed: mapState({
     clearNum: state => state.cart.clearNum,
-    goodsList: state => state.cart.goodsList
+    goodsList: state => state.cart.goodsList,
+    isAllSelect: state => state.cart.isAllSelect
   }),
   watch: {
-    goodsList (v) {
-      console.log(v)
-    },
     goodsItem: {
       handler (newVal, oldVal) {
-        console.log(newVal)
-        if (this.clearNum.length > 0) {
-          let index = this.clearNum.indexOf(this.goodsItem)
-          if (newVal.value) {
-            if (index !== -1) {
-              this.clearNum[index] = this.goodsItem
+        let goodsList = this.goodsList
+        this.changeGoodsList(goodsList)
+        let clearNum = []
+        for (let i = 0; i < this.goodsList.length; i++) {
+          if (this.goodsList[i].status === '1') {
+            if (this.goodsList[i].value) {
+              clearNum.push(this.goodsList[i])
             } else {
-              this.clearNum.push(this.goodsItem)
+              this.changeIsAllSelect(false)
             }
-          } else {
-            if (index !== -1) {
-              this.clearNum.splice(index, 1)
-            }
-          }
-          let goodsList = this.goodsList
-          this.changeGoodsList(goodsList)
-        } else {
-          if (newVal.value) {
-            this.clearNum.push(this.goodsItem)
           }
         }
-        this.changeClearNum(this.clearNum)
-        // this.changeIsAllSelect(false)
+        this.changeClearNum(clearNum)
       },
       deep: true,
       immediate: true
@@ -126,16 +113,14 @@ export default {
       }
     },
     changeCartNum (val) {
-      if (val > this.goodsItem.stock) {
-        this.goodsItem.num = this.goodsItem.stock
+      if (val >= this.goodsItem.stock) {
         Toast({
-          message: '填写数量超出库存范围',
+          message: `库存紧张，最多购买${this.goodsItem.stock}件`,
           position: 'center',
           duration: 2000
         })
       }
       this.doUpdateCart(val)
-      return true
     },
     doUpdateCart (val) {
       updateCart.url = '/cart'
