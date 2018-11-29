@@ -85,10 +85,10 @@ export default {
 <style lang="stylus" scoped>
 @import '~styles/mixins.styl'
   .commonCollection
-      width 52px
-      height 52px
-      margin-top 20px
-      bgImage("/static/icons/Collection_icon")
-      &.active
-          bgImage("/static/icons/Collection_icon_click")
+    width 52px
+    height 52px
+    margin-top 20px
+    bgImage("/static/icons/Collection_icon")
+    &.active
+      bgImage("/static/icons/Collection_icon_click")
 </style>

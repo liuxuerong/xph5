@@ -34,12 +34,12 @@
           <div class="refundItem" v-if="afterSales.status == 6" :class="afterSales.status == 6?'active':''">
             <i class="hookIcon" :class="afterSales.status == 6?'hookActive':''"></i>
             <span class="refundState">退款失败</span>
-            <span class="refundTime">{{afterSales.refundTime.split('T')[0]}} {{afterSales.refundTime.split('T')[1]}}</span>
+            <span class="refundTime" v-if="afterSales.refundTime">{{afterSales.refundTime.split('T')[0]}} {{afterSales.refundTime.split('T')[1]}}</span>
           </div>
           <div class="refundItem" v-else :class="afterSales.status == 5?'active':''">
             <i class="hookIcon" :class="afterSales.status == 5?'hookActive':''"></i>
             <span class="refundState">退款成功</span>
-            <span class="refundTime">{{afterSales.refundTime.split('T')[0]}} {{afterSales.refundTime.split('T')[1]}}</span>
+            <span class="refundTime" v-if="afterSales.refundTime">{{afterSales.refundTime.split('T')[0]}} {{afterSales.refundTime.split('T')[1]}}</span>
           </div>
         </div>
       </div>
@@ -67,11 +67,11 @@
       <div class="orderTotal" v-for="(item,index) in list.memberOrderGoods" :key="index">
         <div class="orderCount border-bottom">
           <span class="goodsCount">商品金额<p>￥ {{item.actualPrice}}</p></span>
-          <span class="goodsDiscount">优惠金额<p>￥ {{list.offerAmount}}</p></span>
+          <span class="goodsDiscount">优惠金额<p>-￥ {{list.offerAmount}}</p></span>
           <span class="goodsDiscount">运费<p>￥ {{list.shippingAmount}}</p></span>
         </div>
         <div class="orderTotalPrice">
-          实付：￥{{list.needPayAmount}}
+          实退：￥{{list.memberOrderGoods[0].actualPrice}}
         </div>
       </div>
       <!-- 物流信息 -->

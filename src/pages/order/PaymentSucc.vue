@@ -17,6 +17,9 @@ import SearchTitle from './ComOrderSearchTitle'
 import {
   storage
 } from 'util/storage'
+import {
+  immedPaymentMony
+} from 'util/const.js'
 export default {
   data () {
     return {
@@ -28,7 +31,7 @@ export default {
   },
   methods: {
     immedPaymentRender () {
-      this.immedPaymentMony = storage.getLocalStorage('immedPaymentMony')
+      this.immedPaymentMony = storage.getLocalStorage(immedPaymentMony)
     }
   },
   mounted () {

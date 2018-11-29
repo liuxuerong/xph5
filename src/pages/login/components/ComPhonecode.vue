@@ -3,7 +3,7 @@
     <div class="userPhone">
       <span class="border-bottom">+86</span>
       <div class="border-bottom phoneInput">
-          <input type="text" placeholder="手机号码" name="" v-model="phone">
+        <input type="text" placeholder="手机号码" name="" v-model="phone">
       </div>
     </div>
     <div class="userPhoneCode border-bottom">
@@ -15,7 +15,7 @@
 </template>
 <script>
 import {Toast} from 'mint-ui'
-import {getVerifyCode, modifyPhone} from 'util/netApi'
+import {getVerifyCode, modifyPhone, checkPhone} from 'util/netApi'
 import {http} from 'util/request'
 import {mapMutations} from 'vuex'
 export default {
@@ -25,6 +25,9 @@ export default {
       phone: '',
       code: ''
     }
+  },
+  props: {
+    types: ''
   },
   computed: {
     // 判断手机号码
@@ -41,27 +44,47 @@ export default {
     ...mapMutations(['changeReturnVal']),
     obtainCodeBtn () {
       if (this.rightPhoneNumber) {
-        let params = {
-          request: this.phone
-        }
-        http(getVerifyCode, params).then((response) => {
-          console.log(response)
-          if (response.data.body === true) {
-            this.computedTime = 60
-            this.timer = setInterval(() => {
-              this.computedTime--
-              if (this.computedTime === 0) {
-                clearInterval(this.timer)
+        if (this.types === '0') {
+          http(checkPhone, [this.phone]).then((response1) => {
+            if (response1.data.body === true) {
+              Toast({
+                message: '手机号码已经被注册',
+                position: 'bottom',
+                duration: 2000
+              })
+            } else {
+              let params = {
+                request: this.phone
               }
-            }, 1000)
-          } else {
-            Toast({
-              message: '手机号码未注册',
-              position: 'bottom',
-              duration: 2000
-            })
+              http(getVerifyCode, params).then((response) => {
+                if (response.data.body === true) {
+                  this.computedTime = 60
+                  this.timer = setInterval(() => {
+                    this.computedTime--
+                    if (this.computedTime === 0) {
+                      clearInterval(this.timer)
+                    }
+                  }, 1000)
+                }
+              })
+            }
+          })
+        } else {
+          let params = {
+            request: this.phone
           }
-        })
+          http(getVerifyCode, params).then((response) => {
+            if (response.data.body === true) {
+              this.computedTime = 60
+              this.timer = setInterval(() => {
+                this.computedTime--
+                if (this.computedTime === 0) {
+                  clearInterval(this.timer)
+                }
+              }, 1000)
+            }
+          })
+        }
       } else {
         Toast({
           message: '请输入正确的手机号码',
@@ -96,10 +119,13 @@ export default {
   watch: {
     code: function (val) {
       let _this = this
-      if (val.length === 6) {
+      if (val.length === 6 && this.types === '1') {
         _this.submitCode()
       }
     }
+  },
+  mounted () {
+    console.log(this.types, 8888)
   }
 }
 </script>
@@ -146,7 +172,7 @@ export default {
       outline  none
 .userPhoneCode
   input
-      width 76%
+      width 74%
       height 140px
       line-height 140px
       font-size 40px

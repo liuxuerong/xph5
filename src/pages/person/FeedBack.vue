@@ -57,7 +57,18 @@ export default {
     }
   },
   components: {
+    name: 'FeedBack',
     UserinfoHeader
+  },
+  watch: {
+    '$route' (to, from) {
+      if (to.name === 'feedBack') {
+        this.active = 0
+        this.objImgs = []
+        this.feedback = ''
+        this.phone = ''
+      }
+    }
   },
   computed: {
     // 手机号码判断

@@ -7,8 +7,8 @@
     <div class="userContent">
       <h3>设置密码</h3>
       <span>6-12位的英文或数字</span>
-      <div class="border-bottom userNameInput">
-        <input type="password" name="" id="" v-model="password">
+      <div class="userNameInput">
+        <input type="password" name="" id="" v-model="password" placeholder="请输入密码">
       </div>
     </div>
     <router-link to="/userName" class="nextOper" v-if="type === '1'">跳过</router-link>
@@ -135,7 +135,7 @@ export default {
             font-size 40px
             color #808080
     .userNameInput
-        width 90%
+        width 100%
         height 150px
         margin 150px auto 0
         input
@@ -146,6 +146,7 @@ export default {
             color #262626
             border none
             outline  none
+            border-bottom 2px solid #E6E6E6
     .nextOper
         display block
         width 200px
@@ -160,4 +161,23 @@ export default {
         right 0
         bottom 8%
         margin 0 auto
+  ::-moz-placeholder {
+    font-size: 0.408889rem;
+    color: #E6E6E6;
+  }
+
+  :-ms-input-placeholder {
+    font-size: 0.408889rem;
+    color: #E6E6E6;
+  }
+
+  ::-moz-placeholder {
+    font-size: 0.408889rem;
+    color: #E6E6E6;
+  }
+
+  ::-webkit-input-placeholder {
+    font-size: 0.408889rem;
+    color: #E6E6E6;
+  }
 </style>

@@ -43,7 +43,7 @@
       <div class="priceInfo">
         <ul class="border-bottom">
           <li v-if="totalPric!==''"><span class="name">商品金额：</span><span class="item">￥{{totalPric}}</span></li>
-          <li>优惠<span class="item">￥{{offerAmount}}</span></li>
+          <li>优惠<span class="item">-￥{{offerAmount}}</span></li>
           <li v-if="shippingAmount!==''"><span class="name"> 运费 </span><span class="item">￥{{shippingAmount}}</span></li>
           <!-- <li><span class="name">居家商品满2000减200</span><span class="item">-￥200</span></li> -->
         </ul>

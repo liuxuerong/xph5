@@ -99,3 +99,7 @@ export const mainEnum = {
   1: '2', // 国际品牌
   2: '3' // 发现
 }
+
+export const detailsEnum = {
+  articleCategoryId: '505072580818894848' // 感兴趣的活动
+}

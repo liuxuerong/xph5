@@ -3,7 +3,7 @@
    <userinfo-header :title="title" :oper="oper" @operComplete="operBtnClick"></userinfo-header>
    <div class="phoneCodeCon">
      <h2 class="subtitle">{{subtitle}}</h2>
-     <phone-code ref="phoneCode"></phone-code>
+     <phone-code ref="phoneCode" :types="types"></phone-code>
    </div>
   </div>
 </template>
@@ -17,7 +17,8 @@ export default {
     return {
       title: '',
       subtitle: '',
-      oper: ''
+      oper: '',
+      types: ''
     }
   },
   computed: mapState({
@@ -30,8 +31,8 @@ export default {
   methods: {
     userPhoneCodeRender () {
       let type = this.$route.params.type
-      this.type = type
-      console.log(type)
+      this.types = type
+      console.log(type, 6333)
       if (type === '0') {
         this.title = '绑定新手机'
         this.subtitle = '绑定新手机'
@@ -70,7 +71,9 @@ export default {
   },
   watch: {
     '$route' (to, from) {
-      this.$router.go(0)
+      if (to.name === 'userPhonecode') {
+        this.userPhoneCodeRender()
+      }
     }
   }
 }
