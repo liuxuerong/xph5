@@ -65,10 +65,7 @@ export default {
       storySubFlag: false,
       linkTo: '/storyDetails/',
       brandDetailsLink: '/brandDetails/',
-      tabbar: [{
-        name: '国际品牌',
-        id: '001'
-      }]
+      tabbar: []
     }
   },
   computed: {},
@@ -81,7 +78,6 @@ export default {
     getTabbar () {
       let _this = this
       http(storyTabs, [mainEnum[0]]).then(res => {
-        console.log(res)
         for (let i = 0; i < res.data.body.length; i++) {
           _this.tabbar.push(res.data.body[i])
         }

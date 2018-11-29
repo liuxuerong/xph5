@@ -3,11 +3,12 @@
     <div class="top">
       <img :src="imageUrl+details.brandLogo" alt="" class="brandLogo">
     <div class="title">
-      {{details.title}}|{{details.subTitle}}
+      <p class="title">{{details.title}} <em v-if="details.subTitle&&details.subTitle!=''">|</em> {{details.subTitle}}</p>
     </div>
      <common-collection class="collection"/>
     </div>
-    <div class="desc">详细介绍详细介绍详细介绍详细介绍详细介绍详细介绍详 详详细介绍详细介绍详细介绍详细介绍详细介
+    <div class="desc">
+      {{details.summary}}
     </div>
   </div>
 </template>
@@ -30,14 +31,7 @@ export default {
   props: {
     details: Object
   },
-  computed: {
-
-  },
-  watch: {
-
-  },
-  methods: {
-
+  mounted () {
   }
 }
 </script>

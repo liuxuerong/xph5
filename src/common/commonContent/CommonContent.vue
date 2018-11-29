@@ -7,9 +7,9 @@
             <img :src="imageUrl+item.coverImage" alt="">
           </div>
           <div class="right">
-            <div @click="goodsDetail(item.id)" class="name">{{item.name}}</div>
+            <div class="name">{{item.name}}</div>
             <div class="price">
-              <div @click="goodsDetail(item.id)">
+              <div>
                 <span>￥{{item.minPrice}}</span>
                 <del>￥{{item.marketPrice}}</del>
               </div>
@@ -17,7 +17,7 @@
             <div class="promotion" v-if="item.activityLabels&&item.activityLabels.length>0">
               <span class="promotionItem" :class="{gray:lables.color==2}" v-for="(lables,index) in item.activityLabels" :key="index">{{lables.labelName}}</span>
             </div>
-            <div @click="goodsDetail(item.id)" class="seeMore">查看详情</div>
+            <div class="seeMore">查看详情</div>
           </div>
           <!-- </div> -->
         </div>
@@ -37,7 +37,6 @@ import {
 } from 'util/config.js'
 export default {
   name: 'CommonContent',
-  components: {},
   data () {
     return {
       content: '',
@@ -51,6 +50,11 @@ export default {
     details: Object
   },
   methods: {
+    returnTitle (title) {
+      dsbridge.call('getTitle', title, function (v) {
+        alert(v)
+      })
+    },
     goodsDetail (goodsId) {
       this.platform = getUrlParam('platform')
       if (this.platform === 'wx') {
@@ -72,7 +76,6 @@ export default {
       for (let i = len; i < len * 2; i++) {
         if (goodsItem[i]) {
           goodsItem[i].addEventListener('click', function () {
-            console.log(_this.goodsItems[i - len].id)
             _this.goodsDetail(_this.goodsItems[i - len].id)
           })
         }
@@ -90,8 +93,8 @@ export default {
           }
         }
       }
+      let j = 0
       for (let i = 0; i < newArr.length; i++) {
-        let j = 0
         if (!isNaN(newArr[i])) {
           let goods = goodsItems[j].innerHTML
           newArr[i] = goods
@@ -105,6 +108,7 @@ export default {
   },
   mounted () {
     this.updateContent()
+    this.returnTitle(this.details.title.trim())
   },
   updated () {
     this.updateContent()

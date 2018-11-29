@@ -97,6 +97,7 @@ export default {
             }
           }
         }
+        console.log(clearNum)
         this.changeClearNum(clearNum)
       },
       deep: true,

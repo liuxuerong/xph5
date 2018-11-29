@@ -1,9 +1,9 @@
 <template>
   <div class="storyDetails" :class="{pt0:hideHead}">
-    <common-nav-header :title="details.title" v-if="details&&!hideHead" />
+    <common-nav-header :title="details.title" v-if="details&&!hideHead" :articleShow="articleShow"/>
     <div class="storyDetailsContent" ref="storyDetailsContent">
       <div>
-        <story-details-header v-if="details" :details="details" />
+        <story-details-header v-if="details" :details="details" :imageShow="true"/>
         <div v-for="item in goodsItems" v-if="goodsItems.length" :key="item.id" class="goodsItems">
           <router-link :to="'/details/'+item.id">
             <img v-lazy="imageUrl+item.coverImage" alt="" class="banner">
@@ -39,6 +39,7 @@ import StoryDetailsHeader from './components/StoryDetailsHeader'
 import CommonNavHeader from '@/common/commonHeader/CommonNavHeader'
 import CommonArticleRec from '@/common/commonArticleRec/CommonArticleRec'
 import { getUrlParam } from '@/func/params'
+import dsbridge from 'dsbridge'
 export default {
   name: 'StoryDetails',
   components: {
@@ -55,7 +56,8 @@ export default {
       linkTo: '/storyDetails/',
       imageUrl: config.imageUrl,
       hideHead: false,
-      platform: ''
+      platform: '',
+      articleShow: true
     }
   },
   watch: {
@@ -64,6 +66,11 @@ export default {
     }
   },
   methods: {
+    returnTitle (title) {
+      dsbridge.call('getTitle', title, function (v) {
+        alert(v)
+      })
+    },
     hideHeads () {
       this.platform = getUrlParam('platform')
       if (this.platform && this.platform !== '') {
@@ -77,7 +84,7 @@ export default {
           console.log(res)
           this.details = res.data.body
           this.goodsItems = res.data.body.goodsItems
-          console.log(this.goodsItems)
+          this.returnTitle(this.details.title.trim())
           setTimeout(() => {
             this.scrollInit()
             this.scroll.scrollTo(0, 0, 0)
@@ -122,6 +129,7 @@ export default {
     }
   }
 }
+
 </script>
 
 <style lang="stylus" scoped>

@@ -1,17 +1,17 @@
 <template>
   <div class="storyDetailsHeader border-bottom">
-    <img v-if="articleShow" :src="imageUrl+details.articleCoverImage" alt="">
+    <img v-if="articleShow||imageShow" :src="imageUrl+details.articleCoverImage" alt="">
     <div class="titleCont">
-      <p class="title">{{details.title}} <em v-if="details.subTitle !==''">|</em> {{details.subTitle}}</p>
+      <p class="title titleReturn">{{details.title}} <em v-if="details.subTitle !==''">|</em> {{details.subTitle}}</p>
       <common-collection class="collection" v-if="!articleShow" />
     </div>
-     <div class="bottom" v-if="!articleShow">
+     <div class="bottom" v-if="!articleShow&&!imageShow">
         <div class="author fl">{{details.author}}</div>
         <div class="time fl">{{details.updateTime.split('T')[0]}}</div>
         <div class="browse fr"><i class="icon"></i>{{details.browse}}</div>
       </div>
-    <!-- <div class="summary">{{details.summary}}
-    </div> -->
+    <div class="summary" v-if="articleShow">{{details.summary}}
+    </div>
   </div>
 </template>
 
@@ -27,7 +27,11 @@ export default {
   name: 'StoryDetailsHeader',
   props: {
     details: Object,
-    articleRecommends: Array
+    articleRecommends: Array,
+    imageShow: {
+      type: Boolean,
+      default: false
+    }
   },
   components: {
     CommonCollection
@@ -40,7 +44,6 @@ export default {
   },
   methods: {
     storyDetailsHeaderRender () {
-      console.log(detailsEnum.articleCategoryId)
       if (this.details.articleCategoryId === detailsEnum.articleCategoryId) {
         this.articleShow = true
       }
@@ -48,7 +51,6 @@ export default {
   },
   mounted () {
     this.storyDetailsHeaderRender()
-    console.log(this.details)
   }
 }
 </script>

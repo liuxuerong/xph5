@@ -44,7 +44,7 @@ export default {
   data () {
     return {
       imageUrl: config.imageUrl,
-      showIndex: null,
+      showIndex: 0,
       classfiyData: []
     }
   },
