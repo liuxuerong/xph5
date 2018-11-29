@@ -107,6 +107,7 @@ export default {
 
   },
   mounted () {
+    console.log(this.details, '----')
     this.updateContent()
     this.returnTitle(this.details.title.trim())
   },
@@ -189,5 +190,7 @@ export default {
       font-size 40px
       line-height 70px
     img
+      display block
       width 100%
+      margin 50px 0
 </style>

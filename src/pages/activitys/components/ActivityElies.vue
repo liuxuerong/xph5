@@ -1,6 +1,6 @@
 <template>
   <div class="eliesItem" @click="activityInfoDetails(activityInfoData.id)">
-    <img :src="imageUrl+activityInfoData.pcArticleCoverImage" alt="">
+    <img :src="imageUrl+activityInfoData.articleCoverImage" alt="">
     <h3 class="activityTitle">{{activityInfoData.title}}</h3>
     <span class="activitySummary" v-if="activityInfoData.summary">{{activityInfoData.summary}}</span>
   </div>

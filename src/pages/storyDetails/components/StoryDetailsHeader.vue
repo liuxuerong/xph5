@@ -59,6 +59,7 @@ export default {
 @import "~styles/mixins.styl";
 .storyDetailsHeader
     img
+      display block
       width 100%
       height 600px
       margin-bottom 50px
