@@ -1,6 +1,6 @@
 <template>
   <div class="xpHotel">
-    <common-nav-header :title="title"/>
+    <common-nav-header />
       <div ref="wrapper" class="wrapper">
         <div>
           <common-banner :bannerData="fiveStarQuality" v-if="fiveStarQuality" />
@@ -35,7 +35,6 @@ export default {
   },
   data () {
     return {
-      title: '酒店用品',
       fiveStarQuality: null,
       fiveStarHotel: null,
       hotelDetails: '/hotelDetails/'

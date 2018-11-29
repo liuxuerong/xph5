@@ -2,27 +2,24 @@
   <div class="commonContent">
     <div class="goodsItemsContainer" ref="goodsItemsContainer">
       <div v-for="item in goodsItems" :key="item.id">
-        <div class="goodsItems" @click="linkDetails">
-          <!-- <router-link :to="'/details/'+item.id"  tag="div" class="goodsItems" > -->
-          <!-- <a :href="'/details/'+item.id" class="goodsItems"> -->
-          <router-link :to="'/details/'+item.id">
+        <div class="goodsItems">
+          <div>
             <img :src="imageUrl+item.coverImage" alt="">
-          </router-link>
+          </div>
           <div class="right">
-            <router-link :to="'/details/'+item.id" class="name">{{item.name}}</router-link>
+            <div @click="goodsDetail(item.id)" class="name">{{item.name}}</div>
             <div class="price">
-              <router-link :to="'/details/'+item.id">
+              <div @click="goodsDetail(item.id)">
                 <span>￥{{item.minPrice}}</span>
                 <del>￥{{item.marketPrice}}</del>
-              </router-link>
+              </div>
             </div>
             <div class="promotion" v-if="item.activityLabels&&item.activityLabels.length>0">
               <span class="promotionItem" :class="{gray:lables.color==2}" v-for="(lables,index) in item.activityLabels" :key="index">{{lables.labelName}}</span>
             </div>
-            <router-link :to="'/details/'+item.id" class="seeMore">查看详情</router-link>
-
+            <div @click="goodsDetail(item.id)" class="seeMore">查看详情</div>
           </div>
-          <!-- </router-link> -->
+          <!-- </div> -->
         </div>
       </div>
     </div>
@@ -32,6 +29,9 @@
 </template>
 
 <script>
+import dsbridge from 'dsbridge'
+import { getUrlParam } from '@/func/params'
+import wx from 'weixin-js-sdk'
 import {
   config
 } from 'util/config.js'
@@ -42,7 +42,8 @@ export default {
     return {
       content: '',
       contentArr: [],
-      imageUrl: config.imageUrl
+      imageUrl: config.imageUrl,
+      platfrom: ''
     }
   },
   props: {
@@ -50,6 +51,33 @@ export default {
     details: Object
   },
   methods: {
+    goodsDetail (goodsId) {
+      this.platfrom = getUrlParam('platfrom')
+      if (this.platfrom === 'wx') {
+        wx.miniProgram.navigateTo({
+          url: '../productDetails/productDetails?id=' + goodsId
+        })
+      } else if (this.platfrom === 'i' || this.platfrom === 'a') {
+        dsbridge.call('goodsDetail', goodsId, function (v) {
+          alert(v)
+        })
+      } else {
+        this.$router.push(`/details/${goodsId}`)
+      }
+    },
+    addMethods () {
+      let goodsItem = document.getElementsByClassName('goodsItems')
+      let len = this.goodsItems.length
+      let _this = this
+      for (let i = len; i < len * 2; i++) {
+        if (goodsItem[i]) {
+          goodsItem[i].addEventListener('click', function () {
+            console.log(_this.goodsItems[i - len].id)
+            _this.goodsDetail(_this.goodsItems[i - len].id)
+          })
+        }
+      }
+    },
     updateContent () {
       const goodsItems = this.$refs.goodsItemsContainer.children
       this.contentArr = this.details.content.split('{')
@@ -71,11 +99,9 @@ export default {
         }
       }
       this.content = newArr.join('')
-    },
-    linkDetails (id) {
-      console.log(777)
-      this.$route.push(`/details/${id}`)
+      this.addMethods()
     }
+
   },
   mounted () {
     this.updateContent()
@@ -83,6 +109,7 @@ export default {
   updated () {
     this.updateContent()
   }
+
 }
 </script>
 

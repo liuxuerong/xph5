@@ -86,7 +86,7 @@ export default {
               speed: 400,
               loop: true
             })
-          }, 100)
+          }, 20)
         })
       }).catch(err => {
         console.log(err)

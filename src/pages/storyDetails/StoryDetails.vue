@@ -1,6 +1,6 @@
 <template>
-  <div class="storyDetails">
-    <common-nav-header  v-if="details"/>
+  <div class="storyDetails" :class="{pt0:hideHead}">
+    <common-nav-header  v-if="details&&!hideHead"/>
     <div class="storyDetailsContent" ref="storyDetailsContent">
       <div>
         <story-details-header v-if="details" :details="details" />
@@ -18,6 +18,7 @@ import {
 import {
   hotelDetailList
 } from 'util/netApi'
+import { getUrlParam } from '@/func/params'
 import BScroll from 'better-scroll'
 import CommonContent from '@/common/commonContent/CommonContent'
 import StoryDetailsHeader from './components/StoryDetailsHeader'
@@ -36,19 +37,18 @@ export default {
       id: '',
       details: null,
       goodsItems: [],
-      linkTo: '/storyDetails/'
-    }
-  },
-  watch: {
-    $route (to, from) {
-      // console.log()
-      // if (to.name === 'StoryDetails') {
-      //   console.log(444)
-      //   this.getBrandDetail()
-      // }
+      linkTo: '/storyDetails/',
+      hideHead: false,
+      platfrom: ''
     }
   },
   methods: {
+    hideHeads () {
+      this.platfrom = getUrlParam('platfrom')
+      if (this.platfrom && this.platfrom !== '') {
+        this.hideHead = true
+      }
+    },
     getStoryDetails () {
       const id = this.$route.params.id
       http(hotelDetailList, [id])
@@ -82,6 +82,7 @@ export default {
   },
   mounted () {
     this.getStoryDetails()
+    this.hideHeads()
   },
   updated () {
     this.$nextTick(function () {
@@ -107,6 +108,8 @@ export default {
 .storyDetails
   height 100%
   padding-top 120px
+.storyDetails.pt0
+  padding-top 0
 .storyDetailsContent
   height 100%
   h2

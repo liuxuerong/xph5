@@ -84,6 +84,25 @@ export default {
   watch: {
     cartCount (v) {
       this.changeStyle(v)
+      if (this.cartCount >= this.maxCount) {
+        Toast({
+          message: '数量超出库存范围',
+          position: 'center',
+          duration: 500
+        })
+        if (this.maxCount === 0) {
+          return
+        }
+        this.cartCount = this.maxCount
+      }
+      if (this.cartCount < 2) {
+        this.cartCount = 1
+        Toast({
+          message: '不能再少了',
+          position: 'center',
+          duration: 500
+        })
+      }
     },
     maxCount () {
       this.changeStyle(this.cartCount)
@@ -98,29 +117,10 @@ export default {
     ...mapMutations(['changeNowPrice', 'changeMaxCount', 'changePopupVisible']),
     addCount () {
       this.cartCount++
-      if (this.cartCount >= this.maxCount) {
-        Toast({
-          message: '商品库存不足',
-          position: 'center',
-          duration: 500
-        })
-        if (this.maxCount === 0) {
-          return
-        }
-        this.cartCount = this.maxCount
-      }
     },
 
     subCount () {
       this.cartCount--
-      if (this.cartCount < 2) {
-        this.cartCount = 1
-        Toast({
-          message: '不能再少了',
-          position: 'center',
-          duration: 500
-        })
-      }
     },
     changeStyle (v) {
       console.log(this.maxCount)

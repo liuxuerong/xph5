@@ -8,6 +8,9 @@ import {
   hasCollection,
   doCollection
 } from '@/func/collection'
+import dsbridge from 'dsbridge'
+import { getUrlParam } from '@/func/params'
+import wx from 'weixin-js-sdk'
 import {
   Toast
 } from 'mint-ui'
@@ -23,10 +26,25 @@ export default {
     return {
       id: '',
       collect: false,
-      params: null
+      params: null,
+      platfrom: ''
     }
   },
   methods: {
+    goodsDetail (goodsId) {
+      this.platfrom = getUrlParam('token')
+      if (this.platfrom === 'wx') {
+        wx.miniProgram.navigateTo({
+          url: '../productDetails/productDetails?id=' + goodsId
+        })
+      } else if (this.platfrom === 'i' || this.platfrom === 'a') {
+        dsbridge.call('goodsDetail', goodsId, function (v) {
+          alert(v)
+        })
+      } else {
+        this.$router.push(`/details/${goodsId}`)
+      }
+    },
     hasCollection (params) {
       let fnType = Object.prototype.toString.call(hasCollection(params)).slice(8, -1)
       if (fnType === 'Promise') {
