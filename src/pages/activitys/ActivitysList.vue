@@ -46,7 +46,8 @@ export default {
       ],
       activityInfo: null, // 活动分类
       activityGoods: [], // 单品抢购
-      activityCategory: [] // 活动品类
+      activityCategory: [], // 活动品类
+      platform: ''
     }
   },
   components: {
@@ -68,6 +69,7 @@ export default {
     activitysRender () {
       let type = Number(this.$route.params.type)
       let platform = this.$route.params.platform
+      this.platform = platform
       if (platform === undefined) {
         this.titleShow = true
       }
@@ -81,11 +83,14 @@ export default {
     },
     // 内容加载
     activitysCon (type) {
-      this.$router.push('/activitysList/' + type)
+      if (this.platform !== undefined) {
+        this.$router.push('/activitysList/' + type + '/' + this.platform)
+      } else {
+        this.$router.push('/activitysList/' + type)
+      }
       if (type === 0) {
         // 商品
         http(activityElies).then((response) => {
-          console.log(response)
           if (response.data.code === 0) {
             let data = response.data.body
             this.activityGoods = data.activityGoodss

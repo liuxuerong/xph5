@@ -59,7 +59,7 @@
         </router-link>
       </div>
       <person-title content="优惠卡券" :moreShow="coupons.length > 0"></person-title>
-      <div ref="couponsScroll" class="couponsScroll">
+      <div ref="couponsScroll" class="couponsScroll" :class="{couponsScrollBg:coupons.length === 0}">
         <ul class="memberGradeScroll clearfix" :style="{width:cardScrollWidth+'rem'}">
           <li class="cardVolItem" v-for="item in coupons" :key="item.id" @click="cardVoucher">
             <div class="left">
@@ -103,7 +103,6 @@
       <person-title content="可能感兴趣的活动" :moreShow="activitys.length > 0"></person-title>
       <activitys-details v-if="activitys.length > 0" :activitysData="activitys"></activitys-details>
       <div v-else class="emptyAmusingBg"></div>
-
       <person-title content="必备工具" :moreShow="moreShow"></person-title>
       <div class="toolCen">
         <div class="toolItem">
@@ -480,6 +479,8 @@ export default {
       width 100%
       height 370px
       overflow hidden
+    .couponsScroll.couponsScrollBg
+      bgImage('/static/images/emptyDiscount')
   .addressBox,.collectBox
     width 100%
     height auto

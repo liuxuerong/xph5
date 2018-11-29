@@ -27,6 +27,7 @@
   </div>
 </template>
 <script>
+import dsBridge from 'dsbridge'
 import { config } from 'util/config'
 import { goodsList } from 'util/netApi'
 import {http} from 'util/request'
@@ -52,8 +53,20 @@ export default {
       this.activityCategoryGoods = this.activityCategory.goodsDetails
     },
     // 商品详情
-    activityGoodsDetails (id) {
-      this.$router.push('/details/' + id)
+    activityGoodsDetails (goodsId) {
+      let platform = this.$route.params.platform
+      if (platform === 'i') {
+        this.titleShow = true
+      } else if (platform === 'a') {
+
+      } else if (platform === 'wx') {
+
+      } else {
+        this.$router.push('/details/' + goodsId)
+        dsBridge.call('goodsDetail', goodsId, function (v) {
+          alert(v)
+        })
+      }
     },
     // 查看更多
     activityGoodsMore (goodsCategoryId) {
