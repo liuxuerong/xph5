@@ -31,6 +31,7 @@ export default {
 </script>
 <style lang="stylus" scoped>
 .commonArticleRec
+  margin-top 50px
   li
     padding-bottom 100px
     .routerDetailes

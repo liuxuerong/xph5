@@ -72,7 +72,6 @@ export default {
       for (let i = len; i < len * 2; i++) {
         if (goodsItem[i]) {
           goodsItem[i].addEventListener('click', function () {
-            console.log(_this.goodsItems[i - len].id)
             _this.goodsDetail(_this.goodsItems[i - len].id)
           })
         }
@@ -104,6 +103,7 @@ export default {
 
   },
   mounted () {
+    console.log(this.details, '----')
     this.updateContent()
   },
   updated () {
@@ -185,5 +185,7 @@ export default {
       font-size 40px
       line-height 70px
     img
+      display block
       width 100%
+      margin 50px 0
 </style>

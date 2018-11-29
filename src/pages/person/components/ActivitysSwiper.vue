@@ -2,7 +2,7 @@
   <div class="activitysWrapper">
     <swiper :options="swiperOption">
       <swiper-slide class="swiperItem" v-for="item in activitysData" :key="item.id" @click.native="activitysList">
-        <img :src="imageUrl+item.pcArticleCoverImage" alt="">
+        <img :src="imageUrl+item.articleCoverImage" alt="">
         <h3 class="title" v-if="item.title">{{item.title}}</h3>
         <p class="subTitle" v-if="item.subTitle">{{item.subTitle}}</p>
         <span class="summary" v-if="item.summary">{{item.summary}}</span>

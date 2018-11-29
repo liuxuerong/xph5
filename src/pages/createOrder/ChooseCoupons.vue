@@ -25,21 +25,12 @@
                 <div v-else class="fullSub">
                   <span>无门槛</span>
                 </div>
-                <!-- <span class="operBtn newReceive" v-if="item.useStatus == '1'" >立即领取</span> -->
-                <span class="operBtn newUse" v-if="item.type == '1' || item.type == '3'"  @click="useCoupon(item.id,item.subMoney,item.type)">立即使用</span>
+                <span class="operBtn newUse" v-if="item.type == '1' || item.type == '3'"  @click="useCoupon(item.id,item.name,item.type)">立即使用</span>
                 <span class="operBtn newUse" v-else  @click="useCoupon(item.id,item.discount,item.type)">立即使用</span>
-                <!-- <span class="operBtn noReceive" v-if="item.useStatus == '3'">领光了</span> -->
               </div>
               <div class="activityTime">
-                <!-- 立即领取 可以领取-->
-                <!-- <span v-if="item.useStatus == '1'" class="activityTime">领取时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span> -->
-                <!-- 立即使用  到达使用时间-->
                 <span class="countDown" v-if="item.invalidDay > 0">{{item.invalidDay}}天后过期</span>
                 <span class="countDown" v-else-if="item.invalidDay === 0">1天后过期</span>
-                <!-- 立即使用 未到达使用时间 -->
-                <!-- <span v-else-if="item.useStatus == '2' && item.display=='1'">使用时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span> -->
-                <!-- 领光了 -->
-                <!-- <span v-if="item.useStatus == '3'" class="activityTime">领取时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span> -->
               </div>
             </div>
           </div>
@@ -83,9 +74,7 @@ export default {
     // 优惠券页面渲染
     headleTabsChange () {
       let parmas = storage.getLocalStorage(couponByGoods)
-
       http(listCouponByGoodsItemIds, parmas).then((response) => {
-        console.log(response)
         if (response.data.code === 0) {
           this.list = response.data.body
         }
@@ -98,7 +87,7 @@ export default {
       let info = storage.getLocalStorage(orderInfo) || {}
       info.couponId = id
       if (type === 1 || type === 3) {
-        info.couponName = '￥' + name
+        info.couponName = name
       } else {
         if (name.toString().replace('.', '').length === 2) {
           info.couponName = parseInt(name.toString().replace('.', '')) + '折'
@@ -112,7 +101,6 @@ export default {
     // 不使用优惠券
     noCoupons () {
       let info = storage.getLocalStorage(orderInfo) || {}
-      console.log(info)
       info.couponId = null
       info.couponName = null
       storage.setLocalStorage(orderInfo, info)
