@@ -13,8 +13,6 @@
   </div>
 </template>
 <script>
-// var dsBridge=require("dsbridge")
-// import dsBridge from 'dsbridge'
 import { config } from 'util/config'
 export default {
   props: ['activityGoods'],

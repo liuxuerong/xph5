@@ -171,7 +171,7 @@ const router = new Router({
       component: resolve => require(['@/pages/person/ToolCenter'], resolve)
     },
     {
-      path: '/aboutMember',
+      path: '/aboutMember/:platform?',
       name: 'aboutMember',
       component: resolve => require(['@/pages/person/AboutMember'], resolve)
     }, {
@@ -226,7 +226,7 @@ const router = new Router({
       component: resolve => require(['@/pages/person/SoftwareSeting'], resolve)
     },
     {
-      path: '/agreement',
+      path: '/agreement/:platform?',
       name: 'agreement',
       component: resolve => require(['@/pages/person/Agreement'], resolve)
     },
@@ -255,7 +255,7 @@ const router = new Router({
       component: resolve => require(['@/pages/person/IntegralDetails'], resolve)
     },
     {
-      path: '/integralRule',
+      path: '/integralRule/:platform?',
       name: 'integralRule',
       component: resolve => require(['@/pages/person/IntegralRule'], resolve)
     },

@@ -21,8 +21,6 @@ export default {
   },
   methods: {
     // 详情跳转
-    // storyDetails/474986986709450752
-    // articleCategoryId id
     activityInfoDetails (id) {
       this.$router.push('/storyDetails/' + id)
     }

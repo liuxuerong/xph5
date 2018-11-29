@@ -1,6 +1,6 @@
 <template>
-  <div class="activitysWrapper" :class="{wrapperTitle:!titleShow}">
-    <userinfo-header v-if="titleShow" :title="title" oper=""></userinfo-header>
+  <div class="activitysWrapper" :class="{wrapperTitle:titleShow}">
+    <userinfo-header :class="{hide:titleShow}" :title="title" oper=""></userinfo-header>
     <div class="wrapperBg">
       <img src="" alt="" id="ceshiId">
       <ul class="activitysTab">
@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import dsbridge from 'dsbridge'
 import UserinfoHeader from '@/pages/person/components/ComUserSetHeader'
 import ActivitysTitle from './components/ActivitysTitle'
 import ActivityElies from './components/ActivityElies'
@@ -65,13 +66,19 @@ export default {
     }
   },
   methods: {
+    returnTitle (title) {
+      dsbridge.call('getTitle', title, function (v) {
+        alert(v)
+      })
+    },
     // 页面初始化加载
     activitysRender () {
       let type = Number(this.$route.params.type)
       let platform = this.$route.params.platform
       this.platform = platform
-      if (platform === undefined) {
+      if (platform === 'i' || platform === 'a') {
         this.titleShow = true
+        this.returnTitle(this.title)
       }
       this.activitysActive = type
       this.activitysCon(type)
@@ -116,6 +123,8 @@ export default {
 </script>
 <style lang="stylus" scoped>
   @import "~styles/mixins.styl";
+  .hide
+    display none
   .activitysWrapper.wrapperTitle
     padding-top 0
   .activitysWrapper

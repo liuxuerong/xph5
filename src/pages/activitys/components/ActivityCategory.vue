@@ -5,7 +5,7 @@
       <dir class="categoryName">
         <h3 class="name">{{activityCategory.name}}
           <span v-if="activityCategory.showTimeType ===1" class="stopTime">距结束 {{activityCategory.endDay}} 天</span>
-          <span v-else class="stopTime">距结束 {{activityCategory.endDay}} 小时</span>
+          <span v-else class="stopTime">距结束 {{time}}</span>
         </h3>
         <div class="subName">{{activityCategory.activityDescribe}}</div>
       </dir>
@@ -27,7 +27,9 @@
   </div>
 </template>
 <script>
-import dsBridge from 'dsbridge'
+import dsbridge from 'dsbridge'
+import { getUrlParam } from '@/func/params'
+import wx from 'weixin-js-sdk'
 import { config } from 'util/config'
 import { goodsList } from 'util/netApi'
 import {http} from 'util/request'
@@ -51,21 +53,21 @@ export default {
     // 页面数据渲染
     activityCategoryRender () {
       this.activityCategoryGoods = this.activityCategory.goodsDetails
+      // console.log(this.activityCategory)
     },
     // 商品详情
     activityGoodsDetails (goodsId) {
-      let platform = this.$route.params.platform
-      if (platform === 'i') {
-        this.titleShow = true
-      } else if (platform === 'a') {
-
-      } else if (platform === 'wx') {
-
-      } else {
-        this.$router.push('/details/' + goodsId)
-        dsBridge.call('goodsDetail', goodsId, function (v) {
+      this.platform = getUrlParam('platform')
+      if (this.platform === 'wx') {
+        wx.miniProgram.navigateTo({
+          url: '../productDetails/productDetails?id=' + goodsId
+        })
+      } else if (this.platform === 'i' || this.platform === 'a') {
+        dsbridge.call('goodsDetail', goodsId, function (v) {
           alert(v)
         })
+      } else {
+        this.$router.push(`/details/${goodsId}`)
       }
     },
     // 查看更多
