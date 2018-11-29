@@ -26,13 +26,15 @@
   </div>
 </template>
 <script>
+import { getUrlParam } from '@/func/params'
 import dsbridge from 'dsbridge'
 import UserinfoHeader from './components/ComUserSetHeader'
 export default {
   data () {
     return {
       title: '积分规则',
-      titleShow: false
+      titleShow: false,
+      platform: ''
     }
   },
   components: {
@@ -45,8 +47,8 @@ export default {
       })
     },
     IntegralRuleRender () {
-      let platform = this.$route.params.platform
-      if (platform === 'i' || platform === 'a') {
+      this.platform = getUrlParam('platform')
+      if (this.platform === 'i' || this.platform === 'a') {
         this.titleShow = true
         this.returnTitle(this.title)
       }
@@ -62,7 +64,7 @@ export default {
   @import "~styles/mixins.styl";
   .hide
     display none
-  .activitysWrapper.wrapperTitle
+  .wrapper.wrapperTitle
     padding-top 0
   .wrapper
     width 100%

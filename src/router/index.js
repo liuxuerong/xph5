@@ -171,7 +171,7 @@ const router = new Router({
       component: resolve => require(['@/pages/person/ToolCenter'], resolve)
     },
     {
-      path: '/aboutMember/:platform?',
+      path: '/aboutMember',
       name: 'aboutMember',
       component: resolve => require(['@/pages/person/AboutMember'], resolve)
     }, {
@@ -226,7 +226,7 @@ const router = new Router({
       component: resolve => require(['@/pages/person/SoftwareSeting'], resolve)
     },
     {
-      path: '/agreement/:platform?',
+      path: '/agreement',
       name: 'agreement',
       component: resolve => require(['@/pages/person/Agreement'], resolve)
     },
@@ -255,7 +255,7 @@ const router = new Router({
       component: resolve => require(['@/pages/person/IntegralDetails'], resolve)
     },
     {
-      path: '/integralRule/:platform?',
+      path: '/integralRule',
       name: 'integralRule',
       component: resolve => require(['@/pages/person/IntegralRule'], resolve)
     },
@@ -323,7 +323,7 @@ const router = new Router({
     },
     // ActivitysList
     {
-      path: '/activitysList/:type/:platform?',
+      path: '/activitysList/:type',
       name: 'activitysList',
       component: resolve => require(['@/pages/activitys/ActivitysList'], resolve)
     },

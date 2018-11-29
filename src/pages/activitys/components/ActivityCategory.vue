@@ -1,5 +1,5 @@
 <template>
-  <div class="activityCategoryItem">
+  <div class="activityCategoryItem" v-if="activityCategory.activityEndTime !== '00:00:00'">
     <div class="categoryInfo">
       <img class="categoryImg" :src="imageUrl+activityCategory.picture" alt="">
       <dir class="categoryName">

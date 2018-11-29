@@ -7,7 +7,7 @@
         <li v-for="(tab,i) in activitysTab" :key="i" :class="{'active':activitysActive==i}" @click="activitysTabClick(i)">{{tab}}</li>
       </ul>
     </div>
-    <div class="activitysCon" v-if="activitysActive == 0">
+    <div class="activitysCon" v-if="activitysActive == 0 && (activityGoods.length || activityCategory.length)">
       <!-- 单品秒杀 -->
       <div class="activityGoodsBox">
         <activitys-title v-if="activityGoods.length" :activitysTitle="activitysTitle[0]"></activitys-title>
@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import { getUrlParam } from '@/func/params'
 import dsbridge from 'dsbridge'
 import UserinfoHeader from '@/pages/person/components/ComUserSetHeader'
 import ActivitysTitle from './components/ActivitysTitle'
@@ -74,9 +75,8 @@ export default {
     // 页面初始化加载
     activitysRender () {
       let type = Number(this.$route.params.type)
-      let platform = this.$route.params.platform
-      this.platform = platform
-      if (platform === 'i' || platform === 'a') {
+      this.platform = getUrlParam('platform')
+      if (this.platform === 'i' || this.platform === 'a') {
         this.titleShow = true
         this.returnTitle(this.title)
       }
@@ -91,7 +91,7 @@ export default {
     // 内容加载
     activitysCon (type) {
       if (this.platform === 'i' || this.platform === 'a') {
-        this.$router.push('/activitysList/' + type + '/' + this.platform)
+        this.$router.push('/activitysList/' + type + '?platform=' + this.platform)
       } else {
         this.$router.push('/activitysList/' + type)
       }
@@ -100,6 +100,7 @@ export default {
         http(activityElies).then((response) => {
           if (response.data.code === 0) {
             let data = response.data.body
+            console.log(response)
             this.activityGoods = data.activityGoodss
             this.activityCategory = data.activotyCategorys
           }
