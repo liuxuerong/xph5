@@ -90,7 +90,7 @@ export default {
     },
     // 内容加载
     activitysCon (type) {
-      if (this.platform !== undefined) {
+      if (this.platform === 'i' || this.platform === 'a') {
         this.$router.push('/activitysList/' + type + '/' + this.platform)
       } else {
         this.$router.push('/activitysList/' + type)
