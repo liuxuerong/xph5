@@ -43,7 +43,7 @@ export default {
       content: '',
       contentArr: [],
       imageUrl: config.imageUrl,
-      platfrom: ''
+      platform: ''
     }
   },
   props: {
@@ -52,12 +52,12 @@ export default {
   },
   methods: {
     goodsDetail (goodsId) {
-      this.platfrom = getUrlParam('platfrom')
-      if (this.platfrom === 'wx') {
+      this.platform = getUrlParam('platform')
+      if (this.platform === 'wx') {
         wx.miniProgram.navigateTo({
           url: '../productDetails/productDetails?id=' + goodsId
         })
-      } else if (this.platfrom === 'i' || this.platfrom === 'a') {
+      } else if (this.platform === 'i' || this.platform === 'a') {
         dsbridge.call('goodsDetail', goodsId, function (v) {
           alert(v)
         })

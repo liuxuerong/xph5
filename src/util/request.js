@@ -19,7 +19,6 @@ let baseUrl = config.baseUrl
 // 获取token;
 let getAccessToken = () => {
   let token = getUrlParam('token')
-  console.log(token)
   let tokenOne = storage.getLocalStorage(accessToken)
   token = token ? `Bearer ${token}` : tokenOne
   return token

@@ -48,7 +48,7 @@ export default {
       goodsItems: [],
       linkTo: '/brandDetails/',
       hideHead: false,
-      platfrom: ''
+      platform: ''
     }
   },
   watch: {
@@ -60,8 +60,8 @@ export default {
   },
   methods: {
     hideHeads () {
-      this.platfrom = getUrlParam('platfrom')
-      if (this.platfrom && this.platfrom !== '') {
+      this.platform = getUrlParam('platform')
+      if (this.platform && this.platform !== '') {
         this.hideHead = true
       }
     },
