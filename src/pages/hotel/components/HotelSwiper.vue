@@ -88,7 +88,7 @@ h4.name
   width 100%
   height 600px
   position relative
-  width 90%
+  width 86%
   margin 0 auto
  .swiperHref
     display block

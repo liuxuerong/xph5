@@ -1,6 +1,6 @@
 <template>
-  <div class="storyDetails">
-    <common-nav-header :title="details.title" v-if="details" />
+  <div class="storyDetails" :class="{pt0:hideHead}">
+    <common-nav-header :title="details.title" v-if="details&&!hideHead" />
     <div class="storyDetailsContent" ref="storyDetailsContent">
       <div>
         <story-details-header v-if="details" :details="details" />
@@ -38,6 +38,7 @@ import CommonContent from '@/common/commonContent/CommonContent'
 import StoryDetailsHeader from './components/StoryDetailsHeader'
 import CommonNavHeader from '@/common/commonHeader/CommonNavHeader'
 import CommonArticleRec from '@/common/commonArticleRec/CommonArticleRec'
+import { getUrlParam } from '@/func/params'
 export default {
   name: 'StoryDetails',
   components: {
@@ -52,7 +53,9 @@ export default {
       details: null,
       goodsItems: [],
       linkTo: '/storyDetails/',
-      imageUrl: config.imageUrl
+      imageUrl: config.imageUrl,
+      hideHead: false,
+      platform: ''
     }
   },
   watch: {
@@ -61,6 +64,12 @@ export default {
     }
   },
   methods: {
+    hideHeads () {
+      this.platform = getUrlParam('platform')
+      if (this.platform && this.platform !== '') {
+        this.hideHead = true
+      }
+    },
     getStoryDetails () {
       const id = this.$route.params.id
       http(hotelDetailList, [id])
@@ -95,6 +104,7 @@ export default {
   },
   mounted () {
     this.getStoryDetails()
+    this.hideHeads()
   },
   updated () {
     let img = this.$refs.storyDetailsContent.getElementsByTagName('img')
@@ -118,6 +128,8 @@ export default {
 .storyDetails
   height 100%
   padding-top 120px
+.storyDetails.pt0
+  padding-top 0
 .storyDetailsContent
   height 100%
   h2

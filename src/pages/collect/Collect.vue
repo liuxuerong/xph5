@@ -91,10 +91,6 @@ export default {
     }
   },
   methods: {
-    // onItemClick (index) {
-    //   this.showWhich = index
-    //   this.scroll.refresh()
-    // },
     onItemClick (index) {
       this.showWhich = index
       this.page = 1

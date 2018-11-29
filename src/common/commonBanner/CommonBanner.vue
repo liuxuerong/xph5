@@ -10,7 +10,7 @@
             <span class="title">{{item.title}}</span>
             <span class="price fr" v-if="item.goodsPrice!==0">{{item.goodsPrice}}元起</span>
           </h5>
-          <div class="content">
+          <div class="content" v-if="item.summary&&item.summary!=''">
             {{item.summary}}
           </div>
         </div>
@@ -45,7 +45,7 @@ export default {
 <style lang="stylus" scoped>
 @import "~styles/mixins.styl";
 .commonContent
-  margin-bottom 150px
+  margin-bottom 50px
   h5
     height 140px
     line-height 140px
@@ -63,6 +63,7 @@ export default {
     color #808080
     font-size 36px
     line-height 60px
+    margin-bottom 100px
     ellipsisM()
     -webkit-line-clamp 2
 .commonBanner

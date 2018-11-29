@@ -1,6 +1,6 @@
 <template>
-  <div class="brandDetailsContent" ref="brandDetailsContent">
-    <common-nav-header :title="details.title" v-if="details" />
+  <div class="brandDetailsContent" ref="brandDetailsContent" :class="{pt0:hideHead}">
+    <common-nav-header :title="details.title" v-if="details&&!hideHead" />
     <div class="brandDetails" ref="brandDetails">
       <div>
         <div class="topBgImg" v-if="details">
@@ -26,6 +26,7 @@ import {
 import {
   config
 } from 'util/config.js'
+import { getUrlParam } from '@/func/params'
 import BScroll from 'better-scroll'
 import DetailsHeader from './components/DetailsHeader'
 import CommonContent from '@/common/commonContent/CommonContent'
@@ -45,8 +46,9 @@ export default {
       imageUrl: config.imageUrl,
       details: null, // 详情
       goodsItems: [],
-      linkTo: '/brandDetails/'
-
+      linkTo: '/brandDetails/',
+      hideHead: false,
+      platform: ''
     }
   },
   watch: {
@@ -57,6 +59,12 @@ export default {
     }
   },
   methods: {
+    hideHeads () {
+      this.platform = getUrlParam('platform')
+      if (this.platform && this.platform !== '') {
+        this.hideHead = true
+      }
+    },
     getBrandDetail () {
       const id = this.$route.params.id
       http(hotelDetailList, [id])
@@ -65,7 +73,6 @@ export default {
           this.goodsItems = res.data.body.goodsItems
           setTimeout(() => {
             this.scrollInit()
-            console.log(7777)
             this.scroll.scrollTo(0, 0, 0)
           }, 16)
         })
@@ -91,7 +98,7 @@ export default {
   },
   mounted () {
     this.getBrandDetail()
-    console.log(this.$refs.brandDetailsContent.getElementsByTagName('img').length)
+    this.hideHeads()
   },
   updated () {
     this.$nextTick(function () {
@@ -117,6 +124,8 @@ export default {
 .brandDetailsContent
   height 100%
   padding-top 120px
+.brandDetailsContent.pt0
+  padding-top 0
 .brandDetails
   height 100%
   .topBgImg

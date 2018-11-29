@@ -14,7 +14,7 @@
       <div>
         <ul class="goodsContainer" v-if="imgsList.length">
           <li v-for="item in imgsList" v-if="imgsList.length" :key="item.index">
-              <router-link :to="'/hallDetails/'+index">
+              <router-link :to="'/hallDetails/'+item.index">
                 <img :src="imageUrl+item.img" alt="">
               </router-link>
             </li>
