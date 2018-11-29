@@ -1,13 +1,13 @@
 <template>
-  <div class="activitysWrapper" :class="{wrapperTitle:!titleShow}">
-    <userinfo-header v-if="titleShow" :title="title" oper=""></userinfo-header>
+  <div class="activitysWrapper" :class="{wrapperTitle:titleShow}">
+    <userinfo-header :class="{hide:titleShow}" :title="title" oper=""></userinfo-header>
     <div class="wrapperBg">
       <img src="" alt="" id="ceshiId">
       <ul class="activitysTab">
         <li v-for="(tab,i) in activitysTab" :key="i" :class="{'active':activitysActive==i}" @click="activitysTabClick(i)">{{tab}}</li>
       </ul>
     </div>
-    <div class="activitysCon" v-if="activitysActive == 0">
+    <div class="activitysCon" v-if="activitysActive == 0 && (activityGoods.length || activityCategory.length)">
       <!-- 单品秒杀 -->
       <div class="activityGoodsBox">
         <activitys-title v-if="activityGoods.length" :activitysTitle="activitysTitle[0]"></activitys-title>
@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import { getUrlParam } from '@/func/params'
+import dsbridge from 'dsbridge'
 import UserinfoHeader from '@/pages/person/components/ComUserSetHeader'
 import ActivitysTitle from './components/ActivitysTitle'
 import ActivityElies from './components/ActivityElies'
@@ -46,7 +48,8 @@ export default {
       ],
       activityInfo: null, // 活动分类
       activityGoods: [], // 单品抢购
-      activityCategory: [] // 活动品类
+      activityCategory: [], // 活动品类
+      platform: ''
     }
   },
   components: {
@@ -64,12 +67,18 @@ export default {
     }
   },
   methods: {
+    returnTitle (title) {
+      dsbridge.call('getTitle', title, function (v) {
+        alert(v)
+      })
+    },
     // 页面初始化加载
     activitysRender () {
       let type = Number(this.$route.params.type)
-      let platform = this.$route.params.platform
-      if (platform === undefined) {
+      this.platform = getUrlParam('platform')
+      if (this.platform === 'i' || this.platform === 'a') {
         this.titleShow = true
+        this.returnTitle(this.title)
       }
       this.activitysActive = type
       this.activitysCon(type)
@@ -81,13 +90,17 @@ export default {
     },
     // 内容加载
     activitysCon (type) {
-      this.$router.push('/activitysList/' + type)
+      if (this.platform === 'i' || this.platform === 'a') {
+        this.$router.push('/activitysList/' + type + '?platform=' + this.platform)
+      } else {
+        this.$router.push('/activitysList/' + type)
+      }
       if (type === 0) {
         // 商品
         http(activityElies).then((response) => {
-          console.log(response)
           if (response.data.code === 0) {
             let data = response.data.body
+            console.log(response)
             this.activityGoods = data.activityGoodss
             this.activityCategory = data.activotyCategorys
           }
@@ -111,6 +124,8 @@ export default {
 </script>
 <style lang="stylus" scoped>
   @import "~styles/mixins.styl";
+  .hide
+    display none
   .activitysWrapper.wrapperTitle
     padding-top 0
   .activitysWrapper

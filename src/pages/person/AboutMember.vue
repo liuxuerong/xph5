@@ -1,6 +1,6 @@
 <template>
-  <div class="wrapper">
-    <userinfo-header title="关于会员卡" oper=""></userinfo-header>
+  <div class="wrapper" :class="{wrapperTitle:titleShow}">
+    <userinfo-header :title="title" :class="{hide:titleShow}" oper=""></userinfo-header>
     <div class="aboutMemberCon">
       <h3 class="aboutTitle">会员等级介绍</h3>
       <p class="introduceText">星品优汇会员成长体系包括4个等级：分别为普卡、银卡、金卡、钻卡。<br />银卡、金卡、钻卡有效期说明：办理日起至次年12月31日。</p>
@@ -86,21 +86,46 @@
   </div>
 </template>
 <script>
+import { getUrlParam } from '@/func/params'
+import dsbridge from 'dsbridge'
 import UserinfoHeader from './components/ComUserSetHeader'
 export default {
   data () {
     return {
-
+      title: '关于会员卡',
+      titleShow: false,
+      platform: ''
     }
   },
   components: {
     name: 'AboutMember',
     UserinfoHeader
+  },
+  methods: {
+    returnTitle (title) {
+      dsbridge.call('getTitle', title, function (v) {
+        alert(v)
+      })
+    },
+    aboutMemberRender () {
+      this.platform = getUrlParam('platform')
+      if (this.platform === 'i' || this.platform === 'a') {
+        this.titleShow = true
+        this.returnTitle(this.title)
+      }
+    }
+  },
+  mounted () {
+    this.aboutMemberRender()
   }
 }
 </script>
 <style lang="stylus" scoped>
   @import "~styles/mixins.styl";
+  .hide
+    display none
+  .wrapper.wrapperTitle
+    padding-top 0
   .wrapper
     width 100%
     box-sizing border-box

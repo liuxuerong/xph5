@@ -323,7 +323,7 @@ const router = new Router({
     },
     // ActivitysList
     {
-      path: '/activitysList/:type/:platform?',
+      path: '/activitysList/:type',
       name: 'activitysList',
       component: resolve => require(['@/pages/activitys/ActivitysList'], resolve)
     },

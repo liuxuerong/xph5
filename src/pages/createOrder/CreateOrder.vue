@@ -21,7 +21,7 @@
     <div class="createOrderWrap" v-if="!unsatisfactoryData.length">
       <div class="title">商品与配送</div>
       <div class="cutOffLine30"></div>
-      <router-link class="cellLink" to="/sendWay">
+      <router-link class="cellLink" to="/addressAdmin/need">
         <div class="text">配送方式<span class="fr" v-if="info&&info.addressType">{{info.addressType}}</span></div>
       </router-link>
       <div class="cutOffLine30"></div>

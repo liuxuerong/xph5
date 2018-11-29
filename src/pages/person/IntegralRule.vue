@@ -1,6 +1,6 @@
 <template>
-  <div class="wrapper">
-    <userinfo-header title="积分规则" oper=''></userinfo-header>
+  <div class="wrapper" :class="{wrapperTitle:titleShow}">
+    <userinfo-header :title="title" :class="{hide:titleShow}" oper=''></userinfo-header>
     <div class="integralRuleCon">
       <div class="integralRuleText">
         <h3>积分获取规则</h3>
@@ -26,21 +26,46 @@
   </div>
 </template>
 <script>
+import { getUrlParam } from '@/func/params'
+import dsbridge from 'dsbridge'
 import UserinfoHeader from './components/ComUserSetHeader'
 export default {
   data () {
     return {
-
+      title: '积分规则',
+      titleShow: false,
+      platform: ''
     }
   },
   components: {
     UserinfoHeader
+  },
+  methods: {
+    returnTitle (title) {
+      dsbridge.call('getTitle', title, function (v) {
+        alert(v)
+      })
+    },
+    IntegralRuleRender () {
+      this.platform = getUrlParam('platform')
+      if (this.platform === 'i' || this.platform === 'a') {
+        this.titleShow = true
+        this.returnTitle(this.title)
+      }
+    }
+  },
+  mounted () {
+    this.IntegralRuleRender()
   }
 }
 </script>
 
 <style lang="stylus" scoped>
   @import "~styles/mixins.styl";
+  .hide
+    display none
+  .wrapper.wrapperTitle
+    padding-top 0
   .wrapper
     width 100%
     box-sizing border-box

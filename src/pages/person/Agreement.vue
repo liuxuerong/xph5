@@ -1,6 +1,6 @@
 <template>
-  <div class="wrapper">
-    <userinfo-header title="商城用户注册协议" oper=''></userinfo-header>
+  <div class="wrapper" :class="{wrapperTitle:titleShow}">
+    <userinfo-header :class="{hide:titleShow}" :title="title" oper=''></userinfo-header>
     <div class="agreementCon">
       <span>本协议是您与商城网站（简称"本站"，网址：<a href="https://www.upinstar.com/">https://www.upinstar.com/</a>）所有者（以下简称为"商城"）之间就商城网站服务等相关事宜所订立的契约，请您仔细阅读本注册协议，您点击"同意并继续"按钮后，本协议即构成对双方有约束力的法律文件。</span>
       <h3>第1条 本站服务条款的确认和接纳</h3>
@@ -40,21 +40,46 @@
   </div>
 </template>
 <script>
+import { getUrlParam } from '@/func/params'
+import dsbridge from 'dsbridge'
 import UserinfoHeader from './components/ComUserSetHeader'
 export default {
   name: 'agreement',
   data () {
     return {
-
+      title: '商城用户注册协议',
+      titleShow: false,
+      platform: ''
     }
   },
   components: {
     UserinfoHeader
+  },
+  methods: {
+    returnTitle (title) {
+      dsbridge.call('getTitle', title, function (v) {
+        alert(v)
+      })
+    },
+    agreementRender () {
+      this.platform = getUrlParam('platform')
+      if (this.platform === 'i' || this.platform === 'a') {
+        this.titleShow = true
+        this.returnTitle(this.title)
+      }
+    }
+  },
+  mounted () {
+    this.agreementRender()
   }
 }
 </script>
 
 <style lang="stylus" ecoped>
+  .hide
+    display none
+  .wrapper.wrapperTitle
+    padding-top 0
   body,html
     background #fff
   .wrapper

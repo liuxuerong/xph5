@@ -2,7 +2,7 @@
   <div class="wrapper">
     <div class="centerHeader">
       <div class="userInfoTop">
-        <span class="prevOper" @click="backPrevOper">&lt;</span>
+        <span class="prevOper" @click="backPrevOper"></span>
         <h3 class="userInfoTitle">个人中心</h3>
       </div>
       <div class="centerHeaderBot">
@@ -283,14 +283,32 @@ export default {
     box-sizing border-box
     padding 0 50px
     position relative
+    // .prevOper
+    //   display block
+    //   font-size 70px
+    //   width 32px
+    //   height 130px
+    //   line-height 130px
+    //   color #fff
+    //   font-weight bold
     .prevOper
-      display block
-      font-size 70px
-      width 32px
-      height 130px
-      line-height 130px
-      color #fff
-      font-weight bold
+      position absolute
+      width 100px
+      height 120px
+      left 50px
+      z-index 99
+    .prevOper:before,.prevOper:after
+      width 0
+      height 0
+      content ''
+      position absolute
+      border 30px solid transparent
+      border-right 30px solid #fff
+      left -30px
+      top 30px
+    .prevOper:after
+      border-right 30px solid #313131
+      left -24px
     .userInfoTitle
       width 60%
       height 130px
