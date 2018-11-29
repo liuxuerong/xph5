@@ -15,13 +15,20 @@ import {
 import axios from 'axios'
 import notice from 'util/notice.js'
 import { config } from 'util/config' // 图片路径
+import { getUrlParam } from '@/func/params'
+function getToken () {
+  let token = getUrlParam('token')
+  let tokenOne = storage.getLocalStorage(accessToken)
+  token = token ? `Bearer ${token}` : tokenOne
+  return token
+}
 export const hasCollection = (params) => {
-  if (storage.getLocalStorage(accessToken)) {
+  if (getToken()) {
     return http(isCollection, params)
   }
 }
 export const doCollection = (params) => {
-  if (storage.getLocalStorage(accessToken)) {
+  if (getToken()) {
     return http(opCollection, params, 'noLoading')
   } else {
     notice.errorModal('未授权，请重新登录', function () {

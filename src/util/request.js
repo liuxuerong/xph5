@@ -13,11 +13,15 @@ import {
 import axios from 'axios'
 import notice from './notice'
 import router from '../router'
+import { getUrlParam } from '@/func/params'
 let baseUrl = config.baseUrl
 
 // 获取token;
 let getAccessToken = () => {
-  let token = storage.getLocalStorage(accessToken)
+  let token = getUrlParam('token')
+  console.log(token)
+  let tokenOne = storage.getLocalStorage(accessToken)
+  token = token ? `Bearer ${token}` : tokenOne
   return token
 }
 
