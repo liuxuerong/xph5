@@ -54,10 +54,6 @@ export default {
     } else {
       this.getImg(this.pricesData.goodsImage)
     }
-
-    // if (typeof (this.pricesData.goodsPics) === 'string') {
-    //   this.img =
-    // }
   }
 
 }

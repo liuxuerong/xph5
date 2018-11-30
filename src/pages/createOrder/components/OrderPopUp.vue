@@ -29,7 +29,7 @@
         </li>
       </ul>
       <div class="goodsInfoBottm border-top">
-        <router-link to="/cart" class="linkCart">返回购物车</router-link>
+        <div class="linkCart" @click="toCart">返回购物车</div>
         <div class="remove" @click="remove">移除上述商品</div>
       </div>
     </div>
@@ -55,6 +55,9 @@ export default {
     // 传给父元素id集合
     remove () {
       this.$emit('remove')
+    },
+    toCart () {
+      this.$router.replace({path: '/cart/1'})
     }
   },
   created () {

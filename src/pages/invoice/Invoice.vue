@@ -230,7 +230,7 @@ export default {
             info.invoicingType = this.inputForm.invoicingType
             // info.shippingMethod = 1
             storage.setLocalStorage(orderInfo, info)
-            this.$router.push({path: '/createOrder/1'})
+            this.$router.replace({path: '/createOrder/1'})
           }
         })
       } else {
@@ -241,7 +241,7 @@ export default {
             info.invoiceTypeValue = this.inputForm.invoiceTypeValue
             // info.shippingMethod = 1
             storage.setLocalStorage(orderInfo, info)
-            this.$router.push({path: '/createOrder/1'})
+            this.$router.replace({path: '/createOrder/1'})
           }
         }).catch(err => {
           console.log(err)

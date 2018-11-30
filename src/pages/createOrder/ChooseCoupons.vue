@@ -96,7 +96,7 @@ export default {
         }
       }
       storage.setLocalStorage(orderInfo, info)
-      this.$router.push({path: '/createOrder/1'})
+      this.$router.replace({path: '/createOrder/1'})
     },
     // 不使用优惠券
     noCoupons () {
@@ -104,7 +104,7 @@ export default {
       info.couponId = null
       info.couponName = null
       storage.setLocalStorage(orderInfo, info)
-      this.$router.push({path: '/createOrder/1'})
+      this.$router.replace({path: '/createOrder/1'})
     }
   },
   mounted () {

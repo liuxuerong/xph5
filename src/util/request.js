@@ -58,6 +58,7 @@ let headerOption = method => {
 }
 // http返回码状态判断
 let state = (res, noLoading) => {
+  // console.log(res)
   if (noLoading) {
     // Loading隐藏
     notice.loadingHide()
@@ -65,6 +66,7 @@ let state = (res, noLoading) => {
   if (res.code === undefined) {
     notice.errorModal('网络错误', function () {
       notice.loadingHide()
+      router.go(0)
     })
   }
   switch (res.code) {

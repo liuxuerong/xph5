@@ -131,8 +131,12 @@ export default {
         this.info = storage.getLocalStorage(orderInfo)
         this.getDetails()
       } else if (to.path === '/createOrder') {
+        this.info = null
         storage.setLocalStorage(orderInfo, {})
         this.getDetails()
+      }
+      if (from.path === '/createOrder/1' && to.path === '/createOrder') {
+        this.$router.go(-1)
       }
     }
   },
@@ -152,7 +156,7 @@ export default {
         storage.setLocalStorage(goodsInfo, goodsInfoCart)
         this.getDetails()
       } else {
-        this.$router.push('/cart')
+        this.$router.replace({path: '/cart/1'})
       }
     },
     getDetails () {

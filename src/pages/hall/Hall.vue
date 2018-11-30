@@ -100,6 +100,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+@import "~styles/mixins.styl"
 .xpHall
   height 100%
   padding-top 136px
@@ -117,10 +118,13 @@ export default {
     width 100%
     .left
       flex 1
+      width 80%
       .title
         font-size 46px
+        ellipsis()
       .summary
         display none
+        ellipsis()
     .experienceGoods
       width 140px
       height 70px

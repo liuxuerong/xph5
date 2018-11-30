@@ -12,9 +12,14 @@ export default {
   props: {
     title: String
   },
+
   methods: {
     goBack () {
-      this.$router.back(-1)
+      if (this.$route.name !== 'HallAtlas') {
+        this.$router.go(-1)
+      } else {
+        this.$router.push('/hall')
+      }
     }
   }
 }
