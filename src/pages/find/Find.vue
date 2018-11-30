@@ -42,7 +42,7 @@
         </div>
 
         <div ref="xpStoryContent" class="xpStoryContent" :class="{fixed:isFixed}">
-          <div>
+          <div class="xpStoryContentChild">
             <div class="xpGoodsTop border-bottom" ref="xpGoodsTop" v-show="!isFixed">
               <div class="xpGoodsTopContent">
                 <tab v-if="tabbar.length">
@@ -250,6 +250,9 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.xpStoryContentChild
+  min-height 100%
+  position relative
 .className
   padding-left 50px
   color #333333
@@ -392,4 +395,11 @@ export default {
   img
     width 100%
     height 360px
+
+</style>
+<style lang="stylus">
+.xpStoryContentChild
+  .vux-divider
+    position absolute
+    bottom 148px
 </style>

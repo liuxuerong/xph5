@@ -88,7 +88,9 @@ import {
 import {
   goodsInfo,
   orderInfo,
-  couponByGoods
+  couponByGoods,
+  invoiceInfo,
+  createOrderFrom
 } from 'util/const.js'
 export default {
   name: 'CreateOrder',
@@ -127,16 +129,28 @@ export default {
   },
   watch: {
     '$route' (to, from) {
-      if (to.path === '/createOrder/1') {
+      console.log(to, 't0')
+      console.log(from, 'from')
+      if (to.name === 'CreateOrder' && to.params.info) {
         this.info = storage.getLocalStorage(orderInfo)
         this.getDetails()
-      } else if (to.path === '/createOrder') {
+      } else if (to.name === 'CreateOrder' && !to.params.info) {
         this.info = null
-        storage.setLocalStorage(orderInfo, {})
+        storage.delLocalStorage(orderInfo)
+        storage.delLocalStorage(invoiceInfo)
         this.getDetails()
       }
-      if (from.path === '/createOrder/1' && to.path === '/createOrder') {
-        this.$router.go(-1)
+      console.log(to, from)
+      if (from.path !== '/createOrder/1' && to.path === '/createOrder') {
+        console.log(from.path)
+        storage.setLocalStorage(createOrderFrom, from.path)
+      }
+      console.log(from.path.indexOf('/createOrder/') !== -1 && to.path.indexOf('/createOrder/') !== -1)
+      if (from.path.indexOf('/createOrder/') !== -1 && to.path.indexOf('/createOrder/') !== -1) {
+        let fromPath = storage.getLocalStorage(createOrderFrom)
+        console.log(fromPath)
+        this.$router.push(fromPath)
+        storage.delLocalStorage(fromPath)
       }
     }
   },

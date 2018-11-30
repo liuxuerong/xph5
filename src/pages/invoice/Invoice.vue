@@ -15,69 +15,69 @@
       <group>
         <radio :options="invoiceStyle" v-model="inputForm.invoiceStyleValue"></radio>
       </group>
-      <group title="发票抬头" v-if="headeShow">
+      <group title="发票抬头" v-if="inputForm.headeShow">
         <x-input placeholder="发票抬头" v-model.trim="inputForm.remark"></x-input>
       </group>
-      <group title="企业信息" v-if="infoAllShow">
+      <group title="企业信息" v-if="inputForm.infoAllShow">
         <x-input placeholder="公司名称" v-model.trim="inputForm.name"></x-input>
         <x-input placeholder="纳税人识别号" v-model.trim="inputForm.idCode"></x-input>
-        <div v-if="infoShow">
+        <div v-if="inputForm.infoShow">
           <x-input placeholder="公司地址" v-model.trim="inputForm.companyAddress"></x-input>
           <x-input placeholder="联系电话" v-model.trim="inputForm.phone"></x-input>
           <x-input placeholder="开户地" v-model.trim="inputForm.bank"></x-input>
           <x-input placeholder="开户账号" v-model.trim="inputForm.accountNumber"></x-input>
         </div>
       </group>
-      <group title="附件" v-if="!infoShow&&infoAllShow">
+      <group title="附件" v-if="!inputForm.infoShow&&inputForm.infoAllShow">
         <div class="upWrap">
-          <div v-if="certificate===''">
-            <input type="hidden" :value="certificate">
+          <div v-if="inputForm.certificate===''">
+            <input type="hidden" :value="inputForm.certificate">
             <input type="file" accept="image/*" @change="headerUpfile(0)">
             <span class="info">
               <img src="/static/icons/invoice_carmer.png" alt="">
               <p>公司营业执照<br>（非必填）</p>
             </span>
           </div>
-          <img v-lazy="imageUrl+certificate" alt="" class="upImg" v-else>
-          <div class="delIcon"  v-if="certificate!==''" @click="delImg ('certificate')"></div>
+          <img v-lazy="imageUrl+inputForm.certificate" alt="" class="upImg" v-else>
+          <div class="delIcon"  v-if="inputForm.certificate!==''" @click="delImg ('certificate')"></div>
         </div>
       </group>
-      <group title="附件" v-if="infoShow&&infoAllShow">
+      <group title="附件" v-if="inputForm.infoShow&&inputForm.infoAllShow">
         <div class="upWrap">
-          <div v-show="certificate===''">
-            <input type="hidden" :value="certificate" name="need" placeholder="公司营业执照">
+          <div v-show="inputForm.certificate===''">
+            <input type="hidden" :value="inputForm.certificate" name="need" placeholder="公司营业执照">
             <input type="file" accept="image/*" @change="headerUpfile(1)">
             <span class="info">
               <img src="/static/icons/invoice_carmer.png" alt="">
               <p>公司营业执照</p>
               </span>
           </div>
-          <img v-lazy="imageUrl+certificate" alt="" class="upImg" v-show="certificate!==''">
-          <div class="delIcon"  v-if="certificate!==''" @click="delImg ('certificate')"></div>
+          <img v-lazy="imageUrl+inputForm.certificate" alt="" class="upImg" v-show="inputForm.certificate!==''">
+          <div class="delIcon"  v-if="inputForm.certificate!==''" @click="delImg ('certificate')"></div>
         </div>
         <div class="upWrap">
-          <div v-show="advice===''">
-            <input type="hidden" :value="advice" name="need" placeholder="一般纳税人认定通知书">
+          <div v-show="inputForm.advice===''">
+            <input type="hidden" :value="inputForm.advice" name="need" placeholder="一般纳税人认定通知书">
             <input type="file" accept="image/*" @change="headerUpfile(2)">
             <span class="info">
               <img src="/static/icons/invoice_carmer.png" alt="">
               <p>一般纳税人认定通知书</p>
             </span>
           </div>
-          <img v-lazy="imageUrl+advice" alt="" class="upImg" v-show="advice!==''">
-          <div class="delIcon"  v-if="advice!==''" @click="delImg ('advice')"></div>
+          <img v-lazy="imageUrl+inputForm.advice" alt="" class="upImg" v-show="inputForm.advice!==''">
+          <div class="delIcon"  v-if="inputForm.advice!==''" @click="delImg ('advice')"></div>
         </div>
         <div class="upWrap">
-          <div v-show="license===''">
-            <input type="hidden" :value="license" name="need" placeholder="开户许可证">
+          <div v-show="inputForm.license===''">
+            <input type="hidden" :value="inputForm.license" name="need" placeholder="开户许可证">
             <input type="file" accept="image/*" @change="headerUpfile(3)">
             <span class="info">
               <img src="/static/icons/invoice_carmer.png" alt="">
               <p>开户许可证</p>
             </span>
           </div>
-          <img v-lazy="imageUrl+license" alt="" class="upImg" v-show="license!==''">
-          <div class="delIcon"  v-if="license!==''"  @click="delImg ('license')"></div>
+          <img v-lazy="imageUrl+inputForm.license" alt="" class="upImg" v-show="inputForm.license!==''">
+          <div class="delIcon"  v-if="inputForm.license!==''"  @click="delImg ('license')"></div>
         </div>
       </group>
       <router-link to="/instructions" tag="div" class="instructions">发票须知</router-link>
@@ -94,7 +94,8 @@ import {
   storage
 } from 'util/storage'
 import {
-  orderInfo
+  orderInfo,
+  invoiceInfo
 } from 'util/const.js'
 import {
   uploadPic
@@ -128,17 +129,17 @@ export default {
   data () {
     return {
       imageUrl: config.imageUrl,
-      headeShow: true,
-      infoShow: false,
-      infoAllShow: false,
       title: '开具发票',
       invoiceType: ['个人', '企业'],
       invoiceStatus: ['增值税普票'],
       invoiceStyle: ['纸质发票', '电子发票'],
-      certificate: '',
-      advice: '',
-      license: '',
       inputForm: {
+        certificate: '',
+        advice: '',
+        license: '',
+        headeShow: true,
+        infoShow: false,
+        infoAllShow: false,
         invoiceTypeValue: '个人',
         invoiceStatusValue: '增值税普票',
         invoiceStyleValue: '纸质发票',
@@ -153,9 +154,6 @@ export default {
       }
     }
   },
-  computed: {
-
-  },
   methods: {
     toastShow (text) {
       Toast({
@@ -165,7 +163,7 @@ export default {
       })
     },
     delImg (str) {
-      this[str] = ''
+      this.inputForm[str] = ''
     },
     submit: function () {
       let input = document.getElementsByTagName('input')
@@ -202,24 +200,26 @@ export default {
       } else {
         this.inputForm.invoiceType = 1
       }
-      if ((this.infoShow && !this.infoAllShow) || (this.infoAllShow && !this.infoShow)) {
-        if (this.certificate !== '') {
+      if ((this.inputForm.infoShow && !this.inputForm.infoAllShow) || (this.inputForm.infoAllShow && !this.inputForm.infoShow)) {
+        if (this.inputForm.certificate !== '') {
           this.inputForm.invoiceEnclosureList.push({
-            content: this.certificate
+            content: this.inputForm.certificate
           })
         }
-      } else if (this.infoShow && this.infoAllShow) {
+      } else if (this.inputForm.infoShow && this.inputForm.infoAllShow) {
         this.inputForm.invoiceEnclosureList.push({
-          content: this.certificate
+          content: this.inputForm.certificate
         })
         this.inputForm.invoiceEnclosureList.push({
-          content: this.advice
+          content: this.inputForm.advice
         })
         this.inputForm.invoiceEnclosureList.push({
-          content: this.license
+          content: this.inputForm.license
         })
       }
       let info = storage.getLocalStorage(orderInfo) || {}
+      storage.setLocalStorage(invoiceInfo, this.inputForm)
+      console.log(this.inputForm)
       if (info.invoiceId) {
         this.inputForm.id = info.invoiceId
         http(updateInvoice, this.inputForm).then(res => {
@@ -230,7 +230,7 @@ export default {
             info.invoicingType = this.inputForm.invoicingType
             // info.shippingMethod = 1
             storage.setLocalStorage(orderInfo, info)
-            this.$router.replace({path: '/createOrder/1'})
+            this.$router.replace({path: '/createOrder/4'})
           }
         })
       } else {
@@ -241,7 +241,7 @@ export default {
             info.invoiceTypeValue = this.inputForm.invoiceTypeValue
             // info.shippingMethod = 1
             storage.setLocalStorage(orderInfo, info)
-            this.$router.replace({path: '/createOrder/1'})
+            this.$router.replace({path: '/createOrder/4'})
           }
         }).catch(err => {
           console.log(err)
@@ -253,44 +253,52 @@ export default {
         this.invoiceStatus = ['增值税普票']
         this.inputForm.invoiceStatusValue = '增值税普票'
         this.invoiceStyle = ['纸质发票', '电子发票']
-        this.headeShow = true
-        this.infoAllShow = false
+        this.inputForm.headeShow = true
+        this.inputForm.infoAllShow = false
       } else {
         this.invoiceStatus = ['增值税普票', '增值税专票']
-        this.headeShow = false
-        this.infoAllShow = true
+        this.inputForm.headeShow = false
+        this.inputForm.infoAllShow = true
       }
     },
     changeInvoiceStatus (value) {
       if (value === '增值税专票') {
         this.invoiceStyle = ['纸质发票']
         this.inputForm.invoiceStyleValue = '纸质发票'
-        this.infoShow = true
+        this.inputForm.infoShow = true
       } else {
         this.invoiceStyle = ['纸质发票', '电子发票']
-        this.infoShow = false
+        this.inputForm.infoShow = false
       }
     },
     headerUpfile (num) {
+      console.log(num)
       let fileKey = uploadPic(event, axios.post)
       let key = ''
       fileKey.then(res => {
         key = res.data.body.key
         switch (num) {
           case 0:
-            this.certificate = key
+            this.inputForm.certificate = key
             break
           case 1:
-            this.certificate = key
+            this.inputForm.certificate = key
             break
           case 2:
-            this.advice = key
+            this.inputForm.advice = key
             break
           case 3:
-            this.license = key
+            this.inputForm.license = key
             break
         }
+        console.log(this.inputForm.certificate)
       })
+    }
+  },
+  created () {
+    if (storage.getLocalStorage(invoiceInfo)) {
+      this.inputForm = storage.getLocalStorage(invoiceInfo)
+      storage.delLocalStorage(invoiceInfo)
     }
   }
 }

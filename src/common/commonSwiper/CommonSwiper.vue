@@ -2,7 +2,7 @@
   <div class="xpSwiper" v-if="swiperData.length">
       <swiper :options="swiperOption">
         <swiper-slide v-for="item in swiperData" :key="item.id">
-            <img v-lazy="imageUrl+item.value" alt="" class="lazyImg">
+            <img :src="imageUrl+item.value" alt="">
         </swiper-slide>
         <div class="swiper-pagination" slot="pagination" v-if="showPagination"></div>
       </swiper>
@@ -28,6 +28,9 @@ export default {
       imageUrl: config.imageUrl,
       swiperOption: {
         loop: true,
+        lazy: {
+          loadPrevNext: true
+        },
         // autoplay: {
         //   delay: 2500,
         //   disableOnInteraction: false
