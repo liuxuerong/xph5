@@ -26,7 +26,7 @@
                   <span>无门槛</span>
                 </div>
                 <span class="operBtn newUse" v-if="item.type == '1' || item.type == '3'"  @click="useCoupon(item.id,item.name,item.type)">立即使用</span>
-                <span class="operBtn newUse" v-else  @click="useCoupon(item.id,item.discount,item.type)">立即使用</span>
+                <span class="operBtn newUse" v-else  @click="useCoupon(item.id,item.name,item.type)">立即使用</span>
               </div>
               <div class="activityTime">
                 <span class="countDown" v-if="item.invalidDay > 0">{{item.invalidDay}}天后过期</span>
@@ -86,15 +86,7 @@ export default {
     useCoupon (id, name, type) {
       let info = storage.getLocalStorage(orderInfo) || {}
       info.couponId = id
-      if (type === 1 || type === 3) {
-        info.couponName = name
-      } else {
-        if (name.toString().replace('.', '').length === 2) {
-          info.couponName = parseInt(name.toString().replace('.', '')) + '折'
-        } else {
-          info.couponName = name.toString().replace('.', '') / 10 + '折'
-        }
-      }
+      info.couponName = name
       storage.setLocalStorage(orderInfo, info)
       this.$router.replace({path: '/createOrder/3'})
     },
