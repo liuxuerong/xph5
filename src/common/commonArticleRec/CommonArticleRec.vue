@@ -30,6 +30,7 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
+@import "~styles/mixins.styl"
 .commonArticleRec
   margin-top 50px
   li
@@ -46,7 +47,8 @@ export default {
       font-weight 600
       line-height 100px
       padding 0 50px
-      color:#333
+      color #333
+      ellipsis()
     .summary
       color #808080
       font-size 36px

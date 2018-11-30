@@ -230,7 +230,7 @@ export default {
             info.invoicingType = this.inputForm.invoicingType
             // info.shippingMethod = 1
             storage.setLocalStorage(orderInfo, info)
-            this.$router.push({path: '/createOrder/1'})
+            this.$router.replace({path: '/createOrder/1'})
           }
         })
       } else {
@@ -241,7 +241,7 @@ export default {
             info.invoiceTypeValue = this.inputForm.invoiceTypeValue
             // info.shippingMethod = 1
             storage.setLocalStorage(orderInfo, info)
-            this.$router.push({path: '/createOrder/1'})
+            this.$router.replace({path: '/createOrder/1'})
           }
         }).catch(err => {
           console.log(err)
@@ -291,27 +291,7 @@ export default {
             break
         }
       })
-    },
-    getInvoiceList () {
-
     }
-    // updateInvoiceInfo () {
-    //    let info = storage.getLocalStorage(orderInfo)
-    //   this.inputForm.id = this.
-    //   http(updateInvoice, this.inputForm).then(res => {
-    //     console.log(res.data.body)
-    //     if (res.data.code === 0) {
-    //       let info = storage.getLocalStorage(orderInfo) || {}
-    //       info.invoiceId = res.data.body.id
-    //       info.invoiceStyleValue = this.inputForm.invoiceStyleValue
-    //       info.invoiceTypeValue = this.inputForm.invoiceTypeValue
-    //       storage.setLocalStorage(orderInfo, info)
-    //       // this.$router.push({path: '/createOrder/1'})
-    //     }
-    //   }).catch(err => {
-    //     console.log(err)
-    //   })
-    // }
   }
 }
 </script>
@@ -355,9 +335,15 @@ export default {
     &>>>.weui-cells_radio .weui-check:checked + .weui-icon-checked:before
       content '\EA08'
       color #fff
-      font-size 0.142222rem
-      margin-top 10px
-      transform: translateX(-4px);
+      font-size 30px
+      margin-left 0
+      margin-right 0
+      display block
+      width 100%
+      height 100%
+      line-height 46px
+      text-align center
+      // transform: translateX(-2px);
     &>>>.weui-check__label:active
       background-color #fff
     &>>>.weui-icon-checked

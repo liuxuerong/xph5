@@ -75,7 +75,7 @@ export default {
       page: 1,
       noMore: false,
       totals: 0,
-      rows: 5
+      rows: 20
     }
   },
   watch: {
@@ -95,6 +95,9 @@ export default {
         this.page = 0
         this.getCartList()
       }
+      if (from.path === '/cart/1' && to.path === '/cart') {
+        this.$router.go(-1)
+      }
     },
     isAllSelect (v) {
       if (v) {
@@ -102,7 +105,7 @@ export default {
         this.page = 1
         this.getCartList()
       } else {
-        this.rows = 5
+        this.rows = 20
       }
     }
   },
@@ -149,7 +152,6 @@ export default {
         http(listCart, parmas).then(res => {
           if (res.data.code === 0) {
             this.totals = res.data.body.totals
-            console.log(res.data.body.list)
             if (this.page !== 1 && res.data.body.list.length === 0) {
               this.scroll.finishPullUp()
               this.noMore = true
@@ -224,7 +226,7 @@ export default {
       this.rows = goods.rows
       storage.delLocalStorage(cartGoods)
       this.scrollInit()
-      this.noMore = true
+      // this.noMore = true
     } else {
       this.getCartList()
     }

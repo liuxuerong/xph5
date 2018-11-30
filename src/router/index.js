@@ -105,7 +105,7 @@ const router = new Router({
       component: resolve => require(['@/pages/invoice/Instructions'], resolve)
     },
     {
-      path: '/cart',
+      path: '/cart/:flag?',
       name: 'Cart',
       meta: { requireLogin: true },
       component: resolve => require(['@/pages/cart/Cart'], resolve)

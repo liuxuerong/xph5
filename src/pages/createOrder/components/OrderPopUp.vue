@@ -4,11 +4,11 @@
       <div class="title">抱歉，您购买的以下{{unsatisfactoryData.length}}件商品，购买的数量 超出了限制
       </div>
       <ul>
-        <li v-for="goods in unsatisfactoryData" :key="goods.id" class="goodsItem">
-          <img v-lazy="imageUrl+goods.pic" alt="">
+        <li v-for="goods in unsatisfactoryData" :key="goods.goodsItemId" class="goodsItem">
+          <img v-lazy="imageUrl+goods.goodsItemPic" alt="">
           <div class="info">
             <p class="name">
-              {{goods.name}}
+              {{goods.goodsItemName}}
             </p>
             <div class="promotion">
               <span class="promotionItem" v-for="(item,index) in goods.spec" :key="index">{{item}}</span>
@@ -29,7 +29,7 @@
         </li>
       </ul>
       <div class="goodsInfoBottm border-top">
-        <router-link to="/cart" class="linkCart">返回购物车</router-link>
+        <div class="linkCart" @click="toCart">返回购物车</div>
         <div class="remove" @click="remove">移除上述商品</div>
       </div>
     </div>
@@ -51,19 +51,25 @@ export default {
       imageUrl: config.imageUrl
     }
   },
-  computed: {
-
-  },
   methods: {
     // 传给父元素id集合
     remove () {
       this.$emit('remove')
+    },
+    toCart () {
+      this.$router.replace({path: '/cart/1'})
     }
   },
   created () {
-    //
-  },
-  mounted () {}
+    for (let i = 0; i < this.unsatisfactoryData.length; i++) {
+      let spec = JSON.parse(this.unsatisfactoryData[i].specs)
+      this.unsatisfactoryData[i].spec = []
+      for (let j = 0; j < spec.length; j++) {
+        this.unsatisfactoryData[i].spec.push(spec[j].value)
+      }
+    }
+  }
+
 }
 </script>
 
@@ -97,8 +103,11 @@ export default {
       overflow-y auto
     li
       display flex
+      width 100%
       .info
-        width 100%
+        flex 1
+        width 60%
+        display inline-block
       .name
         line-height 80px
         color #262626

@@ -18,7 +18,7 @@
         </div>
       </popover>
     </common-nav-header>
-    <div class="createOrderWrap">
+    <div class="createOrderWrap" v-if="!unsatisfactoryData.length">
       <div class="title">商品与配送</div>
       <div class="cutOffLine30"></div>
       <router-link class="cellLink" to="/addressAdmin/need">
@@ -129,91 +129,93 @@ export default {
     '$route' (to, from) {
       if (to.path === '/createOrder/1') {
         this.info = storage.getLocalStorage(orderInfo)
-        // this.getDetails()
+        this.getDetails()
       } else if (to.path === '/createOrder') {
+        this.info = null
         storage.setLocalStorage(orderInfo, {})
+        this.getDetails()
       }
-      this.getDetails()
+      if (from.path === '/createOrder/1' && to.path === '/createOrder') {
+        this.$router.go(-1)
+      }
     }
   },
   methods: {
     remove () {
-      if (this.pricesData.length > this.unsatisfactoryData.length) {
+      let goodsInfoCart = storage.getLocalStorage(goodsInfo)
+      console.log(goodsInfoCart, 'goodsInfoCart')
+      if (goodsInfoCart.goodsItems.length > this.unsatisfactoryData.length) {
         this.unsatisfactoryData = []
-        let goodsInfoCart = storage.getLocalStorage(goodsInfo)
-        goodsInfoCart.goodsItems = []
-        for (let i = 0; i < this.pricesData.length; i++) {
-          if (this.pricesData[i].num <= this.pricesData[i].stock) {
-            goodsInfoCart.goodsItems.push(this.pricesData[i])
+        goodsInfoCart.goodsItemsNew = []
+        for (let i = 0; i < goodsInfoCart.goodsItems.length; i++) {
+          if (goodsInfoCart.goodsItems[i].num <= goodsInfoCart.goodsItems[i].stock) {
+            goodsInfoCart.goodsItemsNew.push(goodsInfoCart.goodsItems[i])
           }
         }
+        goodsInfoCart.goodsItems = goodsInfoCart.goodsItemsNew
         storage.setLocalStorage(goodsInfo, goodsInfoCart)
         this.getDetails()
       } else {
-        this.$router.push('/cart')
+        this.$router.replace({path: '/cart/1'})
       }
     },
     getDetails () {
       let goodsInfoCart = storage.getLocalStorage(goodsInfo)
       this.unsatisfactoryData = []
-      const orderInfoData = storage.getLocalStorage(orderInfo)
-      let params = {}
-      params = Object.assign({}, goodsInfoCart, orderInfoData)
-      if (this.info) {
-        params.favorableId = this.info.couponId
-      }
-      http(goodOrderData, params).then(res => {
-        console.log(res)
-        if (res.data.code === 0) {
-          params.key = res.data.body.key
-          this.availableCoupon = res.data.body.availableCoupon
-          this.pricesData = res.data.body.orderGoodsItems
-          this.shippingAmount = res.data.body.shippingAmount
-          this.offerAmount = res.data.body.offerAmount
-          for (let i = 0; i < this.pricesData.length; i++) {
-            // 库存不满足商品过滤
-            let spec = JSON.parse(this.pricesData[i].spec)
-            this.pricesData[i].spec = []
-            for (let j = 0; j < spec.length; j++) {
-              this.pricesData[i].spec.push(spec[j].value)
-            }
-            for (let j = 0; j < goodsInfoCart.goodsItems.length; j++) {
-              if (this.pricesData[i].goodsId === goodsInfoCart.goodsItems[j].goodsId) {
-                this.pricesData[i].stock = goodsInfoCart.goodsItems[j].stock
-              }
-            }
-            if (this.pricesData[i].num > this.pricesData[i].stock) {
-              this.unsatisfactoryData.push(this.pricesData[i])
-            }
-          }
-          let goodsItems = res.data.body.orderGoodsItems
-          let goodsItemsNew = []
-          for (let index in goodsItems) {
-            for (let k in this.pricesData) {
-              if (goodsItems[index].id === this.pricesData[k].id) {
-                goodsItems[index].goodsItemId = goodsItems[index].id
-                goodsItemsNew.push(goodsItems[index])
-              }
-            }
-          }
-          this.params.key = res.data.body.key
-          this.params.goodsItems = goodsItemsNew
-          this.totalPric = res.data.body.totalPrice
-          this.needPayPrice = res.data.body.needPayPrice
-          storage.setLocalStorage(goodsInfo, params)
-        } else {
-          Toast({
-            message: res.data.message,
-            position: 'center',
-            duration: 1000
-          })
-          setTimeout(() => {
-            this.$router.push('/cart')
-          }, 1000)
+      // 库存不满足商品过滤
+      for (let i = 0; i < goodsInfoCart.goodsItems.length; i++) {
+        if (goodsInfoCart.goodsItems[i].num > goodsInfoCart.goodsItems[i].stock) {
+          this.unsatisfactoryData.push(goodsInfoCart.goodsItems[i])
         }
-      }).catch(err => {
-        console.log(err)
-      })
+      }
+      if (!this.unsatisfactoryData.length) {
+        const orderInfoData = storage.getLocalStorage(orderInfo)
+        let params = {}
+        params = Object.assign({}, goodsInfoCart, orderInfoData)
+
+        if (this.info) {
+          params.favorableId = this.info.couponId
+        }
+        http(goodOrderData, params).then(res => {
+          if (res.data.code === 0) {
+            params.key = res.data.body.key
+            this.availableCoupon = res.data.body.availableCoupon
+            this.pricesData = res.data.body.orderGoodsItems
+            this.shippingAmount = res.data.body.shippingAmount
+            this.offerAmount = res.data.body.offerAmount
+            for (let i = 0; i < this.pricesData.length; i++) {
+              let spec = JSON.parse(this.pricesData[i].spec)
+              this.pricesData[i].spec = []
+              for (let j = 0; j < spec.length; j++) {
+                this.pricesData[i].spec.push(spec[j].value)
+              }
+            }
+            let goodsItems = res.data.body.orderGoodsItems
+            let goodsItemsNew = []
+            for (let index in goodsItems) {
+              for (let k in this.pricesData) {
+                if (goodsItems[index].id === this.pricesData[k].id) {
+                  goodsItems[index].goodsItemId = goodsItems[index].id
+                  goodsItemsNew.push(goodsItems[index])
+                }
+              }
+            }
+            this.params.key = res.data.body.key
+            this.params.goodsItems = goodsItemsNew
+            this.totalPric = res.data.body.totalPrice
+            this.needPayPrice = res.data.body.needPayPrice
+            storage.setLocalStorage(goodsInfo, params)
+          } else {
+            Toast({
+              message: res.data.message,
+              position: 'center',
+              duration: 1000
+            })
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+      }
     },
     getOrderInfo () {
       if (this.$route.path === '/createOrder/1') {

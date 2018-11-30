@@ -141,16 +141,21 @@ export default {
         fromCart: true
       }
       goodsObj.goodsItems = []
+      console.log(this.clearNum, 'this.clearNum')
       for (let i = 0; i < this.clearNum.length; i++) {
         if (this.clearNum[i].status === '1') {
           if (this.clearNum[i].value) {
-            goodsObj.goodsItems.push({
-              goodsId: this.clearNum[i].goodsId,
-              goodsItemId: this.clearNum[i].goodsItemId,
-              num: this.clearNum[i].num,
-              stock: this.clearNum[i].stock
-            })
+            goodsObj.goodsItems.push(this.clearNum[i])
           }
+          // {
+          //     goodsId: this.clearNum[i].goodsId,
+          //     goodsItemId: this.clearNum[i].goodsItemId,
+          //     name: this.clearNum[i].goodsItemName,
+          //     num: this.clearNum[i].num,
+          //     stock: this.clearNum[i].stock,
+          //     price: this.clearNum[i].price,
+          //     img: this.clearNum[i].goodsItemPic
+          //   }
         }
       }
       storage.setLocalStorage(goodsInfo, goodsObj)

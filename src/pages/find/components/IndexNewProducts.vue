@@ -8,7 +8,7 @@
             <img v-lazy="imageUrl+item.coverImage" alt="" class="lazyImg">
             <div class="indexContent">
               <h5>
-                <span class="title">{{item.name}}</span>
+                <span class="title">{{item.name.substr(0,7)}}</span>
                 <span class="price fr" v-if="item.minPrice!==0">{{item.minPrice}}元起</span>
               </h5>
               <div class="content">
@@ -111,8 +111,7 @@ export default {
     color #808080
     font-size 36px
     line-height 60px
-    ellipsisM()
-    -webkit-line-clamp 2
+    ellipsis()
 .promotion
   font-size 0
   height 100px
