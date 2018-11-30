@@ -150,11 +150,11 @@ export default {
         span
           font-size 112px
           font-weight 600
-          color #fff
+          color #262626
         p
           font-size 60px
           margin-top 60px
-          color #fff
+          color #262626
       .weixinTips
         width calc(100% - 40px)
         margin 0 auto

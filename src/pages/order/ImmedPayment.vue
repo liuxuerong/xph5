@@ -90,7 +90,8 @@ export default {
               document.body.appendChild(dom)
               document.forms[0].submit()
             } else if (this.readioActive === 5) {
-              window.location.href = 'weixin://wap/pay?appid=' + response.data.body.appid + '&noncestr=' + response.data.body.noncestr + '&package=' + response.data.body.package + '&prepayid=' + response.data.body.prepayid + '&sign=' + response.data.body.sign + '&timestamp=' + response.data.body.timestamp
+              // console.log('weixin://wap/pay?appid=' + response.data.body.appid + '&noncestr=' + response.data.body.noncestr + '&package=' + response.data.body.package + '&prepayid=' + response.data.body.prepayid + '&sign=' + response.data.body.sign + '&timestamp=' + response.data.body.timestamp)
+              // window.location.href = 'weixin://wap/pay?appid=' + response.data.body.appid + '&noncestr=' + response.data.body.noncestr + '&package=' + response.data.body.package + '&prepayid=' + response.data.body.prepayid + '&sign=' + response.data.body.sign + '&timestamp=' + response.data.body.timestamp
             }
           }
         })
