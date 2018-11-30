@@ -91,7 +91,7 @@ export default {
         info.addressType = '快递配送'
         info.shippingMethod = 2
         storage.setLocalStorage(orderInfo, info)
-        this.$router.replace({path: '/createOrder/1'})
+        this.$router.replace({path: '/createOrder/2'})
       }
     }
   },
