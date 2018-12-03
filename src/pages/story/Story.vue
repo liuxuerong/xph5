@@ -160,7 +160,6 @@ export default {
   updated () {
     this.$nextTick(function () {
       let img = this.$refs.xpStoryContent.getElementsByTagName('img')
-      console.log(img)
       let count = 0
       let length = img.length
       if (length) {

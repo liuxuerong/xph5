@@ -81,8 +81,10 @@ export default {
   .nav
     display inline-block
     min-height 500px
+    width 100%
   .banner
     width 100%
+    display block
   .lazyImg[lazy=loading]
     width 300px
     height 300px

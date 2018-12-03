@@ -99,6 +99,8 @@ export default {
   mounted () {
     this.getBrandDetail()
     this.hideHeads()
+    document.querySelectorAll('html')[0].classList.add('overH')
+    document.querySelectorAll('body')[0].classList.add('overH')
   },
   updated () {
     this.$nextTick(function () {
