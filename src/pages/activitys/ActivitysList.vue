@@ -77,7 +77,7 @@ export default {
     activitysRender () {
       let type = Number(this.$route.params.type)
       this.platform = getUrlParam('platform')
-      if (this.platform === 'i' || this.platform === 'a') {
+      if (this.platform === 'i' || this.platform === 'a' || this.platform === 'wx') {
         this.titleShow = true
         this.returnTitle(this.title)
       }
@@ -91,7 +91,7 @@ export default {
     },
     // 内容加载
     activitysCon (type) {
-      if (this.platform === 'i' || this.platform === 'a') {
+      if (this.platform === 'i' || this.platform === 'a' || this.platform === 'wx') {
         this.$router.push(`/activitysList/${type}?platform=${this.platform}`)
       } else {
         this.$router.push(`/activitysList/${type}`)
@@ -106,12 +106,25 @@ export default {
               this.activityGoods = data.activityGoodss
               this.activityCategory = data.activotyCategorys
             } else {
-              console.log(999)
-              this.$router.push('/activitysList/1')
+              if (this.platform === 'i' || this.platform === 'a' || this.platform === 'wx') {
+                this.$router.push(`/activitysList/1?platform=${this.platform}`)
+              } else {
+                this.$router.push('/activitysList/1')
+              }
             }
           }
         })
       } else {
+        http(activityElies).then((response) => {
+          console.log(response)
+          if (response.data.code === 0) {
+            let data = response.data.body
+            if (JSON.stringify(data) !== '{}') {
+              this.activityGoods = data.activityGoodss
+              this.activityCategory = data.activotyCategorys
+            }
+          }
+        })
         // 活动
         http(activityInfo).then((response) => {
           if (response.data.code === 0) {
