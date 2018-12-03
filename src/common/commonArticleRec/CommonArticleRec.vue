@@ -48,7 +48,8 @@ export default {
       line-height 80px
       padding 40px 50px 30px
       color #333
-      ellipsis()
+      -webkit-line-clamp 2
+      ellipsisM()
     .summary
       color #808080
       font-size 36px
