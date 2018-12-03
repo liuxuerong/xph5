@@ -34,7 +34,6 @@
   </div>
 </template>
 <script>
-import router from '@/router/index.js'
 import PersonTitle from '../person/ComCenterSmillTitle'
 export default {
   props: {
@@ -50,7 +49,7 @@ export default {
   },
   methods: {
     oderListMore (type) {
-      router.push('./orderList/' + type)
+      this.$router.push('/orderList/' + type)
     }
   },
   mounted () {

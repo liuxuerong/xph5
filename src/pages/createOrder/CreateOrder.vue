@@ -64,7 +64,6 @@
 </template>
 
 <script>
-// import router from '@/router/index.js'
 import CommonNavHeader from 'common/commonHeader/CommonNavHeader'
 import OrderPopUp from './components/OrderPopUp'
 import OrderItem from './components/OrderItem'

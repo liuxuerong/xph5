@@ -27,6 +27,7 @@ export default {
     }
   },
   methods: {
+    // 下载页页面渲染
     downloadRender () {
       let ua = navigator.userAgent.toLowerCase()
       if (isWeixinBrowser()) {
@@ -78,7 +79,7 @@ export default {
           window.setTimeout(function () {
             let timeOutDateTime = new Date()
             if (timeOutDateTime - loadDateTime < 5000) {
-              console.log('下载iosApp')
+              // console.log('下载iosApp')
               window.location = 'https://itunes.apple.com/cn/app/%E6%98%9F%E5%93%81%E5%95%86%E5%9F%8E/id1253883465?mt=8'
             } else {
               window.close()
@@ -89,14 +90,14 @@ export default {
           this.terminalType = 'android'
           var state = null
           try {
-            console.log('打开安卓App')
+            // console.log('打开安卓App')
             window.location.href = 'jdhoe://android'
             state = true
           } catch (e) {}
           if (state) {
             window.close()
           } else {
-            console.log('下载安卓App')
+            // console.log('下载安卓App')
             window.location = 'https://alissl.ucdl.pp.uc.cn/fs08/2018/10/09/0/110_860ee7b483abf81ecd840fac557d70b2.apk?appid=7876272&packageid=100445992&md5=5fb0eadbece066eb0f3411c98c408c59&apprd=7876272&pkg=com.jdhoe.android&vcode=17&fname=%E6%98%9F%E5%93%81%E4%BC%98%E6%B1%87&iconUrl=http%3A%2F%2Fandroid%2Dartworks%2E25pp%2Ecom%2Ffs08%2F2018%2F10%2F09%2F2%2F110%5Fcf55896e1e02c66b3c2f6f810a9a05d7%5Fcon%2Epng'
           }
         }
@@ -135,7 +136,7 @@ export default {
       position absolute
       left 0
       top 0
-      bgImage('/static/images/appDownload')
+      background url(/static/images/appDownload@3x.jpg) no-repeat center center/100% 100%
       .appText
         position absolute
         top 300px

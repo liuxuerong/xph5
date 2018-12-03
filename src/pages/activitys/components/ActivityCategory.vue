@@ -1,7 +1,7 @@
 <template>
   <div class="activityCategoryItem" v-if="activityCategory.activityEndTime !== '00:00:00'">
     <div class="categoryInfo">
-      <img class="categoryImg" :src="imageUrl+activityCategory.picture" alt="">
+      <img class="categoryImg" v-lazy="imageUrl+activityCategory.picture" alt="">
       <dir class="categoryName">
         <h3 class="name">{{activityCategory.name}}
           <span v-if="activityCategory.showTimeType ===1" class="stopTime">距结束 {{activityCategory.endDay}} 天</span>
@@ -13,7 +13,7 @@
     <div class="goodsInfo">
       <div class="goodsInfoBox clearfix">
         <div class="goodsInfoItem" v-if="activityCategoryGoods" v-for="goods in activityCategoryGoods" :key="goods.id" @click="activityGoodsDetails(goods.id)">
-          <img :src="imageUrl+goods.coverImage" alt="">
+          <img v-lazy="imageUrl+goods.goodsPics[0].value" alt="">
           <div class="goodsInfoText">
             <h3>{{goods.name}}</h3>
             <p>￥{{goods.minPrice}}<del>￥{{goods.marketPrice}}</del></p>
@@ -53,7 +53,6 @@ export default {
     // 页面数据渲染
     activityCategoryRender () {
       this.activityCategoryGoods = this.activityCategory.goodsDetails
-      // console.log(this.activityCategory)
     },
     // 商品详情
     activityGoodsDetails (goodsId) {
@@ -78,7 +77,6 @@ export default {
           sortOrder: 'DESC'
         }
         http(goodsList, params).then((response) => {
-          console.log(response)
           if (response.data.code === 0) {
             this.activityCategoryGoods = response.data.body.list
             this.activityMoreText = '隐藏部分商品'
@@ -166,7 +164,12 @@ export default {
           box-sizing border-box
           padding 0 35px
       .subName
+        display block
         width 100%
+        height 60px
+        overflow hidden
+        white-space nowrap
+        text-overflow ellipsis
         font-size 40px
         color #333333
   .goodsInfo

@@ -15,7 +15,6 @@
     </div>
 </template>
 <script type="text/javascript">
-import router from '@/router/index.js'
 import { Toast } from 'mint-ui'
 import { setMemberData } from 'util/netApi'
 import { http } from 'util/request'
@@ -41,7 +40,7 @@ export default {
         http(setMemberData, params).then((response) => {
           console.log(response)
           if (response.data.code === 0) {
-            router.push('./')
+            this.$router.push('/')
           }
         })
       } else {

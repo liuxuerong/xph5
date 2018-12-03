@@ -264,18 +264,18 @@ export default {
     // 必备工具跳转
     toolSpecific (type) {
       if (type === 1) {
-        this.$router.push('./toolCenter')
+        this.$router.push('/toolCenter')
       } else if (type === 2) {
-        this.$router.push('./integralDetails')
+        this.$router.push('/integralDetails')
       } else if (type === 3) {
-        this.$router.push('./ToolStore')
+        this.$router.push('/ToolStore')
       } else {
         window.location.href = customerService
       }
     },
     // 优惠卡券
     cardVoucher () {
-      this.$router.push('./cardVoucher')
+      this.$router.push('/cardVoucher')
     },
     // 商品详情
     goodsDetails (id) {
@@ -316,7 +316,7 @@ export default {
     // 判断账号是够登录
     if (!storage.getLocalStorage(accessToken)) {
       // 还未登录
-      this.$router.push('./login')
+      this.$router.push('/login')
     } else {
       // 基础信息加载
       this.getUserInfo()

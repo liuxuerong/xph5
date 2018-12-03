@@ -48,8 +48,10 @@ export default {
     LoginBack
   },
   watch: {
-    $route (to, from) {
-      this.$router.go(0)
+    '$route' (to, from) {
+      if (to.name === 'Login') {
+        this.$router.push('/login')
+      }
     }
   },
   computed: {
@@ -81,7 +83,7 @@ export default {
             position: 'bottom',
             duration: 2000
           })
-          _this.$router.push('./')
+          _this.$router.push('/')
         } else {
           Toast({
             message: '账号和密码不匹配，请重新输入',
@@ -106,7 +108,7 @@ export default {
         left 0
         width 100%
         height 100%
-        bgImage('/static/images/loginBg')
+        background url(/static/images/loginBg@3x.jpg) no-repeat center center/100% 100%
         overflow hidden
     .loginInfo
         width 88%
