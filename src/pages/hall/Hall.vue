@@ -7,7 +7,7 @@
       <div class="swiper-wrapper">
         <div class="swiper-slide" v-for="(item,index) in swiperData" :key="item.id">
           <router-link :to="'/hallDetails/'+index" class="navIndex">
-            <img v-lazy="imageUrl+item.experienceCoverImage" alt="" class="swiperImg">
+            <img :src="imageUrl+item.experienceCoverImage" alt="" class="swiperImg">
             <div class="infoContainer">
               <div class="left">
                 <div class="title">{{item.categoryName}}</div>
@@ -68,15 +68,17 @@ export default {
   methods: {
     getHallData () {
       http(inforSpace).then(res => {
+        let experienceData = []
         for (let i = 0; i < res.data.body.length; i++) {
           if (res.data.body[i].status === '1') {
-            this.swiperData.push(res.data.body[i])
+            experienceData.push(res.data.body[i])
+            if (res.data.body[i].top === '1') {
+              this.swiperData.push(res.data.body[i])
+            }
           }
         }
-        console.log(this.swiperData)
         this.swiperOption.loopedSlides = this.swiperData.length
         storage.setLocalStorage(experience, this.swiperData)
-        console.log(res)
         this.$nextTick(function () {
           setTimeout(() => {
             this.mySwiper = new Swiper(this.$refs.swpierWrap, {
