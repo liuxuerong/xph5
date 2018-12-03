@@ -173,11 +173,6 @@ export default {
     } else {
       this.experienceObj = storage.getLocalStorage(experience)[this.index]
       console.log(this.experienceObj)
-      // let goods = this.experienceObj.experienceGoods
-      // for (let i = 0; i < goods.length; i++) {
-      //   let params = Object.assign({}, this.params, {collectionDataId: goods[i].goodId})
-      //   this.hasCollection(params, i)
-      // }
     }
   },
   mounted () {

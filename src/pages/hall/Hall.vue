@@ -68,9 +68,14 @@ export default {
   methods: {
     getHallData () {
       http(inforSpace).then(res => {
-        this.swiperData = res.data.body
+        for (let i = 0; i < res.data.body.length; i++) {
+          if (res.data.body[i].status === '1') {
+            this.swiperData.push(res.data.body[i])
+          }
+        }
+        console.log(this.swiperData)
         this.swiperOption.loopedSlides = this.swiperData.length
-        storage.setLocalStorage(experience, res.data.body)
+        storage.setLocalStorage(experience, this.swiperData)
         console.log(res)
         this.$nextTick(function () {
           setTimeout(() => {
