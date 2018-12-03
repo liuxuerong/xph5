@@ -78,7 +78,7 @@ export default {
           }
         }
         this.swiperOption.loopedSlides = this.swiperData.length
-        storage.setLocalStorage(experience, this.swiperData)
+        storage.setLocalStorage(experience, experienceData)
         this.$nextTick(function () {
           setTimeout(() => {
             this.mySwiper = new Swiper(this.$refs.swpierWrap, {
