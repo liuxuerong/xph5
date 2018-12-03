@@ -37,7 +37,6 @@ import UserinfoHeader from './components/ComUserSetHeader'
 import { Toast } from 'mint-ui'
 import { addDelivery, updateDelivery, idDelivery } from 'util/netApi'
 import { http } from 'util/request'
-import router from '@/router/index.js'
 import notice from 'util/notice.js'
 import { Group, XAddress, ChinaAddressV4Data, XButton, Cell, Value2nameFilter as value2name } from 'vux'
 export default {
@@ -154,7 +153,7 @@ export default {
           http(addDelivery, params).then((response) => {
             if (response.data.code === 0) {
               notice.toast('添加地址成功', '2000', 'success', function () {
-                router.push('../../addressAdmin')
+                this.$router.push('/addressAdmin')
               })
             }
           }).catch((err) => {
@@ -186,7 +185,7 @@ export default {
           http(updateDelivery, params).then((response) => {
             if (response.data.code === 0) {
               notice.toast('修改地址成功', '2000', 'success', function () {
-                router.push('../../addressAdmin')
+                this.$router.push('/addressAdmin')
               })
             }
           }).catch((err) => {

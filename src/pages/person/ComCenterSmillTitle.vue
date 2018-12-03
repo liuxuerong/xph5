@@ -18,7 +18,7 @@ export default {
   methods: {
     seeMoreData () {
       if (this.content === '我的订单') {
-        this.$router.push('./orderIndex')
+        this.$router.push('/orderIndex')
       } else if (this.content === '我的收藏') {
         this.$router.push('/collect/0')
       } else if (this.content === '优惠卡券') {

@@ -32,7 +32,6 @@
   </div>
 </template>
 <script >
-import router from '@/router/index.js'
 import UserinfoHeader from './components/ComUserSetHeader'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
 import {getMemberIntegral} from 'util/netApi'
@@ -76,7 +75,7 @@ export default {
     },
     // 积分规则
     onOperComplete () {
-      router.push('./integralRule')
+      this.$router.push('/integralRule')
     }
   },
   mounted () {

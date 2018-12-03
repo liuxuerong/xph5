@@ -4,7 +4,7 @@
       <div v-for="item in goodsItems" :key="item.id">
         <div class="goodsItems">
           <div>
-            <img :src="imageUrl+item.coverImage" alt="">
+            <img v-lazy="imageUrl+item.coverImage" alt="">
           </div>
           <div class="right">
             <div class="name">{{item.name}}</div>

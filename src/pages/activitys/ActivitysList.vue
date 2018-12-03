@@ -3,20 +3,20 @@
     <userinfo-header :class="{hide:titleShow}" :title="title" oper=""></userinfo-header>
     <div class="wrapperBg">
       <img src="" alt="" id="ceshiId">
-      <ul class="activitysTab">
+      <ul class="activitysTab" :class="{hide:(activityGoods.length===0 && activityCategory.length===0)}">
         <li v-for="(tab,i) in activitysTab" :key="i" :class="{'active':activitysActive==i}" @click="activitysTabClick(i)">{{tab}}</li>
       </ul>
     </div>
-    <div class="activitysCon" v-if="activitysActive == 0 && (activityGoods.length || activityCategory.length)">
+    <div class="activitysCon" v-if="activitysActive == 0 && (activityGoods.length===0 || activityCategory.length===0)">
       <!-- 单品秒杀 -->
-      <div class="activityGoodsBox">
-        <activitys-title v-if="activityGoods.length" :activitysTitle="activitysTitle[0]"></activitys-title>
-        <activity-goods v-if="activityGoods.length" v-for="item in activityGoods" :key="item.goodsItemId" :activityGoods="item"></activity-goods>
+      <div class="activityGoodsBox" v-if="activityGoods.length">
+        <activitys-title :activitysTitle="activitysTitle[0]"></activitys-title>
+        <activity-goods v-for="item in activityGoods" :key="item.goodsItemId" :activityGoods="item"></activity-goods>
       </div>
       <!-- 品类秒杀 -->
-      <div class="activityCategoryBox">
-        <activitys-title v-if="activityCategory.length" :activitysTitle="activitysTitle[1]"></activitys-title>
-        <activity-category v-if="activityCategory.length" v-for="item in activityCategory" :key="item.goodsCategoryId" :activityCategory="item"></activity-category>
+      <div class="activityCategoryBox" v-if="activityCategory.length">
+        <activitys-title  :activitysTitle="activitysTitle[1]"></activitys-title>
+        <activity-category v-for="item in activityCategory" :key="item.goodsCategoryId" :activityCategory="item"></activity-category>
       </div>
     </div>
     <div class="activitysCon" v-if="activitysActive == 1">
@@ -53,6 +53,7 @@ export default {
     }
   },
   components: {
+    name: 'ActivitysList',
     UserinfoHeader,
     ActivitysTitle,
     ActivityElies,
@@ -91,18 +92,23 @@ export default {
     // 内容加载
     activitysCon (type) {
       if (this.platform === 'i' || this.platform === 'a') {
-        this.$router.push('/activitysList/' + type + '?platform=' + this.platform)
+        this.$router.push(`/activitysList/${type}?platform=${this.platform}`)
       } else {
-        this.$router.push('/activitysList/' + type)
+        this.$router.push(`/activitysList/${type}`)
       }
       if (type === 0) {
         // 商品
         http(activityElies).then((response) => {
+          console.log(response)
           if (response.data.code === 0) {
             let data = response.data.body
-            console.log(response)
-            this.activityGoods = data.activityGoodss
-            this.activityCategory = data.activotyCategorys
+            if (JSON.stringify(data) !== '{}') {
+              this.activityGoods = data.activityGoodss
+              this.activityCategory = data.activotyCategorys
+            } else {
+              console.log(999)
+              this.$router.push('/activitysList/1')
+            }
           }
         })
       } else {

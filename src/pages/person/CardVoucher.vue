@@ -143,7 +143,7 @@ export default {
       if (type !== 2) {
         storage.setLocalStorage('card', item)
       }
-      this.$router.push('./cardDetails/' + type + '/' + mainType + '/' + id)
+      this.$router.push(`/cardDetails/${type}/${mainType}/${id}`)
     },
     // 领取优惠券
     receiveCard (id) {

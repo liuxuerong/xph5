@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <keep-alive :exclude="['Details','Goods','Collect','StoryDetails','ImmedPayment','AboutMember','ToolCenter','Cart','CartOperate','FeedBack','Invoice','HallDetails']">
+    <keep-alive :exclude="['Details','Goods','Collect','StoryDetails','ImmedPayment','AboutMember','ToolCenter','Cart','CartOperate','FeedBack','Invoice','HallDetails','ActivitysList']">
       <router-view/>
       <router-view v-if="isRouterAlive"></router-view>
     </keep-alive>

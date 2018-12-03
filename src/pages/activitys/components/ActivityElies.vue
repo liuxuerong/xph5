@@ -1,6 +1,6 @@
 <template>
   <div class="eliesItem" @click="activityInfoDetails(activityInfoData.id)">
-    <img :src="imageUrl+activityInfoData.articleCoverImage" alt="">
+    <img v-lazy="imageUrl+activityInfoData.articleCoverImage" alt="">
     <h3 class="activityTitle">{{activityInfoData.title}}</h3>
     <span class="activitySummary" v-if="activityInfoData.summary">{{activityInfoData.summary}}</span>
   </div>
@@ -26,7 +26,7 @@ export default {
     }
   },
   mounted () {
-    console.log(this.activityInfoData)
+    // console.log(this.activityInfoData)
   }
 }
 </script>
