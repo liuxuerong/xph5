@@ -109,7 +109,7 @@ export default {
     },
     aboutMemberRender () {
       this.platform = getUrlParam('platform')
-      if (this.platform === 'i' || this.platform === 'a') {
+      if (this.platform === 'i' || this.platform === 'a' || this.platform === 'wx') {
         this.titleShow = true
         this.returnTitle(this.title)
       }
