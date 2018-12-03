@@ -129,8 +129,6 @@ export default {
   },
   watch: {
     '$route' (to, from) {
-      console.log(to, 't0')
-      console.log(from, 'from')
       if (to.name === 'CreateOrder' && to.params.info) {
         this.info = storage.getLocalStorage(orderInfo)
         this.getDetails()
@@ -140,15 +138,11 @@ export default {
         storage.delLocalStorage(invoiceInfo)
         this.getDetails()
       }
-      console.log(to, from)
       if (from.path !== '/createOrder/1' && to.path === '/createOrder') {
-        console.log(from.path)
         storage.setLocalStorage(createOrderFrom, from.path)
       }
-      console.log(from.path.indexOf('/createOrder/') !== -1 && to.path.indexOf('/createOrder/') !== -1)
       if (from.path.indexOf('/createOrder/') !== -1 && to.path.indexOf('/createOrder/') !== -1) {
         let fromPath = storage.getLocalStorage(createOrderFrom)
-        console.log(fromPath)
         this.$router.push(fromPath)
         storage.delLocalStorage(fromPath)
       }
@@ -157,7 +151,6 @@ export default {
   methods: {
     remove () {
       let goodsInfoCart = storage.getLocalStorage(goodsInfo)
-      console.log(goodsInfoCart, 'goodsInfoCart')
       if (goodsInfoCart.goodsItems.length > this.unsatisfactoryData.length) {
         this.unsatisfactoryData = []
         goodsInfoCart.goodsItemsNew = []

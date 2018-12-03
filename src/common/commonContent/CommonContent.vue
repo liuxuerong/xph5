@@ -180,7 +180,7 @@ export default {
 <style lang="stylus">
   .detailsContent
     text-align left
-    padding 100px 50px 0px
+    padding 100px 50px 100px
     color #262626
     font-size 40px
     line-height 70px

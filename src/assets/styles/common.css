@@ -180,6 +180,10 @@ body, html, #app{
 #__vconsole .vc-switch{
   z-index: 99999999 !important;
 }
+html,body{
+overflow: hidden;
+}
+
 .mint-toast-text,.weui-toast__content{
   font-size: 0.32rem !important;
 }
@@ -202,4 +206,7 @@ body, html, #app{
   left:200px;
   top: 360px;
   display: block;
+}
+.weui-mask_transparent{
+  z-index:9999999;
 }
