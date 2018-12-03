@@ -139,6 +139,7 @@ export default {
         margin-left 25px
         margin-right 20px
   .swiper-slide
+    width 100% !important
     .navIndex
       display block
       width 100%

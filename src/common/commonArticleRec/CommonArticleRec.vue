@@ -32,21 +32,21 @@ export default {
 <style lang="stylus" scoped>
 @import "~styles/mixins.styl"
 .commonArticleRec
-  margin-top 50px
+  padding-top 50px
+  padding-bottom 0.888889rem
   li
-    padding-bottom 100px
+    min-height 750px
     .routerDetailes
       display inline-block
       width 100%
     img
       width 100%
       height 600px
-      margin-bottom 50px
      .title
       font-size 56px
       font-weight 600
-      line-height 100px
-      padding 0 50px
+      line-height 80px
+      padding 40px 50px 30px
       color #333
       ellipsis()
     .summary

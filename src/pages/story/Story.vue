@@ -68,12 +68,6 @@ export default {
       tabbar: []
     }
   },
-  computed: {},
-  // watch: {
-  //   '$route' (to, from) {
-  //     this.$router.go(0)
-  //   }
-  // },
   methods: {
     getTabbar () {
       let _this = this
@@ -162,6 +156,24 @@ export default {
     this.getStoryKnow()
     this.getStorySub()
     this.getStoryWord()
+  },
+  updated () {
+    this.$nextTick(function () {
+      let img = this.$refs.xpStoryContent.getElementsByTagName('img')
+      console.log(img)
+      let count = 0
+      let length = img.length
+      if (length) {
+        let timer = setInterval(() => {
+          if (count === length) {
+            this.scroll.refresh()
+            clearInterval(timer)
+          } else if (img[count].complete) {
+            count++
+          }
+        }, 16)
+      }
+    })
   }
 }
 </script>
