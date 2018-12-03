@@ -480,6 +480,7 @@ export default {
       height 370px
       overflow hidden
     .couponsScroll.couponsScrollBg
+      height 100%
       bgImage('/static/images/emptyDiscount')
   .addressBox,.collectBox
     width 100%
