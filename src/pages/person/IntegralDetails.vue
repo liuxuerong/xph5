@@ -14,7 +14,8 @@
               <img v-if="item.image !== undefined || item.image !== ''" :src="imageUrl+item.image" alt="">
               <h3>{{item.content}}</h3>
             </div>
-            <div class="right" :class="item.type=='1'||item.type=='5'?'active':''">{{item.integral}}.0</div>
+            <div class="right" v-if="item.type=='1'||item.type=='5'" :class="item.type=='1'||item.type=='5'?'active':''">+{{item.integral}}.0</div>
+            <div class="right" v-else>-{{item.integral}}.0</div>
           </div>
           <div class="bottom">
             <span v-if="item.type=='1'">购物送积分</span>
