@@ -150,7 +150,5 @@ export default {
        font-size 40px
   .indexContent
     margin-top 0
-  .swiper-slide
-    box-shadow:0px 2px 26px 0px rgba(0, 0, 0, 0.1);
 
 </style>
