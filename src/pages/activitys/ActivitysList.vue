@@ -7,7 +7,7 @@
         <li v-for="(tab,i) in activitysTab" :key="i" :class="{'active':activitysActive==i}" @click="activitysTabClick(i)">{{tab}}</li>
       </ul>
     </div>
-    <div class="activitysCon" v-if="activitysActive == 0 && (activityGoods.length===0 || activityCategory.length===0)">
+    <div class="activitysCon" v-if="activitysActive == 0 && (activityGoods.length!==0 || activityCategory.length!==0)">
       <!-- 单品秒杀 -->
       <div class="activityGoodsBox" v-if="activityGoods.length">
         <activitys-title :activitysTitle="activitysTitle[0]"></activitys-title>
