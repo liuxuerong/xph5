@@ -6,7 +6,7 @@
         <img v-lazy="imageUrl+item.articleCoverImage" alt="" class="lazyImg">
         <p class="title">{{item.title}} <em v-if="item.subTitle">|</em> {{item.subTitle}}</p>
         <slot></slot>
-        <div class="summary">{{item.summary}}</div>
+        <div class="summary" v-if="item.summary">{{item.summary}}</div>
         </router-link>
       </li>
     </ul>
@@ -54,7 +54,7 @@ export default {
       color #808080
       font-size 36px
       line-height 50px
-      padding 0 50px
+      padding 0 50px 80px
   .lazyImg[lazy=loading]
     width 400px
     height 400px
