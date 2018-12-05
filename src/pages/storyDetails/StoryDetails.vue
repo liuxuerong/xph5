@@ -49,7 +49,7 @@ export default {
   methods: {
     hideHeads () {
       this.platform = getUrlParam('platform')
-      if (this.platform && this.platform !== '') {
+      if (this.platform === 'i' || this.platform === 'a' || this.platform === 'wx') {
         this.hideHead = true
       }
     },
