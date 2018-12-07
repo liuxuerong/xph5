@@ -3,8 +3,8 @@
     <!-- 商品详情 name 价格 活动标签 -->
     <h6 class="name">{{goods.name}}</h6>
     <div class="price">
-      <span class="minPrice">{{goods.minPrice}}</span>
-      <del class="marketPrice">市场价{{goods.marketPrice}}</del>
+      <span class="minPrice">￥{{goods.minPrice}}</span>
+      <del class="marketPrice">市场价￥{{goods.marketPrice}}</del>
     </div>
     <div class="activityLabel">
       <span class="activityLabelItem" v-for="(item,index) in activityLabel" :key="index">
