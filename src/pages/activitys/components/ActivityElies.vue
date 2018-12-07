@@ -30,10 +30,10 @@ export default {
 
 <style lang="stylus" scoped>
   .eliesItem
-    width 100%
+    width calc(100% - 100px)
     box-sizing border-box
     padding-bottom 52px
-    margin-bottom 50px
+    margin 0 auto 58px
     box-shadow 0px 2px 26px 0px rgba(0, 0, 0, 0.1)
     img
       display block
@@ -47,6 +47,7 @@ export default {
       padding 0 50px
       line-height 120px
       font-size 56px
+      font-weight 600
       color #333333
     .activitySummary
       display block

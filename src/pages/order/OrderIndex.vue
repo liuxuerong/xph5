@@ -89,19 +89,19 @@ export default {
           border-radius 18px
         .orderIcon
           display block
-          width 71px
-          height 68px
+          width 83px
+          height 83px
           margin 0 auto 30px
         .orderIcon01
           bgImage('/static/icons/orderItem01')
         .orderIcon02
-          bgImage('/static/icons/orderItem03')
-        .orderIcon03
-          bgImage('/static/icons/orderItem04')
-        .orderIcon04
-          bgImage('/static/icons/orderItem05')
-        .orderIcon05
           bgImage('/static/icons/orderItem02')
+        .orderIcon03
+          bgImage('/static/icons/orderItem03')
+        .orderIcon04
+          bgImage('/static/icons/orderItem04')
+        .orderIcon05
+          bgImage('/static/icons/orderItem05')
   .centerTitle
     width 100%
     height 160px

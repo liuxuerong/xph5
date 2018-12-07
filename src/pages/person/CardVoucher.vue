@@ -66,7 +66,7 @@
           </div>
         </div>
       </div>
-      <div class="cardVoucherPage" v-else>
+      <div class="cardVoucherPage" :class="{cardVoucherPageBg:list.length == 0}" v-else>
         <common-empty :emptyObj="emptyObj"/>
       </div>
     </div>
@@ -207,6 +207,12 @@ body, html, #app
       .hrefCss.active
         color #262626
         border-bottom 8px solid #333333
+  .cardVoucherPageBg.cardVoucherPage
+    position absolute
+    left 0
+    width 100%
+    height 100%
+    background #fff
   .cardVoucherPage
     width 100%
     box-sizing border-box

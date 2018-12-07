@@ -122,9 +122,8 @@ export default {
             line-height 265px
             .loginIcon
                 display inline-block
-                width 60px
-                height 60px
-                background red
+                width 66px
+                height 66px
                 margin-right 56px
                 margin-left 30px
                 vertical-align middle

@@ -102,8 +102,12 @@ export default {
           if (response.data.code === 0) {
             let data = response.data.body
             if (JSON.stringify(data) !== '{}') {
-              this.activityGoods = data.activityGoodss
-              this.activityCategory = data.activotyCategorys
+              if (data.activityGoodss) {
+                this.activityGoods = data.activityGoodss
+              }
+              if (data.activotyCategorys) {
+                this.activityCategory = data.activotyCategorys
+              }
             } else {
               if (this.platform === 'i' || this.platform === 'a' || this.platform === 'wx') {
                 this.$router.replace(`/activitysList/1?platform=${this.platform}`)
@@ -118,13 +122,20 @@ export default {
           if (response.data.code === 0) {
             let data = response.data.body
             if (JSON.stringify(data) !== '{}') {
-              this.activityGoods = data.activityGoodss
-              this.activityCategory = data.activotyCategorys
+              if (data.activityGoodss) {
+                this.activityGoods = data.activityGoodss
+              }
+              if (data.activotyCategorys) {
+                this.activityCategory = data.activotyCategorys
+              }
+            } else {
+              console.log(66)
             }
           }
         })
         // 活动
         http(activityInfo).then((response) => {
+          console.log(response)
           if (response.data.code === 0) {
             let data = response.data.body
             // this.activityInfo = [...this.activityInfo, ...data.articles]
@@ -176,6 +187,7 @@ export default {
       margin-right 50px
       background #fff
       line-height 100px
+      font-weight 600
       text-align center
     li.active
       font-size 46px
