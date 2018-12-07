@@ -91,7 +91,7 @@ body, html, #app{
   display: block !important;
   height: 3px !important;
   width: 380px !important;
-  background-color: #E6E6E6;
+  background-color: #e9e9f9;
   background-image:none !important;
   position: absolute !important;
 }
@@ -210,4 +210,7 @@ body, html, #app{
 }
 .overH{
   overflow:hidden;
+}
+.mint-cell-wrapper{
+  padding: 0 !important;
 }

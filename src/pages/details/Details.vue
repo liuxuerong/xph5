@@ -11,8 +11,7 @@
         <details-des :goods="goods" :activityLabel="activityLabel" v-if="goods" />
         <div class="cutOffLine"></div>
         <details-cell :cellInfo="cellInfo[0]" v-if="showCoupon" @click.native="receiveCoupons"/>
-        <div class="cutOffLine"></div>
-
+        <div class="cutOffLine" v-if="showCoupon"></div>
         <details-cell :cellInfo="cellInfo[1]" @click.native="changePopupVisible(true), changeFrom(1)" />
         <div class="cutOffLine"></div>
         <details-service/>

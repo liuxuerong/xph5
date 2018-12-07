@@ -5,7 +5,7 @@
         <common-nav-search :showCart="showCart">
           {{title}}
         </common-nav-search>
-        <div class="xpGoodsTop border-bottom" ref="xpGoodsTop">
+        <div class="xpGoodsTop" ref="xpGoodsTop">
           <div class="xpGoodsTopContent">
             <tab v-if="tabbar.length" :scroll-threshold="2">
               <tab-item :selected="index==currentIndex" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.id" :id="item.id" ref="tabItem">{{item.catName}}</tab-item>
@@ -26,7 +26,7 @@
               </li>
             </ul>
             <common-empty v-if="!noMore&&!goodsListData.length" :emptyObj="emptyObj" />
-            <divider v-if="noMore">哎呀！底线到了</divider>
+            <divider v-if="noMore">已经到达最底部</divider>
           </div>
         </div>
       </div>
@@ -167,7 +167,6 @@ export default {
   .xpGoodsTop>>>.vux-tab .vux-tab-item.vux-tab-selected
     color #333333
     border-bottom 8px solid #262626
-    font-weight: 600;
     position relative
   .xpGoodsTop>>>.vux-tab .vux-tab-item.vux-tab-selected::before
     content ""
@@ -191,7 +190,7 @@ export default {
     line-height 106px
     font-size 42px
     margin-right 40px
-    // flex auto
+    font-weight 600
     width auto
 .xpGoods
   height 100%
@@ -205,7 +204,7 @@ export default {
     font-size 46px
     position fixed
     width 100%
-    top 120px
+    top 96px
     z-index 999999
     padding 0 50px
     background-color #fff
@@ -224,8 +223,8 @@ export default {
   display flex
   flex-wrap wrap
   justify-content space-around
-  padding-top 10px
   background-color #fff
+  border-top 1px solid #e6e6e6
   li
     padding 100px 0
     flex 1

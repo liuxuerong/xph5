@@ -6,7 +6,7 @@
           <common-banner :bannerData="fiveStarQuality" v-if="fiveStarQuality" />
           <!-- <common-banner :bannerData="fiveStarHotel" v-if="fiveStarHotel" :linkUrl="hotelDetails" /> -->
           <hotel-swiper :bannerData="fiveStarHotel" v-if="fiveStarHotel"  />
-          <divider>哎呀！底线到了</divider>
+          <divider>已经到达最底部</divider>
         </div>
       </div>
   </div>

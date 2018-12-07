@@ -95,6 +95,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+@import "~styles/mixins.styl"
 .indexLimit
   padding 0 50px 50px
   border-bottom 10px solid #F5F5F5
@@ -136,6 +137,7 @@ export default {
     color #333
     line-height 120px
     font-weight bold
+    ellipsis()
   .price
     .goodsPrice
       color #333
@@ -144,7 +146,7 @@ export default {
     del
       font-size 30px
       color #CCCCCC
-      padding-left 40px
+      padding-left 20px
     .tag
       float right
       height 62px

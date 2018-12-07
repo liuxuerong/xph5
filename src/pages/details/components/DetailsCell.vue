@@ -16,20 +16,6 @@ export default {
   },
   components: {
     'mt-cell': Cell
-  },
-  data () {
-    return {
-
-    }
-  },
-  computed: {
-
-  },
-  watch: {
-
-  },
-  methods: {
-
   }
 }
 </script>
@@ -45,7 +31,7 @@ export default {
     .mint-cell-title
       flex none
       -webkit-box-flex none
-      margin-right 160px
+      margin-right 110px
     .mint-cell-text
       display inline-block
       height 146px
@@ -53,9 +39,9 @@ export default {
       font-size 40px
       font-weight 600
     .mint-cell-value
-      color #808080
+      color #262626
       font-size 40px
-      font-weight 600
+      font-weight normal
     .mint-cell-allow-right::after
       border-color #808080
       width: 0.22444rem;

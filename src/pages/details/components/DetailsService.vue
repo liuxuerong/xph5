@@ -42,9 +42,9 @@ export default {
       li
         height 140px
         line-height 140px
-        color #808080
+        color #262626
         font-size 40px
-        font-weight 600
+        font-weight normal
         display inline-block
         width 50%
         .dot

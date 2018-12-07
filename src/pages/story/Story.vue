@@ -5,7 +5,7 @@
     </common-header>
     <div class="top">
       <tab v-if="tabbar.length>1">
-        <tab-item :selected="index===0" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.id" >{{item.name}}</tab-item>
+        <tab-item :selected="index===0" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="index" >{{item.name}}</tab-item>
       </tab>
     </div>
     <div ref="xpStoryContent" class="xpStoryContent">
@@ -32,12 +32,8 @@ import {
   storyKnow,
   storyWord,
   storySub,
-  storyTabs,
   brandList
 } from 'util/netApi'
-import {
-  mainEnum
-} from 'util/enum.js'
 import {
   config
 } from 'util/config.js'
@@ -65,18 +61,28 @@ export default {
       storySubFlag: false,
       linkTo: '/storyDetails/',
       brandDetailsLink: '/brandDetails/',
-      tabbar: []
+      tabbar: [{
+        name: '国际品牌'
+      }, {
+        name: '发现好物'
+      },
+      {
+        name: '五星标准'
+      },
+      {
+        name: '生活指南'
+      }]
     }
   },
   methods: {
-    getTabbar () {
-      let _this = this
-      http(storyTabs, [mainEnum[0]]).then(res => {
-        for (let i = 0; i < res.data.body.length; i++) {
-          _this.tabbar.push(res.data.body[i])
-        }
-      })
-    },
+    // getTabbar () {
+    //   let _this = this
+    //   http(storyTabs, [mainEnum[0]]).then(res => {
+    //     for (let i = 0; i < res.data.body.length; i++) {
+    //       _this.tabbar.push(res.data.body[i])
+    //     }
+    //   })
+    // },
     onItemClick (index) {
       this.brandListDataFlag = false
       this.storyKnowFlag = false
@@ -151,7 +157,7 @@ export default {
     }
   },
   mounted () {
-    this.getTabbar()
+    // this.getTabbar()
     this.getBrandList()
     this.getStoryKnow()
     this.getStorySub()

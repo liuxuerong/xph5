@@ -17,12 +17,12 @@
             <li class="emptyBox"></li>
           </ul>
           <common-empty v-else :emptyObj="emptyObj" />
-          <divider v-if="noMore">哎呀！底线到了</divider>
+          <divider v-if="noMore">已经到达最底部</divider>
         </div>
         <div v-else>
           <common-article-rec v-if="content.length" :articleRecommends="content" :linkTo="linkTo" />
           <common-empty v-else :emptyObj="emptyContent" />
-          <divider v-if="noMore">哎呀！底线到了</divider>
+          <divider v-if="noMore">已经到达最底部</divider>
         </div>
       </div>
     </div>

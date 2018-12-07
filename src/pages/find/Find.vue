@@ -2,7 +2,7 @@
   <div class="xpGoods">
     <keep-alive>
       <div class="xpGoodsWrap">
-        <div class="xpGoodsTop border-bottom" ref="xpGoodsTop" v-show="isFixed">
+        <div class="xpGoodsTop" ref="xpGoodsTop" v-show="isFixed">
           <div class="xpGoodsTopContent">
             <tab v-if="tabbar.length">
               <tab-item :selected="index===pageIndex" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.id" :id="item.id" ref="tabItem">{{item.catName}}</tab-item>
@@ -43,7 +43,7 @@
 
         <div ref="xpStoryContent" class="xpStoryContent" :class="{fixed:isFixed}">
           <div class="xpStoryContentChild">
-            <div class="xpGoodsTop border-bottom" ref="xpGoodsTop" v-show="!isFixed">
+            <div class="xpGoodsTop" ref="xpGoodsTop" v-show="!isFixed">
               <div class="xpGoodsTopContent">
                 <tab v-if="tabbar.length">
                   <tab-item :selected="index===pageIndex" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.id" :id="item.id" ref="tabItem">{{item.catName}}</tab-item>
@@ -285,7 +285,6 @@ export default {
 .xpGoodsTop>>>.vux-tab .vux-tab-item.vux-tab-selected
   color #333333
   border-bottom 8px solid #262626
-  font-weight 600
   position relative
 .xpGoodsTop>>>.vux-tab .vux-tab-item.vux-tab-selected::before
   content ''
@@ -307,6 +306,7 @@ export default {
   line-height 106px
   font-size 42px
   margin-right 60px
+  font-weight 600
 .xpGoods
   height 100%
   background-color #fff
@@ -373,6 +373,7 @@ export default {
     h2
       color #333333
       font-size 46px
+      font-weight 600
     h4
       color #333333
       font-size 24px
