@@ -24,6 +24,7 @@ export default {
       line-height 160px
       margin-right 54px
       font-size 60px
+      font-weight 600
       color #333
     span
       display inline-block

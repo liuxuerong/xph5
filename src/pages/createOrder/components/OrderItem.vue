@@ -37,9 +37,6 @@ export default {
     return {
       imageUrl: config.imageUrl
     }
-  },
-  mounted () {
-    console.log(this.pricesData)
   }
 }
 </script>

@@ -41,7 +41,6 @@ export default {
   mounted () {
     http(bannerList, ['find-banner']).then((res) => {
       this.swiperData = res.data.body
-      // console.log(res.data.body)
     }).catch((err) => {
       console.log(err)
     })

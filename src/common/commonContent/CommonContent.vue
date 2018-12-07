@@ -107,7 +107,6 @@ export default {
 
   },
   mounted () {
-    console.log(this.details, '----')
     this.updateContent()
     this.returnTitle(this.details.title.trim())
   },

@@ -57,7 +57,6 @@ export default {
 
     // 获取input的value
     getSearchVal () {
-      console.log(this.searchVal)
       this.hasSearch = true
       this.saveSearchHistory()
     },
@@ -71,7 +70,6 @@ export default {
       this.searchHistoryStorage = storage.getLocalStorageLong(searchHistory)
       this.searchHistoryStorage = this.searchHistoryStorage || []
       let index = ''
-      console.log(this.searchVal)
       if (this.searchVal.trim() !== '') {
         for (let i = 0; i < this.searchHistoryStorage.length; i++) {
           if (this.searchVal === this.searchHistoryStorage[i]) {

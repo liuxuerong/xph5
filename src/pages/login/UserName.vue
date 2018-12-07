@@ -33,12 +33,10 @@ export default {
     setUserNameNext: function () {
       // 下一步
       if (this.rigthUserName) {
-        console.log(this.usernaem)
         var params = {
           name: this.name
         }
         http(setMemberData, params).then((response) => {
-          console.log(response)
           if (response.data.code === 0) {
             this.$router.push('/')
           }

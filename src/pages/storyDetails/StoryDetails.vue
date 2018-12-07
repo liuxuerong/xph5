@@ -57,7 +57,6 @@ export default {
       const id = this.$route.params.id
       http(hotelDetailList, [id])
         .then(res => {
-          console.log(res)
           this.details = res.data.body
           this.goodsItems = res.data.body.goodsItems
           if (res.data.body.articleCategoryId === detailsEnum.articleCategoryId) {

@@ -44,7 +44,6 @@ export default {
     returngoodsRender () {
       let data = storage.getLocalStorage(aftersale)
       this.list = data
-      console.log(data)
     },
     // 选择类型
     returnType () {

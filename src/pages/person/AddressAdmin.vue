@@ -55,12 +55,10 @@ export default {
         page: 1
       }
       http(listDelivery, params).then((response) => {
-        console.log(response)
         this.addList = response.data.body.list
         if (this.addList.length > 0) {
           this.oper = '新增地址'
         }
-        console.log(this.addList)
         // // 判断默认地址
         // for (var i = 0; i < data.list.length; i++) {
         //   if (data.list[i].idDefault === 1) {

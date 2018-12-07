@@ -131,9 +131,7 @@ export default {
     // 页面初始化数据
     afterSaleRender () {
       let orderId = this.$route.params.orderId
-      console.log(orderId)
       http(refundOrderDetail, [orderId]).then((response) => {
-        console.log(response.data.body)
         if (response.data.code === 0) {
           this.title = response.data.body.afterSalesTypeDesc
           this.list = response.data.body
@@ -149,7 +147,6 @@ export default {
     },
     // 退款提交
     returnSubmit (orderId) {
-      console.log(orderId)
       let _this = this
       if (this.logisticsName && this.logisticsNum) {
         let params = {
@@ -157,9 +154,7 @@ export default {
           logisticsName: this.logisticsName, // 物流公司名称
           logisticsNo: this.logisticsNum // 物流单号
         }
-        console.log(params)
         http(submitLogic, params).then((response) => {
-          console.log(response)
           if (response.data.code === 0) {
             Toast({
               message: '提交成功',

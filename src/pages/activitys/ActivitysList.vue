@@ -92,41 +92,50 @@ export default {
     // 内容加载
     activitysCon (type) {
       if (this.platform === 'i' || this.platform === 'a' || this.platform === 'wx') {
-        this.$router.push(`/activitysList/${type}?platform=${this.platform}`)
+        this.$router.replace(`/activitysList/${type}?platform=${this.platform}`)
       } else {
-        this.$router.push(`/activitysList/${type}`)
+        this.$router.replace(`/activitysList/${type}`)
       }
       if (type === 0) {
         // 商品
         http(activityElies).then((response) => {
-          console.log(response)
           if (response.data.code === 0) {
             let data = response.data.body
             if (JSON.stringify(data) !== '{}') {
-              this.activityGoods = data.activityGoodss
-              this.activityCategory = data.activotyCategorys
+              if (data.activityGoodss) {
+                this.activityGoods = data.activityGoodss
+              }
+              if (data.activotyCategorys) {
+                this.activityCategory = data.activotyCategorys
+              }
             } else {
               if (this.platform === 'i' || this.platform === 'a' || this.platform === 'wx') {
-                this.$router.push(`/activitysList/1?platform=${this.platform}`)
+                this.$router.replace(`/activitysList/1?platform=${this.platform}`)
               } else {
-                this.$router.push('/activitysList/1')
+                this.$router.replace('/activitysList/1')
               }
             }
           }
         })
       } else {
         http(activityElies).then((response) => {
-          console.log(response)
           if (response.data.code === 0) {
             let data = response.data.body
             if (JSON.stringify(data) !== '{}') {
-              this.activityGoods = data.activityGoodss
-              this.activityCategory = data.activotyCategorys
+              if (data.activityGoodss) {
+                this.activityGoods = data.activityGoodss
+              }
+              if (data.activotyCategorys) {
+                this.activityCategory = data.activotyCategorys
+              }
+            } else {
+              console.log(66)
             }
           }
         })
         // 活动
         http(activityInfo).then((response) => {
+          console.log(response)
           if (response.data.code === 0) {
             let data = response.data.body
             // this.activityInfo = [...this.activityInfo, ...data.articles]
@@ -178,6 +187,7 @@ export default {
       margin-right 50px
       background #fff
       line-height 100px
+      font-weight 600
       text-align center
     li.active
       font-size 46px

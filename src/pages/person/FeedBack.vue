@@ -113,9 +113,7 @@ export default {
           type: this.active + 1,
           pics: this.objImgs
         }
-        console.log(params)
         http(feedback, params).then((response) => {
-          console.log(response)
           if (response.data.body === true) {
             Toast({
               message: '意见反馈成功',

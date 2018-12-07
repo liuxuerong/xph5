@@ -68,7 +68,6 @@ export default {
           request: this.request
         }
         http(getVerifyCode, params).then((response) => {
-          console.log(response)
           if (response.data.code === 0) {
             this.computedTime = 90
             this.timer = setInterval(() => {
@@ -134,7 +133,7 @@ export default {
     width 100%
     height 100%
     overflow hidden
-    bgImage('/static/images/loginBg')
+    background url(/static/images/loginBg@3x.jpg) no-repeat center center/100% 100%
   .loginInfo
     width 88%
     height 530px
@@ -156,8 +155,8 @@ export default {
       background transparent
 		.loginIcon
 			display inline-block
-			width 60px
-			height 60px
+			width 66px
+			height 66px
 			margin-right 56px
 			margin-left 30px
 			vertical-align middle

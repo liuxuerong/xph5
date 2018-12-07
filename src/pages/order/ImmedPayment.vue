@@ -58,7 +58,6 @@ export default {
     paymentRender () {
       let orderSn = this.$route.params.orderCode
       http(subOrderDetail, [orderSn]).then((response) => {
-        console.log(response)
         this.list = response.data.body
       }).catch((err) => {
         console.log(err)
@@ -76,12 +75,9 @@ export default {
           orderSn: orderSn,
           payment: this.readioActive
         }
-        console.log(params)
         http(payMoney, params).then((response) => {
-          console.log(response)
           // 提交接口成功
           if (response.data.code === 0) {
-            console.log(this.readioActive)
             // 支付宝
             if (this.readioActive === 2) {
               storage.setLocalStorage(immedPaymentMony, this.list.needPayAmount)

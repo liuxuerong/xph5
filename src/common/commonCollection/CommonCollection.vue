@@ -32,7 +32,6 @@ export default {
       if (fnType === 'Promise') {
         hasCollection(params).then(res => {
           this.collect = res.data.body
-          console.log(res)
         }).catch(err => {
           console.log(err)
         })

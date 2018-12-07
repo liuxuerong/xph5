@@ -73,7 +73,6 @@ export default {
           data[i].evaluateText = ''
         }
         this.list = data
-        console.log(this.list)
       })
     },
     uploadPic (e, index) {
@@ -131,9 +130,7 @@ export default {
         orderItemSn: this.orderCode,
         goodsComments: goodsComments
       }
-      console.log(params)
       http(comment, params).then((response) => {
-        console.log(response)
         if (response.data.body === true) {
           Toast({
             message: '评论成功',

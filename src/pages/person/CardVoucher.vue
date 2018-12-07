@@ -66,7 +66,7 @@
           </div>
         </div>
       </div>
-      <div class="cardVoucherPage" v-else>
+      <div class="cardVoucherPage" :class="{cardVoucherPageBg:list.length == 0}" v-else>
         <common-empty :emptyObj="emptyObj"/>
       </div>
     </div>
@@ -114,7 +114,6 @@ export default {
           rows: 100
         }
         http(coupon, params).then((result) => {
-          console.log(result)
           this.list = result.data.body.list
         }).catch((err) => {
           console.log(err)
@@ -126,9 +125,7 @@ export default {
           page: 1,
           rows: 100
         }
-        console.log(index)
         http(coupon, params).then((result) => {
-          console.log(result)
           this.list = result.data.body.list
         }).catch((err) => {
           console.log(err)
@@ -138,7 +135,6 @@ export default {
     // 卡券详情
     cardDetailsPages (type, id, item) {
       let mainType = this.index
-      console.log(mainType)
       // id不能搜索到卡券
       if (type !== 2) {
         storage.setLocalStorage('card', item)
@@ -151,7 +147,6 @@ export default {
         couponId: id
       }
       http(memberCouponRecord, params).then((response) => {
-        console.log(response)
         if (response.data.code === 0) {
           Toast({
             message: '优惠券领取成功',
@@ -167,7 +162,6 @@ export default {
   },
   mounted () {
     this.headleTabsChange(0)
-    console.log(this.list)
   },
   computed: mapState({
     listObj: state => state.card.listObj
@@ -177,7 +171,6 @@ export default {
       this.$router.go(0)
     },
     list: function (v) {
-      console.log(v)
     }
   }
 }
@@ -214,6 +207,12 @@ body, html, #app
       .hrefCss.active
         color #262626
         border-bottom 8px solid #333333
+  .cardVoucherPageBg.cardVoucherPage
+    position absolute
+    left 0
+    width 100%
+    height 100%
+    background #fff
   .cardVoucherPage
     width 100%
     box-sizing border-box

@@ -41,7 +41,6 @@ export default {
   methods: {
     getAddress () {
       http(storeAddr).then(res => {
-        console.log(res)
         this.addressList = res.data.body
       }).catch(err => {
         console.log(err)

@@ -47,7 +47,6 @@ export default {
         }
         if (storage.getLocalStorage(accessToken)) {
           http(modifyPassword, params).then((response) => {
-            console.log(response)
             if (response.data.code === 0) {
               Toast({
                 message: '设置成功',

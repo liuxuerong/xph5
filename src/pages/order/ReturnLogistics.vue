@@ -39,7 +39,6 @@ export default {
   methods: {
     logisticsRender () {
       http(logisticsCompany).then((response) => {
-        console.log(response)
         if (response.data.code === 0) {
           this.list = response.data.body
         }

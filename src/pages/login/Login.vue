@@ -75,7 +75,6 @@ export default {
       }
       http(getLogin, param).then((response) => {
         if (response.data.code === 0) {
-          console.log(response.data.body.access_token)
           storage.setLocalStorage('userId', response.data.body.user_id)
           storage.setLocalStorage(accessToken, 'Bearer ' + response.data.body.access_token)
           Toast({
@@ -123,9 +122,8 @@ export default {
             line-height 265px
             .loginIcon
                 display inline-block
-                width 60px
-                height 60px
-                background red
+                width 66px
+                height 66px
                 margin-right 56px
                 margin-left 30px
                 vertical-align middle

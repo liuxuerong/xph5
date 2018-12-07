@@ -45,11 +45,6 @@ export default {
   components: {
     PhoneCode
   },
-  watch: {
-    '$route.path': function (newVal, oldVal) {
-      // console.log(newVal, oldVal)
-    }
-  },
   computed: {
     // 判断手机号码
     rightPhoneNumber () {
@@ -67,7 +62,6 @@ export default {
           request: this.phone
         }
         http(getVerifyCode, params).then((response) => {
-          console.log(response)
           if (response.data.body === true) {
             this.computedTime = 90
             this.timer = setInterval(() => {
@@ -95,13 +89,7 @@ export default {
     submitCode () {
       // let _this = this
       if (this.rightPhoneNumber && this.rightPhoneCode) {
-        let params = {
-          phone: this.phone,
-          code: this.code
-        }
-        console.log(params)
         http(verifySms, [this.phone, this.code]).then((response) => {
-          console.log(response)
           if (response.data.body === true) {
             let params2 = {
               phone: this.phone,
@@ -110,7 +98,6 @@ export default {
               userType: 1
             }
             http(getLogin, params2).then((response2) => {
-              console.log(response2)
               if (response2.data.code === 0) {
                 storage.setLocalStorage('userId', response2.data.body.user_id)
                 storage.setLocalStorage(accessToken, 'Bearer ' + response2.data.body.access_token)

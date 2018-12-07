@@ -151,7 +151,6 @@ export default {
     pageRender () {
       let type = this.$route.params.type
       this.type = type
-      console.log(type)
       if (type === '-1') {
         this.title = '全部订单'
       } else if (type === '1') {
@@ -171,7 +170,6 @@ export default {
         status: type
       }
       http(OrderList, params).then((response) => {
-        console.log(response)
         if (response.data.code === 0) {
           this.list = response.data.body.list
         }

@@ -120,7 +120,6 @@ export default {
     afterSaleRender () {
       let orderId = this.$route.params.orderId
       http(refundOrderDetail, [orderId]).then((response) => {
-        console.log(response)
         if (response.data.code === 0) {
           this.title = response.data.body.afterSalesTypeDesc
           this.list = response.data.body
