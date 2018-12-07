@@ -77,6 +77,9 @@ export default {
 <style lang="stylus" scoped>
 .xpIndex
   height 100%
+  // @supports (bottom: env(safe-area-inset-bottom))
+  //   .tabbar
+  //     padding-bottom env(safe-area-inset-bottom)
   .tabbar
     position fixed
     bottom 0
@@ -108,6 +111,7 @@ export default {
         color #BA825A
     a:nth-child(3)
       img
-        width 114px
-        height 117px
+        width 111px
+        height 126px
+
 </style>

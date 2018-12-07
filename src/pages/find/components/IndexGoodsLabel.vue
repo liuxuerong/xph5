@@ -3,7 +3,7 @@
     <h4>口碑爆款</h4>
     <img :src="imageUrl+goodsLabel.appImage" alt="" class="banner">
     <div class="goodsContainer">
-      <common-img-prices class="goodsItem" v-for="item in goodsLabel.goodsDetails" :key="item.id" :pricesData="item" v-if="bestChoiceGoods.length"/>
+      <common-img-prices class="goodsItem" v-for="(item,index) in goodsLabel.goodsDetails" :key="item.id" :pricesData="item" v-if="bestChoiceGoods.length&&index<5"/>
       <div class="moreGoods">
         <router-link to="/hotGoods" v-if="bestChoiceGoods.length">查看<br>更多商品</router-link>
       </div>
@@ -81,6 +81,7 @@ export default {
   .banner
     width 100%
     height 350px
+    margin-bottom 84px
 .goodsContainer
   display flex
   justify-content space-around

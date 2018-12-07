@@ -106,7 +106,7 @@ export default {
 <style lang="stylus">
 .detailsCommentSwiper
   .swiper-slide
-    height 320px
+    height 400px
     background rgba(255,255,255,1);
     padding 20px
     width 320px
@@ -117,8 +117,6 @@ export default {
     img
       height 100%
       width 320px
-// .pswp__button--close
-//   display none !important
 .pswp__top-bar
   height 100px !important
   line-height 100px !important
@@ -137,7 +135,7 @@ export default {
 <style lang="stylus" scoped>
 @import "~styles/mixins.styl";
 .detailsCommentSwiper
-  height 360px
+  height 400px
   padding 0 50px
   margin-bottom 34px
  .imgText

@@ -8,7 +8,7 @@
       <li class="emptyBox"></li>
     </ul>
     <common-empty v-else :emptyObj="emptyObj" class="commonEmpty" />
-    <divider v-if="noMore">哎呀！底线到了</divider>
+    <divider v-if="noMore">已经到达最底部</divider>
     </div>
   </div>
 </template>

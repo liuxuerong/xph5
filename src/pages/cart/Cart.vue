@@ -14,7 +14,7 @@
           <div class="empty" @click="emptyNoInventory">清空失效商品</div>
           <goods-item  v-for="item in disabledCartList" :key="item.id" :goodsItem="item" :disabled="true"></goods-item>
         </div>
-        <divider v-if="noMore&&goodsList.length">哎呀！底线到了</divider>
+        <divider v-if="noMore&&goodsList.length">已经到达最底部</divider>
       </div>
       <common-empty v-if="goodsList.length<1" :emptyObj="emptyObj"/>
     </div>

@@ -1,6 +1,6 @@
 <template>
   <div class="xpClassify">
-    <common-header :isScan="false"></common-header>
+    <common-header :isScan="false">分类</common-header>
     <div class="xpClassifyWrap" ref="xpClassifyWrap">
       <ul class="xpClassifyWrapUl">
         <li class="xpClassifyWrapli" v-for="(item,index) in classfiyData" :key="index" :item="item" v-if="classfiyData.length">
@@ -13,7 +13,7 @@
           </div>
             <ul class="classifyDetails" :class="{active:showIndex==index}" >
               <li class="border-bottom" v-for="(goods,innerIndex) in item.children" :key="goods.id">
-                <router-link :to="`/goods/${index}/${innerIndex}`" class="nav">{{goods.catName}}</router-link>
+                <router-link :to="`/goods/${index}/${innerIndex}`"  class="nav">{{goods.catName}}</router-link>
               </li>
             </ul>
         </li>
@@ -50,7 +50,12 @@ export default {
   },
   methods: {
     changeToggle (index) {
-      this.showIndex = index
+      if (index === this.showIndex) {
+        this.showIndex = null
+      } else {
+        this.showIndex = index
+      }
+
       this.scrollInit()
     },
     scrollInit () {
@@ -86,7 +91,7 @@ export default {
 
 <style lang="stylus" scoped>
   .xpClassify
-    padding-top 160px
+    padding-top 200px
     height 100%
     .xpClassifyWrap
       padding 0 50px
@@ -104,7 +109,7 @@ export default {
         align-items center
         justify-content space-around
         img
-          width 260px
+          width 320px
           height 260px
         .name
           min-width 260px

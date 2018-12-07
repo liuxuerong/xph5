@@ -50,6 +50,7 @@ export default {
       color #333
       -webkit-line-clamp 2
       ellipsisM()
+      margin-bottom 30px
     .summary
       color #808080
       font-size 36px

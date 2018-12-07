@@ -24,7 +24,7 @@
               </li>
             </ul>
             <common-empty v-if="!noMore&&!goodsListData.length" :emptyObj="emptyObj" />
-            <divider v-if="noMore">哎呀！底线到了</divider>
+            <divider v-if="noMore">已经到达最底部</divider>
           </div>
         </div>
       </div>
