@@ -58,10 +58,7 @@ export default {
   watch: {
     searchHistoryStorage: {
       handler (val) {
-        console.log(888)
-        console.log(val)
         let searchVal = val[val.length - 1]
-        console.log(searchVal !== val[val.length - 2])
         if (searchVal !== val[val.length - 2]) {
           this.getGoodsList(searchVal, 1)
         }
@@ -119,7 +116,6 @@ export default {
   },
   mounted () {
     let searchName = this.searchHistoryStorage[this.searchHistoryStorage.length - 1]
-    console.log(this.searchHistoryStorage)
     this.getGoodsList(searchName, 1)
   }
 }

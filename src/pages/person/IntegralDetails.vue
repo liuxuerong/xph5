@@ -62,7 +62,6 @@ export default {
   methods: {
     integralDetailsRender () {
       http(getMemberIntegral).then((result) => {
-        console.log(result)
         if (result.data.code === 0) {
           this.totalIntegral = result.data.body.totalIntegral
           this.list = result.data.body.interalRecords.list

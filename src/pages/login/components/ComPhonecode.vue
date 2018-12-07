@@ -123,9 +123,6 @@ export default {
         _this.submitCode()
       }
     }
-  },
-  mounted () {
-    console.log(this.types, 8888)
   }
 }
 </script>

@@ -92,14 +92,13 @@ export default {
     // 内容加载
     activitysCon (type) {
       if (this.platform === 'i' || this.platform === 'a' || this.platform === 'wx') {
-        this.$router.push(`/activitysList/${type}?platform=${this.platform}`)
+        this.$router.replace(`/activitysList/${type}?platform=${this.platform}`)
       } else {
-        this.$router.push(`/activitysList/${type}`)
+        this.$router.replace(`/activitysList/${type}`)
       }
       if (type === 0) {
         // 商品
         http(activityElies).then((response) => {
-          console.log(response)
           if (response.data.code === 0) {
             let data = response.data.body
             if (JSON.stringify(data) !== '{}') {
@@ -107,16 +106,15 @@ export default {
               this.activityCategory = data.activotyCategorys
             } else {
               if (this.platform === 'i' || this.platform === 'a' || this.platform === 'wx') {
-                this.$router.push(`/activitysList/1?platform=${this.platform}`)
+                this.$router.replace(`/activitysList/1?platform=${this.platform}`)
               } else {
-                this.$router.push('/activitysList/1')
+                this.$router.replace('/activitysList/1')
               }
             }
           }
         })
       } else {
         http(activityElies).then((response) => {
-          console.log(response)
           if (response.data.code === 0) {
             let data = response.data.body
             if (JSON.stringify(data) !== '{}') {

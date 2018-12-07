@@ -109,7 +109,6 @@ export default {
     // 获取页面资料信息
     getUserInfo () {
       http(memberData).then((response) => {
-        console.log(response)
         let data = response.data.body
         this.memberLevelName = data.memberLevelName + '会员'
         this.name = data.name
@@ -164,7 +163,6 @@ export default {
     },
     // 手机号 昵称 性别 出生日期
     userBasicInfo (index) {
-      console.log(index)
       if (index === 0) {
         // 手机号显示
       } else if (index === 1) {

@@ -28,7 +28,6 @@ export default {
         rows: 20
       }
       http(brandList, parmas).then(res => {
-        console.log(res)
         this.articles = res.data.body.articles
       }).catch(err => {
         console.log(err)

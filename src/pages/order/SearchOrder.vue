@@ -108,7 +108,6 @@ export default {
     // 搜索页面渲染
     searchOrderRender () {
       let searchName = storage.getLocalStorage(searchorder)
-      console.log(searchName)
       this.searchName = searchName
       let params = {
         searchName: searchName,
@@ -116,7 +115,6 @@ export default {
         rows: 100
       }
       http(orderSearch, params).then((response) => {
-        console.log(response)
         if (response.data.code === 0) {
           this.list = response.data.body.list
         }
@@ -132,7 +130,6 @@ export default {
     },
     // 查看详情
     orderDetails (orderCode, state, orderId) {
-      console.log(state)
       if (state !== 6 && state !== 8 && state !== 9 && state !== 10) {
         // 售前订单详情
         this.$router.push('/orderDetails/-1/' + orderCode)
@@ -143,7 +140,6 @@ export default {
     },
     // 确认收货
     confirmGoods (orderCode) {
-      console.log(orderCode)
       notice.confirm('您确定收到货物？', '否则可能钱财两空', function () {
         http(confirmGoods, [orderCode]).then((response) => {
           if (response.data.body === true) {

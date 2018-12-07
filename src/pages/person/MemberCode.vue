@@ -58,7 +58,6 @@ export default {
     // 页面初始化渲染
     memberCodeRender () {
       http(memberCenter).then((result) => {
-        console.log(result)
         if (result.data.code === 0) {
           this.list = result.data.body
           this.codeValue = result.data.body.cardNo

@@ -32,7 +32,6 @@ export default {
     userPhoneCodeRender () {
       let type = this.$route.params.type
       this.types = type
-      console.log(type, 6333)
       if (type === '0') {
         this.title = '绑定新手机'
         this.subtitle = '绑定新手机'
@@ -45,7 +44,6 @@ export default {
     },
     // 下一步  完成
     operBtnClick () {
-      console.log(this.returnVal)
       if (this.returnVal) {
         if (this.type === '0') {
           Toast({

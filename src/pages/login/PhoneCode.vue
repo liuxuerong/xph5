@@ -68,7 +68,6 @@ export default {
           request: this.request
         }
         http(getVerifyCode, params).then((response) => {
-          console.log(response)
           if (response.data.code === 0) {
             this.computedTime = 90
             this.timer = setInterval(() => {

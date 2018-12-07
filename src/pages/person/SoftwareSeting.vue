@@ -26,13 +26,11 @@ export default {
   },
   methods: {
     softwareSetingInfo (index) {
-      console.log(index)
       // 0 用户协议
       // 1 意见反馈
       // 2 关于我们
       // 3 账户安全
       if (index === 0) {
-        console.log(666)
         this.$router.push('/agreement')
       } else if (index === 1) {
         this.$router.push('/feedBack')

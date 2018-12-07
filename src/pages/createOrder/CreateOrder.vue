@@ -247,7 +247,6 @@ export default {
       }
       if (this.canClick) {
         http(createOrderData, params).then(res => {
-          console.log(res)
           if (res.data.code === 0) {
             this.$router.push('/immedPayment/' + res.data.body)
             this.canClick = false

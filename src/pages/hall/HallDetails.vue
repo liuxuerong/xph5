@@ -126,7 +126,6 @@ export default {
       this.show = true
     },
     doCollection (index, goodId) {
-      console.log(7889)
       let params = Object.assign({}, this.params, {collectionDataId: goodId})
       doCollection(params).then(res => {
         if (res.data.code === 0) {

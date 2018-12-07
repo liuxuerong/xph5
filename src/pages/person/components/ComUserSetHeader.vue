@@ -21,16 +21,11 @@ export default {
     // 返回上一步
     backPrevOper: function () {
       let path = this.$route.path
-      console.log(path)
       if (path === '/addressAdmin') {
         this.$router.push('/userInfoSet')
       } else if (path === '/userInfoSet' || path === '/userInfoSet/1') {
         storage.delLocalStorage('modifyName')
         this.$router.push('/personCenter')
-      } else if (path === '/activitysList/1') {
-        this.$router.push('/personCenter')
-      } else if (path === '/activitysList/0') {
-        this.$router.push('/find')
       } else {
         this.$router.back(-1)
       }

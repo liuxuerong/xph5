@@ -84,7 +84,6 @@ export default {
         couponId: id
       }
       http(memberCouponRecord, params).then((response) => {
-        console.log(response)
         if (response.data.code === 0) {
           Toast({
             message: '优惠券领取成功',

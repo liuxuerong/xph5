@@ -212,7 +212,6 @@ export default {
               time3 = '0' + time3
             }
             _this.time = time1 + ' : ' + time2 + ' : ' + time3
-            // console.log(time1)
             if (_this.computedTime === 0) {
             }
           }, 1000)

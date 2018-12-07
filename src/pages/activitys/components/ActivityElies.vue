@@ -24,9 +24,6 @@ export default {
     activityInfoDetails (id) {
       this.$router.push('/storyDetails/' + id)
     }
-  },
-  mounted () {
-    // console.log(this.activityInfoData)
   }
 }
 </script>

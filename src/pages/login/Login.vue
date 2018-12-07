@@ -75,7 +75,6 @@ export default {
       }
       http(getLogin, param).then((response) => {
         if (response.data.code === 0) {
-          console.log(response.data.body.access_token)
           storage.setLocalStorage('userId', response.data.body.user_id)
           storage.setLocalStorage(accessToken, 'Bearer ' + response.data.body.access_token)
           Toast({

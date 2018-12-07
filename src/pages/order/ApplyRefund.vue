@@ -106,14 +106,12 @@ export default {
     applyRefundRender () {
       let type = this.$route.params.type
       this.type = type
-      console.log(type)
       let orderData = this.$route.params.orderId
       if (type === '1') {
         this.title = '仅退款'
         // let orderCode = this.$route.params.orderId
         http(subOrderDetail, [orderData]).then((response) => {
           let data = response.data.body
-          console.log(data)
           this.list = data
           this.orderId = data.orderId
         })
@@ -143,9 +141,7 @@ export default {
     },
     // 图片删除
     deletePic (index) {
-      console.log(index)
       this.objImgs.splice(index, 1)
-      console.log(this.objImgs)
     },
     // 退款数据提交
     sureRefundOper () {
@@ -184,10 +180,8 @@ export default {
           desc: this.desc,
           pic: this.objImgs.join(',')
         }
-        console.log(params)
         if (this.reason !== '') {
           http(applyAfterSales, params).then((response) => {
-            console.log(response)
             if (response.data.body === true) {
               Toast({
                 message: '申请售后成功',

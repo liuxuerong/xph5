@@ -32,7 +32,6 @@ export default {
     // 店铺列表页面渲染
     toolStoreRender () {
       http(storeAddr).then((response) => {
-        console.log(response)
         if (response.data.code === 0) {
           this.list = response.data.body
         }

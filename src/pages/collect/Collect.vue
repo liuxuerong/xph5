@@ -110,7 +110,6 @@ export default {
       }
       if (!this.noMore) {
         http(goodscollectionList, params).then(res => {
-          console.log(res)
           if (this.page !== 1 && res.data.body.list.length === 0) {
             this.scroll.finishPullUp()
             this.noMore = true
