@@ -74,7 +74,8 @@ export default {
       if (this.activityMoreText === '查看全部商品') {
         let params = {
           categoryId: goodsCategoryId,
-          sortOrder: 'DESC'
+          sortOrder: 'DESC',
+          sortCode: 2
         }
         http(goodsList, params).then((response) => {
           if (response.data.code === 0) {
@@ -109,6 +110,7 @@ export default {
     }
   },
   mounted () {
+    console.log(this.activityCategory)
     this.activityCategoryRender()
     this.setNewSwiperData()
     this.timer = setInterval(() => {

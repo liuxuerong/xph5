@@ -3,7 +3,7 @@
     <search-title :title="title" :oper='false'></search-title>
     <div class="paymentCon">
       <div class="paymentTitle">支付中心</div>
-      <div class="paymentOrder">
+      <div class="paymentOrder" v-if="list">
         <span>订单编号：{{list.orderSn}}</span>
         <span>付款总额：￥ {{list.needPayAmount}}</span>
       </div>
@@ -41,7 +41,7 @@ export default {
   data () {
     return {
       title: '支付方式',
-      list: [],
+      list: null,
       readioActive: ''
     }
   },

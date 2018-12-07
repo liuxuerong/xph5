@@ -41,7 +41,8 @@ export default {
     // 返回上一步
     backPrevOper () {
       let path = this.$route.path.split('/')[1]
-      if (path === 'paymentSucc' || path === 'orderList') {
+      console.log(path)
+      if (path === 'paymentSucc' || path === 'orderList' || path === 'immedPayment') {
         this.$router.push('/personCenter')
       } else {
         this.$router.back(-1)

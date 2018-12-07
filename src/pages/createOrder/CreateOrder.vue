@@ -34,7 +34,7 @@
       </div>
       <div class="title">支付信息</div>
       <div class="cellLink" @click.prevent="chooseCoupons" v-if="availableCoupon===1">
-        <div class="text border-bottom">使用优惠券<span class="fr" v-if="info&&info.couponName">已经使用{{info.couponName}}优惠券</span></div>
+        <div class="text border-bottom">使用优惠券<span class="fr" v-if="info&&info.couponName">{{info.couponName}}</span></div>
       </div>
       <router-link class="cellLink" to="/invoice">
         <div class="text">发票<span class="fr" v-if="info&&info.invoiceTypeValue">{{info.invoiceTypeValue}}&nbsp;&nbsp;{{info.invoiceStyleValue}}</span></div>

@@ -101,6 +101,7 @@ export default {
         http(activityElies).then((response) => {
           if (response.data.code === 0) {
             let data = response.data.body
+            console.log(data)
             if (JSON.stringify(data) !== '{}') {
               if (data.activityGoodss) {
                 this.activityGoods = data.activityGoodss
