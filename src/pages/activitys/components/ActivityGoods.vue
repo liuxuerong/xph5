@@ -13,6 +13,9 @@
   </div>
 </template>
 <script>
+import dsbridge from 'dsbridge'
+import { getUrlParam } from '@/func/params'
+import wx from 'weixin-js-sdk'
 import { config } from 'util/config'
 export default {
   props: ['activityGoods'],
@@ -29,7 +32,18 @@ export default {
   methods: {
     // 商品详情
     activityGoodsDetails (goodsId) {
-      this.$router.push('/details/' + goodsId)
+      this.platform = getUrlParam('platform')
+      if (this.platform === 'wx') {
+        wx.miniProgram.navigateTo({
+          url: '../productDetails/productDetails?id=' + goodsId
+        })
+      } else if (this.platform === 'i' || this.platform === 'a') {
+        dsbridge.call('goodsDetail', goodsId, function (v) {
+          alert(v)
+        })
+      } else {
+        this.$router.push(`/details/${goodsId}`)
+      }
     },
     countDown (t) {
       t = new Date(t)

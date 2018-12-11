@@ -101,12 +101,13 @@ export default {
         http(activityElies).then((response) => {
           if (response.data.code === 0) {
             let data = response.data.body
+            console.log(data)
             if (JSON.stringify(data) !== '{}') {
               if (data.activityGoodss) {
                 this.activityGoods = data.activityGoodss
               }
-              if (data.activotyCategorys) {
-                this.activityCategory = data.activotyCategorys
+              if (data.activityCategorys) {
+                this.activityCategory = data.activityCategorys
               }
             } else {
               if (this.platform === 'i' || this.platform === 'a' || this.platform === 'wx') {
@@ -125,8 +126,8 @@ export default {
               if (data.activityGoodss) {
                 this.activityGoods = data.activityGoodss
               }
-              if (data.activotyCategorys) {
-                this.activityCategory = data.activotyCategorys
+              if (data.activityCategorys) {
+                this.activityCategory = data.activityCategorys
               }
             } else {
               console.log(66)

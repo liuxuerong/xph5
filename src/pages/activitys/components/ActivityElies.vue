@@ -6,6 +6,7 @@
   </div>
 </template>
 <script>
+import { getUrlParam } from '@/func/params'
 import { config } from 'util/config'
 export default {
   props: {
@@ -22,7 +23,12 @@ export default {
   methods: {
     // 详情跳转
     activityInfoDetails (id) {
-      this.$router.push('/storyDetails/' + id)
+      let platform = getUrlParam('platform')
+      if (platform === 'i' || platform === 'a' || platform === 'wx') {
+        this.$router.push(`/storyDetails/${id}?platform=${platform}`)
+      } else {
+        this.$router.push('/storyDetails/' + id)
+      }
     }
   }
 }
