@@ -9,12 +9,12 @@
             </tab>
           </div>
         </div>
-        <div class="index searchActive"  ref="index">
+        <div class="index searchActive" ref="index">
           <div class="scrollTopTop" v-show="showScrollToTop" @click="scrollToTop"></div>
           <common-header ref="commonHeader" />
           <!-- <h2 class="indexHeader" ref="indexHeader">
-            五星生活在等你哦~
-          </h2> -->
+              五星生活在等你哦~
+            </h2> -->
           <common-search ref="commonSearchDom" class="searchActive" />
           <div ref="topScroll" style="opacity:0;width:0;heigth:0"></div>
           <index-swiper ref="indexSwiper" v-if="IndexSwiperShow" />
@@ -34,19 +34,18 @@
               </router-link>
             </div>
           </div>
-          <index-limit :swiperData="timeLimitShoppings" v-if="timeLimitShoppings.length" />
+          <!-- IndexStoreActivity -->
+          <index-store-activity :swiperData="franchiseeActivitys" v-if="franchiseeActivitys.length" />
           <index-new-products :swiperData="newProducts" v-if="newProducts.length" />
           <index-goods-label :goodsLabel="goodsLabel" v-if="goodsLabel" />
-          <h6 class="className">全品目录</h6>
-          <!-- <index-nav  :timeLimitShoppings="timeLimitShoppings" :newProducts="newProducts"/> -->
+          <h6 class="className">热门品类</h6>
         </div>
-
         <div ref="xpStoryContent" class="xpStoryContent" :class="{fixed:isFixed}">
           <div class="xpStoryContentChild">
             <div class="xpGoodsTop" ref="xpGoodsTop" v-show="!isFixed">
               <div class="xpGoodsTopContent">
                 <tab v-if="tabbar.length">
-                  <tab-item :selected="index===pageIndex" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.id" :id="item.id" ref="tabItem">{{item.catName}}</tab-item>
+                  <tab-item :selected="index===pageIndex" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.categoryId" :id="item.id" ref="tabItem">{{item.categoryName}}</tab-item>
                 </tab>
               </div>
             </div>
@@ -81,7 +80,8 @@ import CommonSearch from 'common/commonSearch/CommonSearch'
 import CommonHeader from 'common/commonHeader/CommonHeader'
 import IndexSwiper from './components/IndexSwiper'
 import IndexGoodsLabel from './components/IndexGoodsLabel'
-import IndexLimit from './components/IndexLimit'
+// import IndexLimit from './components/IndexLimit'
+import IndexStoreActivity from './components/IndexStoreActivity'
 import IndexNewProducts from './components/IndexNewProducts'
 import {
   Tab,
@@ -92,15 +92,19 @@ import {
   http
 } from 'util/request'
 import {
-  category,
+  // category,
   goodsList,
   findData
 } from 'util/netApi'
 import {
   config
 } from 'util/config.js'
-import {storage} from 'util/storage'
-import {accessToken} from 'util/const'
+import {
+  storage
+} from 'util/storage'
+import {
+  accessToken
+} from 'util/const'
 export default {
   name: 'Find',
   components: {
@@ -114,8 +118,7 @@ export default {
     CommonHeader,
     CommonSearch,
     IndexSwiper,
-    // PullTo,
-    IndexLimit,
+    IndexStoreActivity,
     IndexNewProducts
   },
   props: {},
@@ -138,7 +141,7 @@ export default {
       showScrollToTop: false,
       IndexSwiperShow: true,
       searchActive: false,
-      timeLimitShoppings: [],
+      franchiseeActivitys: [],
       newProducts: [],
       goodsLabel: null,
       timer: '',
@@ -156,20 +159,27 @@ export default {
     scrollToTop () {
       this.$refs.topScroll.scrollIntoView()
     },
-    getTabbar () {
-      http(category).then(res => {
-        for (let i = 0; i < res.data.body.length; i++) {
-          this.tabbar.push(res.data.body[i])
-          this.categoryId = this.tabbar[0].id
-        }
-        this.getGoodsList(this.categoryId, this.page)
-      })
-    },
+    // getTabbar () {
+    //   http(category).then(res => {
+    //     for (let i = 0; i < res.data.body.length; i++) {
+    //       this.tabbar.push(res.data.body[i])
+    //       this.categoryId = this.tabbar[0].id
+    //     }
+    //     this.getGoodsList(this.categoryId, this.page)
+    //   })
+    // },
     getFindData () {
       http(findData).then(res => {
-        this.timeLimitShoppings = res.data.body.timeLimitShoppings
+        this.franchiseeActivitys = res.data.body.franchiseeActivitys
+        console.log(res)
         this.newProducts = res.data.body.newProducts
         this.goodsLabel = res.data.body.goodsLabel
+        let allCategoryMenu = res.data.body.allCategoryMenu
+        for (let i = 0; i < allCategoryMenu.length; i++) {
+          this.tabbar.push(allCategoryMenu[i])
+          this.categoryId = this.tabbar[0].categoryId
+        }
+        this.getGoodsList(this.categoryId, this.page)
       }).catch(err => {
         console.log(err)
       })
@@ -238,7 +248,7 @@ export default {
     }
   },
   mounted () {
-    this.getTabbar()
+    // this.getTabbar()
     this.getFindData()
   },
   destroyed () {
@@ -398,6 +408,7 @@ export default {
     height 360px
 
 </style>
+
 <style lang="stylus">
 .xpStoryContentChild
   .vux-divider

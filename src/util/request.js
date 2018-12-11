@@ -58,7 +58,6 @@ let headerOption = method => {
 }
 // http返回码状态判断
 let state = (res, noLoading) => {
-  // console.log(res)
   if (noLoading) {
     // Loading隐藏
     notice.loadingHide()
@@ -129,36 +128,31 @@ export const http = (opts, params, noLoading) => {
   }
   // 请求默认配置
   let httpDefaultOptions = {}
-  if (opts.method === 'GET') {
-    httpDefaultOptions = {
-      url: baseUrl + opts.version + opts.url,
-      method: opts.method,
-      headers: headerOption(opts.method),
-      timeout: 30000,
-      params: Array.isArray(params) && opts.join ? {} : params
-    }
-  } else {
-    httpDefaultOptions = {
-      url: baseUrl + opts.version + opts.url,
-      method: opts.method,
-      headers: headerOption(opts.method),
-      timeout: 30000,
-      data: Array.isArray(params) && opts.join ? {} : params
-    }
+  httpDefaultOptions = {
+    url: baseUrl + opts.version + opts.url,
+    method: opts.method,
+    headers: headerOption(opts.method),
+    timeout: 30000,
+    params: Array.isArray(params) && opts.join ? {} : params,
+    data: Array.isArray(params) && opts.join ? {} : params
   }
-
+  if (opts.method === 'GET' || opts.method === 'DELETE' || opts.method === 'HEAD') {
+    delete httpDefaultOptions.data
+  } else {
+    delete httpDefaultOptions.params
+  }
   // 如果参数是连接在url后面的形式
   if (opts.join && Array.isArray(params)) {
     params.forEach(c => {
       httpDefaultOptions.url += '/' + c
     })
   }
-
   // 响应拦截器即异常处理
   axios.interceptors.request.use(data => {
     // notice.loadingHide()
     return data
   }, err => {
+    console.log(err)
     return Promise.resolve(err)
   })
   axios.interceptors.response.use(response => {
