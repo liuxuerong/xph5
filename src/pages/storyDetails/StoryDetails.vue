@@ -92,6 +92,10 @@ export default {
     document.querySelectorAll('html')[0].classList.add('overH')
     document.querySelectorAll('body')[0].classList.add('overH')
   },
+  destroyed () {
+    document.querySelectorAll('html')[0].classList.remove('overH')
+    document.querySelectorAll('body')[0].classList.remove('overH')
+  },
   updated () {
     this.$nextTick(function () {
       let img = this.$refs.storyDetailsContent.getElementsByTagName('img')

@@ -12,9 +12,6 @@
         <div class="index searchActive" ref="index">
           <div class="scrollTopTop" v-show="showScrollToTop" @click="scrollToTop"></div>
           <common-header ref="commonHeader" />
-          <!-- <h2 class="indexHeader" ref="indexHeader">
-                五星生活在等你哦~
-              </h2> -->
           <common-search ref="commonSearchDom" class="searchActive" />
           <div ref="topScroll" style="opacity:0;width:0;heigth:0"></div>
           <index-swiper ref="indexSwiper" v-if="IndexSwiperShow" />
@@ -51,7 +48,7 @@
             </div>
             <ul class="goodsContainer" v-if="goodsListData.length">
               <div class="classfiyBanner" ref="classfiyBanner">
-                <img src="/static/images/classfiyBanner.png" alt="">
+                <img :src="imageUrl+tabbar[pageIndex].appImage" alt="">
               </div>
               <li v-for="item in goodsListData" v-if="goodsListData.length" :key="item.id" ref="goodsItem">
                 <common-img-prices :pricesData="item" />
@@ -153,10 +150,10 @@ export default {
       }
     }
   },
-  created () {
-    let _this = this
-    window.addEventListener('scroll', _this.getTop)
-  },
+  // created () {
+  //   let _this = this
+  //   window.addEventListener('scroll', _this.getTop)
+  // },
   methods: {
     scrollToTop () {
       this.$refs.topScroll.scrollIntoView()
@@ -164,10 +161,10 @@ export default {
     getFindData () {
       http(findData).then(res => {
         this.franchiseeActivitys = res.data.body.franchiseeActivitys
-        console.log(res)
         this.newProducts = res.data.body.newProducts
         this.goodsLabel = res.data.body.goodsLabel
         let allCategoryMenu = res.data.body.allCategoryMenu
+        console.log(res)
         for (let i = 0; i < allCategoryMenu.length; i++) {
           this.tabbar.push(allCategoryMenu[i])
           this.categoryId = this.tabbar[0].categoryId
