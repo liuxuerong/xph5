@@ -5,7 +5,7 @@
         <div class="xpGoodsTop" ref="xpGoodsTop" v-show="isFixed">
           <div class="xpGoodsTopContent">
             <tab v-if="tabbar.length">
-              <tab-item :selected="index===pageIndex" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.id" :id="item.id" ref="tabItem">{{item.catName}}</tab-item>
+              <tab-item :selected="index===pageIndex" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.categoryId" :id="item.categoryId" ref="tabItem">{{item.customName}}</tab-item>
             </tab>
           </div>
         </div>
@@ -13,8 +13,8 @@
           <div class="scrollTopTop" v-show="showScrollToTop" @click="scrollToTop"></div>
           <common-header ref="commonHeader" />
           <!-- <h2 class="indexHeader" ref="indexHeader">
-              五星生活在等你哦~
-            </h2> -->
+                五星生活在等你哦~
+              </h2> -->
           <common-search ref="commonSearchDom" class="searchActive" />
           <div ref="topScroll" style="opacity:0;width:0;heigth:0"></div>
           <index-swiper ref="indexSwiper" v-if="IndexSwiperShow" />
@@ -45,7 +45,7 @@
             <div class="xpGoodsTop" ref="xpGoodsTop" v-show="!isFixed">
               <div class="xpGoodsTopContent">
                 <tab v-if="tabbar.length">
-                  <tab-item :selected="index===pageIndex" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.categoryId" :id="item.id" ref="tabItem">{{item.categoryName}}</tab-item>
+                  <tab-item :selected="index===pageIndex" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.categoryId" :id="item.categoryId" ref="tabItem">{{item.customName}}</tab-item>
                 </tab>
               </div>
             </div>
@@ -133,7 +133,6 @@ export default {
       categoryId: '',
       isFixed: false,
       noMore: false,
-      // searchTop: null,
       commonHeader: null,
       index: null,
       goodsItemH: 0,
@@ -154,20 +153,14 @@ export default {
       }
     }
   },
-  computed: {},
+  created () {
+    let _this = this
+    window.addEventListener('scroll', _this.getTop)
+  },
   methods: {
     scrollToTop () {
       this.$refs.topScroll.scrollIntoView()
     },
-    // getTabbar () {
-    //   http(category).then(res => {
-    //     for (let i = 0; i < res.data.body.length; i++) {
-    //       this.tabbar.push(res.data.body[i])
-    //       this.categoryId = this.tabbar[0].id
-    //     }
-    //     this.getGoodsList(this.categoryId, this.page)
-    //   })
-    // },
     getFindData () {
       http(findData).then(res => {
         this.franchiseeActivitys = res.data.body.franchiseeActivitys
@@ -206,7 +199,6 @@ export default {
           this.goodsListData = this.goodsListData.concat(res.data.body.list)
           this.$nextTick(function () {
             this.timer = setTimeout(() => {
-              // this.searchTop = this.$refs.commonSearchDom.$el.offsetTop - this.$refs.commonSearchDom.$el.style.height
               this.commonHeader = this.$refs.commonHeader.$el.offsetHeight
               this.index = this.$refs.index
               if (this.$refs.goodsItem.length) {
@@ -214,8 +206,6 @@ export default {
                 this.classfiyBannerH = this.$refs.classfiyBanner.offsetHeight
               }
               this.changeStatus()
-              // this.getTop(this.searchTop, this.commonHeader, this.index, this.goodsItemH)
-              // this.changeStatus(this.searchTop, this.commonHeader, this.index, this.goodsItemH)
             }, 20)
           })
         })

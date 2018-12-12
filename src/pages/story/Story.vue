@@ -10,10 +10,7 @@
     </div>
     <div ref="xpStoryContent" class="xpStoryContent">
       <div>
-
-        <!-- 发现好物 -->
-        <!-- <common-article-rec v-if="storyKnow.length&&storyKnowFlag" :articleRecommends="storyKnow" :linkTo="linkTo" /> -->
-        <!-- 五星标准 -->
+        <!-- 五星推荐 -->
         <common-article-rec v-if="storyRecom.length&&storyRecomFlag" :articleRecommends="storyRecom" :linkTo="linkTo" />
         <!-- 品质生活 -->
         <common-article-rec v-if="storySub.length&&storySubFlag" :articleRecommends="storySub" :linkTo="linkTo" />
@@ -34,7 +31,6 @@ import {
   http
 } from 'util/request'
 import {
-  // storyKnow,
   storyRecom,
   storySub,
   brandList
@@ -59,8 +55,8 @@ export default {
       brandListData: [],
       storyRecom: [],
       storySub: [],
-      brandListDataFlag: true,
-      storyRecomFlag: false,
+      brandListDataFlag: false,
+      storyRecomFlag: true,
       storySubFlag: false,
       linkTo: '/storyDetails/',
       brandDetailsLink: '/brandDetails/',
@@ -105,7 +101,9 @@ export default {
     getstoryRecom () {
       http(storyRecom)
         .then(res => {
+          console.log(res)
           this.storyRecom = res.data.body.articles
+          console.log(this.storyRecom)
         })
         .catch(err => {
           console.log(err)
