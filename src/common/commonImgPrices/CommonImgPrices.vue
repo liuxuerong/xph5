@@ -1,6 +1,6 @@
 <template>
   <div class="commonImgPrices">
-    <router-link :to="'/details/'+pricesData.id">
+    <div @click="goodsDetail(pricesData.id)">
       <div class="imgContainer" v-if="img">
         <img v-lazy="imageUrl+img"  alt="">
       </div>
@@ -11,11 +11,14 @@
       <div class="promotion" v-if="pricesData.activityLabels&&pricesData.activityLabels.length>0">
         <span class="promotionItem" :class="{gray:item.color==2}" v-for="(item,index) in pricesData.activityLabels" :key="index">{{item.labelName}}</span>
       </div>
-    </router-link>
+    </div>
   </div>
 </template>
 <script>
 import { config } from 'util/config'
+import dsbridge from 'dsbridge'
+import { getUrlParam } from '@/func/params'
+import wx from 'weixin-js-sdk'
 export default {
   name: 'CommonImgPrices',
   props: {
@@ -45,6 +48,21 @@ export default {
         this.img = img.split(',')[0]
       } else {
         this.img = img[0].value
+      }
+    },
+    goodsDetail (goodsId) {
+      this.platform = getUrlParam('platform')
+      if (this.platform === 'wx') {
+        wx.miniProgram.navigateTo({
+          url: '../productDetails/productDetails?id=' + goodsId
+        })
+      } else if (this.platform === 'i' || this.platform === 'a') {
+        console.log(66)
+        dsbridge.call('goodsDetail', goodsId, function (v) {
+          alert(v)
+        })
+      } else {
+        this.$router.push(`/details/${goodsId}`)
       }
     }
   },

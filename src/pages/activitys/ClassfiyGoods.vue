@@ -4,7 +4,9 @@
     <div class="classfiyGoodsCon" ref="classfiyGoodsCon">
       <div class="bscroll-container">
         <div class="classfiyGoodsBg">
-          <img class="classfiyGoodsImg" v-lazy="imageUrl+activeData.picture" alt="">
+          <div class="mask"></div>
+          <!-- <img class="classfiyGoodsImg" v-lazy="imageUrl+activeData.picture" alt=""> -->
+          <img class="classfiyGoodsImg" src="static/images/activeClassfiyBg.jpg" alt="">
           <div class="classfiyGoodsText">
             <h3>{{activeData.name}}</h3>
             <p>{{activeData.activityDescribe}}</p>
@@ -142,6 +144,15 @@ export default {
     width 100%
     height 600px
     position relative
+    .mask
+      position absolute
+      left 0
+      top 0
+      width 100%
+      height 100%
+      background #000
+      opacity 0.2
+      z-index 2
     .classfiyGoodsImg
       position absolute
       left 0
@@ -149,13 +160,12 @@ export default {
       display block
       width 100%
       height 100%
-      background #000
-      opacity 0.3
     .classfiyGoodsText
       width 100%
       position absolute
       left 0
       top 150px
+      z-index 5
       h3
         display block
         width 100%

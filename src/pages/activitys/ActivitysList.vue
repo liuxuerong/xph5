@@ -3,7 +3,7 @@
     <userinfo-header :class="{hide:titleShow}" :title="title" oper=""></userinfo-header>
     <div class="isEmpty" v-if="!isEmpty">
       <div class="wrapperBg">
-        <img class="categoryImg" v-lazy="imageUrl+activityCategory.picture" alt="">
+        <img src="" alt="" id="ceshiId">
       </div>
       <div class="activitysCon" v-if="activityGoods.length!==0 || activityCategory.length!==0">
         <!-- 单品秒杀 -->
