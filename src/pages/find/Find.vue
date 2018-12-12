@@ -4,7 +4,7 @@
       <div class="xpGoodsWrap">
         <div class="xpGoodsTop" ref="xpGoodsTop" v-show="isFixed">
           <div class="xpGoodsTopContent">
-            <tab v-if="tabbar.length">
+            <tab v-if="tabbar.length" :scroll-threshold="3">
               <tab-item :selected="index===pageIndex" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.categoryId" :id="item.categoryId" ref="tabItem">{{item.customName}}</tab-item>
             </tab>
           </div>
@@ -41,7 +41,7 @@
           <div class="xpStoryContentChild">
             <div class="xpGoodsTop" ref="xpGoodsTop" v-show="!isFixed">
               <div class="xpGoodsTopContent">
-                <tab v-if="tabbar.length">
+                <tab v-if="tabbar.length" :scroll-threshold="3">
                   <tab-item :selected="index===pageIndex" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.categoryId" :id="item.categoryId" ref="tabItem">{{item.customName}}</tab-item>
                 </tab>
               </div>
@@ -284,7 +284,7 @@ export default {
   border-bottom 8px solid #262626
   position relative
 .xpGoodsTop>>>.vux-tab .vux-tab-item.vux-tab-selected::before
-  content ''
+  content ""
   position absolute
   bottom 0
   left 50%
@@ -293,17 +293,20 @@ export default {
   background-color #262626
   height 8px
 .xpGoodsTop>>>.vux-tab-ink-bar
-  display none !important
+    display none !important
 .xpGoodsTop>>>.vux-tab-container
-  height 106px
+    height 106px
 .xpGoodsTop>>>.vux-tab
-  height 106px
+    height 106px
+.xpGoodsTop>>>.scrollable .vux-tab-item
+  flex 0 0 22%
 .xpGoodsTop>>>.vux-tab .vux-tab-item
   height 106px
   line-height 106px
   font-size 42px
-  margin-right 60px
+  margin-right 40px
   font-weight 600
+  width auto
 .xpGoods
   height 100%
   background-color #fff
