@@ -4,7 +4,7 @@
       <div class="xpGoodsWrap">
         <div class="xpGoodsTop" ref="xpGoodsTop" v-show="isFixed">
           <div class="xpGoodsTopContent">
-            <tab v-if="tabbar.length">
+            <tab v-if="tabbar.length" :scroll-threshold="3">
               <tab-item :selected="index===pageIndex" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.categoryId" :id="item.categoryId" ref="tabItem">{{item.customName}}</tab-item>
             </tab>
           </div>
@@ -12,9 +12,6 @@
         <div class="index searchActive" ref="index">
           <div class="scrollTopTop" v-show="showScrollToTop" @click="scrollToTop"></div>
           <common-header ref="commonHeader" />
-          <!-- <h2 class="indexHeader" ref="indexHeader">
-                五星生活在等你哦~
-              </h2> -->
           <common-search ref="commonSearchDom" class="searchActive" />
           <div ref="topScroll" style="opacity:0;width:0;heigth:0"></div>
           <index-swiper ref="indexSwiper" v-if="IndexSwiperShow" />
@@ -44,14 +41,14 @@
           <div class="xpStoryContentChild">
             <div class="xpGoodsTop" ref="xpGoodsTop" v-show="!isFixed">
               <div class="xpGoodsTopContent">
-                <tab v-if="tabbar.length">
+                <tab v-if="tabbar.length" :scroll-threshold="3">
                   <tab-item :selected="index===pageIndex" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.categoryId" :id="item.categoryId" ref="tabItem">{{item.customName}}</tab-item>
                 </tab>
               </div>
             </div>
             <ul class="goodsContainer" v-if="goodsListData.length">
               <div class="classfiyBanner" ref="classfiyBanner">
-                <img src="/static/images/classfiyBanner.png" alt="">
+                <img :src="imageUrl+tabbar[pageIndex].appImage" alt="">
               </div>
               <li v-for="item in goodsListData" v-if="goodsListData.length" :key="item.id" ref="goodsItem">
                 <common-img-prices :pricesData="item" />
@@ -153,10 +150,10 @@ export default {
       }
     }
   },
-  created () {
-    let _this = this
-    window.addEventListener('scroll', _this.getTop)
-  },
+  // created () {
+  //   let _this = this
+  //   window.addEventListener('scroll', _this.getTop)
+  // },
   methods: {
     scrollToTop () {
       this.$refs.topScroll.scrollIntoView()
@@ -164,10 +161,10 @@ export default {
     getFindData () {
       http(findData).then(res => {
         this.franchiseeActivitys = res.data.body.franchiseeActivitys
-        console.log(res)
         this.newProducts = res.data.body.newProducts
         this.goodsLabel = res.data.body.goodsLabel
         let allCategoryMenu = res.data.body.allCategoryMenu
+        console.log(res)
         for (let i = 0; i < allCategoryMenu.length; i++) {
           this.tabbar.push(allCategoryMenu[i])
           this.categoryId = this.tabbar[0].categoryId
@@ -287,7 +284,7 @@ export default {
   border-bottom 8px solid #262626
   position relative
 .xpGoodsTop>>>.vux-tab .vux-tab-item.vux-tab-selected::before
-  content ''
+  content ""
   position absolute
   bottom 0
   left 50%
@@ -296,17 +293,20 @@ export default {
   background-color #262626
   height 8px
 .xpGoodsTop>>>.vux-tab-ink-bar
-  display none !important
+    display none !important
 .xpGoodsTop>>>.vux-tab-container
-  height 106px
+    height 106px
 .xpGoodsTop>>>.vux-tab
-  height 106px
+    height 106px
+.xpGoodsTop>>>.scrollable .vux-tab-item
+  flex 0 0 22%
 .xpGoodsTop>>>.vux-tab .vux-tab-item
   height 106px
   line-height 106px
   font-size 42px
-  margin-right 60px
+  margin-right 40px
   font-weight 600
+  width auto
 .xpGoods
   height 100%
   background-color #fff

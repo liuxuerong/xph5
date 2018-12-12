@@ -10,7 +10,7 @@
             <img :src="imageUrl+item.experienceCoverImage" alt="" class="swiperImg">
             <div class="infoContainer">
               <div class="left">
-                <div class="title">{{item.categoryName}}</div>
+                <div class="title">{{item.title}}</div>
                 <div class="summary">{{item.summary}}</div>
               </div>
               <div class="experienceGoods"><img src="/static/icons/outsidelabel_icon.png" alt="">{{item.experienceGoods.length}}</div>

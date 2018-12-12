@@ -9,10 +9,9 @@
             <div class="indexContent">
               <h5>
                 {{item.title}}
-                <i v-if="item.subTitle!==''">|{{item.subTitle}}</i>
               </h5>
               <div class="content">
-                {{item.summary}}
+                <p v-html="item.summary.replace('/n', '<br>')"></p>
               </div>
             </div>
           </router-link>
