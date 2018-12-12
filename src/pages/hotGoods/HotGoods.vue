@@ -7,7 +7,7 @@
           <div>
             <ul class="goodsContainer" v-if="goodsListData.length">
               <li v-for="item in goodsListData" v-if="goodsListData.length" :key="item.id">
-                <common-img-prices :pricesData="item" />
+                <common-img-prices :pricesData="item" :left="true"/>
               </li>
               <li v-if="(noMore||goodsListData.length<20)&&goodsListData.length%2!==0">
                 <div class="moreTip">

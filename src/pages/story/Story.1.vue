@@ -11,14 +11,10 @@
     <div ref="xpStoryContent" class="xpStoryContent">
       <div>
 
-        <!-- 发现好物 -->
-        <!-- <common-article-rec v-if="storyKnow.length&&storyKnowFlag" :articleRecommends="storyKnow" :linkTo="linkTo" /> -->
-        <!-- 五星标准 -->
-        <common-article-rec v-if="storyRecom.length&&storyRecomFlag" :articleRecommends="storyRecom" :linkTo="linkTo" />
-        <!-- 品质生活 -->
+        <common-article-rec v-if="storyKnow.length&&storyKnowFlag" :articleRecommends="storyKnow" :linkTo="linkTo" />
+        <common-article-rec v-if="storyWord.length&&storyWordFlag" :articleRecommends="storyWord" :linkTo="linkTo" />
         <common-article-rec v-if="storySub.length&&storySubFlag" :articleRecommends="storySub" :linkTo="linkTo" />
-         <!-- 国际品牌 -->
-        <common-article-rec v-if="brandListData.length&&brandListDataFlag" :articleRecommends="brandListData" :linkTo="brandDetailsLink" />
+         <common-article-rec v-if="brandListData.length&&brandListDataFlag" :articleRecommends="brandListData" :linkTo="brandDetailsLink" />
       </div>
     </div>
   </div>
@@ -34,7 +30,8 @@ import {
   http
 } from 'util/request'
 import {
-  // storyKnow,
+  storyKnow,
+  storyWord,
   storyRecom,
   storySub,
   brandList
@@ -57,10 +54,12 @@ export default {
       imageUrl: config.imageUrl,
       articles: [],
       brandListData: [],
-      storyRecom: [],
+      storyKnow: [],
+      storyWord: [],
       storySub: [],
       brandListDataFlag: true,
-      storyRecomFlag: false,
+      storyKnowFlag: false,
+      storyWordFlag: false,
       storySubFlag: false,
       linkTo: '/storyDetails/',
       brandDetailsLink: '/brandDetails/',
@@ -76,16 +75,27 @@ export default {
     }
   },
   methods: {
+    // getTabbar () {
+    //   let _this = this
+    //   http(storyTabs, [mainEnum[0]]).then(res => {
+    //     for (let i = 0; i < res.data.body.length; i++) {
+    //       _this.tabbar.push(res.data.body[i])
+    //     }
+    //   })
+    // },
     onItemClick (index) {
       this.brandListDataFlag = false
-      this.storyRecomFlag = false
+      this.storyKnowFlag = false
+      this.storyWordFlag = false
       this.storySubFlag = false
       if (index === 0) {
-        this.storyRecomFlag = true
-      } else if (index === 1) {
-        this.storySubFlag = true
-      } else if (index === 2) {
         this.brandListDataFlag = true
+      } else if (index === 1) {
+        this.storyKnowFlag = true
+      } else if (index === 2) {
+        this.storyWordFlag = true
+      } else if (index === 3) {
+        this.storySubFlag = true
       }
       this.scroll.refresh()
       this.scroll.scrollTo(0, 0, 0)
@@ -102,10 +112,21 @@ export default {
         console.log(err)
       })
     },
-    getstoryRecom () {
-      http(storyRecom)
+    getStoryKnow () {
+      http(storyKnow)
         .then(res => {
-          this.storyRecom = res.data.body.articles
+          console.log(res)
+          this.storyKnow = res.data.body.articles
+          this.scrollInit()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    getStoryWord () {
+      http(storyWord)
+        .then(res => {
+          this.storyWord = res.data.body.articles
         })
         .catch(err => {
           console.log(err)
@@ -135,10 +156,12 @@ export default {
       }
     }
   },
-  created () {
+  mounted () {
+    // this.getTabbar()
     this.getBrandList()
+    this.getStoryKnow()
     this.getStorySub()
-    this.getstoryRecom()
+    this.getStoryWord()
   },
   updated () {
     this.$nextTick(function () {
@@ -148,7 +171,7 @@ export default {
       if (length) {
         let timer = setInterval(() => {
           if (count === length) {
-            this.scrollInit()
+            this.scroll.refresh()
             clearInterval(timer)
           } else if (img[count].complete) {
             count++
