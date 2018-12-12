@@ -90,6 +90,7 @@ import { getUrlParam } from '@/func/params'
 import dsbridge from 'dsbridge'
 import UserinfoHeader from './components/ComUserSetHeader'
 export default {
+  name: 'AboutMember',
   data () {
     return {
       title: '关于会员卡',
@@ -98,7 +99,6 @@ export default {
     }
   },
   components: {
-    name: 'AboutMember',
     UserinfoHeader
   },
   methods: {

@@ -24,7 +24,7 @@
               <h4>material comforts</h4>
             </div>
             <div class="right wrap">
-              <router-link to="/activitysList/0" class="item top">
+              <router-link to="/activitysList" class="item top">
                 <h2>活动精选</h2>
                 <h4>Featured</h4>
               </router-link>

@@ -70,6 +70,7 @@ import UserinfoHeader from './components/ComUserSetHeader'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import PersonTitle from './ComCenterSmillTitle'
 export default {
+  name: 'TouristToolCenter',
   data () {
     return {
       title: '会员福利',
@@ -95,7 +96,6 @@ export default {
     }
   },
   components: {
-    name: 'TouristToolCenter',
     PersonTitle,
     swiper,
     swiperSlide,

@@ -15,3 +15,4 @@ export const aftersale = 'AFTERSALE' // 售后
 export const searchorder = 'SEARCHORDER' // 订单搜索
 export const retrunLogistics = 'RETRUNLOGISTICS' // 退货物流
 export const immedPaymentMony = 'IMMEDPAYMENTMONY' // 支付金额
+export const activityCategory = 'ACTIVITYCATEGORY' // 品类秒杀查看详情

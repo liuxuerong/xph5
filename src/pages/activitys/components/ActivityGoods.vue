@@ -18,6 +18,7 @@ import { getUrlParam } from '@/func/params'
 import wx from 'weixin-js-sdk'
 import { config } from 'util/config'
 export default {
+  name: 'ActivityGoods',
   props: ['activityGoods'],
   data () {
     return {
@@ -25,9 +26,6 @@ export default {
       beginTime: 0,
       time: ''
     }
-  },
-  components: {
-    name: 'ActivityGoods'
   },
   methods: {
     // 商品详情

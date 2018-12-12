@@ -37,7 +37,7 @@ export default {
   methods: {
     // 列表
     activitysList () {
-      this.$router.push('/activitysList/1')
+      this.$router.push('/activitiesInterest')
     }
   }
 }

@@ -9,11 +9,9 @@
 import { getUrlParam } from '@/func/params'
 import { config } from 'util/config'
 export default {
+  name: 'activityElies',
   props: {
     activityInfoData: Object
-  },
-  components: {
-    name: 'activityElies'
   },
   data () {
     return {
@@ -41,6 +39,7 @@ export default {
     padding-bottom 52px
     margin 0 auto 58px
     box-shadow 0px 2px 26px 0px rgba(0, 0, 0, 0.1)
+    background #fff
     img
       display block
       width 100%

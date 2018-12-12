@@ -24,7 +24,7 @@ export default {
       } else if (this.content === '优惠卡券') {
         this.$router.push('/cardVoucher')
       } else if (this.content === '可能感兴趣的活动') {
-        this.$router.push('/activitysList/1')
+        this.$router.push('/activitiesInterest')
       }
     }
   },

@@ -323,7 +323,7 @@ const router = new Router({
     },
     // ActivitysList
     {
-      path: '/activitysList/:type',
+      path: '/activitysList',
       name: 'activitysList',
       component: resolve => require(['@/pages/activitys/ActivitysList'], resolve)
     },
@@ -348,6 +348,16 @@ const router = new Router({
       path: '/userNamePer',
       name: 'userNamePer',
       component: resolve => require(['@/pages/person/UserNamePer'], resolve)
+    },
+    {
+      path: '/activitiesInterest',
+      name: 'activitiesInterest',
+      component: resolve => require(['@/pages/activitys/ActivitiesInterest'], resolve)
+    },
+    {
+      path: '/classfiyGoods/:classfiyId',
+      name: 'classfiyGoods',
+      component: resolve => require(['@/pages/activitys/ClassfiyGoods'], resolve)
     }
   ]
 })

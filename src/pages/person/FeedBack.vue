@@ -45,6 +45,7 @@ import { accessToken } from 'util/const.js'
 import axios from 'axios'
 import { config } from 'util/config' // 图片路径
 export default {
+  name: 'FeedBack',
   data () {
     return {
       feedbackTitle: ['反馈类型', '问题和意见', '联系方式'],
@@ -57,7 +58,6 @@ export default {
     }
   },
   components: {
-    name: 'FeedBack',
     UserinfoHeader
   },
   watch: {

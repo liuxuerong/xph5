@@ -44,7 +44,7 @@ import { getUrlParam } from '@/func/params'
 import dsbridge from 'dsbridge'
 import UserinfoHeader from './components/ComUserSetHeader'
 export default {
-  name: 'agreement',
+  name: 'Agreement',
   data () {
     return {
       title: '商城用户注册协议',

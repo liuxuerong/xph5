@@ -31,9 +31,10 @@ import dsbridge from 'dsbridge'
 import { getUrlParam } from '@/func/params'
 import wx from 'weixin-js-sdk'
 import { config } from 'util/config'
-import { goodsList } from 'util/netApi'
-import {http} from 'util/request'
+import {storage} from 'util/storage'
+import {activityCategory} from 'util/const.js'
 export default {
+  name: 'ActivityCategory',
   props: {
     activityCategory: Object
   },
@@ -42,16 +43,15 @@ export default {
       imageUrl: config.imageUrl, // 图片路径
       beginTime: 0,
       time: '',
+      platform: '',
       activityCategoryGoods: '',
       activityMoreText: '查看全部商品'
     }
   },
-  components: {
-    name: 'ActivityCategory'
-  },
   methods: {
     // 页面数据渲染
     activityCategoryRender () {
+      this.platform = getUrlParam('platform')
       this.activityCategoryGoods = this.activityCategory.goodsDetails
     },
     // 商品详情
@@ -71,22 +71,8 @@ export default {
     },
     // 查看更多
     activityGoodsMore (goodsCategoryId) {
-      if (this.activityMoreText === '查看全部商品') {
-        let params = {
-          categoryId: goodsCategoryId,
-          sortOrder: 'DESC',
-          sortCode: 2
-        }
-        http(goodsList, params).then((response) => {
-          if (response.data.code === 0) {
-            this.activityCategoryGoods = response.data.body.list
-            this.activityMoreText = '隐藏部分商品'
-          }
-        })
-      } else {
-        this.activityMoreText = '查看全部商品'
-        this.activityCategoryRender()
-      }
+      this.$router.push(`/classfiyGoods/${goodsCategoryId}?platform=${this.platform}`)
+      storage.setLocalStorage(activityCategory, this.activityCategory)
     },
     // 倒计时
     countDown (t) {
@@ -110,7 +96,6 @@ export default {
     }
   },
   mounted () {
-    console.log(this.activityCategory)
     this.activityCategoryRender()
     this.setNewSwiperData()
     this.timer = setInterval(() => {
@@ -134,6 +119,7 @@ export default {
       position absolute
       top 0px
       left 0px
+      background #f5f5f5
     .categoryName
       width calc(100% - 100px)
       height 200px
