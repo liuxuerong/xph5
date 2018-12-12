@@ -4,11 +4,12 @@
     <div class="swiperContainer">
       <swiper :options="swiperOption">
         <swiper-slide v-for="item in swiperData" :key="item.id">
-          <router-link :to="'/details/'+item.id" class="swiperHref">
+          <router-link :to="'/storyDetails/'+item.id" class="swiperHref">
             <img v-lazy="imageUrl+item.articleCoverImage" alt="" class="lazyImg">
             <div class="indexContent">
               <h5>
                 {{item.title}}
+                <i v-if="item.subTitle!==''">|{{item.subTitle}}</i>
               </h5>
               <div class="content">
                 {{item.summary}}
@@ -89,7 +90,7 @@ export default {
       margin 90px auto
       display block
 .indexContent
-  padding 0 30px 30px
+  padding 0 30px 30px 0
   h5
     height 100px
     line-height 100px
