@@ -20,12 +20,16 @@ export default {
   methods: {
     // 返回上一步
     backPrevOper: function () {
-      let path = this.$route.path
-      if (path === '/addressAdmin') {
+      let path = this.$route.path.split('/')[1]
+      if (path === 'addressAdmin') {
         this.$router.push('/userInfoSet')
-      } else if (path === '/userInfoSet' || path === '/userInfoSet/1') {
+      } else if (path === 'userInfoSet' || path === 'userInfoSet/1') {
         storage.delLocalStorage('modifyName')
         this.$router.push('/personCenter')
+      } else if (path === 'classfiyGoods') {
+        this.$router.push('/activitysList')
+      } else if (path === 'activitysList') {
+        this.$router.push('/find')
       } else {
         this.$router.back(-1)
       }

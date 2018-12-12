@@ -58,19 +58,16 @@ export default {
       }
     }
   },
+  watch: {
+    '$route' (to, from) {
+    }
+  },
   components: {
     UserinfoHeader,
     ActivitysTitle,
     ActivityGoods,
     ActivityCategory,
     CommonEmpty
-  },
-  watch: {
-    '$route' (to, from) {
-      if (to.name === 'activitysList') {
-        this.activitysRender()
-      }
-    }
   },
   methods: {
     returnTitle (title) {
