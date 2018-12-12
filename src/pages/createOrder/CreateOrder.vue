@@ -137,15 +137,19 @@ export default {
         storage.delLocalStorage(invoiceInfo)
         this.getDetails()
       }
-      if (from.path !== '/createOrder/1' && to.path === '/createOrder') {
-        storage.setLocalStorage(createOrderFrom, from.path)
-      }
-      if (from.path.indexOf('/createOrder/') !== -1 && to.path.indexOf('/createOrder/') !== -1) {
+      if (from.path.indexOf('/createOrder/') !== -1 && to.path.indexOf('/createOrder') !== -1) {
         let fromPath = storage.getLocalStorage(createOrderFrom)
         this.$router.push(fromPath)
         storage.delLocalStorage(fromPath)
       }
     }
+  },
+  beforeRouteEnter (to, from, next) {
+    // 第一次进入创建订单页面
+    if (from.path.indexOf('/createOrder/') === -1 && to.path === '/createOrder') {
+      storage.setLocalStorage(createOrderFrom, from.path)
+    }
+    next()
   },
   methods: {
     remove () {
@@ -281,6 +285,7 @@ export default {
       this.$router.push('/chooseCoupons')
     }
   },
+
   created () {
     this.getDetails()
   },

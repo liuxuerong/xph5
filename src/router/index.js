@@ -113,7 +113,7 @@ const router = new Router({
     {
       path: '/collect/:index',
       name: 'Collect',
-      meta: { requireLogin: true },
+      // meta: { requireLogin: true },
       component: resolve => require(['@/pages/collect/Collect'], resolve)
     },
     {

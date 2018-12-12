@@ -77,12 +77,14 @@ export default {
       height 98px
       line-height 98px
       ellipsis()
+      font-size 46px
       color #333
     .price
       height 50px
       line-height 50px
       ellipsis()
       color #333
+      font-size 40px
 .promotion
   font-size 0
   text-align center
