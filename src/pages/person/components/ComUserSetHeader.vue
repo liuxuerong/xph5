@@ -26,8 +26,6 @@ export default {
       } else if (path === 'userInfoSet' || path === 'userInfoSet/1') {
         storage.delLocalStorage('modifyName')
         this.$router.push('/personCenter')
-      } else if (path === 'classfiyGoods') {
-        this.$router.push('/activitysList')
       } else if (path === 'activitysList') {
         this.$router.push('/find')
       } else {

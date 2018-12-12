@@ -58,10 +58,6 @@ export default {
       }
     }
   },
-  watch: {
-    '$route' (to, from) {
-    }
-  },
   components: {
     UserinfoHeader,
     ActivitysTitle,
