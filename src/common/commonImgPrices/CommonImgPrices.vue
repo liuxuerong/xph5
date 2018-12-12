@@ -1,6 +1,5 @@
 <template>
   <div class="commonImgPrices" :class={left:left} @click="goodsDetail (pricesData.id)">
-    <!-- <router-link :to="'/details/'+pricesData.id"> -->
       <div class="imgContainer" v-if="img">
         <img v-lazy="imageUrl+img" alt="">
       </div>
@@ -14,14 +13,11 @@
           <span class="promotionItem" :class="{gray:item.color==2}" v-for="(item,index) in pricesData.activityLabels" :key="index">{{item.labelName}}</span>
         </div>
       </div>
-    <!-- </router-link> -->
   </div>
 </template>
 
 <script>
-import {
-  config
-} from 'util/config'
+import { config } from 'util/config'
 import dsbridge from 'dsbridge'
 import { getUrlParam } from '@/func/params'
 import wx from 'weixin-js-sdk'

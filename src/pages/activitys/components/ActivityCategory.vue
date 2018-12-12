@@ -1,7 +1,8 @@
 <template>
   <div class="activityCategoryItem" v-if="activityCategory.activityEndTime !== '00:00:00'">
     <div class="categoryInfo">
-      <img class="categoryImg" v-lazy="imageUrl+activityCategory.picture" alt="">
+      <!-- <img class="categoryImg" v-lazy="imageUrl+activityCategory.picture" alt=""> -->
+      <img class="categoryImg" src="static/images/activeClassfiyBg.jpg" alt="">
       <dir class="categoryName">
         <h3 class="name">{{activityCategory.name}}
           <span v-if="activityCategory.showTimeType ===1" class="stopTime">距结束 {{activityCategory.endDay}} 天</span>
@@ -71,7 +72,11 @@ export default {
     },
     // 查看更多
     activityGoodsMore (goodsCategoryId) {
-      this.$router.push(`/classfiyGoods/${goodsCategoryId}?platform=${this.platform}`)
+      if (this.platform === 'a' || this.platform === 'i' || this.platform === 'wx') {
+        this.$router.push(`/classfiyGoods/${goodsCategoryId}?platform=${this.platform}`)
+      } else {
+        this.$router.push(`/classfiyGoods/${goodsCategoryId}`)
+      }
       storage.setLocalStorage(activityCategory, this.activityCategory)
     },
     // 倒计时
@@ -131,6 +136,8 @@ export default {
       left 0
       right 0
       margin auto
+      border-top-left-radius 12px
+      border-top-right-radius 12px
       .name
         width 100%
         height 60px

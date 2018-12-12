@@ -21,11 +21,11 @@
         </div>
       </div>
     </div>
-    <div class="gradeTips" v-if="list.totalShoppingMoney > 10000">
+    <div class="gradeTips" v-if="list.totalShoppingMoney > 17000">
       <span v-if="list.totalShoppingMoney > 5000">您已成功延续下一年钻卡会员</span>
       <span v-else>您距离下一年延续钻卡会员 还有<i>{{list.upMoney}} 元</i>的距离</span>
     </div>
-    <div class="gradeTips" v-else-if="list.totalShoppingMoney > 5000">
+    <div class="gradeTips" v-else-if="list.totalShoppingMoney > 7000">
       <span v-if="list.totalShoppingMoney > 3000">您已成功延续下一年金卡会员</span>
       <span v-else>您距离下一年延续金卡会员 还有<i> {{list.upMoney}}元</i>的距离</span>
     </div>
