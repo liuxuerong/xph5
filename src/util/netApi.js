@@ -108,6 +108,7 @@ export const brandDetail = {url: '/international/brand/api', method: 'GET', vers
 export const storyTabs = { url: '/article/api/child', method: 'GET', version: v1, join: true } // tab
 export const storyKnow = { url: '/article/api/story/knowledge', method: 'GET', version: v1 } // 故事-识物
 export const storyWord = { url: '/article/api/story/wordOfMouth', method: 'GET', version: v1 } // 故事-口碑产品
+export const storyRecom = { url: '/article/api/recommend/info', method: 'GET', version: v1 }
 export const storySub = { url: '/article/api/story/subject', method: 'GET', version: v1 } // 故事-专题
 
 // 体验馆
