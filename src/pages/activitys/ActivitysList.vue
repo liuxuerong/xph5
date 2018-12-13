@@ -65,13 +65,6 @@ export default {
     ActivityCategory,
     CommonEmpty
   },
-  watch: {
-    '$route' (to, from) {
-      if (to.name === 'activitysList') {
-        this.activitysRender()
-      }
-    }
-  },
   methods: {
     returnTitle (title) {
       dsbridge.call('getTitle', title, function (v) {
