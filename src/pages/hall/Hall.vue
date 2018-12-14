@@ -47,8 +47,6 @@ export default {
     return {
       imageUrl: config.imageUrl,
       swiperData: [],
-      imgHeight: '',
-      speed: 400,
       swiperOption: {
         direction: 'vertical',
         notNextTick: true,
