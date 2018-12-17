@@ -126,8 +126,6 @@
   </div>
 </template>
 <script>
-import {storage} from 'util/storage'
-import { accessToken } from 'util/const.js'
 import {memberCenter, listDelivery, goodscollectionList, cartNum, customerService} from 'util/netApi'
 import {http} from 'util/request'
 import PersonTitle from './ComCenterSmillTitle'
@@ -300,7 +298,6 @@ export default {
       window.location.href = customerService
     }
   },
-
   mounted () {
     this.scroll = new BScroll(this.$refs.couponsScroll, {
       bounce: {
@@ -313,16 +310,11 @@ export default {
       startX: 0
     })
     window.addEventListener('scroll', this.handleScroll)
-    // 判断账号是够登录
-    if (!storage.getLocalStorage(accessToken)) {
-      // 还未登录
-      this.$router.push('/login')
-    } else {
-      // 基础信息加载
-      this.getUserInfo()
-      // 购物车数量
-      this.goodsNum()
-    }
+    this.getUserInfo()
+    this.goodsNum()
+  },
+  deactivated () {
+    window.removeEventListener('scroll', this.handleScroll)
   }
 }
 </script>

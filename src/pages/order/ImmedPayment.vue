@@ -14,11 +14,11 @@
           <span>支付宝支付</span>
           <i class="redio" :class="readioActive===2?'active':''" @click="redioSelect(2)"></i>
         </div>
-        <div class="paymentItem clearfix">
+        <!-- <div class="paymentItem clearfix">
           <i class="paymentImg wechatImg"></i>
           <span>微信支付</span>
           <i class="redio" :class="readioActive===5?'active':''" @click="redioSelect(5)"></i>
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="immedPayment" @click="immedPayment">立即支付
