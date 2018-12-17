@@ -261,6 +261,7 @@ export default {
 .index
   padding-top 136px
   overflow hidden
+  background-color #fff
   // position absolute
   width 100%
 .indexHeader

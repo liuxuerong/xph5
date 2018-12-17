@@ -64,6 +64,8 @@ export default {
   font-size 56px
   color #333
   border-bottom 1px solid #e6e6e6
+  font-weight 600
+  line-height 100px
   .scan
     width 60px
     height 60px

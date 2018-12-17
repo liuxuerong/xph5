@@ -177,6 +177,7 @@ export default {
     height 106px
 .top>>>.vux-tab
     height 106px
+    font-weight 600
 .top>>>.vux-tab .vux-tab-item
     height 106px
     line-height 106px

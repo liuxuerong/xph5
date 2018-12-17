@@ -149,8 +149,6 @@ export default {
 </script>
 <style lang="stylus" scoped>
   @import "~styles/mixins.styl";
-  body, html
-    background #F5F5F5!important
   .wrapper
     width 100%
     box-sizing border-box

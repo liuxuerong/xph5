@@ -175,18 +175,13 @@ export default {
   }
 }
 </script>
-<style lang="stylus">
-body, html, #app
-  width 100%
-  background-color #f5f5f5!important
-.commonEmpty
-  padding-top 400px!important
-</style>
 <style lang="stylus" scoped>
   @import "~styles/mixins.styl";
+  .wrapper >>> .commonEmpty
+    padding-top 400px
   .wrapper
     width 100%
-    box-sizing border-box
+    min-height 100%
     padding-top 132px
     background #F5F5F5
   .cardVoucherTitle

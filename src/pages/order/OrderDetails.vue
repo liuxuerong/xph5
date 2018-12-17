@@ -297,7 +297,6 @@ export default {
 <style lang="stylus">
   html,body
     position relative
-    background #F5F5F5!important
   .Scavenging
     display block
     width 600px
@@ -318,6 +317,8 @@ export default {
     width 100%
     box-sizing border-box
     padding-top 132px
+    min-height 100%
+    background #f5f5f5
   .orderDetatilCon
     width 100%
     box-sizing border-box

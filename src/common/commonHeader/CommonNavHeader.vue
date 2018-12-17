@@ -31,6 +31,7 @@ export default {
     top 0
     height 120px
     line-height 120px
+    font-weight 600
     text-align center
     font-size 56px
     color #262626

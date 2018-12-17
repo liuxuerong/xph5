@@ -179,16 +179,11 @@ export default {
   }
 }
 </script>
-<style lang="stylus">
-body,html
-    position relative
-    background #F5F5F5!important
-</style>
 <style lang="stylus" scoped>
   @import "~styles/mixins.styl";
   .wrapper
     width 100%
-    box-sizing border-box
+    min-height 100%
     padding-top 130px
     padding-bottom 148px
     background #F5F5F5

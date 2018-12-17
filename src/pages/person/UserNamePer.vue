@@ -49,16 +49,13 @@ export default {
   }
 }
 </script>
-<style lang="stylus">
-body,html,#app
-  background #f5f5f5!important
-</style>
 <style lang="stylus" scoped>
 @import "~styles/mixins.styl";
 .userNamePerWrapper
   width 100%
-  box-sizing border-box
+  min-height 100%
   padding-top 132px
+  background #f5f5f5
   .userNamePerCon
     width 100%
     .nameInput

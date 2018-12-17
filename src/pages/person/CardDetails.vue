@@ -188,20 +188,14 @@ export default {
   })
 }
 </script>
-<style lang="stylus">
-  html,body,#app
-    width 100%
-    height 100%
-    background #f5f5f5!important
-</style>
 
 <style lang="stylus">
   .wrapper
     background #f5f5f5
     .cardIntroduce
-      width calc(100% - 100px)
       background #fff
-      margin 0 auto 30px
+      width calc(100% - 100px)
+      margin 0 auto
       overflow hidden
       box-sizing border-box
       padding 46px 52px
@@ -339,8 +333,8 @@ export default {
       margin 0 auto
   .cardIntroduce
     width calc(100% - 100px)
+    margin 0 auto
     background #fff
-    margin 0 auto 30px
     overflow hidden
     p
       display block!important

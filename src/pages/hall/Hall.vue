@@ -124,6 +124,7 @@ export default {
     .left
       flex 1
       width 80%
+      text-align left
       .title
         font-size 46px
         ellipsis()
