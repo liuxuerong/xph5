@@ -1,16 +1,17 @@
 <template>
   <div class="storyDetails" :class="{pt0:hideHead}">
-    <common-nav-header  v-if="details&&!hideHead"/>
+    <common-nav-header v-if="details&&!hideHead" />
     <div class="storyDetailsContent" ref="storyDetailsContent">
       <div>
         <story-details-header v-if="details" :details="details" />
-        <common-content v-if="(details&&goodsItems.length) || (details&&articleShow)" :goodsItems="goodsItems" :details="details" />
+        <common-content v-if="details" :goodsItems="goodsItems" :details="details" />
         <h2 v-if="details&&details.articleRecommends.length">热文推荐</h2>
         <common-article-rec v-if="details" :articleRecommends="details.articleRecommends" :linkTo="linkTo" />
       </div>
     </div>
   </div>
 </template>
+
 <script>
 import {
   http
@@ -18,15 +19,14 @@ import {
 import {
   hotelDetailList
 } from 'util/netApi'
-import { getUrlParam } from '@/func/params'
+import {
+  getUrlParam
+} from '@/func/params'
 import BScroll from 'better-scroll'
 import CommonContent from '@/common/commonContent/CommonContent'
 import StoryDetailsHeader from './components/StoryDetailsHeader'
 import CommonNavHeader from '@/common/commonHeader/CommonNavHeader'
 import CommonArticleRec from '@/common/commonArticleRec/CommonArticleRec'
-import {
-  detailsEnum
-} from 'util/enum.js'
 export default {
   name: 'StoryDetails',
   components: {
@@ -42,8 +42,7 @@ export default {
       goodsItems: [],
       linkTo: '/storyDetails/',
       hideHead: false,
-      platform: '',
-      articleShow: false
+      platform: ''
     }
   },
   methods: {
@@ -59,9 +58,6 @@ export default {
         .then(res => {
           this.details = res.data.body
           this.goodsItems = res.data.body.goodsItems
-          if (res.data.body.articleCategoryId === detailsEnum.articleCategoryId) {
-            this.articleShow = true
-          }
           setTimeout(() => {
             this.scrollInit()
             this.scroll.scrollTo(0, 0, 0)

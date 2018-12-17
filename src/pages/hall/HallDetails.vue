@@ -9,7 +9,7 @@
     </div>
     <div v-transfer-dom class="oneGoodsWrap">
       <popup v-model="showOne">
-          <router-link :to="'/details/'+itemObj.goodId" v-if="itemObj">
+        <router-link :to="'/details/'+itemObj.goodId" v-if="itemObj">
           <div class="details">
             <img :src="imageUrl+itemObj.goodCoverImage" alt="">
             <div class="text">
@@ -40,7 +40,8 @@
 
       </popup>
     </div>
-    <div class="morePic"><router-link :to="'/hallAtlas/'+(parseInt(index)+1)" class="link">更多图片</router-link>  <em @click="showAllDetails()">商品({{experienceObj.experienceGoods.length}})</em></div>
+    <div class="morePic">
+      <router-link :to="'/hallAtlas/'+(parseInt(index)+1)" class="link">更多图片</router-link> <em @click="showAllDetails()">商品({{experienceObj.experienceGoods.length}})</em></div>
   </div>
 </template>
 
@@ -126,7 +127,9 @@ export default {
       this.show = true
     },
     doCollection (index, goodId) {
-      let params = Object.assign({}, this.params, {collectionDataId: goodId})
+      let params = Object.assign({}, this.params, {
+        collectionDataId: goodId
+      })
       doCollection(params).then(res => {
         if (res.data.code === 0) {
           this.experienceObj.experienceGoods[index].collected = this.experienceObj.experienceGoods[index].collected === '1' ? '0' : '1'

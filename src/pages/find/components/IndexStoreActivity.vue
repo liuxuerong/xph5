@@ -3,7 +3,7 @@
     <h4>门店活动</h4>
     <div class="swiperContainer">
       <swiper :options="swiperOption">
-        <swiper-slide v-for="item in swiperData" :key="item.id">
+        <swiper-slide v-for="(item,i) in swiperData" :key="item.id">
           <router-link :to="'/storyDetails/'+item.id" class="swiperHref">
             <img v-lazy="imageUrl+item.articleCoverImage" alt="" class="lazyImg">
             <div class="indexContent">
@@ -11,7 +11,9 @@
                 {{item.title}}
               </h5>
               <div class="content">
-                <p v-html="item.summary.replace('/n', '<br>')"></p>
+                <p v-for="(v,k) in summary[i]" :key="k">
+                  {{v}}
+                </p>
               </div>
             </div>
           </router-link>
@@ -42,8 +44,16 @@ export default {
   props: {
     swiperData: Array
   },
+  methods: {
+    resetSwiperData () {
+      this.summary = this.swiperData.map(function (v, i) {
+        return v.summary.split('\n')
+      })
+    }
+  },
   data () {
     return {
+      summary: [],
       swiperOption: {
         spaceBetween: 15,
         pagination: {
@@ -55,7 +65,9 @@ export default {
       imageUrl: config.imageUrl
     }
   },
-  mounted () {}
+  mounted () {
+    this.resetSwiperData()
+  }
 }
 </script>
 

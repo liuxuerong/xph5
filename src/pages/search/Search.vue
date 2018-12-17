@@ -6,7 +6,7 @@
         <form action="javascript:return true;">
         <input type="search" placeholder="搜索" v-model.trim="searchVal" @keyup.13="getSearchVal" autofocus="true">
         </form>
-        <div class="icon glass" v-show="!hasSearch"></div>
+        <div class="icon glass" v-show="!hasSearch" @click="getSearchVal"></div>
         <div class="icon close" v-show="hasSearch" @click="emptySearchVal">×</div>
       </div>
       <div class="cancel" v-show="!hasSearch" @click="emptySearchVal">取消</div>
