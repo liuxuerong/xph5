@@ -23,6 +23,7 @@
         </div>
       </div>
     </div>
+    {{content}}
     <div class="detailsContent" v-html="content" v-if="content!==''">
     </div>
   </div>
