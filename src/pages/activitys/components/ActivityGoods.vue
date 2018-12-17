@@ -1,6 +1,6 @@
 <template>
   <div class="activityGoodsItem" @click="activityGoodsDetails(activityGoods.goodsId)">
-    <img v-lazy="imageUrl+activityGoods.goodsPicture" class="goodsImg">
+    <img v-lazy="imageUrl+activityGoods.coverImage" class="goodsImg">
     <div class="goodsText">
       <h3 class="goodsName">{{activityGoods.goodsName}}</h3>
       <div class="goodsPrice">

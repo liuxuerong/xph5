@@ -79,6 +79,7 @@ export default {
         this.returnTitle(this.title)
       }
       http(activityElies).then((response) => {
+        console.log(response)
         if (response.data.code === 0) {
           let data = response.data.body
           if (JSON.stringify(data) !== '{}') {
@@ -116,7 +117,7 @@ export default {
     width 100%
     height 430px
     position relative
-    bgImage('/static/images/activitysListBg')
+    background url("/static/images/activitysListBg.png") no-repeat center center/100% 100%
     img
       display block
       width 100%
