@@ -1,8 +1,8 @@
 <template>
   <div class="commonContent">
     <div class="goodsItemsContainer" ref="goodsItemsContainer">
-      <div v-for="item in goodsItems" :key="item.id">
-        <div class="goodsItems">
+      <div v-for="item in goodsItems" :key="item.id" v-if="goodsItems.length">
+        <div class="goodsItems" v-if="JSON.stringify(item) != '{}'">
           <div>
             <img :src="imageUrl+item.coverImage" alt="" :key="item.coverImage">
           </div>
@@ -23,7 +23,6 @@
         </div>
       </div>
     </div>
-    {{content}}
     <div class="detailsContent" v-html="content" v-if="content!==''">
     </div>
   </div>
@@ -47,7 +46,12 @@ export default {
     }
   },
   props: {
-    goodsItems: Array,
+    goodsItems: {
+      default: function () {
+        return []
+      },
+      type: Array
+    },
     details: Object
   },
   methods: {
@@ -82,6 +86,7 @@ export default {
         }
       }
     },
+    // JSON.stringify(item) != '{}'
     updateContent () {
       const goodsItems = this.$refs.goodsItemsContainer.children
       this.contentArr = this.details.content.split('{')
@@ -97,7 +102,7 @@ export default {
       let j = 0
       for (let i = 0; i < newArr.length; i++) {
         if (!isNaN(newArr[i])) {
-          let goods = goodsItems[j].innerHTML
+          let goods = goodsItems[j] ? goodsItems[j].innerHTML : ''
           newArr[i] = goods
           j++
         }
