@@ -34,7 +34,7 @@ export default {
   .commonEmpty
     padding-top 300px
     text-align center
-    // background-color: #F5F5F5;
+    background-color #fff
     height 100%
     img
       width 890px

@@ -17,7 +17,7 @@ const router = new Router({
         {name: 'Classify', path: '/classify', component: resolve => require(['@/pages/classify/Classify'], resolve)},
         {name: 'Hall', path: '/hall', component: resolve => require(['@/pages/hall/Hall'], resolve)},
         {name: 'Story', path: '/story', component: resolve => require(['@/pages/story/Story'], resolve)},
-        {name: 'PersonCenter', path: '/personCenter', component: resolve => require(['@/pages/person/PersonCenter'], resolve)}
+        {name: 'PersonCenter', path: '/personCenter', meta: { requireLogin: true }, component: resolve => require(['@/pages/person/PersonCenter'], resolve)}
       ]
     },
     {
@@ -141,11 +141,6 @@ const router = new Router({
       name: 'userPassword',
       component: resolve => require(['@/pages/login/UserPassword'], resolve)
     },
-    // {
-    //   path: '/personCenter',
-    //   name: 'personCenter',
-    //   component: resolve => require(['@/pages/person/PersonCenter'], resolve)
-    // },
     {
       path: '/userInfoSet/:type?',
       name: 'userInfoSet',
