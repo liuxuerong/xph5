@@ -1,6 +1,6 @@
 <template>
   <div class="hallDetailsContainer">
-    <common-nav-header :title="experienceObj.categoryName" v-if="experienceObj" />
+    <common-nav-header :title="experienceObj.title" v-if="experienceObj" />
     <div ref="hallDetails" class="hallDetails" v-if="experienceObj">
       <img :src="imageUrl+experienceObj.experienceCoverImage" alt="" ref="zoomImg">
       <div class="tag" ref="tag" v-for="(item,index) in experienceObj.experienceGoods" :key="item.goodsId" :style="{left:item.left,top:item.top}" @click="showDetails(index)">
