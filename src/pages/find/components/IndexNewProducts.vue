@@ -94,6 +94,7 @@ export default {
       display block
 .indexContent
   padding 0 30px 30px
+  text-align left
   h5
     height 100px
     line-height 100px

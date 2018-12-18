@@ -88,7 +88,6 @@ export default {
   }
 }
 </script>
-
 <style lang="stylus" scoped>
   .xpClassify
     padding-top 200px

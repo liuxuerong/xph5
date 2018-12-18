@@ -24,7 +24,6 @@
     <div v-transfer-dom>
       <popup v-model="show" class="goodsWrap">
         <div class="titlExa">样板间商品</div>
-
         <div class="details" v-if="experienceObj" v-for="(itemObj,index) in experienceObj.experienceGoods" :key="itemObj.goodId">
           <router-link :to="'/details/'+itemObj.goodId">
             <img v-lazy="imageUrl+itemObj.goodCoverImage" alt="">

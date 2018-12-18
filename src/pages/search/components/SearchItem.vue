@@ -75,18 +75,13 @@ export default {
       }
       if (!this.noMore) {
         http(goodsList, param).then(res => {
+          this.goodsList = [...this.goodsList, ...res.data.body.list]
+          this.scrollInit()
+          this.emptyObj.emptyP = '没有找到关键字为“' + searchName + '”的产品'
           if (this.page !== 1 && res.data.body.list.length === 0) {
             this.scroll.finishPullUp()
             this.noMore = true
           }
-          if (page === 1) {
-            this.goodsList = res.data.body.list
-          } else {
-            this.goodsList = [...this.goodsList, ...res.data.body.list]
-          }
-
-          this.scrollInit()
-          this.emptyObj.emptyP = '没有找到关键字为“' + searchName + '”的产品'
         })
       }
     },
@@ -100,7 +95,9 @@ export default {
             bottom: true
           },
           pullUpLoad: {
-            threshold: -30 // 当上拉距离超过30px时触发 pullingUp 事件
+            threshold: -50,
+            moreTxt: '加载更多',
+            noMoreTxt: '没有更多数据了'
           }
         })
         let _this = this
@@ -108,9 +105,11 @@ export default {
           _this.page++
           let searchName = _this.searchHistoryStorage[_this.searchHistoryStorage.length - 1]
           _this.getGoodsList(searchName, _this.page)
+          // _this.scrollInit()
         })
       } else {
         this.scroll.refresh()
+        this.scroll.finishPullUp()
       }
     }
   },
