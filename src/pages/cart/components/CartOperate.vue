@@ -82,6 +82,19 @@ export default {
       },
       deep: true,
       immediate: true
+    },
+    showModify: function (v) {
+      if (!v) {
+        let goodsList = this.goodsList
+        for (let i in goodsList) {
+          console.log(goodsList[i])
+          if (goodsList[i].num > goodsList[i].stock || goodsList[i].stock === 0) {
+            console.log(goodsList[i])
+            goodsList[i].value = false
+          }
+        }
+        this.changeGoodsList(goodsList)
+      }
     }
   },
   methods: {
@@ -141,7 +154,6 @@ export default {
         fromCart: true
       }
       goodsObj.goodsItems = []
-      console.log(this.clearNum, 'this.clearNum')
       for (let i = 0; i < this.clearNum.length; i++) {
         if (this.clearNum[i].status === '1') {
           if (this.clearNum[i].value) {

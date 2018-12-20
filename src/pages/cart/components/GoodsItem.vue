@@ -1,40 +1,60 @@
 <template>
   <div class="goodsItem" :class="{disabled:disabled}">
     <label for="" class="border-bottom">
-        <div class="checkIcon">
-            <check-icon :value.sync="goodsItem.value">
-            </check-icon>
-          </div>
-          <div class="goodsItemMain">
-            <router-link :to="'/details/'+goodsItem.goodsId" class="linkDetails">
-              <img v-lazy="imageUrl+goodsItem.goodsItemPic" alt="" >
-             </router-link>
-            <div class="info">
-              <div class="name">{{goodsItem.goodsItemName}}</div>
-              <div class="describe">
-                <span class="color" v-for="(item,index) in specs" :key="index">{{item}}</span>
-                 x <em class="num">{{goodsItem.num}}</em>
-              </div>
+      <div class="checkIcon">
+          <check-icon :value.sync="goodsItem.value">
+          </check-icon>
+          <div class="shadow" v-if="goodsItem.stock==0&&!showModify"></div>
+        </div>
+        <div class="goodsItemMain">
+          <router-link :to="'/details/'+goodsItem.goodsId" class="linkDetails">
+            <img v-lazy="imageUrl+goodsItem.goodsItemPic" alt="" >
+            <img src="/static/images/soldOut.png" alt="" class="soldOut" v-if="goodsItem.stock==0&&goodsItem.status==1">
+            </router-link>
+          <div class="info">
+            <div class="name">{{goodsItem.goodsItemName}}</div>
+            <div class="describe">
+              <span class="color" v-for="(item,index) in specs" :key="index">
+                <i v-if="index+1<specs.lenth">{{item}}/</i>
+                <i v-else>{{item}}</i>
+              </span>
+            </div>
+            <div class="inventoryWrap" v-if="goodsItem.status==1">
               <div class="inventory" v-if="goodsItem.stock<5&&goodsItem.stock>0&&goodsItem.status==1">
-                库存紧张
+              库存紧张
               </div>
-               <div class="inventory" v-if="goodsItem.stock==0&&goodsItem.status==1">
+              <div class="inventory" v-if="goodsItem.stock==0&&goodsItem.status==1">
                 无库存
               </div>
               <div class="inventory notEnough" v-if="goodsItem.stock<goodsItem.num&&goodsItem.stock!=0&&goodsItem.status==1&&goodsItem.stock>=5">
                 库存不足
               </div>
-              <div class="bottom clearfix">
-                <span class="tag fl" v-if="goodsItem.status!=1">已失效</span>
-                <span class="modify" v-if="showModify">
-                  <x-number :min="1" v-model="goodsItem.num" :fillable="true" @on-change="changeCartNum"></x-number>
-                  <div class="shadow" v-if="goodsItem.stock==0&&goodsItem.status==1"></div>
-                </span>
-                <i class="price fr">￥{{goodsItem.price.toFixed(2)}}</i>
+            </div>
+            <div class="bottom clearfix " v-if="goodsItem.status==1">
+              <i class="price fl">￥{{goodsItem.price.toFixed(2)}}</i>
+              <span class="modify fr" >
+                <div class="num" ref="num">
+                  <span class="sub fl" @click="subCount" :class="{disable:subDisabled}">_</span>
+                  <input type="text" class="fl" v-model="goodsItem.num">
+                  <span class="add fr" @click="addCount" ref="add" :class="{disable:addDisabled}">+</span>
+                </div>
+                <div class="shadow" v-if="goodsItem.stock==0&&goodsItem.status==1"></div>
+              </span>
+               <div class="opera able  fl">
+                <i class="text">请重新选择规格</i>
+                <div class="btn">重新选择</div>
               </div>
             </div>
-        </div>
-      </label>
+            <div class="bottom clearfix disabled" v-else>
+              <span class="tag fl" v-if="goodsItem.status!=1">已失效</span>
+              <div class="opera disabled fl">
+                <i class="text">商品已不能购买</i>
+                <div class="btn">联系客服</div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </label>
   </div>
 </template>
 
@@ -42,14 +62,12 @@
 import {
   http
 } from 'util/request'
-import { updateCart } from 'util/netApi'
 import {
-  CheckIcon,
-  XNumber
+  updateCart
+} from 'util/netApi'
+import {
+  CheckIcon
 } from 'vux'
-import {
-  Toast
-} from 'mint-ui'
 import {
   config
 } from 'util/config.js'
@@ -60,13 +78,14 @@ import {
 export default {
   name: 'GoodsItem',
   components: {
-    CheckIcon,
-    XNumber
+    CheckIcon
   },
   data () {
     return {
       imageUrl: config.imageUrl,
-      specs: []
+      specs: [],
+      subDisabled: false,
+      addDisabled: false
     }
   },
   props: {
@@ -87,12 +106,17 @@ export default {
       handler (newVal, oldVal) {
         let goodsList = this.goodsList
         this.changeGoodsList(goodsList)
+        this.changeStyle()
         let clearNum = []
         for (let i = 0; i < this.goodsList.length; i++) {
-          if (this.goodsList[i].status === '1') {
+          if (this.goodsList[i].status === '1' && this.goodsList[i].stock >= this.goodsList[i].num && this.goodsList[i].stock !== 0) {
             if (this.goodsList[i].value) {
               clearNum.push(this.goodsList[i])
             } else {
+              //  if (cartList[i].stock >= cartList[i].num && cartList[i].stock !== 0) {
+              //       cartList[i].value = true
+              //     }
+              console.log(777)
               this.changeIsAllSelect(false)
             }
           }
@@ -111,51 +135,106 @@ export default {
         this.specs.push(specs[i].value)
       }
     },
-    changeCartNum (val) {
-      if (val >= this.goodsItem.stock) {
+    // changeCartNum (val) {
+    //   if (val >= this.goodsItem.stock) {
+    //     this.goodsItem.num = this.goodsItem.stock
+    //     Toast({
+    //       message: '填写数量超出库存范围',
+    //       position: 'center',
+    //       duration: 2000
+    //     })
+    //   }
+    //   this.doUpdateCart(val)
+    // },
+    addCount () {
+      this.goodsItem.num++
+    },
+
+    subCount () {
+      this.goodsItem.num--
+      console.log(this.goodsItem.num)
+    },
+    changeStyle () {
+      if (this.goodsItem.num >= this.goodsItem.stock) {
         this.goodsItem.num = this.goodsItem.stock
-        Toast({
-          message: '填写数量超出库存范围',
-          position: 'center',
-          duration: 2000
-        })
+        this.addDisabled = true
+        if (this.goodsItem.stock === 0) {
+          return
+        }
+      } else {
+        this.addDisabled = false
       }
-      this.doUpdateCart(val)
+      if (this.goodsItem.num < 2) {
+        this.subDisabled = true
+        this.goodsItem.num = 1
+      } else {
+        this.subDisabled = false
+      }
     },
     doUpdateCart (val) {
-      updateCart.url = '/cart'
-      updateCart.url = updateCart.url + '/' + this.goodsItem.id
-      if (this.goodsItem.num !== '') {
-        let params = {
-          cartId: this.goodsItem.id,
-          request: val
+      if (val > 1 && val <= this.goodsItem.stock) {
+        updateCart.url = '/cart'
+        updateCart.url = updateCart.url + '/' + this.goodsItem.id
+        if (this.goodsItem.num !== '') {
+          let params = {
+            cartId: this.goodsItem.id,
+            request: val
+          }
+          http(updateCart, params, 'noloading').then(res => {}).catch(err => {
+            console.log(err)
+          })
         }
-        http(updateCart, params, 'noloading').then(res => {
-        }).catch(err => {
-          console.log(err)
-        })
       }
     }
   },
   mounted () {
+    console.log(this.goodsItem)
     this.getSpecs()
   }
 }
 </script>
 
 <style lang="stylus" scoped>
+@import '~styles/mixins.styl'
+  .num
+    height 60px
+    line-height 60px
+    color #262626
+    font-size 40px
+    span
+      display inline-block
+      width 60px
+      height 60px
+      line-height 60px
+      font-size 36px
+      text-align center
+      color #262626
+      background-color #F5F5F5
+      border-radius 50%
+      vertical-align middle
+    .sub
+      line-height 40px
+    span.disable
+      color #ccc
+    input
+      width 134px
+      height 60px
+      line-height 60px
+      margin-top 2px
+      outline none
+      text-align center
   .goodsItem
-    padding 0 50px
+    padding 0 32px
     label
       display flex
       align-items center
     .checkIcon
-      height 46px
+      height 60px
       width 60px
       margin-right 30px
       position relative
     .shadow
-      height 46px
+      height 60px
       width 60px
       position absolute
       z-index 2
@@ -167,33 +246,42 @@ export default {
         width 286px
         height 286px
         margin-right 30px
+        position relative
         img
           width 100%
           height 100%
+        .soldOut
+          position absolute
+          width 70%
+          height 70%
+          top 15%
+          left 15%
       .info
         flex 1
         .name
-          color #262626
-          font-size 40px
+          color #333
+          font-size 46px
           font-weight 600
           line-height 80px
+          ellipsis()
+          max-width 540px
         .describe
-          color #808080
+          color #999999
+          height 50px
           font-size 36px
           line-height 50px
-          margin-bottom 30px
           span
-            margin-right 20px
+            margin 15px 0
         .bottom
           color #000
           font-size 46px
           line-height 60px
           .tag
-            background #E6E6E6
-            color #ffffff
-            height 60px
-            line-height 60px
-            font-size 30px
+            background #F5F5F5
+            color #DBDBDB
+            height 50px
+            line-height 50px
+            font-size 32px
             width 127px
             text-align center
           .modify
@@ -210,7 +298,9 @@ export default {
               left 0
           .price
             display inline-block
-            line-height 100px
+            line-height 60px
+            font-size 46px
+            color #333
 .disabled .checkIcon>>>.vux-check-icon
   display none
 .disabled.goodsItem .goodsItemMain .info .name
@@ -219,29 +309,33 @@ export default {
   color #ccc
 .disabled.goodsItem .goodsItemMain .info .bottom
   color #ccc
+.inventoryWrap
+  height 50px
+  margin-bottom 40px
 .inventory
-  height 47px
+  height 50px
   display inline-block
-  line-height 47px
+  line-height 50px
   background-color #F5F5F5
-  font-size 30px
+  font-size 32px
   padding 0 10px
   color #BA825A
-  margin-bottom 20px
 .inventory.notEnough
   color #D54B4B
 </style>
 
 <style lang="stylus">
   .checkIcon .vux-check-icon
-    line-height 46px
+    line-height 60px
     position absolute
     // top 40px
   .checkIcon .weui-icon-circle
-    font-size 46px
+    font-size 60px
   .checkIcon .weui-icon-success
     color #BA825A
-    font-size 46px
+    font-size 60px
+  .checkIcon [class^="weui-icon-"]:before,.checkIcon [class*=" weui-icon-"]:before
+    margin 0
   .checkIcon .vux-check-icon > .weui-icon-success:before, .vux-check-icon > .weui-icon-success-circle:before
     color #BA825A
   .vux-cell-primary

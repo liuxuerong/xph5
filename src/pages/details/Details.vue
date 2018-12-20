@@ -135,9 +135,6 @@ export default {
   watch: {
     $route (to, from) {
       this.scroll.refresh()
-      // if (to.name === 'Details') {
-      //   this.initDeatils()
-      // }
     },
     popupVisible: function (curval) {
       if (curval) {

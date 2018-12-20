@@ -123,7 +123,6 @@ export default {
       this.cartCount--
     },
     changeStyle (v) {
-      console.log(this.maxCount)
       if (v >= this.maxCount) {
         this.addDisabled = true
       } else {

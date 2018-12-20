@@ -89,7 +89,6 @@ import {
   http
 } from 'util/request'
 import {
-  // category,
   goodsList,
   findData
 } from 'util/netApi'

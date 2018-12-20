@@ -9,7 +9,7 @@
               <router-link to="/" class="item">体验馆</router-link>
             </li>
             <li class="border-bottom">
-              <router-link to="/" class="item">联系客服</router-link>
+              <span @click="customerService" class="item">联系客服</span>
             </li>
             <li class="border-bottom">
               <router-link to="/search" class="item">搜索</router-link>
@@ -78,8 +78,8 @@ import {
 } from 'util/request'
 import {
   goodOrderData,
-  createOrderData
-  // cartListGoods
+  createOrderData,
+  customerService
 } from 'util/netApi'
 import {
   storage
@@ -272,6 +272,9 @@ export default {
         position: 'center',
         duration: 1000
       })
+    },
+    customerService () {
+      window.location.href = customerService
     },
     // 使用优惠券
     chooseCoupons () {

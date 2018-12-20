@@ -129,19 +129,22 @@ export default {
       let params = Object.assign({}, this.params, {
         collectionDataId: goodId
       })
-      doCollection(params).then(res => {
-        if (res.data.code === 0) {
-          this.experienceObj.experienceGoods[index].collected = this.experienceObj.experienceGoods[index].collected === '1' ? '0' : '1'
-          let message = this.experienceObj.experienceGoods[index].collected === '0' ? '取消成功' : '收藏成功'
-          Toast({
-            message: message,
-            position: 'bottom',
-            duration: 1000
-          })
-        }
-      }).catch(err => {
-        console.log(err)
-      })
+      let fnType = Object.prototype.toString.call(doCollection(params)).slice(8, -1)
+      if (fnType === 'Promise') {
+        doCollection(params).then(res => {
+          if (res.data.code === 0) {
+            this.experienceObj.experienceGoods[index].collected = this.experienceObj.experienceGoods[index].collected === '1' ? '0' : '1'
+            let message = this.experienceObj.experienceGoods[index].collected === '0' ? '取消成功' : '收藏成功'
+            Toast({
+              message: message,
+              position: 'bottom',
+              duration: 1000
+            })
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+      }
     }
   },
   watch: {
