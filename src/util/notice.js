@@ -34,10 +34,11 @@ const notice = {
   },
   // 操作弹窗
   // 操作框标题，操作框内容，确定按钮的回调函数
-  confirm: (title, content, confirmGoods) => {
+  confirm: (title, content, confirmGoods, confirmText = '确定') => {
     return Vue.$vux.confirm.show({
-      title: title,
-      content: content,
+      title,
+      content,
+      confirmText,
       onConfirm  () {
         if (typeof confirmGoods === 'function') {
           confirmGoods()

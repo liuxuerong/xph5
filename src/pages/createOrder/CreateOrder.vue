@@ -59,7 +59,6 @@
       <div class="price">￥{{needPayPrice}}</div>
       <span class="pay" @click="createOrder">立即支付</span>
     </div>
-    <order-pop-up :unsatisfactoryData="unsatisfactoryData" v-if="unsatisfactoryData.length" @remove="remove"/>
   </div>
 </template>
 

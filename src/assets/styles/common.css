@@ -135,7 +135,7 @@ body, html, #app{
   font-weight: 600;
 }
 .weui-dialog .weui-dialog__hd{
-  padding-top: 107px;
+  padding: 107px 0px 0.5em;
 }
 .weui-dialog .weui-dialog__bd>div{
   font-size: 40px;

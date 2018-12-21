@@ -1,60 +1,65 @@
 <template>
   <div class="goodsItem" :class="{disabled:disabled}">
     <label for="" class="border-bottom">
-      <div class="checkIcon">
-          <check-icon :value.sync="goodsItem.value">
-          </check-icon>
-          <div class="shadow" v-if="goodsItem.stock==0&&!showModify"></div>
-        </div>
-        <div class="goodsItemMain">
-          <router-link :to="'/details/'+goodsItem.goodsId" class="linkDetails">
-            <img v-lazy="imageUrl+goodsItem.goodsItemPic" alt="" >
-            <img src="/static/images/soldOut.png" alt="" class="soldOut" v-if="goodsItem.stock==0&&goodsItem.status==1">
-            </router-link>
-          <div class="info">
-            <div class="name">{{goodsItem.goodsItemName}}</div>
-            <div class="describe">
-              <span class="color" v-for="(item,index) in specs" :key="index">
-                <i v-if="index+1<specs.lenth">{{item}}/</i>
-                <i v-else>{{item}}</i>
-              </span>
-            </div>
-            <div class="inventoryWrap" v-if="goodsItem.status==1">
-              <div class="inventory" v-if="goodsItem.stock<5&&goodsItem.stock>0&&goodsItem.status==1">
-              库存紧张
-              </div>
-              <div class="inventory" v-if="goodsItem.stock==0&&goodsItem.status==1">
-                无库存
-              </div>
-              <div class="inventory notEnough" v-if="goodsItem.stock<goodsItem.num&&goodsItem.stock!=0&&goodsItem.status==1&&goodsItem.stock>=5">
-                库存不足
-              </div>
-            </div>
-            <div class="bottom clearfix " v-if="goodsItem.status==1">
-              <i class="price fl">￥{{goodsItem.price.toFixed(2)}}</i>
-              <span class="modify fr" >
-                <div class="num" ref="num">
-                  <span class="sub fl" @click="subCount" :class="{disable:subDisabled}">_</span>
-                  <input type="text" class="fl" v-model="goodsItem.num">
-                  <span class="add fr" @click="addCount" ref="add" :class="{disable:addDisabled}">+</span>
-                </div>
-                <div class="shadow" v-if="goodsItem.stock==0&&goodsItem.status==1"></div>
-              </span>
-               <div class="opera able  fl">
-                <i class="text">请重新选择规格</i>
-                <div class="btn">重新选择</div>
-              </div>
-            </div>
-            <div class="bottom clearfix disabled" v-else>
-              <span class="tag fl" v-if="goodsItem.status!=1">已失效</span>
-              <div class="opera disabled fl">
-                <i class="text">商品已不能购买</i>
-                <div class="btn">联系客服</div>
-              </div>
-            </div>
+        <div class="checkIcon">
+            <check-icon :value.sync="goodsItem.value">
+            </check-icon>
+            <div class="shadow" v-if="goodsItem.stock==0&&!showModify"></div>
           </div>
-      </div>
-    </label>
+          <div class="goodsItemMain">
+            <router-link :to="'/details/'+goodsItem.goodsId" class="linkDetails">
+              <img v-lazy="imageUrl+goodsItem.goodsItemPic" alt="" >
+              <img src="/static/images/soldOut.png" alt="" class="soldOut" v-if="goodsItem.stock==0&&goodsItem.status==1">
+              </router-link>
+            <div class="info">
+              <div class="name">{{goodsItem.goodsItemName}}</div>
+              <div class="describe">
+                <span class="color" v-for="(item,index) in specs" :key="index">
+                  <i v-if="index+1<specs.length">{{item}}/</i>
+                  <i v-else>{{item}}</i>
+                </span>
+              </div>
+              <div class="inventoryWrap" v-if="goodsItem.status==1&&goodsItem.stock!=0">
+                <div class="inventory" v-if="goodsItem.stock<5&&goodsItem.stock>0&&goodsItem.status==1">
+                库存紧张
+                </div>
+                <div class="inventory notEnough" v-if="goodsItem.stock<goodsItem.num&&goodsItem.stock!=0&&goodsItem.status==1&&goodsItem.stock>=5">
+                  库存不足
+                </div>
+                <span class="modify fr" v-if="goodsItem.stock!=0">
+                  <div class="num" ref="num">
+                    <span class="sub fl" @click="subCount" :class="{disable:subDisabled}">_</span>
+                    <input type="text" class="fl" v-model="goodsItem.num" @keyup="changeStyle">
+                    <span class="add fr" @click="addCount" ref="add" :class="{disable:addDisabled}">+</span>
+                  </div>
+                </span>
+              </div>
+                <div class="opera able  fl" v-if="goodsItem.stock==0">
+                  <i class="text">请重新选择规格</i>
+                  <div class="btn">重新选择</div>
+                </div>
+              <div class="bottom clearfix " v-if="goodsItem.status==1">
+                <i class="price fl" v-if="goodsItem.stock!=0">￥{{goodsItem.price.toFixed(2)}}</i>
+                <div class="fr goodsOpera">
+                  <i>移入收藏</i>
+                  <i>删除</i>
+                </div>
+              </div>
+
+              <div class="bottom clearfix disabled"  v-if="goodsItem.status!=1">
+
+                <div class="opera disabled fl">
+                  <i class="text">商品已不能购买</i>
+                  <div class="btn"  @click="contactService">联系客服</div>
+                </div>
+                <div class="fr goodsOpera">
+                  <i>移入收藏</i>
+                  <i>删除</i>
+                </div>
+              </div>
+            </div>
+        </div>
+      </label>
   </div>
 </template>
 
@@ -63,7 +68,8 @@ import {
   http
 } from 'util/request'
 import {
-  updateCart
+  updateCart,
+  customerService
 } from 'util/netApi'
 import {
   CheckIcon
@@ -75,6 +81,9 @@ import {
   mapState,
   mapMutations
 } from 'vuex'
+import {
+  Toast
+} from 'mint-ui'
 export default {
   name: 'GoodsItem',
   components: {
@@ -106,17 +115,15 @@ export default {
       handler (newVal, oldVal) {
         let goodsList = this.goodsList
         this.changeGoodsList(goodsList)
-        this.changeStyle()
         let clearNum = []
         for (let i = 0; i < this.goodsList.length; i++) {
-          if (this.goodsList[i].status === '1' && this.goodsList[i].stock >= this.goodsList[i].num && this.goodsList[i].stock !== 0) {
+          if (this.goodsList[i].status === '1' && this.goodsList[i].stock !== 0) {
             if (this.goodsList[i].value) {
               clearNum.push(this.goodsList[i])
             } else {
               //  if (cartList[i].stock >= cartList[i].num && cartList[i].stock !== 0) {
               //       cartList[i].value = true
               //     }
-              console.log(777)
               this.changeIsAllSelect(false)
             }
           }
@@ -135,44 +142,53 @@ export default {
         this.specs.push(specs[i].value)
       }
     },
-    // changeCartNum (val) {
-    //   if (val >= this.goodsItem.stock) {
-    //     this.goodsItem.num = this.goodsItem.stock
-    //     Toast({
-    //       message: '填写数量超出库存范围',
-    //       position: 'center',
-    //       duration: 2000
-    //     })
-    //   }
-    //   this.doUpdateCart(val)
-    // },
+    // 联系客服
+    contactService () {
+      window.location.href = customerService
+    },
     addCount () {
       this.goodsItem.num++
+      this.changeStyle()
     },
 
     subCount () {
       this.goodsItem.num--
-      console.log(this.goodsItem.num)
+      this.changeStyle()
     },
     changeStyle () {
-      if (this.goodsItem.num >= this.goodsItem.stock) {
-        this.goodsItem.num = this.goodsItem.stock
+      if (this.goodsItem.num > this.goodsItem.stock) {
         this.addDisabled = true
+        Toast({
+          message: '数量超出库存范围',
+          position: 'center',
+          duration: 1000
+        })
+        this.goodsItem.num = this.goodsItem.stock
+
         if (this.goodsItem.stock === 0) {
           return
         }
       } else {
+        this.doUpdateCart(this.goodsItem.num)
         this.addDisabled = false
+      }
+      if (this.goodsItem.num > 0) {
+        this.doUpdateCart(this.goodsItem.num)
       }
       if (this.goodsItem.num < 2) {
         this.subDisabled = true
         this.goodsItem.num = 1
+        // Toast({
+        //   message: '不能再少了',
+        //   position: 'center',
+        //   duration: 2000
+        // })
       } else {
         this.subDisabled = false
       }
     },
     doUpdateCart (val) {
-      if (val > 1 && val <= this.goodsItem.stock) {
+      if (val > 0 && val <= this.goodsItem.stock) {
         updateCart.url = '/cart'
         updateCart.url = updateCart.url + '/' + this.goodsItem.id
         if (this.goodsItem.num !== '') {
@@ -188,8 +204,8 @@ export default {
     }
   },
   mounted () {
-    console.log(this.goodsItem)
     this.getSpecs()
+    console.log(this.goodsItem)
   }
 }
 </script>
@@ -237,7 +253,11 @@ export default {
       height 60px
       width 60px
       position absolute
+      top 4px
       z-index 2
+      border 3px solid #cccccc
+      background-color #F5F5F5
+      border-radius 50%
     .goodsItemMain
       flex 1
       display flex
@@ -284,6 +304,7 @@ export default {
             font-size 32px
             width 127px
             text-align center
+            margin-bottom 40px
           .modify
             display inline-block
             line-height 120px
@@ -322,15 +343,48 @@ export default {
   color #BA825A
 .inventory.notEnough
   color #D54B4B
+.opera
+  font-size 36px
+  width 100%
+  display flex
+  justify-content space-between
+  align-items center
+  .btn
+    font-size 40px
+    color #666
+    display inline-block
+    width 220px
+    height 80px
+    line-height 80px
+    border-radius 40px
+    text-align center
+.opera.able
+  i
+    color #333333
+  .btn
+    color #BA825A
+    border 2px solid #BA825A
+.bottom .opera.disabled
+  i
+    color #666666
+  .btn
+    color #999999
+    border 2px solid #999999
+.goodsOpera
+  display inline-block
+  i
+    color #999999
+    font-size 36px
 </style>
 
 <style lang="stylus">
   .checkIcon .vux-check-icon
     line-height 60px
     position absolute
-    // top 40px
+    width 60px
+    height 60px
   .checkIcon .weui-icon-circle
-    font-size 60px
+    font-size 64px
   .checkIcon .weui-icon-success
     color #BA825A
     font-size 60px

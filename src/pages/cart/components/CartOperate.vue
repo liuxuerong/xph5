@@ -3,10 +3,13 @@
     <div class="checkIcon">
       <check-icon :value.sync="check" @click.native="checkAll"> </check-icon>
     </div>
-    <span class="all">全选</span>
-    <span class="price" v-if="!showModify">￥{{price.toFixed(2)}}</span>
-    <span class="btn" :class="{active:clearBtn}" v-if="!showModify" @click="buy">去结算</span>
-    <span class="btn delBtn" :class="{active:clearBtn}" v-else @click="delCheck">删除所选</span>
+    <span class="all">全选<i v-if="showModify">({{clearNum.length}})</i></span>
+    <span class="price" v-if="!showModify"><i>合计：</i>￥{{price.toFixed(2)}}</span>
+    <span class="btn" v-if="!showModify" @click="buy">结算<i>({{clearNum.length}})</i></span>
+    <div class="btnWrap" v-else>
+      <span class="collect" >移入收藏夹</span>
+      <span class="delBtn" :class="{active:clearBtn}" @click="sureDel">删除</span>
+    </div>
   </div>
 </template>
 
@@ -15,7 +18,8 @@ import {
   storage
 } from 'util/storage'
 import {
-  goodsInfo, cartGoods
+  goodsInfo
+  // cartGoods
 } from 'util/const.js'
 import {
   http
@@ -33,6 +37,7 @@ import {
   mapState,
   mapMutations
 } from 'vuex'
+import notice from 'util/notice'
 export default {
   name: 'CartOperate',
   props: {
@@ -48,7 +53,8 @@ export default {
     return {
       check: false,
       price: 0,
-      clearBtn: false
+      clearBtn: false,
+      unsatisfactoryData: []
     }
   },
   computed: mapState({
@@ -87,9 +93,7 @@ export default {
       if (!v) {
         let goodsList = this.goodsList
         for (let i in goodsList) {
-          console.log(goodsList[i])
-          if (goodsList[i].num > goodsList[i].stock || goodsList[i].stock === 0) {
-            console.log(goodsList[i])
+          if (goodsList[i].stock === 0) {
             goodsList[i].value = false
           }
         }
@@ -112,6 +116,16 @@ export default {
         }
       }
       this.changeGoodsList(goodsList)
+    },
+    sureDel () {
+      console.log(this.goodsList)
+      for (let v of this.goodsList) {
+        if (v.value) {
+          console.log(111)
+          notice.confirm('是否确认删除选定商品？', '', this.delCheck, '删除')
+          break
+        }
+      }
     },
     delCheck () {
       let checkGoodsList = []
@@ -154,25 +168,29 @@ export default {
         fromCart: true
       }
       goodsObj.goodsItems = []
+      this.unsatisfactoryData = []
       for (let i = 0; i < this.clearNum.length; i++) {
         if (this.clearNum[i].status === '1') {
           if (this.clearNum[i].value) {
-            goodsObj.goodsItems.push(this.clearNum[i])
+            if (this.clearNum[i].num > this.clearNum[i].stock) {
+              this.unsatisfactoryData.push(this.clearNum[i])
+            } else {
+              goodsObj.goodsItems.push(this.clearNum[i])
+            }
           }
-          // {
-          //     goodsId: this.clearNum[i].goodsId,
-          //     goodsItemId: this.clearNum[i].goodsItemId,
-          //     name: this.clearNum[i].goodsItemName,
-          //     num: this.clearNum[i].num,
-          //     stock: this.clearNum[i].stock,
-          //     price: this.clearNum[i].price,
-          //     img: this.clearNum[i].goodsItemPic
-          //   }
         }
       }
+
+      // storage.setLocalStorage(cartGoods, {
+      //   goodsList: this.goodsList,
+      //   page: this.page,
+      //   rows: this.rows
+      // })
       storage.setLocalStorage(goodsInfo, goodsObj)
-      storage.setLocalStorage(cartGoods, {goodsList: this.goodsList, page: this.page, rows: this.rows})
-      this.$router.push('/createOrder')
+      this.$emit('buy', this.unsatisfactoryData)
+      if (!this.unsatisfactoryData.length) {
+        this.$router.push('/createOrder')
+      }
     }
   }
 }
@@ -192,29 +210,61 @@ export default {
   color #262626
   font-size 46px
   justify-content space-between
+  display flex
+  justify-content space-between
+  align-items center
   .checkIcon
     width 70px
-    height 50px
-    float left
-    margin-top 40px
+    height 60px
+    margin-right 32px
   .all
-    width 230px
-    float left
+    margin-right 32px
+    font-weight 600
+    i
+      font-weight normal
   .price
-    width 300px
     text-align right
     float left
+    margin-right 32px
+    flex 1
+    i
+      font-size 30px
+      color #262626
   .btn
-    width 340px
+    width 300px
     height 148px
     line-height 148px
-    background-color #F0F0F0
+    background:linear-gradient(-48deg,rgba(172,124,98,1),rgba(220,166,116,1));
+    opacity:0.96
     text-align center
-    color #999999
+    color #FFFFFF
+    font-size 46px
     float right
-    &.active
-      color #ba825a
+    i
+      font-size 40px
   .delBtn
-    &.active
-      color #D54B4B
+    height 90px
+    display inline-block
+    line-height 90px
+    width 180px
+    text-align center
+    font-size 40px
+    color #D54B4B
+    border 2px solid #D54B4B
+    margin-right 50px
+    border-radius 45px
+  .collect
+    height 90px
+    line-height 90px
+    width 280px
+    text-align center
+    font-size 40px
+    color #BA825A
+    border 2px solid #BA825A
+    margin-right 50px
+    border-radius 45px
+    display inline-block
+  .btnWrap
+    flex 1
+    text-align right
 </style>
