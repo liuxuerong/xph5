@@ -9,12 +9,12 @@
     <div class="goodsWrap" ref="goodsWrap">
       <div>
         <div class="topWrap clearfix" v-if="goodsList.length">
-          <div class="goodsNum fl" v-if="cartList.length">
+          <div class="goodsNum fl" v-if="goodsList.length">
             共
             <i>{{totals}}</i> 件商品
           </div>
-          <router-link to="/" class="fr btn">
-            优惠券</router-link>
+          <div @click="chooseCoupons" class="fr btn">
+            优惠券</div>
         </div>
         <div v-if="cartList.length" class="abledWrap">
           <goods-item v-for="item in cartList" :key="item.id" :goodsItem="item" :showModify="showModify"></goods-item>
@@ -68,6 +68,12 @@ import {
 //   storage
 // } from 'util/storage'
 import OrderPopUp from './components/OrderPopUp'
+import {
+  storage
+} from 'util/storage'
+import {
+  couponByGoods
+} from 'util/const.js'
 export default {
   name: 'Cart',
   components: {
@@ -116,9 +122,6 @@ export default {
         this.page = 0
         this.getCartList()
       }
-      // if (from.path === '/cart/1' && to.path === '/cart') {
-      //   this.$router.go(-1)
-      // }
     },
     isAllSelect (v) {
       if (v) {
@@ -262,6 +265,7 @@ export default {
     sureEmpty () {
       notice.confirm('是否确认清空全部失效商品？', '商品清空后将无法恢复', this.emptyNoInventory, '继续删除')
     },
+    // 清楚失效商品
     emptyNoInventory () {
       let id = ''
       for (let i = 0; i < this.disabledCartList.length; i++) {
@@ -281,6 +285,19 @@ export default {
       }).catch(err => {
         console.log(err)
       })
+    },
+    // 使用优惠券
+    chooseCoupons () {
+      let couponArr = []
+      console.log(this.cartList)
+      for (let i = 0; i < this.cartList.length; i++) {
+        couponArr[i] = {
+          'goodsItemId': this.cartList[i].goodsItemId,
+          'num': this.cartList[i].num
+        }
+      }
+      storage.setLocalStorage(couponByGoods, couponArr)
+      this.$router.replace('/chooseCoupons/1')
     }
   },
   mounted () {

@@ -284,7 +284,7 @@ export default {
         }
       }
       storage.setLocalStorage(couponByGoods, this.couponArr)
-      this.$router.push('/chooseCoupons')
+      this.$router.push('/chooseCoupons/2')
     }
   },
 

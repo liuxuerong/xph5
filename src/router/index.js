@@ -267,7 +267,7 @@ const router = new Router({
       component: resolve => require(['@/pages/person/CardDetails'], resolve)
     },
     {
-      path: '/chooseCoupons',
+      path: '/chooseCoupons/:type',
       name: 'chooseCoupons',
       meta: { requireLogin: true },
       component: resolve => require(['@/pages/createOrder/ChooseCoupons'], resolve)

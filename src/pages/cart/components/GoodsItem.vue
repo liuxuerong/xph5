@@ -229,7 +229,7 @@ export default {
       border-radius 50%
       vertical-align middle
     .sub
-      line-height 40px
+      line-height 34px
     span.disable
       color #ccc
     input
