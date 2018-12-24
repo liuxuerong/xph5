@@ -34,7 +34,7 @@
                   </div>
                 </span>
               </div>
-                <div class="opera able  fl" v-if="goodsItem.stock==0">
+                <div class="opera able  fl" v-if="goodsItem.stock==0&&goodsItem.status==1">
                   <i class="text">请重新选择规格</i>
                   <div class="btn">重新选择</div>
                 </div>

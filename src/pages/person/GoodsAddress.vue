@@ -1,45 +1,66 @@
 <template>
-  <div class="wrapper">
-    <userinfo-header :title="title" oper=""></userinfo-header>
+  <div class="wrapper goodsAddressWrapper">
+    <userinfo-header :title="title" :oper="oper" @operComplete="sureDel"></userinfo-header>
     <div class="addressConter">
-      <div class="addressItem border-bottom">
+      <div class="addressItem">
         <span>联系人</span>
-        <input type="text" v-model="receiverName" placeholder="联系人姓名">
+        <x-input placeholder="联系人姓名" v-model.trim="receiverName"></x-input>
+        <!-- <input type="text" v-model="receiverName" placeholder="联系人姓名"> -->
       </div>
-      <div class="addressItem border-bottom">
+      <div class="addressItem">
         <span>电话</span>
-        <input type="text" v-model="phone" placeholder="手机号码">
+        <x-input placeholder="手机号码" v-model.trim="phone"></x-input>
       </div>
-      <div class="addressItem border-bottom">
+      <div class="addressItem">
         <span>地址</span>
         <group class="changeAddress" v-if="type=='1'">
-          <x-address @on-hide="logHide" title="" @on-show="logShow" v-model="value" :list="addressData" @on-shadow-change="onShadowChange" placeholder="地址" :show.sync="showAddress"></x-address>
+          <x-address title="" @on-show="logShow" v-model="value" :list="addressData" @on-shadow-change="onShadowChange" placeholder="地址" :show.sync="showAddress"></x-address>
         </group>
         <group class="changeAddress" v-else>
-          <x-address @on-hide="logHide" title="" @on-show="logShow" v-model="value" :list="addressData" @on-shadow-change="onShadowChange" :inline-desc="placeholder" :show.sync="showAddress"></x-address>
+          <x-address title="" @on-show="logShow" v-model="value" :list="addressData" @on-shadow-change="onShadowChange" :inline-desc="placeholder" :show.sync="showAddress"></x-address>
         </group>
       </div>
-      <div class="addressItem border-bottom">
+
+      <div class="addressItem details clearfix">
         <span>详细地址</span>
-        <input type="text" v-model="detailedAddr" placeholder="填写详细地址">
+        <x-input placeholder="填写详细地址" v-model.trim="detailedAddr"></x-input>
       </div>
-      <div class="addressItem border-bottom">
-        <span>设为默认</span>
+      <div class="cutOffLine30"></div>
+      <div class="addressItem">
+        <span class="bold">设为默认</span>
         <em class="checkboxInput" :class="{active:idDefault}"><input type="checkbox" v-model="idDefault"></em>
       </div>
-
       <button class="addressSubmit" @click="addressSubmit">确定</button>
     </div>
   </div>
 </template>
+
 <script>
 import UserinfoHeader from './components/ComUserSetHeader'
-import { Toast } from 'mint-ui'
-import { addDelivery, updateDelivery, idDelivery } from 'util/netApi'
-import { http } from 'util/request'
-import notice from 'util/notice.js'
-import { Group, XAddress, ChinaAddressV4Data, XButton, Cell, Value2nameFilter as value2name } from 'vux'
+import {
+  Toast
+} from 'mint-ui'
+import {
+  addDelivery,
+  updateDelivery,
+  idDelivery,
+  delDelivery
+} from 'util/netApi'
+import {
+  http
+} from 'util/request'
+import notice from 'util/notice'
+import {
+  XInput,
+  Group,
+  XAddress,
+  ChinaAddressV4Data,
+  XButton,
+  Cell,
+  Value2nameFilter as value2name
+} from 'vux'
 export default {
+  name: 'GoodsAddress',
   data () {
     return {
       title: '',
@@ -55,18 +76,14 @@ export default {
       names: [],
       value: [],
       title2: '',
-      value2: ['天津市', '市辖区', '和平区'],
-      value3: ['广东省', '中山市', '--'],
       addressData: ChinaAddressV4Data,
-      value4: [],
-      value5: ['广东省', '深圳市', '南山区'],
-      showAddress: false
+      showAddress: false,
+      oper: ''
     }
   },
   computed: {
     rigthData: function () {
       let phone = /^1\d{10}$/gi.test(this.phone)
-      // let addressName = !/[@#$%^&*]+/gi.test(this.province)
       let receiverName = !/[@#$%^&*]+/gi.test(this.receiverName)
       let detailedAddr = !/[@#$%^&*]+/gi.test(this.detailedAddr)
       return phone && receiverName && detailedAddr
@@ -80,7 +97,8 @@ export default {
     Group,
     XAddress,
     XButton,
-    Cell
+    Cell,
+    XInput
   },
   methods: {
     // 修改地址渲染
@@ -114,23 +132,15 @@ export default {
     onShadowChange (ids, names) {
       this.names = names
     },
-    changeData () {
-      this.value2 = ['430000', '430400', '430407']
-    },
-    changeDataByLabels () {
-      this.value2 = ['广东省', '广州市', '天河区']
-    },
-    changeDataByLabels2 () {
-      this.value2 = ['广东省', '中山市', '--']
-    },
     getName (value) {
       return value2name(value, ChinaAddressV4Data)
     },
-    logHide (str) {
-      console.log('on-hide', str)
-    },
     logShow (str) {
       this.placeholder = ''
+    },
+    // 页面返回提示
+    addressSubmitSure () {
+
     },
     // 地址提交
     addressSubmit () {
@@ -151,9 +161,12 @@ export default {
         }
         if (this.rigthData && this.rigthNull) {
           http(addDelivery, params).then((response) => {
+            let _this = this
             if (response.data.code === 0) {
-              notice.toast('添加地址成功', '2000', 'success', function () {
-                this.$router.push('/addressAdmin')
+              notice.toast('添加地址成功', '1000', 'success', function () {
+                setTimeout(() => {
+                  _this.$router.push('/addressAdmin')
+                }, 1000)
               })
             }
           }).catch((err) => {
@@ -163,7 +176,7 @@ export default {
           Toast({
             message: '请确认填写信息是否正确',
             position: 'bottom',
-            duration: 5000
+            duration: 2000
           })
         }
       } else {
@@ -183,9 +196,12 @@ export default {
         }
         if (this.rigthData && this.rigthNull) {
           http(updateDelivery, params).then((response) => {
+            let _this = this
             if (response.data.code === 0) {
-              notice.toast('修改地址成功', '2000', 'success', function () {
-                this.$router.push('/addressAdmin')
+              notice.toast('修改地址成功', '1000', 'success', function () {
+                setTimeout(() => {
+                  _this.$router.push('/addressAdmin')
+                }, 1000)
               })
             }
           }).catch((err) => {
@@ -195,7 +211,7 @@ export default {
           Toast({
             message: '请确认填写信息是否正确',
             position: 'bottom',
-            duration: 5000
+            duration: 2000
           })
         }
       }
@@ -203,6 +219,18 @@ export default {
     // 添加地址
     addAddress () {
       this.popupVisible = true
+    },
+    sureDel () {
+      notice.confirm('确定删除该地址？', '地址删除后，将无法恢复', this.del)
+    },
+    // 删除地址
+    del () {
+      let id = this.$route.params.id
+      http(delDelivery, [id]).then(res => {
+        this.$router.go(-1)
+      }).catch(err => {
+        console.log(err)
+      })
     }
   },
   watch: {
@@ -214,9 +242,10 @@ export default {
     },
     // 监测路由发生变化  则刷新页面
     '$route' (to, from) {
-      if (to.name === 'goodsAddress') {
-        this.addressRender()
-      }
+      // if (to.name === 'goodsAddress') {
+      //   console.log(1111)
+      //   this.addressRender()
+      // }
     }
   },
   mounted () {
@@ -224,45 +253,73 @@ export default {
     if (type === '1') {
       this.type = 1
       this.title = '新增地址'
+      this.oper = ''
     } else if (type === '2') {
-      this.title = '修改地址'
+      this.title = '编辑收货地址'
       this.type = 2
       this.addressRender()
+      this.oper = '删除'
     }
   }
 }
 </script>
+
 <style lang="stylus">
-  html,body
-    background #fff
-  .vux-popup-picker-placeholder
-    float left!important
-    color #ccc!important
-    font-size 40px!important
-  .weui-cell_access
-    height 134px!important
-    padding 0!important
-  .weui-cells:after,.weui-cell_access .weui-cell__ft:after,.weui-cells:before
-    display none!important
+.vux-popup-picker-container
   .vux-no-group-title
-    margin-top 0!important
+    margin-top 0
   .vux-popup-header
-    height 130px!important
-    line-height 130px!important
-    font-size 40px!important
+    height 130px
+    line-height 130px
+    font-size 40px
   .vux-popup-header-right
-    color #ba825a!important
+    color #ba825a
   .vux-popup-picker-value
-    float left!important
-    color #808080!important
-    font-size 40px!important
+    float left
+    color #808080
+    font-size 40px
+.goodsAddressWrapper
+  .vux-label-desc
+    font-size 46px
+    color #333333
+    font-weight 600
+  .weui-cell_access
+    height 134px
+    padding 0
+  .weui-cells
+    margin-top 0
+  .weui-input
+    height auto
+  .weui-cells:after,.weui-cell_access .weui-cell__ft:after,.weui-cells:before,.weui-cell:after,.weui-cell:before
+    display none
+  .vux-popup-picker-placeholder
+    float left
+    color #cccccc
+    font-size 46px
+  .vux-popup-picker-value
+    font-size 46px
+    font-weight 600
+    color #333333
+    text-align left
+    display inline-block
+    width 100%
+  .weui-cell
+    padding 0
+    font-size 46px
+    font-weight 600
+    color #333333
+    input
+      font-weight 600
 </style>
+
 <style lang="stylus" scoped>
   @import "~styles/mixins.styl";
   .wrapper
     background #F5F5F5
     box-sizing border-box
-    padding-top 100px
+    padding-top 130px
+    min-height 100vh
+    position relative
   .addressConter
     width 100%
     background #ffffff
@@ -273,41 +330,51 @@ export default {
     height 138px
     line-height 138px
     box-sizing border-box
-    padding 0 100px 0 52px
+    padding 0 50px 0 52px
     margin-top 1px
+    .bold
+      color #333333
+      font-weight 600
     span
       float left
       width 200px
-      font-size 40px
-      font-weight bold
-      color #000000
+      font-size 46px
+      color #666666
+      margin-right 40px
     input[type="text"]
       float left
       width 75%
-      font-size 40px
-      color #808080
+      font-size 46px
+      font-weight 600
+      color #333333
       height 134px
       line-height 134px
       border none
+  .addressItem.details
+    min-height 138px
+    height auto
+    line-height 70px
   .addressSubmit
+    position absolute
     display block
     width 86%
     height 148px
     line-height 148px
-    margin 50px auto 0
     font-size 46px
     text-align center
     color #BA825A
     font-weight bold
-    background #F0F0F0
+    background #fff
+    bottom 110px
+    left 7%
   .addressBox
     width 100%
   .checkboxInput
     float right
-    width 50px
-    height 50px
-    line-height 50px
-    margin-top 42px
+    width 60px
+    height 60px
+    line-height 60px
+    margin-top 37px
     bgImage('/static/icons/payUnchecked')
     input
       display block
@@ -316,22 +383,25 @@ export default {
       opacity 0
   .checkboxInput.active
     bgImage('/static/icons/paySelect')
-
   ::-webkit-input-placeholder {
     color: #ccc;
-    font-size 40px
+    font-size 46px
+    font-weight normal
   }
   ::-moz-placeholder {
     color: #ccc;
-    font-size 40px
+    font-size 46px
+    font-weight normal
   }
   :-ms-input-placeholder {
     color: #ccc;
-    font-size 40px
+    font-size 46px
+    font-weight normal
   }
   :-moz-placeholder {
     color: #ccc;
-    font-size 40px
+    font-size 46px
+    font-weight normal
   }
   .changeAddress
     float left
@@ -341,5 +411,18 @@ export default {
     height 134px
     line-height 134px
     border none
-    background red
+    position relative
+  .changeAddress:before
+    border: solid 0.017778rem #b3b3b3;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    content: " ";
+    top: 50%;
+    z-index:2
+    right: 0;
+    position: absolute;
+    -webkit-transform: translateY(-50%) rotate(45deg);
+    transform: translateY(-50%) rotate(45deg);
+    width: 0.22444rem;
+    height: 0.22444rem;
 </style>

@@ -19,46 +19,52 @@
       </popover>
     </common-nav-header>
     <div class="createOrderWrap" v-if="!unsatisfactoryData.length">
-      <div class="title">商品与配送</div>
       <div class="cutOffLine30"></div>
-      <router-link class="cellLink" to="/addressAdmin/need">
-        <div class="text">配送方式<span class="fr" v-if="info&&info.addressType">{{info.addressType}}</span></div>
-      </router-link>
-      <div class="cutOffLine30"></div>
-      <div class="goodsItem">
-        <ul v-if="pricesData.length">
-          <li v-for="item in pricesData" :key="item.id">
-            <order-item :pricesData="item" />
-          </li>
-        </ul>
-      </div>
-      <div class="title">支付信息</div>
-      <div class="cellLink" @click.prevent="chooseCoupons" v-if="availableCoupon===1">
-        <div class="text border-bottom">使用优惠券<span class="fr" v-if="info&&info.couponName">{{info.couponName}}</span></div>
-      </div>
-      <router-link class="cellLink" to="/invoice">
-        <div class="text">发票<span class="fr" v-if="info&&info.invoiceTypeValue">{{info.invoiceTypeValue}}&nbsp;&nbsp;{{info.invoiceStyleValue}}</span></div>
-      </router-link>
-      <div class="cutOffLine30"></div>
-      <div class="priceInfo">
-        <ul class="border-bottom">
-          <li v-if="totalPric!==''"><span class="name">商品金额：</span><span class="item">￥{{totalPric}}</span></li>
-          <li>优惠<span class="item">-￥{{offerAmount}}</span></li>
-          <li v-if="shippingAmount!==''"><span class="name"> 运费 </span><span class="item">￥{{shippingAmount}}</span></li>
-          <!-- <li><span class="name">居家商品满2000减200</span><span class="item">-￥200</span></li> -->
-        </ul>
-        <div class="total">
-          实付：￥{{needPayPrice}}
+      <div class="addressWrap clearfix" v-if="addressInfo">
+        <div class="top clearfix">
+          <h4>{{addressInfo.receiverName}}</h4>
+          <span>{{addressInfo.phone}}</span>
         </div>
+        <div class="bottom">{{addressInfo.province}}{{addressInfo.city}}{{addressInfo.area}}{{addressInfo.detailedAddr}}</div>
       </div>
-      <div class="title">备注</div>
-      <textarea name="" id="" cols="30" rows="10" placeholder="输入备注信息" v-model="params.desc"></textarea>
-      <div class="cutOffLine30"></div>
+    <router-link class="cellLink" to="/addressAdmin/need">
+      <div class="text">配送方式<span class="fr" v-if="info&&info.addressType">{{info.addressType}}</span></div>
+    </router-link>
+    <div class="cutOffLine30"></div>
+    <div class="goodsItem">
+      <ul v-if="pricesData.length">
+        <li v-for="item in pricesData" :key="item.id">
+          <order-item :pricesData="item" />
+        </li>
+      </ul>
     </div>
-    <div class="bottom">
-      <div class="price">￥{{needPayPrice}}</div>
-      <span class="pay" @click="createOrder">立即支付</span>
+    <div class="title">支付信息</div>
+    <div class="cellLink" @click.prevent="chooseCoupons" v-if="availableCoupon===1">
+      <div class="text border-bottom">使用优惠券<span class="fr" v-if="info&&info.couponName">{{info.couponName}}</span></div>
     </div>
+    <router-link class="cellLink" to="/invoice">
+      <div class="text">发票<span class="fr" v-if="info&&info.invoiceTypeValue">{{info.invoiceTypeValue}}&nbsp;&nbsp;{{info.invoiceStyleValue}}</span></div>
+    </router-link>
+    <div class="cutOffLine30"></div>
+    <div class="priceInfo">
+      <ul class="border-bottom">
+        <li v-if="totalPric!==''"><span class="name">商品金额：</span><span class="item">￥{{totalPric}}</span></li>
+        <li>优惠<span class="item">-￥{{offerAmount}}</span></li>
+        <li v-if="shippingAmount!==''"><span class="name"> 运费 </span><span class="item">￥{{shippingAmount}}</span></li>
+        <!-- <li><span class="name">居家商品满2000减200</span><span class="item">-￥200</span></li> -->
+      </ul>
+      <div class="total">
+        实付：￥{{needPayPrice}}
+      </div>
+    </div>
+    <div class="title">备注</div>
+    <textarea name="" id="" cols="30" rows="10" placeholder="输入备注信息" v-model="params.desc"></textarea>
+    <div class="cutOffLine30"></div>
+  </div>
+  <div class="bottom">
+    <div class="price">￥{{needPayPrice}}</div>
+    <span class="pay" @click="createOrder">立即支付</span>
+  </div>
   </div>
 </template>
 
@@ -78,7 +84,8 @@ import {
 import {
   goodOrderData,
   createOrderData,
-  customerService
+  customerService,
+  listDelivery
 } from 'util/netApi'
 import {
   storage
@@ -115,6 +122,7 @@ export default {
       needPayPrice: '',
       offerAmount: '',
       cartList: '',
+      addressInfo: null,
       params: {
         favorableId: '',
         key: '',
@@ -165,8 +173,33 @@ export default {
         storage.setLocalStorage(goodsInfo, goodsInfoCart)
         this.getDetails()
       } else {
-        this.$router.replace({path: '/cart/1'})
+        this.$router.replace({
+          path: '/cart/1'
+        })
       }
+    },
+    // 获取地址
+    getAddress () {
+      let params = {
+        page: 1,
+        rows: 20
+      }
+      http(listDelivery, params).then(res => {
+        console.log(res)
+        let addressList = res.data.body.list
+        let flag = true
+        for (let item of addressList) {
+          if (item.idDefault) {
+            this.addressInfo = item
+            flag = false
+          }
+        }
+        if (flag) {
+          this.addressInfo = addressList[0]
+        }
+      }).catch(err => {
+        console.log(err)
+      })
     },
     getDetails () {
       let goodsInfoCart = storage.getLocalStorage(goodsInfo)
@@ -290,6 +323,7 @@ export default {
 
   created () {
     this.getDetails()
+    this.getAddress()
   },
   mounted () {
     this.getOrderInfo()

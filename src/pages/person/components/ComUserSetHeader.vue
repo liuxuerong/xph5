@@ -85,8 +85,8 @@ export default {
 		margin auto
 	.completeOper
 		float right
-		font-size 36px
-		color #808080
+		font-size 46px
+		color #666666
 		height 130px
 		line-height 130px
 </style>
