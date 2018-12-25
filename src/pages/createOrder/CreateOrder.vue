@@ -20,51 +20,58 @@
     </common-nav-header>
     <div class="createOrderWrap" v-if="!unsatisfactoryData.length">
       <div class="cutOffLine30"></div>
-      <div class="addressWrap clearfix" v-if="addressInfo">
-        <div class="top clearfix">
-          <h4>{{addressInfo.receiverName}}</h4>
-          <span>{{addressInfo.phone}}</span>
+      <div class="wrap">
+        <router-link class="cellLink" to="/addressAdmin/need" v-if="addressInfo">
+          <div class="addressWrap  text">
+            <div class="infoTop clearfix">
+              <h4>{{addressInfo.receiverName}}</h4>
+              <em>{{addressInfo.phone}}</em>
+            </div>
+            <div class="infoBottom">{{addressInfo.province}}{{addressInfo.city}}{{addressInfo.area}}{{addressInfo.detailedAddr}}</div>
+          </div>
+        </router-link>
+        <router-link class="cellLink" to="goodsAddress/1" v-else>
+          <div class="text addAddress">您还没有收货地址，点击这里添加</div>
+        </router-link>
+      </div>
+      <div class="cutOffLine30"></div>
+      <div class="goodsItem wrap">
+        <ul v-if="pricesData.length">
+          <li v-for="item in pricesData" :key="item.id">
+            <order-item :pricesData="item" />
+          </li>
+        </ul>
+         <div class="remark border-top">
+           <span>备注</span>
+            <textarea name="" id="" cols="30" rows="10" placeholder="建议留言前先与客服进行沟通确认" v-model="params.desc"></textarea>
+         </div>
+      </div>
+      <div class="title">支付信息</div>
+      <div class="cellLink" @click.prevent="chooseCoupons" v-if="availableCoupon===1">
+        <div class="text border-bottom">使用优惠券<span class="fr" v-if="info&&info.couponName">{{info.couponName}}</span></div>
+      </div>
+      <router-link class="cellLink" to="/invoice">
+        <div class="text">发票<span class="fr" v-if="info&&info.invoiceTypeValue">{{info.invoiceTypeValue}}&nbsp;&nbsp;{{info.invoiceStyleValue}}</span></div>
+      </router-link>
+      <div class="cutOffLine30"></div>
+      <div class="priceInfo">
+        <ul class="border-bottom">
+          <li v-if="totalPric!==''"><span class="name">商品金额：</span><span class="item">￥{{totalPric}}</span></li>
+          <li>优惠<span class="item">-￥{{offerAmount}}</span></li>
+          <li v-if="shippingAmount!==''"><span class="name"> 运费 </span><span class="item">￥{{shippingAmount}}</span></li>
+          <!-- <li><span class="name">居家商品满2000减200</span><span class="item">-￥200</span></li> -->
+        </ul>
+        <div class="total">
+          实付：￥{{needPayPrice}}
         </div>
-        <div class="bottom">{{addressInfo.province}}{{addressInfo.city}}{{addressInfo.area}}{{addressInfo.detailedAddr}}</div>
       </div>
-    <router-link class="cellLink" to="/addressAdmin/need">
-      <div class="text">配送方式<span class="fr" v-if="info&&info.addressType">{{info.addressType}}</span></div>
-    </router-link>
-    <div class="cutOffLine30"></div>
-    <div class="goodsItem">
-      <ul v-if="pricesData.length">
-        <li v-for="item in pricesData" :key="item.id">
-          <order-item :pricesData="item" />
-        </li>
-      </ul>
+
+      <div class="cutOffLine30"></div>
     </div>
-    <div class="title">支付信息</div>
-    <div class="cellLink" @click.prevent="chooseCoupons" v-if="availableCoupon===1">
-      <div class="text border-bottom">使用优惠券<span class="fr" v-if="info&&info.couponName">{{info.couponName}}</span></div>
+    <div class="bottom">
+      <div class="price">￥{{needPayPrice}}</div>
+      <span class="pay" @click="createOrder">立即支付</span>
     </div>
-    <router-link class="cellLink" to="/invoice">
-      <div class="text">发票<span class="fr" v-if="info&&info.invoiceTypeValue">{{info.invoiceTypeValue}}&nbsp;&nbsp;{{info.invoiceStyleValue}}</span></div>
-    </router-link>
-    <div class="cutOffLine30"></div>
-    <div class="priceInfo">
-      <ul class="border-bottom">
-        <li v-if="totalPric!==''"><span class="name">商品金额：</span><span class="item">￥{{totalPric}}</span></li>
-        <li>优惠<span class="item">-￥{{offerAmount}}</span></li>
-        <li v-if="shippingAmount!==''"><span class="name"> 运费 </span><span class="item">￥{{shippingAmount}}</span></li>
-        <!-- <li><span class="name">居家商品满2000减200</span><span class="item">-￥200</span></li> -->
-      </ul>
-      <div class="total">
-        实付：￥{{needPayPrice}}
-      </div>
-    </div>
-    <div class="title">备注</div>
-    <textarea name="" id="" cols="30" rows="10" placeholder="输入备注信息" v-model="params.desc"></textarea>
-    <div class="cutOffLine30"></div>
-  </div>
-  <div class="bottom">
-    <div class="price">￥{{needPayPrice}}</div>
-    <span class="pay" @click="createOrder">立即支付</span>
-  </div>
   </div>
 </template>
 
@@ -348,13 +355,13 @@ export default {
     height 100%
     display inline-block
 .createOrder
-  padding-top 120px
+  padding 120px 0 148px
   height 100%
-  padding-bottom 148px
   .createOrderWrap
-    background-color #f5f5f5
     height 100%
     overflow-y auto
+    background-color #f5f5f5
+    padding 0 50px
     .title
       padding-top 13px
       height 160px
@@ -365,14 +372,11 @@ export default {
       font-weight bold
       padding-left 50px
     .cellLink
-      height 148px
       line-height 148px
       padding 0 50px
       display inline-block
-      background-color #fff
       width 100%
       .text
-        height 148px
         line-height 148px
         position relative
         width 100%
@@ -386,7 +390,8 @@ export default {
         content ''
         position absolute
         right 10px
-        top 60px
+        top 50%
+        margin-top -15px
         width 30px
         height 30px
         border-right 2px solid #666
@@ -412,6 +417,14 @@ export default {
       font-size 46px
       color #262626
       font-weight 600
+  .remark
+    display flex
+    algin-items center
+    span
+      font-size 40px
+      color #333
+      height 148px
+      line-height 148px
   textarea
     height 148px
     line-height 148px
@@ -419,18 +432,18 @@ export default {
     color #333
     font-size 40px
     background-color #fff
-    width 100%
+    flex 1
   textarea::-webkit-input-placeholder
-    color #4D4D4D
+    color #CCCCCC
     font-size 40px
   textarea:-moz-placeholder
-    color #4D4D4D
+    color #CCCCCC
     font-size 40px
   textarea::-moz-placeholder
-    color #4D4D4D
+    color #CCCCCC
     font-size 40px
   textarea:-ms-input-placeholder
-    color #4D4D4D
+    color #CCCCCC
     font-size 40px
   .bottom
     position fixed
@@ -453,8 +466,32 @@ export default {
       color #BA825A
       font-size 46px
   .goodsItem
-    padding 50px
+    padding 50px 50px 0
+  .wrap
     background-color #fff
+    border-radius 20px
+    margin-bottom 30px
+    .addAddress
+      color #999999 !important
+      font-size 46px !important
+  .addressWrap
+    .infoTop
+      color #333333
+      font-size 50px
+      h4
+        display inline-block
+        height 140px
+        line-height 140px
+      em
+        display inline-block
+        height 140px
+        line-height 140px
+  .infoBottom
+    line-height 50px
+    color #333333
+    font-size 40px
+    margin-bottom 40px
+
 </style>
 
 <style lang="stylus">

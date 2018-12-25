@@ -4,33 +4,33 @@
     <div class="addressConter">
       <div class="addressItem">
         <span>联系人</span>
-        <x-input placeholder="联系人姓名" v-model.trim="receiverName"></x-input>
-        <!-- <input type="text" v-model="receiverName" placeholder="联系人姓名"> -->
+        <x-input placeholder="联系人姓名" v-model.trim="user.receiverName"
+        ></x-input>
       </div>
       <div class="addressItem">
         <span>电话</span>
-        <x-input placeholder="手机号码" v-model.trim="phone"></x-input>
+        <x-input placeholder="手机号码" v-model.trim="user.phone" ></x-input>
       </div>
       <div class="addressItem">
         <span>地址</span>
         <group class="changeAddress" v-if="type=='1'">
-          <x-address title="" @on-show="logShow" v-model="value" :list="addressData" @on-shadow-change="onShadowChange" placeholder="地址" :show.sync="showAddress"></x-address>
+          <x-address title="" @on-show="logShow" v-model="user.value" :list="addressData" @on-shadow-change="onShadowChange" placeholder="地址" :show.sync="showAddress"></x-address>
         </group>
         <group class="changeAddress" v-else>
-          <x-address title="" @on-show="logShow" v-model="value" :list="addressData" @on-shadow-change="onShadowChange" :inline-desc="placeholder" :show.sync="showAddress"></x-address>
+          <x-address title="" @on-show="logShow" v-model="user.value" :list="addressData" @on-shadow-change="onShadowChange" :inline-desc="placeholder" :show.sync="showAddress"></x-address>
         </group>
       </div>
 
       <div class="addressItem details clearfix">
         <span>详细地址</span>
-        <x-input placeholder="填写详细地址" v-model.trim="detailedAddr"></x-input>
+        <x-input placeholder="填写详细地址" v-model.trim="user.detailedAddr"></x-input>
       </div>
       <div class="cutOffLine30"></div>
       <div class="addressItem">
         <span class="bold">设为默认</span>
         <em class="checkboxInput" :class="{active:idDefault}"><input type="checkbox" v-model="idDefault"></em>
       </div>
-      <button class="addressSubmit" @click="addressSubmit">确定</button>
+      <button class="addressSubmit" @click="addressSubmit">保存</button>
     </div>
   </div>
 </template>
@@ -59,38 +59,65 @@ import {
   Cell,
   Value2nameFilter as value2name
 } from 'vux'
+import { required, maxLength } from 'vuelidate/lib/validators'
+import {fromRoute} from 'util/const.js'
+import {
+  storage
+} from 'util/storage'
+const isPhone = (value) => /^1\d{10}$/gi.test(value)
 export default {
   name: 'GoodsAddress',
   data () {
     return {
       title: '',
-      receiverName: '',
-      detailedAddr: '',
-      phone: '',
+      user: {
+        phone: '',
+        receiverName: '',
+        value: [],
+        names: [],
+        detailedAddr: ''
+      },
       idDefault: '',
-      postalCode: '',
       placeholder: '',
       popupVisible: false,
       type: '',
-      value_0_1: [],
-      names: [],
-      value: [],
-      title2: '',
+
       addressData: ChinaAddressV4Data,
       showAddress: false,
-      oper: ''
+      oper: '',
+      fromRoute: null
     }
   },
-  computed: {
-    rigthData: function () {
-      let phone = /^1\d{10}$/gi.test(this.phone)
-      let receiverName = !/[@#$%^&*]+/gi.test(this.receiverName)
-      let detailedAddr = !/[@#$%^&*]+/gi.test(this.detailedAddr)
-      return phone && receiverName && detailedAddr
-    },
-    rigthNull: function () {
-      return this.phone !== '' && this.province !== '' && this.receiverName !== '' && this.detailedAddr !== ''
+
+  validations: {
+    user: {
+      phone: {
+        required,
+        isPhone
+      },
+      receiverName: {
+        required,
+        maxLength: maxLength(25)
+      },
+      // value: {
+      //   required
+      // },
+      detailedAddr: {
+        required
+      }
+      // names: {
+      //   required
+      // }
+
     }
+  },
+  beforeRouteEnter (to, from, next) {
+    // 如果是从创建订单页面进入的话，新增地址保存之后跳转至创建订单页面
+    if (from.path.indexOf('/createOrder') !== -1) {
+      console.log(this)
+      storage.setLocalStorage(fromRoute, from.path)
+    }
+    next()
   },
   components: {
     UserinfoHeader,
@@ -107,13 +134,13 @@ export default {
       http(idDelivery, [id]).then((response) => {
         if (response.data.code === 0) {
           let data = response.data.body
-          this.receiverName = data.receiverName
-          this.phone = data.phone
+          this.user.receiverName = data.receiverName
+          this.user.phone = data.phone
           this.placeholder = data.province + '  ' + data.city + '  ' + data.area
-          this.names[0] = data.province
-          this.names[1] = data.city
-          this.names[2] = data.area
-          this.detailedAddr = data.detailedAddr
+          this.user.names[0] = data.province
+          this.user.names[1] = data.city
+          this.user.names[2] = data.area
+          this.user.detailedAddr = data.detailedAddr
           if (data.idDefault === 1) {
             this.idDefault = true
           } else {
@@ -130,7 +157,7 @@ export default {
       }, 2000)
     },
     onShadowChange (ids, names) {
-      this.names = names
+      this.user.names = names
     },
     getName (value) {
       return value2name(value, ChinaAddressV4Data)
@@ -142,30 +169,44 @@ export default {
     addressSubmitSure () {
 
     },
+    toastFn (message) {
+      Toast({
+        message,
+        position: 'bottom',
+        duration: 2000
+      })
+    },
     // 地址提交
     addressSubmit () {
+      this.$v.$touch()
       let type = this.$route.params.type
-      // 1  新增加地址
-      // 2  修改地址
-      if (type === '1') {
-        let params = {
-          receiverName: this.receiverName,
-          province: this.names[0],
-          city: this.names[1],
-          area: this.names[2],
-          detailedAddr: this.detailedAddr,
-          addressName: '',
-          phone: this.phone,
-          idDefault: this.idDefault ? 1 : 0,
-          postalCode: this.postalCode
-        }
-        if (this.rigthData && this.rigthNull) {
+      let id = this.$route.params.id
+      let params = {
+        receiverName: this.user.receiverName,
+        province: this.user.names[0],
+        city: this.user.names[1],
+        area: this.user.names[2],
+        detailedAddr: this.user.detailedAddr,
+        addressName: '',
+        phone: this.user.phone,
+        idDefault: this.idDefault ? 1 : 0,
+        id: id
+      }
+      if (!this.$v.$invalid) {
+        // 1  新增加地址
+        // 2  修改地址
+        if (type === '1') {
+          console.log(this.user.value)
+          if (!this.user.value.length) {
+            return this.toastFn('请选择地址')
+          }
           http(addDelivery, params).then((response) => {
             let _this = this
             if (response.data.code === 0) {
               notice.toast('添加地址成功', '1000', 'success', function () {
                 setTimeout(() => {
-                  _this.$router.push('/addressAdmin')
+                  _this.fromRoute = storage.getLocalStorage(fromRoute) || '/addressAdmin'
+                  _this.$router.push(_this.fromRoute)
                 }, 1000)
               })
             }
@@ -173,28 +214,6 @@ export default {
             console.log(err)
           })
         } else {
-          Toast({
-            message: '请确认填写信息是否正确',
-            position: 'bottom',
-            duration: 2000
-          })
-        }
-      } else {
-        let id = this.$route.params.id
-        let params = {
-          receiverName: this.receiverName,
-          province: this.names[0],
-          city: this.names[1],
-          area: this.names[2],
-          detailedAddr: this.detailedAddr,
-          addressName: '',
-          phone: this.phone,
-          idDefault: this.idDefault ? 1 : 0,
-          id: id,
-          postalCode: this.postalCode
-
-        }
-        if (this.rigthData && this.rigthNull) {
           http(updateDelivery, params).then((response) => {
             let _this = this
             if (response.data.code === 0) {
@@ -207,12 +226,26 @@ export default {
           }).catch((err) => {
             console.log(err)
           })
-        } else {
-          Toast({
-            message: '请确认填写信息是否正确',
-            position: 'bottom',
-            duration: 2000
-          })
+        }
+      } else {
+        if (!this.$v.user.receiverName.required) {
+          return this.toastFn('请填写联系人')
+        }
+        if (!this.$v.user.receiverName.maxLength) {
+          return this.toastFn('联系不要超过25个字')
+        }
+        if (!this.$v.user.phone.required) {
+          return this.toastFn('请填写电话号码')
+        }
+        if (!this.$v.user.phone.isPhone) {
+          return this.toastFn('请填写一个正确的手机号码')
+        }
+
+        // if (!this.$v.user.names.required) {
+        //   return this.toastFn('请选择地址')
+        // }
+        if (!this.$v.user.detailedAddr.required) {
+          return this.toastFn('请填写详细地址')
         }
       }
     },
@@ -296,6 +329,7 @@ export default {
     float left
     color #cccccc
     font-size 46px
+    font-weight normal
   .vux-popup-picker-value
     font-size 46px
     font-weight 600
@@ -310,6 +344,26 @@ export default {
     color #333333
     input
       font-weight 600
+    input::-webkit-input-placeholder {
+        color: #ccc;
+        font-size 46px
+        font-weight normal
+      }
+    input::-moz-placeholder {
+        color: #ccc;
+        font-size 46px
+        font-weight normal
+      }
+    input:-ms-input-placeholder {
+        color: #ccc;
+        font-size 46px
+        font-weight normal
+      }
+    input:-moz-placeholder {
+        color: #ccc;
+        font-size 46px
+        font-weight normal
+      }
 </style>
 
 <style lang="stylus" scoped>
@@ -383,26 +437,7 @@ export default {
       opacity 0
   .checkboxInput.active
     bgImage('/static/icons/paySelect')
-  ::-webkit-input-placeholder {
-    color: #ccc;
-    font-size 46px
-    font-weight normal
-  }
-  ::-moz-placeholder {
-    color: #ccc;
-    font-size 46px
-    font-weight normal
-  }
-  :-ms-input-placeholder {
-    color: #ccc;
-    font-size 46px
-    font-weight normal
-  }
-  :-moz-placeholder {
-    color: #ccc;
-    font-size 46px
-    font-weight normal
-  }
+
   .changeAddress
     float left
     width 75%

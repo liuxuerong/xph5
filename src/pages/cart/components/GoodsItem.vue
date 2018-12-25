@@ -287,7 +287,6 @@ export default {
           max-width 540px
         .describe
           color #999999
-          height 50px
           font-size 36px
           line-height 50px
           span
