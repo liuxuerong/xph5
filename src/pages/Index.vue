@@ -11,21 +11,8 @@
 </template>
 
 <script>
-import Find from '@/pages/find/Find'
-import Classfiy from '@/pages/classify/Classify'
-// import Brand from '@/pages/brand/Brand'
-import Hall from '@/pages/hall/Hall'
-import Story from '@/pages/story/Story'
-import Person from '@/pages/person/PersonCenter'
 export default {
   name: 'Index',
-  components: {
-    Find,
-    Classfiy,
-    Hall,
-    Story,
-    Person
-  },
   data () {
     return {
       tabItemData: [

@@ -91,7 +91,8 @@ export const updateInvoice = { url: '/invoice/api', method: 'PUT', version: v1 }
 export const memberCenter = { url: '/member/api/center', method: 'GET', version: v1 }
 
 // 订单
-export const OrderList = { url: '/order/member/orders', method: 'GET', version: v1 } // 订单列表
+export const OrderList1 = { url: '/order/member/orders', method: 'GET', version: v1 } // 订单列表
+export const OrderList = { url: '/order/member/orders', method: 'GET', version: v2 } // 订单列表
 export const cancelOrder = { url: '/order/cancel', method: 'PUT', version: v1, join: true } // 取消订单
 export const subOrderDetail = { url: '/order/detail', method: 'GET', version: v1, join: true } // 子订单详情
 export const refundOrderDetail = { url: '/order/detail', method: 'GET', version: v1, join: true } // 退款订单详情

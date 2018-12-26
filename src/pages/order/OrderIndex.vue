@@ -2,6 +2,7 @@
   <div class="orderIndex">
     <div class="centerTitle">
       <h3 class="bgFontTitle">我的订单</h3>
+      <router-link class="seeMore" to="/orderList/-1">查看全部new<i class="moreIcon"></i></router-link>
       <span class="seeMore" @click="oderListMore(-1)">查看全部<i class="moreIcon"></i></span>
     </div>
     <div class="orderBox">
@@ -49,7 +50,7 @@ export default {
   },
   methods: {
     oderListMore (type) {
-      this.$router.push('/orderList/' + type)
+      this.$router.push('/orderList1/' + type)
     }
   },
   mounted () {

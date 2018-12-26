@@ -176,10 +176,19 @@ const router = new Router({
       component: resolve => require(['@/pages/order/OrderIndex'], resolve)
     },
     {
-      path: '/orderList/:type',
-      name: 'orderList',
+      path: '/orderList1/:type',
+      name: 'orderList1',
       meta: { requireLogin: true },
       component: resolve => require(['@/pages/order/OrderList'], resolve)
+    },
+    {
+      path: '/orderList',
+      name: 'orderList',
+      meta: { requireLogin: true },
+      component: resolve => require(['@/pages/orderM/OrderList'], resolve),
+      children: [
+        {name: 'orderListStatus', path: ':status', component: resolve => require(['@/pages/orderM/OrderListStatus'], resolve)}
+      ]
     },
     {
       path: '/orderDetails/:type/:orderCode',

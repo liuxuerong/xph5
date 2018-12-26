@@ -164,7 +164,6 @@ export default {
         invoicingId: '',
         desc: ''
       }
-
     }
   },
   watch: {
