@@ -27,7 +27,7 @@
               <h4>{{addressInfo.receiverName}}</h4>
               <em>{{addressInfo.phone}}</em>
             </div>
-            <div class="infoBottom">{{addressInfo.province}}{{addressInfo.city}}{{addressInfo.area}}{{addressInfo.detailedAddr}}</div>
+            <p class="infoBottom">{{addressInfo.province}}{{addressInfo.city}}{{addressInfo.area}}{{addressInfo.detailedAddr}}</p>
           </div>
         </router-link>
         <router-link class="cellLink" to="goodsAddress/1" v-else>
@@ -41,28 +41,49 @@
             <order-item :pricesData="item" />
           </li>
         </ul>
-         <div class="remark border-top">
-           <span>备注</span>
-            <textarea name="" id="" cols="30" rows="10" placeholder="建议留言前先与客服进行沟通确认" v-model="params.desc"></textarea>
-         </div>
+        <div class="remark border-top">
+          <span>备注</span>
+          <CommonTextarea placeholder="建议留言前先与客服进行沟通确认" v-model="params.desc" @input="changeDesc" :max="100"></CommonTextarea>
+        </div>
       </div>
-      <div class="title">支付信息</div>
-      <div class="cellLink" @click.prevent="chooseCoupons" v-if="availableCoupon===1">
-        <div class="text border-bottom">使用优惠券<span class="fr" v-if="info&&info.couponName">{{info.couponName}}</span></div>
+      <div class="wrap">
+        <div class="cellLink">
+          <div>配送方式<span class="fr">快递 10元</span></div>
+        </div>
+        <div class="cellLink" @click.prevent="chooseCoupons">
+          <div class="text">优惠券<span class="fr" v-if="info&&info.couponName">{{info.couponName}}</span><span class="fr" v-else>无可用</span>
+          </div>
+        </div>
+        <div class="cellLink">
+          <div>开具发票<span class="fr"><x-switch  v-model="isInvoicing" title=""></x-switch></span>
+          </div>
+        </div>
+        <div v-if="isInvoicing">
+          <div class="cellLink">
+            <div>发票类型<span class="fr">电子普通发票</span></div>
+          </div>
+          <div class="cellLink">
+            <div>发票内容<span class="fr">商品明细</span></div>
+          </div>
+          <div class="cellLink">
+            <div class=" text">发票抬头<span class="fr">个人</span></div>
+          </div>
+        </div>
       </div>
-      <router-link class="cellLink" to="/invoice">
-        <div class="text">发票<span class="fr" v-if="info&&info.invoiceTypeValue">{{info.invoiceTypeValue}}&nbsp;&nbsp;{{info.invoiceStyleValue}}</span></div>
-      </router-link>
-      <div class="cutOffLine30"></div>
-      <div class="priceInfo">
-        <ul class="border-bottom">
-          <li v-if="totalPric!==''"><span class="name">商品金额：</span><span class="item">￥{{totalPric}}</span></li>
-          <li>优惠<span class="item">-￥{{offerAmount}}</span></li>
-          <li v-if="shippingAmount!==''"><span class="name"> 运费 </span><span class="item">￥{{shippingAmount}}</span></li>
-          <!-- <li><span class="name">居家商品满2000减200</span><span class="item">-￥200</span></li> -->
-        </ul>
-        <div class="total">
-          实付：￥{{needPayPrice}}
+
+      <!-- <router-link class="cellLink" to="/invoice">
+          <div class="text">发票<span class="fr" v-if="info&&info.invoiceTypeValue">{{info.invoiceTypeValue}}&nbsp;&nbsp;{{info.invoiceStyleValue}}</span></div>
+        </router-link> -->
+      <!-- <div class="cutOffLine30"></div> -->
+      <div class="wrap">
+        <div class="cellLink lh80">
+          <div>商品金额<span class="fr">￥{{totalPric}}</span></div>
+        </div>
+        <div class="cellLink lh80">
+          <div>优惠<span class="fr">￥{{offerAmount}}</span></div>
+        </div>
+        <div class="cellLink lh80">
+          <div>运费<span class="fr">￥{{shippingAmount}}</span></div>
         </div>
       </div>
 
@@ -70,7 +91,7 @@
     </div>
     <div class="bottom">
       <div class="price">￥{{needPayPrice}}</div>
-      <span class="pay" @click="createOrder">立即支付</span>
+      <span class="pay" @click="createOrder">提交订单</span>
     </div>
   </div>
 </template>
@@ -79,11 +100,13 @@
 import CommonNavHeader from 'common/commonHeader/CommonNavHeader'
 import OrderPopUp from './components/OrderPopUp'
 import OrderItem from './components/OrderItem'
+import CommonTextarea from 'common/commonTextarea/CommonTextarea'
 import {
   Toast
 } from 'mint-ui'
 import {
-  Popover
+  Popover,
+  XSwitch
 } from 'vux'
 import {
   http
@@ -110,10 +133,13 @@ export default {
     CommonNavHeader,
     OrderItem,
     Popover,
-    OrderPopUp
+    OrderPopUp,
+    XSwitch,
+    CommonTextarea
   },
   data () {
     return {
+      text: 'fff',
       canClick: true,
       title: '确认订单',
       availableCoupon: '',
@@ -130,6 +156,7 @@ export default {
       offerAmount: '',
       cartList: '',
       addressInfo: null,
+      isInvoicing: false,
       params: {
         favorableId: '',
         key: '',
@@ -166,6 +193,9 @@ export default {
     next()
   },
   methods: {
+    changeDesc (v) {
+      this.params.desc = v
+    },
     remove () {
       let goodsInfoCart = storage.getLocalStorage(goodsInfo)
       if (goodsInfoCart.goodsItems.length > this.unsatisfactoryData.length) {
@@ -227,6 +257,7 @@ export default {
         }
         http(goodOrderData, params).then(res => {
           if (res.data.code === 0) {
+            console.log(res.data.body)
             params.key = res.data.body.key
             this.availableCoupon = res.data.body.availableCoupon
             this.pricesData = res.data.body.orderGoodsItems
@@ -275,6 +306,7 @@ export default {
     },
     createOrder () {
       let params = {}
+      console.log(this.params)
       const info = storage.getLocalStorage(goodsInfo)
       const orderInfoData = storage.getLocalStorage(orderInfo)
       params.fromCart = info.fromCart || false
@@ -341,6 +373,26 @@ export default {
 <style lang="stylus" scoped>
 .createOrder>>>.commonNavHeader
   overflow visible
+.createOrder >>> .weui-switch
+  width 153px
+  height 100px
+  border-radius 80px
+  border 2px solid #DDDDDD
+  background-color #fff
+.createOrder >>> .weui-switch:before
+  width 100%
+  height 100%
+  border-radius 80px
+  background-color #fff
+.createOrder >>> .weui-switch:after
+  width 90px
+  height 90px
+  border-radius 45px
+  top 3px
+.createOrder >>> .weui-switch:checked:after
+  transform translateX(56px)
+.createOrder >>> .weui-switch:checked
+  background-color #4CD964
 .popUp
   position absolute
   right 50px
@@ -371,32 +423,41 @@ export default {
       font-size 46px
       font-weight bold
       padding-left 50px
+    .lh80.cellLink
+      line-height 128px
+      div
+        line-height 128px
     .cellLink
       line-height 148px
       padding 0 50px
       display inline-block
       width 100%
-      .text
+      div
         line-height 148px
         position relative
         width 100%
         font-size 40px
-        color #262626
+        color #333
         span
           position absolute
-          right 60px
-          color #999999
+          right 0px
+          color #333
+      .text
+        span
+          position absolute
+          right 40px
       .text::after
         content ''
         position absolute
         right 10px
         top 50%
-        margin-top -15px
-        width 30px
-        height 30px
-        border-right 2px solid #666
-        border-top 2px solid #666
+        margin-top -12px
+        width 24px
+        height 24px
+        border-right 2px solid #B3B3B3
+        border-top 2px solid #B3B3B3
         transform rotate(45deg)
+
   .priceInfo
     background-color #fff
     ul
@@ -420,6 +481,7 @@ export default {
   .remark
     display flex
     algin-items center
+    margin-top 30px
     span
       font-size 40px
       color #333
@@ -433,6 +495,7 @@ export default {
     font-size 40px
     background-color #fff
     flex 1
+    font-weight normal
   textarea::-webkit-input-placeholder
     color #CCCCCC
     font-size 40px
@@ -454,16 +517,18 @@ export default {
     background-color #fff
     .price
       flex 1
-      text-align center
+      text-align left
+      padding-left 50px
       color #262626
-      font-size 46px
+      font-size 56px
+      font-weight 600
       line-height 146px
     .pay
-      width 675px
+      width 340px
       line-height 148px
-      background-color #F0F0F0
+      background:linear-gradient(-45deg,rgba(172,124,98,1),rgba(220,166,116,1));
       text-align center
-      color #BA825A
+      color #fff
       font-size 46px
   .goodsItem
     padding 50px 50px 0
@@ -478,14 +543,19 @@ export default {
     .infoTop
       color #333333
       font-size 50px
+      font-weight 600
       h4
         display inline-block
         height 140px
         line-height 140px
+        color #333333
+        font-size 50px
       em
         display inline-block
         height 140px
         line-height 140px
+        color #333333
+        font-size 50px
   .infoBottom
     line-height 50px
     color #333333

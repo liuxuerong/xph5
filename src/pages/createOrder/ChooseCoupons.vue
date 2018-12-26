@@ -295,8 +295,8 @@ export default {
     width calc(100% - 100px)
     height 140px
     line-height 140px
-    border 1px solid #ba825a
     font-size 50px
+    background #fff
     color #ba825a
     text-align center
     position fixed

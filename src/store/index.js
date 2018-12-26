@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import createPersistedState from 'vuex-persistedstate'
 import getters from './getters'
 import home from './modules/home'
 import details from './modules/details'
@@ -17,5 +18,6 @@ export default new Vuex.Store({
     returnVal,
     coupon
   },
-  getters
+  getters,
+  plugins: [createPersistedState()]
 })

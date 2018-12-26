@@ -23,7 +23,8 @@
 
       <div class="addressItem details clearfix">
         <span>详细地址</span>
-        <x-input placeholder="填写详细地址" v-model.trim="user.detailedAddr"></x-input>
+         <CommonTextarea placeholder="填写详细地址" v-model="user.detailedAddr" @input="changeDesc" :max="100"></CommonTextarea>
+        <!-- <x-input placeholder="填写详细地址" v-model.trim="user.detailedAddr"></x-input> -->
       </div>
       <div class="cutOffLine30"></div>
       <div class="addressItem">
@@ -37,6 +38,7 @@
 
 <script>
 import UserinfoHeader from './components/ComUserSetHeader'
+import CommonTextarea from 'common/commonTextarea/CommonTextarea'
 import {
   Toast
 } from 'mint-ui'
@@ -88,7 +90,15 @@ export default {
       fromRoute: null
     }
   },
-
+  components: {
+    UserinfoHeader,
+    Group,
+    XAddress,
+    XButton,
+    Cell,
+    XInput,
+    CommonTextarea
+  },
   validations: {
     user: {
       phone: {
@@ -99,15 +109,9 @@ export default {
         required,
         maxLength: maxLength(25)
       },
-      // value: {
-      //   required
-      // },
       detailedAddr: {
         required
       }
-      // names: {
-      //   required
-      // }
 
     }
   },
@@ -119,15 +123,11 @@ export default {
     }
     next()
   },
-  components: {
-    UserinfoHeader,
-    Group,
-    XAddress,
-    XButton,
-    Cell,
-    XInput
-  },
+
   methods: {
+    changeDesc (v) {
+      this.user.detailedAddr = v
+    },
     // 修改地址渲染
     addressRender () {
       let id = this.$route.params.id
@@ -298,6 +298,33 @@ export default {
 </script>
 
 <style lang="stylus">
+.addressConter
+  .addressItem
+    textarea
+      font-weight 600 !important
+      padding 36px 0 0 0  !important
+      font-size 46px !important
+      color #333333 !important
+    textarea::-webkit-input-placeholder {
+        color: #ccc;
+        font-size 46px
+        font-weight normal
+      }
+    textarea::-moz-placeholder {
+        color: #ccc;
+        font-size 46px
+        font-weight normal
+      }
+    textarea:-ms-input-placeholder {
+        color: #ccc;
+        font-size 46px
+        font-weight normal
+      }
+    textarea:-moz-placeholder {
+        color: #ccc;
+        font-size 46px
+        font-weight normal
+      }
 .vux-popup-picker-container
   .vux-no-group-title
     margin-top 0
@@ -395,6 +422,10 @@ export default {
       font-size 46px
       color #666666
       margin-right 40px
+      vertical-align middle
+      display inline-block
+      min-height 134px
+      line-height 134px
     input[type="text"]
       float left
       width 75%

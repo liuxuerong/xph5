@@ -212,6 +212,6 @@ body, html, #app{
 .mint-cell-wrapper{
   padding: 0 !important;
 }
-.vux-x-input .weui-icon{
-  font-size: 40px;
+.vux-x-input .weui-icon ,.weui-icon-clear{
+  font-size: 40px !important;
 }
