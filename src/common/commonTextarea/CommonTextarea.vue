@@ -1,6 +1,6 @@
 <template>
   <div class="commonTextarea">
-    <textarea name="" id="" cols="cols" rows="rows" :placeholder="placeholder" v-model="currentValue" @focus ="focus" @blur = "blur"></textarea>
+    <textarea name="" id="" cols="cols" rows="rows" :placeholder="placeholder" v-model="currentValue"></textarea>
     <icon type="clear" @click.native="clear" v-if="clearShow"/>
   </div>
 </template>
@@ -47,6 +47,9 @@ export default {
   watch: {
     value (val) {
       this.currentValue = val
+      if (val.length) {
+        this.clearShow = true
+      }
     },
     currentValue (newVal) {
       if (this.max && newVal && newVal.length > this.max) {
@@ -57,18 +60,17 @@ export default {
           duration: 2000
         })
       }
+      if (newVal.length) {
+        this.clearShow = true
+      } else {
+        this.clearShow = false
+      }
       this.$emit('input', this.currentValue)
     }
   },
   methods: {
     clear () {
       this.currentValue = ''
-    },
-    focus () {
-      this.clearShow = true
-    },
-    blur () {
-      this.clearShow = false
     }
   }
 }

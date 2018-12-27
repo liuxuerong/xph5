@@ -49,7 +49,7 @@ export const listCart = { url: '/cart/carts', method: 'GET', version: v2 } // �
 // 获取订单详情
 export const goodOrderData = { url: '/order/detail', method: 'POST', version: v1 }
 // 确认订单
-export const createOrderData = { url: '/order/create', method: 'POST', version: v1 }
+export const createOrderData = { url: '/order/create', method: 'POST', version: v2 }
 // 检查订单
 export const checkOrderData = { url: '/order/check', method: 'GET', version: v1, join: true }
 // 支付
@@ -93,6 +93,7 @@ export const memberCenter = { url: '/member/api/center', method: 'GET', version:
 // 订单
 export const OrderList1 = { url: '/order/member/orders', method: 'GET', version: v1 } // 订单列表
 export const OrderList = { url: '/order/member/orders', method: 'GET', version: v2 } // 订单列表
+export const orderDetails = {url: '/order/detail', method: 'GET', version: v2, join: true}// v2版本获取订单详情
 export const cancelOrder = { url: '/order/cancel', method: 'PUT', version: v1, join: true } // 取消订单
 export const subOrderDetail = { url: '/order/detail', method: 'GET', version: v1, join: true } // 子订单详情
 export const refundOrderDetail = { url: '/order/detail', method: 'GET', version: v1, join: true } // 退款订单详情

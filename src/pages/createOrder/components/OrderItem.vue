@@ -60,7 +60,8 @@ export default {
       width 100%
       height 100%
   .info
-    width 70%
+    flex 1
+    width 60%
     padding-left 50px
     align-items top
     justify-content space-between

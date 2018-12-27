@@ -3,7 +3,7 @@
     <div>
       <ul>
         <li v-if="list.length" v-for="item in list" :key="item.orderId">
-          <order-item v-if="item.memberOrderGoods" v-for="goods in item.memberOrderGoods" :key="goods.goodsId" :pricesData="goods"></order-item>
+          <order-item v-if="item.memberOrderGoods" v-for="goods in item.memberOrderGoods" :key="goods.goodsId" :orderSn="item.orderSn" :pricesData="goods"></order-item>
           <div class="itemBottom">
             <div class="info clearfix">
               <i class="status">{{item.statusDesc}}</i>
@@ -14,6 +14,7 @@
                 <em>合计：
                   <i class="price">
                     ￥{{item.needPayAmount}}
+                    ￥{{item.totalAmount}}
                   </i>
                 </em>
               </span>
@@ -29,13 +30,16 @@
           </div>
         </li>
       </ul>
+       <common-empty v-if="!noMore&&!list.length" :emptyObj="emptyObj" />
+      <divider v-if="noMore">已经到达最底部</divider>
     </div>
-    <common-empty v-if="!noMore&&!list.length" :emptyObj="emptyObj" />
-    <divider v-if="noMore">已经到达最底部</divider>
   </div>
 </template>
 
 <script>
+import {
+  Divider
+} from 'vux'
 import {
   http
 } from 'util/request'
@@ -49,7 +53,8 @@ export default {
   name: 'OrderListStatus',
   components: {
     OrderItem,
-    CommonEmpty
+    CommonEmpty,
+    Divider
   },
   data () {
     return {
@@ -72,6 +77,9 @@ export default {
   watch: {
     '$route' (to, from) {
       if (to.name === 'orderListStatus') {
+        this.noMore = false
+        this.page = 1
+        this.list = []
         this.getList()
       }
     }
@@ -85,11 +93,13 @@ export default {
         rows: 20,
         status: this.currentIndex
       }
+      console.log(this.noMore)
       if (!this.noMore) {
         http(OrderList, params).then((res) => {
           console.log(res)
           if (res.data.code === 0) {
             this.list = [...this.list, ...res.data.body.list]
+            console.log(this.list)
             this.scrollInit()
             if (this.page !== 1 && res.data.body.list.length === 0) {
               this.scroll.finishPullUp()
@@ -133,8 +143,13 @@ export default {
 
 <style lang="stylus" scoped>
 .orderListStatus
-  height 100%
+  height calc(100%-(120px))
   padding 0 50px
+  z-index -1
+  overflow hidden
+  &>div
+    padding-top 40px
+    padding-bottom 140px
   li
     background-color #fff
     border-radius 20px
@@ -178,4 +193,6 @@ export default {
     .glod
       color #BA825A
       border 2px solid #BA825A
+  .commonEmpty
+    background-color #f5f5f5
 </style>

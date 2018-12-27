@@ -180,7 +180,7 @@ export default {
       let _this = this
       let type = this.$route.params.type
       if (type !== '5') {
-        _this.$router.push('/orderDetails/' + this.type + '/' + item.orderSn)
+        _this.$router.push('/orderDetails1/' + this.type + '/' + item.orderSn)
       } else if (type === '5') {
         // 申请售后
         if (item.afterSalesType === 1) {

@@ -70,7 +70,6 @@ export default {
 
   },
   mounted () {
-    console.log(7898)
     this.currentIndex = this.$route.path.split('/')[2]
   }
 }
@@ -79,6 +78,7 @@ export default {
 <style lang="stylus" scoped>
 .orderListWrap
   height 100%
+  padding-top 104px
 .orderList>>>.vux-tab .vux-tab-item.vux-tab-selected
   color #333333
   border-bottom 8px solid #262626
@@ -110,12 +110,11 @@ export default {
     font-weight 600
     width auto
 .orderList
-  padding-top 120px
   height 100%
   background-color #F5F5F5
 .topTap
-  margin-bottom 30px
   height 120px
+  z-index 99999999
   a
     color #666666
 </style>

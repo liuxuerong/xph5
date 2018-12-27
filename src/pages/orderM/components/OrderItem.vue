@@ -1,33 +1,34 @@
 <template>
   <div class="orderItem">
-    <router-link :to="'/details/'+pricesData.goodsId">
-      <div class="imgContainer">
-        <img v-lazy="imageUrl+pricesData.pic" alt="">
-      </div>
-      <div class="info">
-        <p class="name">
-          {{pricesData.goodsName}}
-        </p>
-        <div class="wrap">
-          <div class="promotion">
-            {{formatSpec}}
-          </div>
-          <div class="num">
-            x{{pricesData.num}}
-          </div>
-        </div>
-        <div class="wrap">
-          <p class="price">¥{{pricesData.actualPrice}}</p>
-          <div class="status">
-            x{{pricesData.num}}
-          </div>
-          <!-- <div class="btn">
-            已退款
-          </div> -->
-        </div>
 
+    <div class="imgContainer">
+      <router-link :to="'/details/'+pricesData.goodsId">
+        <img v-lazy="imageUrl+pricesData.pic" alt="">
+      </router-link>
+    </div>
+    <div class="info" @click="goDetails">
+      <p class="name">
+        {{pricesData.goodsName}}
+      </p>
+      <div class="wrap goods">
+        <div class="promotion">
+          {{formatSpec}}
+        </div>
+        <div class="num">
+          x{{pricesData.num}}
+        </div>
       </div>
-    </router-link>
+      <div class="wrap">
+        <p class="price">¥{{pricesData.actualPrice}}</p>
+        <div class="status" v-if="isDetails">
+          x{{pricesData.num}}
+        </div>
+        <div class="btn" v-else>
+          已退款
+        </div>
+      </div>
+
+    </div>
   </div>
 </template>
 
@@ -40,6 +41,14 @@ export default {
   props: {
     pricesData: {
       type: Object
+    },
+    isDetails: {
+      type: Boolean,
+      default: false
+    },
+    orderSn: {
+      type: String,
+      default: ''
     }
   },
   computed: {
@@ -52,6 +61,15 @@ export default {
       }
       spec = spec.substring(0, spec.length - 1)
       return spec
+    }
+  },
+  methods: {
+    // 订单详情
+    goDetails () {
+      if (!this.isDetails) {
+        console.log(this.orderSn)
+        this.$router.push(`/orderDetails/${this.orderSn}`)
+      }
     }
   },
   data () {
@@ -68,13 +86,16 @@ export default {
   font-size 40px
   width 100%
   padding 50px
-  a
-    display flex
-    width 100%
-    align-items center
+  display flex
+  width 100%
+  align-items center
   .imgContainer
     width 286px
     height 286px
+    a
+      display inline-block
+      width 100%
+      height 100%
     img
       width 100%
       height 100%
@@ -142,4 +163,5 @@ export default {
     width 14%
     vertical-align top
     text-align right
+
 </style>

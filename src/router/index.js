@@ -100,6 +100,12 @@ const router = new Router({
       component: resolve => require(['@/pages/invoice/Invoice'], resolve)
     },
     {
+      path: '/invoiceInfo',
+      name: 'invoiceInfo',
+      meta: { requireLogin: true },
+      component: resolve => require(['@/pages/invoice/InvoiceInfo'], resolve)
+    },
+    {
       path: '/instructions',
       name: 'Instructions',
       component: resolve => require(['@/pages/invoice/Instructions'], resolve)
@@ -191,10 +197,16 @@ const router = new Router({
       ]
     },
     {
-      path: '/orderDetails/:type/:orderCode',
+      path: '/orderDetails1/:type/:orderCode',
       name: 'orderDetails',
       meta: { requireLogin: true },
       component: resolve => require(['@/pages/order/OrderDetails'], resolve)
+    },
+    {
+      path: '/orderDetails/:orderSn',
+      name: 'orderDetails',
+      meta: { requireLogin: true },
+      component: resolve => require(['@/pages/orderM/OrderDetails'], resolve)
     },
     {
       path: '/immedPayment/:orderCode',

@@ -1,22 +1,6 @@
 <template>
   <div class="createOrder">
     <common-nav-header :title="title">
-      <popover placement="bottom" class="popUp">
-        <span class="nav">...</span>
-        <div slot="content" class="popover-demo-content">
-          <ul>
-            <li class="border-bottom">
-              <router-link to="/" class="item">体验馆</router-link>
-            </li>
-            <li class="border-bottom">
-              <span @click="customerService" class="item">联系客服</span>
-            </li>
-            <li class="border-bottom">
-              <router-link to="/search" class="item">搜索</router-link>
-            </li>
-          </ul>
-        </div>
-      </popover>
     </common-nav-header>
     <div class="createOrderWrap" v-if="!unsatisfactoryData.length">
       <div class="cutOffLine30"></div>
@@ -60,7 +44,7 @@
         </div>
         <div v-if="isInvoicing">
           <div class="cellLink">
-            <div>发票类型<span class="fr">电子普通发票</span></div>
+            <div class="text" @click="openType">发票类型<span class="fr">电子普通发票</span></div>
           </div>
           <div class="cellLink">
             <div>发票内容<span class="fr">商品明细</span></div>
@@ -72,8 +56,8 @@
       </div>
 
       <!-- <router-link class="cellLink" to="/invoice">
-          <div class="text">发票<span class="fr" v-if="info&&info.invoiceTypeValue">{{info.invoiceTypeValue}}&nbsp;&nbsp;{{info.invoiceStyleValue}}</span></div>
-        </router-link> -->
+                <div class="text">发票<span class="fr" v-if="info&&info.invoiceTypeValue">{{info.invoiceTypeValue}}&nbsp;&nbsp;{{info.invoiceStyleValue}}</span></div>
+              </router-link> -->
       <!-- <div class="cutOffLine30"></div> -->
       <div class="wrap">
         <div class="cellLink lh80">
@@ -93,6 +77,37 @@
       <div class="price">￥{{needPayPrice}}</div>
       <span class="pay" @click="createOrder">提交订单</span>
     </div>
+    <mt-popup position="bottom" v-model="invoiceVisible" @touchmove.prevent>
+      <div class="popWrap">
+        <div class="title">
+          发票类型
+          <div class="close" @click="closeType">×</div>
+        </div>
+          <ul>
+           <li :class="{active:test==='One'}">
+              <label for="invoice1">
+                <div class="top">
+                  <h3 class="name">电子普通发票</h3>
+                <span class="radioWrap"><icon :type="test==='One'?'success':'circle'"></icon><input type="radio" value="One" v-model="test" id="invoice1"></span>
+                </div>
+                <p>电子普通发票与纸质普通发票具备同等法律效力,可支持报销入账</p>
+              </label>
+            </li>
+            <li :class="{active:test!=='One'}">
+              <label for="invoice2">
+                <div class="top">
+                <h3 class="name">增值税专用发票</h3>
+                <span class="radioWrap"> <icon :type="test==='One'?'circle':'success'"></icon><input type="radio" value="Two" v-model="test" id="invoice2"></span>
+                 </div>
+                <p>我司依法开具发票，如你购买的商品按税法规定属于不得从增值税销项税额中抵扣的项目，请选择普通发票</p>
+              </label>
+            </li>
+          </ul>
+        <div class="bottomClose" @click="closeType">
+          关闭
+        </div>
+      </div>
+    </mt-popup>
   </div>
 </template>
 
@@ -102,11 +117,12 @@ import OrderPopUp from './components/OrderPopUp'
 import OrderItem from './components/OrderItem'
 import CommonTextarea from 'common/commonTextarea/CommonTextarea'
 import {
-  Toast
+  Toast,
+  Popup
 } from 'mint-ui'
 import {
-  Popover,
-  XSwitch
+  XSwitch,
+  Icon
 } from 'vux'
 import {
   http
@@ -114,8 +130,7 @@ import {
 import {
   goodOrderData,
   createOrderData,
-  customerService,
-  listDelivery
+  customerService
 } from 'util/netApi'
 import {
   storage
@@ -132,14 +147,15 @@ export default {
   components: {
     CommonNavHeader,
     OrderItem,
-    Popover,
     OrderPopUp,
     XSwitch,
-    CommonTextarea
+    CommonTextarea,
+    'mt-popup': Popup,
+    Icon
   },
   data () {
     return {
-      text: 'fff',
+      text: '',
       canClick: true,
       title: '确认订单',
       availableCoupon: '',
@@ -156,8 +172,11 @@ export default {
       offerAmount: '',
       cartList: '',
       addressInfo: null,
-      isInvoicing: false,
+      isInvoicing: true,
+      invoiceVisible: false,
+      test: 'One',
       params: {
+        sourcePort: 1,
         favorableId: '',
         key: '',
         goodsItems: [],
@@ -195,6 +214,14 @@ export default {
     changeDesc (v) {
       this.params.desc = v
     },
+    // 打开发票类型弹窗
+    openType () {
+      this.invoiceVisible = true
+    },
+    // 关闭发票类型弹窗
+    closeType () {
+      this.invoiceVisible = false
+    },
     remove () {
       let goodsInfoCart = storage.getLocalStorage(goodsInfo)
       if (goodsInfoCart.goodsItems.length > this.unsatisfactoryData.length) {
@@ -215,28 +242,28 @@ export default {
       }
     },
     // 获取地址
-    getAddress () {
-      let params = {
-        page: 1,
-        rows: 20
-      }
-      http(listDelivery, params).then(res => {
-        console.log(res)
-        let addressList = res.data.body.list
-        let flag = true
-        for (let item of addressList) {
-          if (item.idDefault) {
-            this.addressInfo = item
-            flag = false
-          }
-        }
-        if (flag) {
-          this.addressInfo = addressList[0]
-        }
-      }).catch(err => {
-        console.log(err)
-      })
-    },
+    // getAddress () {
+    //   let params = {
+    //     page: 1,
+    //     rows: 20
+    //   }
+    //   http(listDelivery, params).then(res => {
+    //     console.log(res)
+    //     let addressList = res.data.body.list
+    //     let flag = true
+    //     for (let item of addressList) {
+    //       if (item.idDefault) {
+    //         this.addressInfo = item
+    //         flag = false
+    //       }
+    //     }
+    //     if (flag) {
+    //       this.addressInfo = addressList[0]
+    //     }
+    //   }).catch(err => {
+    //     console.log(err)
+    //   })
+    // },
     getDetails () {
       let goodsInfoCart = storage.getLocalStorage(goodsInfo)
       this.unsatisfactoryData = []
@@ -262,6 +289,7 @@ export default {
             this.pricesData = res.data.body.orderGoodsItems
             this.shippingAmount = res.data.body.shippingAmount
             this.offerAmount = res.data.body.offerAmount
+            this.addressInfo = res.data.body.delivery
             for (let i = 0; i < this.pricesData.length; i++) {
               let spec = JSON.parse(this.pricesData[i].spec)
               this.pricesData[i].spec = []
@@ -309,9 +337,10 @@ export default {
       const info = storage.getLocalStorage(goodsInfo)
       const orderInfoData = storage.getLocalStorage(orderInfo)
       params.fromCart = info.fromCart || false
-      params.deliveryId = orderInfoData.addressId
+      params.deliveryId = orderInfoData.addressId || this.addressInfo.id
       params.invoicingId = orderInfoData.invoicingId
-      params.shippingMethod = orderInfoData.shippingMethod
+      // params.shippingMethod = orderInfoData.shippingMethod
+      params.shippingMethod = 2
       params.favorableId = orderInfoData.couponId
       params.invoicingType = this.invoicingType
       params = Object.assign(this.params, params)
@@ -361,15 +390,18 @@ export default {
 
   created () {
     this.getDetails()
-    this.getAddress()
+    // this.getAddress()
   },
   mounted () {
+    // 获取从其他页面带过来的信息
     this.getOrderInfo()
   }
 }
 </script>
 
 <style lang="stylus" scoped>
+.createOrder>>>.v-modal
+  z-index 99999 !important
 .createOrder>>>.commonNavHeader
   overflow visible
 .createOrder >>> .weui-switch
@@ -560,6 +592,72 @@ export default {
     color #333333
     font-size 40px
     margin-bottom 40px
+.popWrap
+  .bottomClose
+    height 250px
+    line-height 250px
+    background-color #F0F0F0
+    font-size 50px
+    color #BA825A
+    text-align center
+  .title
+    height 190px
+    line-height 190px
+    color #333333
+    font-size 56px
+    font-weight 600
+    text-align center
+    position relative
+    .close
+      position absolute
+      right 0
+      top 0
+      color #999999
+      font-weight normal
+      width 100px
+      height 190px
+  ul
+    padding 0 50px
+    li.active
+      border none
+      background #FAF7F3
+      border 2px solid #FAF7F3
+    li
+      border 2px solid #E6E6E6
+      border-radius 20px
+      margin-bottom 30px
+      padding 20px 50px
+      .top
+        display flex
+        justify-content space-between
+        align-items center
+      label
+        display inline-block
+        width 100%
+        height 100%
+      .name
+        font-size 46px
+        color #333333
+        line-height 100px
+        display inline-block
+        opacity 1
+      p
+        font-size 36px
+        color #999999
+  .radioWrap
+    position relative
+    width 80px
+    height 80px
+    overflow hidden
+    display inline-block
+    input
+      position absolute
+      top 0
+      left 0
+      z-index 999999
+      opacity 0
+      width 60px
+      height 60px
 
 </style>
 
@@ -582,4 +680,16 @@ export default {
       display inline-block
       line-height 97px
       padding-left 50px
+.createOrder
+  .mint-popup
+    width 100%
+    z-index 999999 !important
+.radioWrap
+  .weui-icon
+    width 60px
+    height 60px
+    font-size 50px
+    line-height 70px
+  .weui-icon-success
+    color #BA825A
 </style>
