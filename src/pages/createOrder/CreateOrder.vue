@@ -172,7 +172,7 @@ export default {
       offerAmount: '',
       cartList: '',
       addressInfo: null,
-      isInvoicing: true,
+      isInvoicing: false,
       invoiceVisible: false,
       test: 'One',
       params: {

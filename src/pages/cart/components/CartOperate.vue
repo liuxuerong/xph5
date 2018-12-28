@@ -7,7 +7,7 @@
     <span class="price" v-if="!showModify"><i>合计：</i>￥{{price.toFixed(2)}}</span>
     <span class="btn" v-if="!showModify" @click="buy">结算<i>({{clearNum.length}})</i></span>
     <div class="btnWrap" v-else>
-      <span class="collect" >移入收藏夹</span>
+      <span class="collect" @click="collectBatch">移入收藏夹</span>
       <span class="delBtn" :class="{active:clearBtn}" @click="sureDel">删除</span>
     </div>
   </div>
@@ -25,7 +25,8 @@ import {
   http
 } from 'util/request'
 import {
-  delCart
+  delCart,
+  batchCollection
 } from 'util/netApi'
 import {
   CheckIcon
@@ -116,6 +117,23 @@ export default {
         }
       }
       this.changeGoodsList(goodsList)
+    },
+    // 批量移入收藏夹
+    collectBatch () {
+      console.log(this.clearNum)
+      let params = []
+      for (let item of this.clearNum) {
+        params.push({collectionDataId: item.goodsId, collectionType: 1})
+      }
+
+      http(batchCollection, params, 'noloading').then(res => {
+        console.log(res)
+        if (res.data.code === 0) {
+          notice.alert('', '成功移入收藏夹，你可以在  我的-商品收藏  中找到。')
+        }
+      }).catch(err => {
+        console.log(err)
+      })
     },
     sureDel () {
       console.log(this.goodsList)

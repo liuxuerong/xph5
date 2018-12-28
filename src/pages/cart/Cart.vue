@@ -347,6 +347,7 @@ export default {
     position absolute
     right 50px
     top 0
+    font-weight normal
   .goodsWrap
     height 100%
     &>div

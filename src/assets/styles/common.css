@@ -215,3 +215,6 @@ body, html, #app{
 .vux-x-input .weui-icon ,.weui-icon-clear{
   font-size: 40px !important;
 }
+.weui-icon_toast.weui-icon-success-no-circle:before{
+  font-size: 160px !important;
+}

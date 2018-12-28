@@ -30,6 +30,7 @@ export const goodscollectionList = { url: '/member/collection/list/1', method: '
 export const articlecollectionlist = { url: '/member/collection/list/2', method: 'GET', version: v1 } // 文章收藏
 export const opCollection = { url: '/member/collection', method: 'POST', version: v1 } // 新增 / 取消
 export const isCollection = { url: '/member/collection/check', method: 'POST', version: v1 } // 是否收藏
+export const batchCollection = { url: '/member/collection/update/batch', method: 'POST', version: v1 } // 批量收藏
 
 // 分类
 export const category = { url: '/goods/categorys', method: 'GET', version: v1 } // tab
@@ -53,7 +54,8 @@ export const createOrderData = { url: '/order/create', method: 'POST', version: 
 // 检查订单
 export const checkOrderData = { url: '/order/check', method: 'GET', version: v1, join: true }
 // 支付
-export const payMoney = { url: '/pay/pay', method: 'POST', version: '' }
+export const payMoney = { url: '/pay/pay', method: 'POST', version: v2 }
+export const payMoney1 = { url: '/pay/pay', method: 'POST', version: '' }
 
 // 获取会员资料
 export const memberData = { url: '/member/api/obtainMemberData', method: 'GET', version: v1 }

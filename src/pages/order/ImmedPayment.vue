@@ -4,10 +4,9 @@
     <div class="paymentCon">
       <div class="paymentTitle">支付中心</div>
       <div class="paymentOrder" v-if="list">
-        <span>订单编号：{{list.orderSn}}</span>
-        <span>付款总额：￥ {{list.needPayAmount}}</span>
+        <span class="needPay">需支付：<i>￥ {{list.needPayAmount.toFixed(2)}}</i></span>
+        <span class="time">剩余时间: <i>{{remainingTime}}</i> </span>
       </div>
-      <div class="paymentTitle">请选择支付方式</div>
       <div class="paymentWay">
         <div class="paymentItem clearfix">
           <i class="paymentImg alipayImg"></i>
@@ -22,7 +21,6 @@
       </div>
     </div>
     <div class="immedPayment" @click="immedPayment">立即支付
-      <!-- <span class="surplusTime">16:50:36</span> -->
     </div>
   </div>
 </template>
@@ -34,34 +32,64 @@ import {
   immedPaymentMony
 } from 'util/const.js'
 import SearchTitle from './ComOrderSearchTitle'
-import {payMoney, subOrderDetail} from 'util/netApi'
+import {payMoney, orderDetails} from 'util/netApi'
 import {http} from 'util/request'
 import notice from 'util/notice'
+import { Confirm } from 'vux'
 export default {
   data () {
     return {
-      title: '支付方式',
+      title: '收银台',
       list: null,
-      readioActive: ''
+      readioActive: '',
+      confirmTime: '',
+      remainingTime: ''
     }
   },
   components: {
-    SearchTitle
+    SearchTitle,
+    Confirm
   },
   watch: {
     '$route' (to, from) {
       this.$router.go(0)
     }
   },
+  beforeRouteLeave (to, from, next) {
+    if (this.remainingTime !== '00:00') {
+      notice.confirm2('确认离开收银台', `离开后订单在${this.remainingTime}后将取消`, next, '继续支付', '确认离开')
+    } else {
+      next()
+    }
+  },
   methods: {
     // 支付页面渲染
     paymentRender () {
       let orderSn = this.$route.params.orderCode
-      http(subOrderDetail, [orderSn]).then((response) => {
+      http(orderDetails, [orderSn]).then((response) => {
         this.list = response.data.body
+        this.confirmTime = this.list.allowPayTime.replace('T', ' ')
+        let _this = this
+        _this.remainingTime = _this.formatDuring(new Date(_this.confirmTime).getTime() - new Date())
+        this.timer = setInterval(() => {
+          let time = new Date(_this.confirmTime).getTime() - new Date()
+          _this.remainingTime = _this.formatDuring(time)
+        }, 1000)
       }).catch((err) => {
         console.log(err)
       })
+    },
+    // 时间格式化
+    formatDuring (mss) {
+      if (mss > 0) {
+        let minutes = parseInt((mss % (1000 * 60 * 60)) / (1000 * 60))
+        let seconds = parseInt(mss % (1000 * 60) / 1000)
+        minutes = minutes > 9 ? minutes : '0' + minutes
+        seconds = seconds > 9 ? seconds : '0' + seconds
+        return `${minutes}:${seconds}`
+      } else {
+        return `00:00`
+      }
     },
     // 选择支付方式
     redioSelect (paymentWay) {
@@ -69,6 +97,10 @@ export default {
     },
     // 立即支付
     immedPayment () {
+      if (this.remainingTime === '00:00') {
+        notice.alert('继续支付')
+        return
+      }
       if (this.readioActive !== '') {
         let orderSn = this.$route.params.orderCode
         let params = {
@@ -79,16 +111,27 @@ export default {
           // 提交接口成功
           if (response.data.code === 0) {
             // 支付宝
+            let obj = {
+              needPayAmount: this.list.needPayAmount,
+              orderSn: this.list.orderSn,
+              deliveryPeople: this.list.deliveryPeople
+            }
             if (this.readioActive === 2) {
-              storage.setLocalStorage(immedPaymentMony, this.list.needPayAmount)
+              obj = Object.assign(obj, {
+                payWay: '支付宝'
+              })
               let dom = document.createElement('div')
               dom.innerHTML = response.data.body
               document.body.appendChild(dom)
               document.forms[0].submit()
             } else if (this.readioActive === 5) {
+              obj = Object.assign(obj, {
+                payWay: '微信'
+              })
               // console.log('weixin://wap/pay?appid=' + response.data.body.appid + '&noncestr=' + response.data.body.noncestr + '&package=' + response.data.body.package + '&prepayid=' + response.data.body.prepayid + '&sign=' + response.data.body.sign + '&timestamp=' + response.data.body.timestamp)
               // window.location.href = 'weixin://wap/pay?appid=' + response.data.body.appid + '&noncestr=' + response.data.body.noncestr + '&package=' + response.data.body.package + '&prepayid=' + response.data.body.prepayid + '&sign=' + response.data.body.sign + '&timestamp=' + response.data.body.timestamp
             }
+            storage.setLocalStorage(immedPaymentMony, obj)
           }
         })
       } else {
@@ -98,14 +141,19 @@ export default {
   },
   mounted () {
     this.paymentRender()
+  },
+  beforeDestroy () {
+    this.timer = null
   }
 }
 </script>
 <style lang="stylus" scoped>
   @import "~styles/mixins.styl";
+  .wrapper
+    min-height 100%
+    background #F5F5F5
   .paymentCon
     width 100%
-    background #fff
     .paymentTitle
       width 100%
       height 170px
@@ -118,23 +166,35 @@ export default {
       padding 30px 50px 0
   .paymentOrder
     width 100%
-    box-sizing border-box
     padding 50px
+    display flex
+    justify-content space-between
+    align-items center
+    .needPay
+      font-size 46px
+      color #333
+      vertical-align middle
+      display inline-block
+      i
+        font-size 76px
+        font-weight bold
+    .time
+      font-size 36px
+      color #999
+      i
+        color #BA825A
     span
       display block
-      width 100%
       font-size 36px
       color #262626
       line-height 66px
   .paymentWay
     width 100%
-    box-sizing border-box
-    padding 0 50px 0
+    padding 50px
     background #fff
     .paymentItem
       width 100%
-      box-sizing border-box
-      padding-top 80px
+      padding 50px 0
       .paymentImg
         float left
         width 116px
@@ -153,23 +213,24 @@ export default {
         color #000
       i.redio
         float right
-        width 46px
-        height 46px
+        width 60px
+        height 60px
         bgImage('/static/icons/payUnchecked')
-        margin-top 40px
+        margin-top 20px
       i.redio.active
         bgImage('/static/icons/paySelect')
   .immedPayment
     display block
     width calc(100% - 100px)
     height 148px
-    background #F0F0F0
+    background #FFFFFF
     font-size 46px
     color #BA825A
-    margin 40% auto 0
     text-align center
     line-height 120px
-    position relative
+    position fixed
+    bottom 100px
+    left 50px
     .surplusTime
       display block
       width 100%
