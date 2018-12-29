@@ -1,4 +1,5 @@
 <template>
+<div class="goodsWrap">
   <div class="goodsItem" :class="{disabled:disabled}">
     <label for="" class="border-bottom">
         <div class="checkIcon">
@@ -34,14 +35,14 @@
                   </div>
                 </span>
               </div>
-                <div class="opera able  fl" v-if="goodsItem.stock==0&&goodsItem.status==1">
+                <div class="opera able  fl" v-if="goodsItem.stock==0&&goodsItem.status==1&&goodsItem.stockAdequate">
                   <i class="text">请重新选择规格</i>
-                  <div class="btn">重新选择</div>
+                  <div class="btn" @click="reselect(goodsItem.goodsId,goodsItem.id)">重新选择</div>
                 </div>
               <div class="bottom clearfix " v-if="goodsItem.status==1">
                 <i class="price fl" v-if="goodsItem.stock!=0">￥{{goodsItem.price.toFixed(2)}}</i>
                 <div class="fr goodsOpera">
-                  <i>移入收藏</i>
+                  <i @click="doCollection(goodsItem.goodsId)">移入收藏</i>
                   <i>删除</i>
                 </div>
               </div>
@@ -53,14 +54,18 @@
                   <div class="btn"  @click="contactService">联系客服</div>
                 </div>
                 <div class="fr goodsOpera">
-                  <i>移入收藏</i>
+                  <i @click="doCollection(goodsItem.goodsId)">移入收藏</i>
                   <i>删除</i>
                 </div>
               </div>
             </div>
         </div>
       </label>
+
   </div>
+
+</div>
+
 </template>
 
 <script>
@@ -84,10 +89,16 @@ import {
 import {
   Toast
 } from 'mint-ui'
+import {
+  hasCollection,
+  doCollection
+} from '@/func/collection'
+
 export default {
   name: 'GoodsItem',
   components: {
     CheckIcon
+
   },
   data () {
     return {
@@ -136,10 +147,47 @@ export default {
   },
   methods: {
     ...mapMutations(['changeClearNum', 'changeIsAllSelect', 'changeGoodsList']),
+    // 重新选择派发给父组件
+    reselect (v, id) {
+      this.$emit('reselect', v, id)
+    },
+    // 处理规格
     getSpecs () {
       let specs = JSON.parse(this.goodsItem.specs)
       for (let i in specs) {
         this.specs.push(specs[i].value)
+      }
+    },
+    // 是否收藏
+    doCollection (goodsId) {
+      let params = {
+        collectionType: 1,
+        collectionDataId: goodsId
+      }
+      let fnType = Object.prototype.toString.call(hasCollection(params)).slice(8, -1)
+      if (fnType === 'Promise') {
+        hasCollection(params).then(res => {
+          this.collect = res.data.body
+          if (this.collect) {
+            Toast({
+              message: '该商品已收藏',
+              position: 'center',
+              duration: 1000
+            })
+          } else {
+            doCollection(params).then(res => {
+              Toast({
+                message: '收藏成功',
+                position: 'center',
+                duration: 1000
+              })
+            }).catch(err => {
+              console.log(err)
+            })
+          }
+        }).catch(err => {
+          console.log(err)
+        })
       }
     },
     // 联系客服
@@ -211,7 +259,14 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+
 @import '~styles/mixins.styl'
+  .goodsWrap
+    height 100%
+  .goodsWrap >>> .mint-popup
+    z-index  99999999 !important
+  .goodsWrap >>> .v-modal
+    z-index  9999999 !important
   .num
     height 60px
     line-height 60px

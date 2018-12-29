@@ -17,13 +17,13 @@
             优惠券</div>
         </div>
         <div v-if="cartList.length" class="abledWrap">
-          <goods-item v-for="item in cartList" :key="item.id" :goodsItem="item" :showModify="showModify"></goods-item>
+          <goods-item v-for="item in cartList" :key="item.id" :goodsItem="item" :showModify="showModify " @reselect="reselect"></goods-item>
         </div>
         <div class="disabledWrap" v-if="disabledCartList.length">
           <div class="empty">
             <div class="text">以下商品为失效商品，不可购买</div>
             <div  class="btn" @click="sureEmpty">清空失效商品</div></div>
-          <goods-item v-for="item in disabledCartList" :key="item.id" :goodsItem="item" :disabled="true"></goods-item>
+          <goods-item v-for="item in disabledCartList" :key="item.id" :goodsItem="item" :disabled="true" @reselect="reselect"></goods-item>
         </div>
         <divider v-if="noMore&&goodsList.length">已经到达最底部</divider>
       </div>
@@ -31,6 +31,7 @@
     </div>
     <cart-operate v-if="goodsList.length" :showModify="showModify" :page="page" :rows="rows" @buy="changeData"/>
     <order-pop-up :unsatisfactoryData="unsatisfactoryData" v-if="unsatisfactoryData.length" @remove="remove" @orderPopUpShow="orderPopUpShow"/>
+    <details-pop-up :sku="sku" v-if="sku" :goods="goods" :goodsStatus="goodsStatus" :shoppingCartId="shoppingCartId" @addCart="addCart"/>
   </div>
 </template>
 
@@ -40,7 +41,7 @@ import CommonEmpty from 'common/commonEmpty/CommonEmpty'
 import CommonNavHeader from 'common/commonHeader/CommonNavHeader'
 import GoodsItem from './components/GoodsItem'
 import CartOperate from './components/CartOperate'
-
+import DetailsPopUp from '../details/components/DetailsPopUp'
 import {
   Toast
 } from 'mint-ui'
@@ -53,20 +54,14 @@ import {
 } from 'util/request'
 import {
   listCart,
-  delCart
+  delCart,
+  goodsDetail
 } from 'util/netApi'
 import {
   mapState,
   mapMutations,
   mapActions
 } from 'vuex'
-// import {
-// // cartGoods,
-//   goodsInfo
-// } from 'util/const'
-// import {
-//   storage
-// } from 'util/storage'
 import OrderPopUp from './components/OrderPopUp'
 import {
   storage
@@ -82,7 +77,8 @@ export default {
     GoodsItem,
     CartOperate,
     Divider,
-    OrderPopUp
+    OrderPopUp,
+    DetailsPopUp
   },
   data () {
     return {
@@ -102,7 +98,12 @@ export default {
       noMore: false,
       totals: 0,
       rows: 20,
-      unsatisfactoryData: []
+      unsatisfactoryData: [],
+      goodsId: '',
+      goodsStatus: 1,
+      goods: null,
+      sku: null,
+      shoppingCartId: ''
     }
   },
   watch: {
@@ -139,8 +140,38 @@ export default {
     clearNum: state => state.cart.clearNum
   }),
   methods: {
-    ...mapMutations(['changeGoodsList', 'changeIsAllSelect', 'changeClearNum']),
-    ...mapActions(['refreshCart']),
+    ...mapMutations(['changeGoodsList', 'changeIsAllSelect', 'changeClearNum', 'changePopupVisible', 'changeFrom']),
+    ...mapActions(['refreshCart', 'pushKeys']),
+    // 重新选择
+    reselect (goodsId, id) {
+      this.shoppingCartId = id
+      console.log(id)
+      this.goodsId = goodsId
+      this.changePopupVisible(true)
+      // 商品详情
+      if (this.goodsId !== '' || this.goodsId !== undefined) {
+        http(goodsDetail, [this.goodsId])
+          .then(res => {
+            console.log(res)
+            this.goodsStatus = res.data.body.status
+            this.goods = res.data.body.goods
+            this.changeFrom(2)
+            this.pushKeys(res.data.body.goodsItems).then(res => {
+              console.log(res, 122)
+              this.sku = res
+            }).catch(err => {
+              console.log(err, 444)
+            })
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+    },
+    // 加入之后重新刷新页面
+    addCart () {
+      this.$router.go(0)
+    },
     scrollInit () {
       if (!this.scroll) {
         this.scroll = new BScroll(this.$refs.goodsWrap, {
@@ -289,7 +320,6 @@ export default {
     // 使用优惠券
     chooseCoupons () {
       let couponArr = []
-      console.log(this.cartList)
       for (let i = 0; i < this.cartList.length; i++) {
         couponArr[i] = {
           'goodsItemId': this.cartList[i].goodsItemId,
@@ -335,7 +365,10 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-
+.xpCart >>> .v-modal
+  z-index 99999999!important
+.xpCart >>> .mint-popup
+  z-index 999999999!important
 .xpCart
   height 100%
   padding-top 120px

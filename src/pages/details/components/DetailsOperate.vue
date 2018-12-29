@@ -106,6 +106,7 @@ export default {
     },
     popUpShowBuy () {
       if (this.goodsStatus === 1) {
+        console.log('this.changeFrom')
         this.changeFrom(3)
         this.changePopupVisible(true)
       }

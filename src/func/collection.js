@@ -24,7 +24,7 @@ function getToken () {
 }
 export const hasCollection = (params) => {
   if (getToken()) {
-    return http(isCollection, params)
+    return http(isCollection, params, 'noLoading')
   }
 }
 export const doCollection = (params) => {

@@ -82,7 +82,9 @@ export default {
             position: 'bottom',
             duration: 2000
           })
-          _this.$router.push('/')
+          setTimeout(() => {
+            _this.$router.push('/')
+          }, 2000)
         } else {
           Toast({
             message: '账号和密码不匹配，请重新输入',

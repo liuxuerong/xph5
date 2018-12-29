@@ -289,7 +289,6 @@ export default {
             this.goodsComment = res.data.body.goodsComments
             this.changeNowPrice(res.data.body.goods.minPrice)
             storage.setLocalStorage(comment, res.data.body.goodsComments)
-            console.log(comment)
             let totals = res.data.body.goodsComments.totals
             if (totals >= 999) {
               totals = '999+'

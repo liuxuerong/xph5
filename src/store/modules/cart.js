@@ -11,6 +11,7 @@ const cart = {
       state.cartNum = cartNum
     },
     changeFrom (state, from) {
+      console.log(741)
       state.from = from
     },
     changeClearNum (state, clearNum) {

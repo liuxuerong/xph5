@@ -50,7 +50,7 @@
 // import UserinfoHeader from '../person/components/ComUserSetHeader'
 import CommonNavNoMemory from 'common/commonHeader/CommonNavNoMemory'
 import { Tab, TabItem } from 'vux'
-import {listCouponByGoodsItemIds, listUseCouponByGoodsId, memberCouponRecord} from 'util/netApi'
+import {listCouponByGoodsItemIds, memberCouponRecord, listUseCoupon} from 'util/netApi'
 import {http} from 'util/request'
 import {storage} from 'util/storage'
 import {couponByGoods, orderInfo} from 'util/const.js'
@@ -138,7 +138,7 @@ export default {
             position: 'bottom',
             duration: 2000
           })
-          this.headleTabsChange(listUseCouponByGoodsId)
+          this.headleTabsChange(listUseCoupon)
         }
       }).catch((err) => {
         console.log(err)
@@ -150,7 +150,7 @@ export default {
     if (this.type === '1') {
       this.title = '领取优惠券'
       this.routeName = '/cart'
-      this.headleTabsChange(listUseCouponByGoodsId)
+      this.headleTabsChange(listUseCoupon)
     } else {
       this.title = '选择优惠券'
       this.routeName = '/createOrder/3'

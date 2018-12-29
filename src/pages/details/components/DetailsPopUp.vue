@@ -64,7 +64,11 @@ export default {
   props: {
     sku: Object,
     goods: Object,
-    goodsStatus: Number
+    goodsStatus: Number,
+    shoppingCartId: {
+      type: String,
+      default: ''
+    }
   },
   data () {
     return {
@@ -187,16 +191,18 @@ export default {
       if (this.isAllCheck()) {
         const params = {
           goodsItemId: this.goodsItemsId,
-          num: this.cartCount
+          num: this.cartCount,
+          shoppingCartId: this.shoppingCartId
         }
         http(addCart, params).then(res => {
           if (res.data.code === 0) {
             Toast({
               message: '添加购物车成功',
               position: 'bottom',
-              duration: 500
+              duration: 1000
             })
             this.changePopupVisible(false)
+            this.$emit('addCart')
           } else {
             Toast({
               message: res.data.message,

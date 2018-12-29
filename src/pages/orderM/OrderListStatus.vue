@@ -3,7 +3,7 @@
     <div>
       <ul>
         <li v-if="list.length" v-for="item in list" :key="item.orderId">
-          <order-item v-if="item.memberOrderGoods" v-for="goods in item.memberOrderGoods" :key="goods.goodsId" :orderSn="item.orderSn" :pricesData="goods"></order-item>
+          <order-item v-if="item.memberOrderGoods" v-for="goods in item.memberOrderGoods" :key="goods.orderItemId" :orderSn="item.orderSn" :pricesData="goods"></order-item>
           <div class="itemBottom">
             <div class="info clearfix">
               <i class="status">{{item.statusDesc}}</i>
