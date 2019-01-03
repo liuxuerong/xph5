@@ -3,7 +3,7 @@
     <div>
       <ul>
         <li v-if="list.length" v-for="item in list" :key="item.orderId">
-          <order-item v-if="item.memberOrderGoods" v-for="goods in item.memberOrderGoods" :key="goods.orderItemId" :orderSn="item.orderSn" :pricesData="goods"></order-item>
+          <order-item v-if="item.memberOrderGoods" v-for="goods in item.memberOrderGoods" :key="goods.orderItemId" :orderSn="item.orderSn" :pricesData="goods" :status="item.status"></order-item>
           <div class="itemBottom">
             <div class="info clearfix">
               <i class="status">{{item.statusDesc}}</i>
@@ -14,17 +14,32 @@
                 <em>合计：
                   <i class="price">
                     ￥{{item.needPayAmount}}
-                    ￥{{item.totalAmount}}
                   </i>
                 </em>
               </span>
             </div>
+            <!--
+            1: 待支付
+            2: 待发货
+            3: 待收货
+            4: 待评价
+            5: 交易成功
+            6: 交易关闭 -->
             <div class="btnWrap">
-              <span class="gray">
+              <span class="glod" v-if="item.status==1" @click="pay(item.orderSn)">
+                去支付
+              </span>
+              <span class="glod" v-if="item.status==3">
                 确认收货
               </span>
-              <span class="glod">
-                确认收货
+              <span class="gray"  v-if="item.status==3" @click="watchLogistics(item.memberOrderGoods[0].logisticsName,item.memberOrderGoods[0].logisticsNo)">
+                查看物流
+              </span>
+             <span class="glod"  v-if="item.status==4" @click="immedEvaluate(item.orderSn)">
+                评价
+              </span>
+               <span class="gray"  v-if="item.status==4">
+                查看发票
               </span>
             </div>
           </div>
@@ -49,6 +64,8 @@ import {
 import OrderItem from './components/OrderItem'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
 import BScroll from 'better-scroll'
+import {storage} from 'util/storage'
+import { logistics } from 'util/const'
 export default {
   name: 'OrderListStatus',
   components: {
@@ -109,7 +126,23 @@ export default {
         })
       }
     },
-
+    // 查看物流
+    watchLogistics (logisticsName, logisticsNo) {
+      let params = {
+        logino: logisticsNo,
+        code: logisticsName
+      }
+      storage.setLocalStorage(logistics, params)
+      this.$router.push('/watchLogistics')
+    },
+    // 去支付
+    pay (orderSn) {
+      this.$router.push('/immedPayment/' + orderSn)
+    },
+    // 立即评价
+    immedEvaluate (orderCode) {
+      this.$router.push('/immedEvaluate/' + orderCode)
+    },
     scrollInit () {
       if (!this.scroll) {
         this.scroll = new BScroll(this.$refs.orderListStatus, {

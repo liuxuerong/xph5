@@ -20,11 +20,14 @@
       </div>
       <div class="wrap">
         <p class="price">¥{{pricesData.actualPrice}}</p>
-        <div class="status" v-if="isDetails">
-          x{{pricesData.num}}
+        <div class="status" v-if="!isDetails&&pricesData.saleStatus">
+          {{pricesData.saleStatusStr}}
         </div>
-        <div class="btn" v-else>
-          已退款
+        <div class="btn" v-if="isDetails&&status==2">
+          退款
+        </div>
+         <div class="btn" v-if="isDetails&&status==3">
+          申请售后
         </div>
       </div>
 
@@ -49,7 +52,9 @@ export default {
     orderSn: {
       type: String,
       default: ''
-    }
+    },
+    // 主订单的状态
+    status: Number
   },
   computed: {
     // 格式化商品信息

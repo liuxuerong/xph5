@@ -41,8 +41,6 @@ export default {
     }
   },
   mounted () {
-    // this.value = this.vModel
-    console.log(this.value)
   },
   watch: {
     value (val) {

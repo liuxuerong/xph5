@@ -33,7 +33,7 @@
 </template>
 <script>
 import SearchTitle from './ComOrderSearchTitle'
-import { subOrderDetail, comment } from 'util/netApi'
+import { orderDetails, comment } from 'util/netApi'
 import {Toast} from 'mint-ui'
 import { http } from 'util/request'
 import { config } from 'util/config' // 图片路径
@@ -67,7 +67,8 @@ export default {
     evaluateRender () {
       let orderCode = this.$route.params.orderCode
       this.orderCode = orderCode
-      http(subOrderDetail, [orderCode]).then((response) => {
+      http(orderDetails, [orderCode]).then((response) => {
+        console.log(response)
         let data = response.data.body.memberOrderGoods
         for (let i = 0; i < data.length; i++) {
           data[i].evaluateText = ''

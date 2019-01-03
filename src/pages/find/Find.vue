@@ -35,9 +35,9 @@
           <index-store-activity :swiperData="franchiseeActivitys" v-if="franchiseeActivitys.length" />
           <index-new-products :swiperData="newProducts" v-if="newProducts.length" />
           <index-goods-label :goodsLabel="goodsLabel" v-if="goodsLabel" />
-          <h6 class="className">热门品类</h6>
+          <h6 class="className" v-if="tabbar.length">热门品类</h6>
         </div>
-        <div ref="xpStoryContent" class="xpStoryContent" :class="{fixed:isFixed}">
+        <div ref="xpStoryContent" class="xpStoryContent" :class="{fixed:isFixed}" v-if="tabbar.length">
           <div class="xpStoryContentChild">
             <div class="xpGoodsTop" ref="xpGoodsTop" v-show="!isFixed">
               <div class="xpGoodsTopContent">
@@ -46,7 +46,7 @@
                 </tab>
               </div>
             </div>
-            <ul class="goodsContainer" v-if="goodsListData.length">
+            <ul class="goodsContainer" v-if="goodsListData.length&&tabbar.length">
               <div class="classfiyBanner" ref="classfiyBanner">
                 <img :src="imageUrl+tabbar[pageIndex].appImage" alt="">
               </div>
@@ -181,6 +181,7 @@ export default {
       this.noMore = false
       this.getGoodsList(this.categoryId, this.page)
     },
+    // 热门品类
     getGoodsList (categoryId, page) {
       const param = {
         page: page,
@@ -189,6 +190,7 @@ export default {
       }
       if (!this.noMore) {
         http(goodsList, param).then(res => {
+          console.log(res)
           if (this.page !== 1 && res.data.body.list.length === 0) {
             this.noMore = true
           }
@@ -197,7 +199,7 @@ export default {
             this.timer = setTimeout(() => {
               this.commonHeader = this.$refs.commonHeader.$el.offsetHeight
               this.index = this.$refs.index
-              if (this.$refs.goodsItem.length) {
+              if (this.$refs.goodsItem && this.$refs.goodsItem.length) {
                 this.goodsItemH = this.$refs.goodsItem[0].offsetHeight
                 this.classfiyBannerH = this.$refs.classfiyBanner.offsetHeight
               }

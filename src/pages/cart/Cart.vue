@@ -17,7 +17,7 @@
             优惠券</div>
         </div>
         <div v-if="cartList.length" class="abledWrap">
-          <goods-item v-for="item in cartList" :key="item.id" :goodsItem="item" :showModify="showModify " @reselect="reselect"></goods-item>
+          <goods-item v-for="item in cartList" :key="item.id" :goodsItem="item" :showModify="showModify " @reselect="reselect" @refresh="getCartList"></goods-item>
         </div>
         <div class="disabledWrap" v-if="disabledCartList.length">
           <div class="empty">
@@ -29,7 +29,7 @@
       </div>
       <common-empty v-if="goodsList.length<1" :emptyObj="emptyObj" />
     </div>
-    <cart-operate v-if="goodsList.length" :showModify="showModify" :page="page" :rows="rows" @buy="changeData"/>
+    <cart-operate v-if="goodsList.length" :showModify="showModify" :page="page" :rows="rows" @buy="changeData" :cartList="cartList"/>
     <order-pop-up :unsatisfactoryData="unsatisfactoryData" v-if="unsatisfactoryData.length" @remove="remove" @orderPopUpShow="orderPopUpShow"/>
     <details-pop-up :sku="sku" v-if="sku" :goods="goods" :goodsStatus="goodsStatus" :shoppingCartId="shoppingCartId" @addCart="addCart"/>
   </div>

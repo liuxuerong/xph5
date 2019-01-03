@@ -43,7 +43,7 @@
                 <i class="price fl" v-if="goodsItem.stock!=0">￥{{goodsItem.price.toFixed(2)}}</i>
                 <div class="fr goodsOpera">
                   <i @click="doCollection(goodsItem.goodsId)">移入收藏</i>
-                  <i>删除</i>
+                  <i @click="delCheck(goodsItem.id,true)">删除</i>
                 </div>
               </div>
 
@@ -55,7 +55,7 @@
                 </div>
                 <div class="fr goodsOpera">
                   <i @click="doCollection(goodsItem.goodsId)">移入收藏</i>
-                  <i>删除</i>
+                  <i @click="delCheck(goodsItem.id,true)">删除</i>
                 </div>
               </div>
             </div>
@@ -74,7 +74,9 @@ import {
 } from 'util/request'
 import {
   updateCart,
-  customerService
+  customerService,
+  delCart,
+  batchCollection
 } from 'util/netApi'
 import {
   CheckIcon
@@ -89,16 +91,11 @@ import {
 import {
   Toast
 } from 'mint-ui'
-import {
-  hasCollection,
-  doCollection
-} from '@/func/collection'
 
 export default {
   name: 'GoodsItem',
   components: {
     CheckIcon
-
   },
   data () {
     return {
@@ -158,41 +155,73 @@ export default {
         this.specs.push(specs[i].value)
       }
     },
-    // 是否收藏
+    // 收藏
     doCollection (goodsId) {
-      let params = {
+      let params = [{
         collectionType: 1,
         collectionDataId: goodsId
+      }]
+      let checkGoodsList = []
+      let notCheckGoodsList = []
+      for (let i = 0; i < this.goodsList.length; i++) {
+        if (this.goodsList[i].goodsId === goodsId) {
+          checkGoodsList.push(this.goodsList[i])
+        } else {
+          notCheckGoodsList.push(this.goodsList[i])
+        }
       }
-      let fnType = Object.prototype.toString.call(hasCollection(params)).slice(8, -1)
-      if (fnType === 'Promise') {
-        hasCollection(params).then(res => {
-          this.collect = res.data.body
-          if (this.collect) {
-            Toast({
-              message: '该商品已收藏',
-              position: 'center',
-              duration: 1000
-            })
-          } else {
-            doCollection(params).then(res => {
+      http(batchCollection, params, 'noloading').then(res => {
+        if (res.data.code === 0) {
+          Toast({
+            message: '成功移入收藏夹',
+            position: 'center',
+            duration: 1000
+          })
+          this.changeGoodsList(notCheckGoodsList)
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    // 联系客服
+    contactService () {
+      window.location.href = customerService
+    },
+    // 删除
+    delCheck (id, toast = false) {
+      let checkGoodsList = []
+      let notCheckGoodsList = []
+      for (let i = 0; i < this.goodsList.length; i++) {
+        if (this.goodsList[i].id === id) {
+          checkGoodsList.push(this.goodsList[i])
+        } else {
+          notCheckGoodsList.push(this.goodsList[i])
+        }
+      }
+      if (checkGoodsList.length) {
+        http(delCart, [id]).then(res => {
+          if (res.data.code === 0) {
+            // this.show5 = true
+            if (toast === true) {
+              Toast({
+                message: '删除成功',
+                position: 'center',
+                duration: 1000
+              })
+            } else {
               Toast({
                 message: '收藏成功',
                 position: 'center',
                 duration: 1000
               })
-            }).catch(err => {
-              console.log(err)
-            })
+            }
+
+            this.changeGoodsList(notCheckGoodsList)
           }
         }).catch(err => {
           console.log(err)
         })
       }
-    },
-    // 联系客服
-    contactService () {
-      window.location.href = customerService
     },
     addCount () {
       this.goodsItem.num++
@@ -305,10 +334,10 @@ export default {
       margin-right 30px
       position relative
     .shadow
-      height 60px
-      width 60px
+      height 63px
+      width 63px
       position absolute
-      top 4px
+      top 3px
       z-index 2
       border 3px solid #cccccc
       background-color #F5F5F5

@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <search-title :title="title" :oper='false'></search-title>
+    <common-nav-header :title="title"/>
     <div class="paymentCon">
       <div class="paymentTitle">支付中心</div>
       <div class="paymentOrder" v-if="list">
@@ -31,7 +31,7 @@ import {
 import {
   immedPaymentMony
 } from 'util/const.js'
-import SearchTitle from './ComOrderSearchTitle'
+import CommonNavHeader from 'common/commonHeader/CommonNavHeader'
 import {payMoney, orderDetails} from 'util/netApi'
 import {http} from 'util/request'
 import notice from 'util/notice'
@@ -47,7 +47,7 @@ export default {
     }
   },
   components: {
-    SearchTitle,
+    CommonNavHeader,
     Confirm
   },
   watch: {
@@ -67,6 +67,7 @@ export default {
     paymentRender () {
       let orderSn = this.$route.params.orderCode
       http(orderDetails, [orderSn]).then((response) => {
+        console.log(response)
         this.list = response.data.body
         this.confirmTime = this.list.allowPayTime.replace('T', ' ')
         let _this = this
@@ -152,6 +153,7 @@ export default {
   .wrapper
     min-height 100%
     background #F5F5F5
+    padding-top 120px
   .paymentCon
     width 100%
     .paymentTitle

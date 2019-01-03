@@ -51,10 +51,6 @@ export default {
         {
           index: 4,
           text: '待评价'
-        },
-        {
-          index: 5,
-          text: '退款/售后'
         }
       ],
       currentIndex: -1

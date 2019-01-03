@@ -4,20 +4,23 @@
     <div class="orderDetatilCon" v-if="orderData">
       <div class="bgTop">
         <span class="statusDesc">
-              {{orderData.statusDesc}}
-            </span>
-        <span class="time">距自动关闭剩<i>{{1}}</i>分<i>{{1}}</i>秒</span>
+          {{orderData.statusDesc}}
+        </span>
+        <span class="time" v-if="orderData.status===1">距自动关闭剩<i>{{remainingTime.minutes}}</i>分<i>{{remainingTime.seconds}}</i>秒</span>
       </div>
       <div class="orderInfo">
         <div class="orderProvide wrap">
-          <router-link class="cellLink" to="goodsAddress/1">
+          <router-link class="cellLink" to="goodsAddress/1" v-if="orderData.status===5">
             <div class="text addAddress">订单签收成功，感谢您对我们无限的订单签收成功，感谢您对我们无限的...</div>
+          </router-link>
+          <router-link class="cellLink" to="goodsAddress/1" v-if="orderData.status===3">
+            <div class="text addAddress">您已提交订单，请等待物流信息更新...</div>
           </router-link>
           <span class="orderName">{{orderData.deliveryPeople}}&nbsp;&nbsp;&nbsp;&nbsp;{{orderData.deliveryPhone}}</span>
           <span class="orderAddress">{{orderData.deliveryAddr}}</span>
         </div>
         <div class="wrap goods">
-          <order-item v-if="orderData.memberOrderGoods" v-for="goods in orderData.memberOrderGoods" :key="goods.goodsId" :pricesData="goods"></order-item>
+          <order-item v-if="orderData.memberOrderGoods" v-for="goods in orderData.memberOrderGoods" :key="goods.goodsId" :pricesData="goods" :isDetails="true" :status="orderData.status"></order-item>
           <ul class="priceItem">
             <li>
               <span class="name">商品总额</span><span class="price">￥{{orderData.totalAmount}}</span>
@@ -39,9 +42,14 @@
             <div class="btn">查看发票</div>
           </div>
           <ul class="infoItem">
-            <li>
-              <span class="name">商品总额</span><span class="content">电子普通发票</span>
+            <li><span class="name">订单编号：</span><span class="content">{{orderData.orderSn}}</span>
             </li>
+            <li> <span class="name">支付方式：</span><span class="content">{{orderData.paymentDesc}}</span></li>
+            <li> <span class="name">下单时间：</span><span class="content">{{orderData.createTime}}</span></li>
+            <li> <span class="name" v-if="orderData.payTime">付款时间：</span><span class="content">{{orderData.payTime}}</span></li>
+            <li> <span class="name" v-if="orderData.deliverTime">发货时间：</span><span class="content">{{orderData.deliverTime}}</span></li>
+            <li> <span class="name" v-if="orderData.finishTime">成交时间：</span><span class="content">{{orderData.finishTime}}</span></li>
+            <li> <span class="name" v-if="orderData.finishTime">获取积分：</span><span class="content">{{orderData.finishTime}}</span></li>
           </ul>
         </div>
         <div class="wrap">
@@ -49,7 +57,7 @@
             <h4>备注信息</h4>
           </div>
           <div class="infoContent">
-            这里是备注这里是备注这里是备注这里是备注这里是 这里是备注这里是备注这里是备注这里是备注备注
+            {{orderData.desc}}
           </div>
         </div>
         <div class="wrap">
@@ -57,15 +65,23 @@
             <h4>订单信息</h4>
           </div>
           <ul class="infoItem">
-            <li>
-              <span class="name">订单编号：</span><span class="content">电子普通发票</span>
-            </li>
+            <li><span class="name">订单编号：</span><span class="content">{{orderData.orderSn}}</span></li>
+            <li> <span class="name">支付方式：</span><span class="content">{{orderData.paymentDesc}}</span></li>
+            <li> <span class="name">下单时间：</span><span class="content">{{orderData.createTime}}</span></li>
+            <li> <span class="name" v-if="orderData.payTime">付款时间：</span><span class="content">{{orderData.payTime}}</span></li>
+            <li> <span class="name" v-if="orderData.deliverTime">发货时间：</span><span class="content">{{orderData.deliverTime}}</span></li>
+            <li> <span class="name" v-if="orderData.finishTime">成交时间：</span><span class="content">{{orderData.finishTime}}</span></li>
+            <li> <span class="name" v-if="orderData.finishTime">获取积分：</span><span class="content">{{orderData.finishTime}}</span></li>
           </ul>
         </div>
       </div>
       <div class="orderOperBtn">
-        <span class="gray">取消订单</span>
-        <span class="glod">去支付</span>
+        <span class="gray" v-if="orderData.status==2||orderData.status==3">查看物流</span>
+        <span class="gray" v-if="orderData.status==2||orderData.status==6">删除订单</span>
+        <span class="glod" v-if="orderData.status==2">评价</span>
+        <span class="gray" v-if="orderData.status==3">延长收货</span>
+        <span class="glod" v-if="orderData.status==3">确认收货</span>
+        <span class="gray" v-if="orderData.status==6">联系客服</span>
       </div>
     </div>
   </div>
@@ -107,9 +123,8 @@ export default {
       computedTime: 0,
       time: '',
       codeValue: '',
-      timeout: false // 定时器
-      // 1 立即支付
-      // 7 查看详情 --- 交易关闭
+      remainingTime: null,
+      timer: null
     }
   },
   components: {
@@ -125,13 +140,38 @@ export default {
     }
   },
   methods: {
+
     // 订单列表页面渲染
     orderDetailRender () {
       let orderCode = this.$route.params.orderSn
       http(orderDetails, [orderCode]).then((res) => {
         console.log(res)
         this.orderData = res.data.body
+        let _this = this
+        _this.remainingTime = _this.formatDuring(new Date(res.data.body.allowPayTime).getTime() - new Date())
+        this.timer = setInterval(() => {
+          let time = new Date(_this.confirmTime).getTime() - new Date()
+          _this.remainingTime = _this.formatDuring(time)
+        }, 1000)
       })
+    },
+    // 时间格式化
+    formatDuring (mss) {
+      if (mss > 0) {
+        let minutes = parseInt((mss % (1000 * 60 * 60)) / (1000 * 60))
+        let seconds = parseInt(mss % (1000 * 60) / 1000)
+        minutes = minutes > 9 ? minutes : '0' + minutes
+        seconds = seconds > 9 ? seconds : '0' + seconds
+        return {
+          minutes,
+          seconds
+        }
+      } else {
+        return {
+          minutes: '00',
+          seconds: '00'
+        }
+      }
     },
     // 查看售后
     orderDetails (orderId) {
@@ -218,6 +258,8 @@ export default {
     padding-top 120px
     min-height 100%
     background #f5f5f5
+  .addAddress
+    border-bottom 2px dashed #E6E6E6
   .orderDetatilCon
     width 100%
     padding-bottom 148px
@@ -280,7 +322,7 @@ export default {
       border 2px solid #BA825A
   .bgTop
     height 370px
-    background pink
+    background url('/static/images/statusDescBg.png')
     .statusDesc
       font-size 66px
       color #FFFFFF

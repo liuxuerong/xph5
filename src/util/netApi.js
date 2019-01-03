@@ -88,6 +88,7 @@ export const listUseCoupon = {url: '/coupon/listUseCoupon', method: 'GET', versi
 // 发票
 export const addInvoice = { url: '/invoice/api', method: 'POST', version: v1 } // 新增
 export const updateInvoice = { url: '/invoice/api', method: 'PUT', version: v1 } // 修改
+export const getInvoice = { url: '/invoice/api/member/get', method: 'GET', version: v1 } // 修改
 
 // 个人中心
 export const memberCenter = { url: '/member/api/center', method: 'GET', version: v1 }
@@ -145,7 +146,8 @@ export const storeAddr = { url: '/shop/record/all', method: 'GET', version: v1 }
 export const cartNum = { url: '/cart/count', method: 'GET', version: v1 }
 
 // 评论
-export const comment = { url: '/comment', method: 'POST', version: v1 } // 新增
+export const comment1 = { url: '/comment', method: 'POST', version: v1 } // 新增
+export const comment = { url: '/comment', method: 'POST', version: v2 } // 新增
 export const commentList = { url: '/comment', method: 'GET', version: v1 } // 列表
 
 // 退货退款

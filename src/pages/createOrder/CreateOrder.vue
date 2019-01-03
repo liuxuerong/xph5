@@ -5,7 +5,16 @@
     <div class="createOrderWrap" v-if="!unsatisfactoryData.length">
       <div class="cutOffLine30"></div>
       <div class="wrap">
-        <router-link class="cellLink" to="/addressAdmin/need" v-if="addressInfo">
+        <router-link class="cellLink" to="/addressAdmin/need" v-if="info&&info.addressInfo">
+          <div class="addressWrap  text">
+            <div class="infoTop clearfix">
+              <h4>{{info.addressInfo.receiverName}}</h4>
+              <em>{{info.addressInfo.phone}}</em>
+            </div>
+            <p class="infoBottom">{{info.addressInfo.province}}{{info.addressInfo.city}}{{info.addressInfo.area}}{{info.addressInfo.detailedAddr}}</p>
+          </div>
+        </router-link>
+        <router-link class="cellLink" to="/addressAdmin/need" v-else-if="addressInfo">
           <div class="addressWrap  text">
             <div class="infoTop clearfix">
               <h4>{{addressInfo.receiverName}}</h4>
@@ -32,10 +41,13 @@
       </div>
       <div class="wrap">
         <div class="cellLink">
-          <div>配送方式<span class="fr">快递 10元</span></div>
+          <div>配送方式<span class="fr">快递</span></div>
         </div>
         <div class="cellLink" @click.prevent="chooseCoupons">
-          <div class="text">优惠券<span class="fr" v-if="info&&info.couponName">{{info.couponName}}</span><span class="fr" v-else>无可用</span>
+          <div class="text">优惠券
+            <span class="fr" v-if="info&&info.couponName">{{info.couponName}}</span>
+            <span class="fr availableCouponNum" v-else-if="availableCoupon&&availableCouponNum"><i>{{availableCouponNum}}</i>张可用</span>
+            <span class="fr" v-else>无可用</span>
           </div>
         </div>
         <div class="cellLink">
@@ -49,15 +61,15 @@
           <div class="cellLink">
             <div>发票内容<span class="fr">商品明细</span></div>
           </div>
-          <div class="cellLink">
+          <router-link :to="`/invoiceInfo/${invoiceType}/${invoiceStatus}`" class="cellLink">
             <div class=" text">发票抬头<span class="fr">个人</span></div>
-          </div>
+          </router-link>
         </div>
       </div>
 
       <!-- <router-link class="cellLink" to="/invoice">
-                <div class="text">发票<span class="fr" v-if="info&&info.invoiceTypeValue">{{info.invoiceTypeValue}}&nbsp;&nbsp;{{info.invoiceStyleValue}}</span></div>
-              </router-link> -->
+                  <div class="text">发票<span class="fr" v-if="info&&info.invoiceTypeValue">{{info.invoiceTypeValue}}&nbsp;&nbsp;{{info.invoiceStyleValue}}</span></div>
+                </router-link> -->
       <!-- <div class="cutOffLine30"></div> -->
       <div class="wrap">
         <div class="cellLink lh80">
@@ -83,26 +95,26 @@
           发票类型
           <div class="close" @click="closeType">×</div>
         </div>
-          <ul>
-           <li :class="{active:test==='One'}">
-              <label for="invoice1">
-                <div class="top">
-                  <h3 class="name">电子普通发票</h3>
-                <span class="radioWrap"><icon :type="test==='One'?'success':'circle'"></icon><input type="radio" value="One" v-model="test" id="invoice1"></span>
-                </div>
-                <p>电子普通发票与纸质普通发票具备同等法律效力,可支持报销入账</p>
-              </label>
-            </li>
-            <li :class="{active:test!=='One'}">
-              <label for="invoice2">
-                <div class="top">
-                <h3 class="name">增值税专用发票</h3>
-                <span class="radioWrap"> <icon :type="test==='One'?'circle':'success'"></icon><input type="radio" value="Two" v-model="test" id="invoice2"></span>
-                 </div>
-                <p>我司依法开具发票，如你购买的商品按税法规定属于不得从增值税销项税额中抵扣的项目，请选择普通发票</p>
-              </label>
-            </li>
-          </ul>
+        <ul>
+          <li :class="{active:test==='One'}">
+            <label for="invoice1">
+                  <div class="top">
+                    <h3 class="name">电子普通发票</h3>
+                  <span class="radioWrap"><icon :type="test==='One'?'success':'circle'"></icon><input type="radio" value="One" v-model="test" id="invoice1"></span>
+                  </div>
+                  <p>电子普通发票与纸质普通发票具备同等法律效力,可支持报销入账</p>
+                </label>
+          </li>
+          <li :class="{active:test!=='One'}">
+            <label for="invoice2">
+                  <div class="top">
+                  <h3 class="name">增值税专用发票</h3>
+                  <span class="radioWrap"> <icon :type="test==='One'?'circle':'success'"></icon><input type="radio" value="Two" v-model="test" id="invoice2"></span>
+                   </div>
+                  <p>我司依法开具发票，如你购买的商品按税法规定属于不得从增值税销项税额中抵扣的项目，请选择普通发票</p>
+                </label>
+          </li>
+        </ul>
         <div class="bottomClose" @click="closeType">
           关闭
         </div>
@@ -130,7 +142,8 @@ import {
 import {
   goodOrderData,
   createOrderData,
-  customerService
+  customerService,
+  getInvoice
 } from 'util/netApi'
 import {
   storage
@@ -159,6 +172,7 @@ export default {
       canClick: true,
       title: '确认订单',
       availableCoupon: '',
+      availableCouponNum: 0,
       goodsId: '',
       goodsItemId: '',
       num: '',
@@ -167,13 +181,15 @@ export default {
       shippingAmount: '',
       couponArr: [],
       unsatisfactoryData: [],
-      info: null,
+      info: null, // 创建订单参数
       needPayPrice: '',
       offerAmount: '',
       cartList: '',
       addressInfo: null,
       isInvoicing: false,
       invoiceVisible: false,
+      invoiceStatus: 1, // 1、普票 2、专票
+      invoiceType: 1, // 1、个人 2、企业
       test: 'One',
       params: {
         sourcePort: 1,
@@ -286,6 +302,7 @@ export default {
             console.log(res.data.body)
             params.key = res.data.body.key
             this.availableCoupon = res.data.body.availableCoupon
+            this.availableCouponNum = res.data.body.availableCouponNum
             this.pricesData = res.data.body.orderGoodsItems
             this.shippingAmount = res.data.body.shippingAmount
             this.offerAmount = res.data.body.offerAmount
@@ -325,7 +342,7 @@ export default {
       }
     },
     getOrderInfo () {
-      if (this.$route.path === '/createOrder/1') {
+      if (this.$route.path.indexOf('/createOrder/') !== -1) {
         this.info = storage.getLocalStorage(orderInfo)
       } else if (this.$route.path === '/createOrder') {
         storage.setLocalStorage(orderInfo, {})
@@ -344,11 +361,25 @@ export default {
       params.favorableId = orderInfoData.couponId
       params.invoicingType = this.invoicingType
       params = Object.assign(this.params, params)
+      // 判断配送地址有没有选择
       if (!params.deliveryId) {
-        this.toastShow('请选择配送方式！')
+        this.toastShow('请添加收货地址！')
         return false
       }
+      // 判断是否要开发票
+      if (this.isInvoicing) {
+        // 查询发票信息
+        this.getInvoiceInfo()
+        // 默认电子普票个人
+        // 收票人手机是否存在
+        if (this.invoicePhone) {
+
+        } else {
+          this.toastShow('请填写发票抬头！')
+        }
+      }
       if (this.canClick) {
+        // 提交订单
         http(createOrderData, params).then(res => {
           if (res.data.code === 0) {
             this.$router.push('/immedPayment/' + res.data.body)
@@ -374,6 +405,14 @@ export default {
     },
     customerService () {
       window.location.href = customerService
+    },
+    // 查询发票信息
+    getInvoiceInfo () {
+      http(getInvoice).then(res => {
+        console.log(res)
+      }).catch(err => {
+        console.log(err)
+      })
     },
     // 使用优惠券
     chooseCoupons () {
@@ -424,6 +463,9 @@ export default {
   transform translateX(56px)
 .createOrder >>> .weui-switch:checked
   background-color #4CD964
+.availableCouponNum
+  i
+    color #D54B4B
 .popUp
   position absolute
   right 50px

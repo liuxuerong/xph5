@@ -109,13 +109,14 @@ export default {
         console.log(err)
       })
     },
+
     // 立即使用优惠券
     useCoupon (id, name, type) {
       let info = storage.getLocalStorage(orderInfo) || {}
       info.couponId = id
       info.couponName = name
       storage.setLocalStorage(orderInfo, info)
-      this.$router.replace({path: '/createOrder/3'})
+      this.$router.push({path: '/createOrder/3'})
     },
     // 不使用优惠券
     noCoupons () {

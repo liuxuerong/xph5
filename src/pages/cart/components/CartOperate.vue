@@ -3,7 +3,7 @@
     <div class="checkIcon">
       <check-icon :value.sync="check" @click.native="checkAll"> </check-icon>
     </div>
-    <span class="all">全选<i v-if="showModify">({{clearNum.length}})</i></span>
+    <span class="all">全选</span>
     <span class="price" v-if="!showModify"><i>合计：</i>￥{{price.toFixed(2)}}</span>
     <span class="btn" v-if="!showModify" @click="buy">结算<i>({{clearNum.length}})</i></span>
     <div class="btnWrap" v-else>
@@ -120,32 +120,29 @@ export default {
     },
     // 批量移入收藏夹
     collectBatch () {
-      console.log(this.clearNum)
       let params = []
       for (let item of this.clearNum) {
         params.push({collectionDataId: item.goodsId, collectionType: 1})
       }
 
       http(batchCollection, params, 'noloading').then(res => {
-        console.log(res)
         if (res.data.code === 0) {
           notice.alert('', '成功移入收藏夹，你可以在  我的-商品收藏  中找到。')
+          this.delCheck(false)
         }
       }).catch(err => {
         console.log(err)
       })
     },
     sureDel () {
-      console.log(this.goodsList)
       for (let v of this.goodsList) {
         if (v.value) {
-          console.log(111)
           notice.confirm('是否确认删除选定商品？', '', this.delCheck, '删除')
           break
         }
       }
     },
-    delCheck () {
+    delCheck (toast = true) {
       let checkGoodsList = []
       let notCheckGoodsList = []
       let id = ''
@@ -161,12 +158,14 @@ export default {
       if (checkGoodsList.length) {
         http(delCart, [id]).then(res => {
           if (res.data.code === 0) {
-            // this.show5 = true
-            Toast({
-              message: '删除成功',
-              position: 'center',
-              duration: 1000
-            })
+            if (toast) {
+              Toast({
+                message: '删除成功',
+                position: 'center',
+                duration: 1000
+              })
+            }
+
             this.changeGoodsList(notCheckGoodsList)
           }
         }).catch(err => {
