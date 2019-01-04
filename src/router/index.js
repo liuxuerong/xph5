@@ -100,7 +100,7 @@ const router = new Router({
       component: resolve => require(['@/pages/invoice/Invoice'], resolve)
     },
     {
-      path: '/invoiceInfo/:invoiceType/:invoiceStatus',
+      path: '/invoiceInfo/:invoiceType/:invoiceStatus/:from', // from 1设置页面 2创建订单
       name: 'invoiceInfo',
       meta: { requireLogin: true },
       component: resolve => require(['@/pages/invoice/InvoiceInfo'], resolve)
@@ -300,7 +300,7 @@ const router = new Router({
       component: resolve => require(['@/pages/person/ToolStore'], resolve)
     },
     {
-      path: '/watchLogistics',
+      path: '/watchLogistics/:orderSn',
       name: 'watchLogistics',
       meta: { requireLogin: true },
       component: resolve => require(['@/pages/order/WatchLogistics'], resolve)

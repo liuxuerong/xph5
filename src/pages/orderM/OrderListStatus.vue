@@ -29,10 +29,10 @@
               <span class="glod" v-if="item.status==1" @click="pay(item.orderSn)">
                 去支付
               </span>
-              <span class="glod" v-if="item.status==3">
+              <span class="glod" v-if="item.status==3" @click="confirmGoods(item.orderSn)">
                 确认收货
               </span>
-              <span class="gray"  v-if="item.status==3" @click="watchLogistics(item.memberOrderGoods[0].logisticsName,item.memberOrderGoods[0].logisticsNo)">
+              <span class="gray"  v-if="item.status==3" @click="watchLogistics(item.orderSn)">
                 查看物流
               </span>
              <span class="glod"  v-if="item.status==4" @click="immedEvaluate(item.orderSn)">
@@ -59,13 +59,16 @@ import {
   http
 } from 'util/request'
 import {
-  OrderList
+  OrderList,
+  confirmGoods
 } from 'util/netApi'
+import {
+  Toast
+} from 'mint-ui'
+import notice from 'util/notice.js'
 import OrderItem from './components/OrderItem'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
 import BScroll from 'better-scroll'
-import {storage} from 'util/storage'
-import { logistics } from 'util/const'
 export default {
   name: 'OrderListStatus',
   components: {
@@ -110,7 +113,6 @@ export default {
         rows: 20,
         status: this.currentIndex
       }
-      console.log(this.noMore)
       if (!this.noMore) {
         http(OrderList, params).then((res) => {
           console.log(res)
@@ -127,13 +129,8 @@ export default {
       }
     },
     // 查看物流
-    watchLogistics (logisticsName, logisticsNo) {
-      let params = {
-        logino: logisticsNo,
-        code: logisticsName
-      }
-      storage.setLocalStorage(logistics, params)
-      this.$router.push('/watchLogistics')
+    watchLogistics (orderSn) {
+      this.$router.push(`/watchLogistics/${orderSn}`)
     },
     // 去支付
     pay (orderSn) {
@@ -142,6 +139,24 @@ export default {
     // 立即评价
     immedEvaluate (orderCode) {
       this.$router.push('/immedEvaluate/' + orderCode)
+    },
+    // 确认收货
+    confirmGoods (orderCode) {
+      let _this = this
+      notice.confirm('您确定收到货物？', '否则可能钱财两空', function () {
+        http(confirmGoods, [orderCode]).then((response) => {
+          if (response.data.body === true) {
+            Toast({
+              message: '收货成功',
+              position: 'center',
+              duration: 2000
+            })
+            setTimeout(() => {
+              _this.orderDetailRender()
+            }, 2000)
+          }
+        })
+      })
     },
     scrollInit () {
       if (!this.scroll) {

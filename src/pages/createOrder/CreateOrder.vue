@@ -61,15 +61,15 @@
           <div class="cellLink">
             <div>发票内容<span class="fr">商品明细</span></div>
           </div>
-          <router-link :to="`/invoiceInfo/${invoiceType}/${invoiceStatus}`" class="cellLink">
+          <router-link :to="`/invoiceInfo/${invoiceType}/${invoiceStatus}/2`" class="cellLink">
             <div class=" text">发票抬头<span class="fr">个人</span></div>
           </router-link>
         </div>
       </div>
 
       <!-- <router-link class="cellLink" to="/invoice">
-                  <div class="text">发票<span class="fr" v-if="info&&info.invoiceTypeValue">{{info.invoiceTypeValue}}&nbsp;&nbsp;{{info.invoiceStyleValue}}</span></div>
-                </router-link> -->
+                    <div class="text">发票<span class="fr" v-if="info&&info.invoiceTypeValue">{{info.invoiceTypeValue}}&nbsp;&nbsp;{{info.invoiceStyleValue}}</span></div>
+                  </router-link> -->
       <!-- <div class="cutOffLine30"></div> -->
       <div class="wrap">
         <div class="cellLink lh80">
@@ -96,23 +96,29 @@
           <div class="close" @click="closeType">×</div>
         </div>
         <ul>
-          <li :class="{active:test==='One'}">
+          <li :class="{active:invoiceStatusSelect==='One'}">
             <label for="invoice1">
-                  <div class="top">
-                    <h3 class="name">电子普通发票</h3>
-                  <span class="radioWrap"><icon :type="test==='One'?'success':'circle'"></icon><input type="radio" value="One" v-model="test" id="invoice1"></span>
-                  </div>
-                  <p>电子普通发票与纸质普通发票具备同等法律效力,可支持报销入账</p>
-                </label>
+              <div class="top">
+                <h3 class="name">电子普通发票</h3>
+                <span class="radioWrap">
+                  <icon :type="invoiceStatusSelect==='One'?'success':'circle'"></icon>
+                  <input type="radio" value="One" v-model="invoiceStatusSelect" id="invoice1">
+                </span>
+              </div>
+              <p>电子普通发票与纸质普通发票具备同等法律效力,可支持报销入账</p>
+            </label>
           </li>
-          <li :class="{active:test!=='One'}">
+          <li :class="{active:invoiceStatusSelect!=='One'}">
             <label for="invoice2">
-                  <div class="top">
-                  <h3 class="name">增值税专用发票</h3>
-                  <span class="radioWrap"> <icon :type="test==='One'?'circle':'success'"></icon><input type="radio" value="Two" v-model="test" id="invoice2"></span>
-                   </div>
-                  <p>我司依法开具发票，如你购买的商品按税法规定属于不得从增值税销项税额中抵扣的项目，请选择普通发票</p>
-                </label>
+              <div class="top">
+                <h3 class="name">增值税专用发票</h3>
+                <span class="radioWrap">
+                  <icon :type="invoiceStatusSelect==='One'?'circle':'success'"></icon>
+                  <input type="radio" value="Two" v-model="invoiceStatusSelect" id="invoice2">
+                </span>
+              </div>
+                <p>我司依法开具发票，如你购买的商品按税法规定属于不得从增值税销项税额中抵扣的项目，请选择普通发票</p>
+            </label>
           </li>
         </ul>
         <div class="bottomClose" @click="closeType">
@@ -188,9 +194,10 @@ export default {
       addressInfo: null,
       isInvoicing: false,
       invoiceVisible: false,
+      invoicePhone: false, // 收票人电话号码是否存在
       invoiceStatus: 1, // 1、普票 2、专票
       invoiceType: 1, // 1、个人 2、企业
-      test: 'One',
+      invoiceStatusSelect: 'One',
       params: {
         sourcePort: 1,
         favorableId: '',
@@ -216,6 +223,16 @@ export default {
         let fromPath = storage.getLocalStorage(createOrderFrom)
         this.$router.push(fromPath)
         storage.delLocalStorage(fromPath)
+      }
+    },
+    // 是否开发票
+    isInvoicing (v) {
+
+    },
+    // 发票类型弹窗选择
+    invoiceStatusSelect (v) {
+      if (v === 'Two') {
+        this.$router.push('/invoiceInfo/1/2/2')
       }
     }
   },
@@ -350,7 +367,6 @@ export default {
     },
     createOrder () {
       let params = {}
-      console.log(this.params)
       const info = storage.getLocalStorage(goodsInfo)
       const orderInfoData = storage.getLocalStorage(orderInfo)
       params.fromCart = info.fromCart || false
@@ -359,25 +375,23 @@ export default {
       // params.shippingMethod = orderInfoData.shippingMethod
       params.shippingMethod = 2
       params.favorableId = orderInfoData.couponId
-      params.invoicingType = this.invoicingType
+      params.invoicingType = orderInfoData.invoicingType
+      // 判断是否要开发票
+      if (this.isInvoicing && !params.favorableId) {
+        // 查询发票信息
+        // 默认电子普票个人
+        // 收票人手机是否存在
+        this.getInvoiceInfo()
+      }
       params = Object.assign(this.params, params)
       // 判断配送地址有没有选择
       if (!params.deliveryId) {
         this.toastShow('请添加收货地址！')
         return false
       }
-      // 判断是否要开发票
-      if (this.isInvoicing) {
-        // 查询发票信息
-        this.getInvoiceInfo()
-        // 默认电子普票个人
-        // 收票人手机是否存在
-        if (this.invoicePhone) {
+      console.log(info)
 
-        } else {
-          this.toastShow('请填写发票抬头！')
-        }
-      }
+      this.canClick = false
       if (this.canClick) {
         // 提交订单
         http(createOrderData, params).then(res => {
@@ -410,6 +424,17 @@ export default {
     getInvoiceInfo () {
       http(getInvoice).then(res => {
         console.log(res)
+        if (res.data.body.phone) {
+          this.invoicePhone = true
+          if (this.invoicePhone) {
+            let info = storage.getLocalStorage(orderInfo) || {}
+            info.favorableId = res.data.body.favorableId
+            info.invoicingType = 1
+            storage.setLocalStorage(orderInfo, info)
+          } else {
+            this.toastShow('请填写发票抬头！')
+          }
+        }
       }).catch(err => {
         console.log(err)
       })

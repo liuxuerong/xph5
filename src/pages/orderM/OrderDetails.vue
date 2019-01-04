@@ -6,6 +6,7 @@
         <span class="statusDesc">
           {{orderData.statusDesc}}
         </span>
+        <span class="reason" v-if="orderData.status===6">{{orderData.reasonDesc}}</span>
         <span class="time" v-if="orderData.status===1">距自动关闭剩<i>{{remainingTime.minutes}}</i>分<i>{{remainingTime.seconds}}</i>秒</span>
       </div>
       <div class="orderInfo">
@@ -22,7 +23,7 @@
         <div class="wrap goods">
           <order-item v-if="orderData.memberOrderGoods" v-for="goods in orderData.memberOrderGoods" :key="goods.goodsId" :pricesData="goods" :isDetails="true" :status="orderData.status"></order-item>
           <ul class="priceItem">
-            <li>
+            <li class="border-top">
               <span class="name">商品总额</span><span class="price">￥{{orderData.totalAmount}}</span>
             </li>
             <li>
@@ -31,7 +32,7 @@
             <li>
               <span class="name">运费</span><span class="price">￥{{orderData.shippingAmount}}</span>
             </li>
-            <li class="all">
+            <li class="all border-top">
               <span class="name"> 共<b>{{orderData.memberOrderGoods.length}}</b>件商品</span><span class="price">实付：￥{{orderData.needPayAmount}}</span>
             </li>
           </ul>
@@ -51,8 +52,9 @@
             <li> <span class="name" v-if="orderData.finishTime">成交时间：</span><span class="content">{{orderData.finishTime}}</span></li>
             <li> <span class="name" v-if="orderData.finishTime">获取积分：</span><span class="content">{{orderData.finishTime}}</span></li>
           </ul>
+          <div class="tip"><i>!</i>订单完成后三个工作日内即可开具</div>
         </div>
-        <div class="wrap">
+        <div class="wrap" v-if="orderData.desc&&orderData.desc==''">
           <div class="title">
             <h4>备注信息</h4>
           </div>
@@ -66,24 +68,83 @@
           </div>
           <ul class="infoItem">
             <li><span class="name">订单编号：</span><span class="content">{{orderData.orderSn}}</span></li>
-            <li> <span class="name">支付方式：</span><span class="content">{{orderData.paymentDesc}}</span></li>
-            <li> <span class="name">下单时间：</span><span class="content">{{orderData.createTime}}</span></li>
-            <li> <span class="name" v-if="orderData.payTime">付款时间：</span><span class="content">{{orderData.payTime}}</span></li>
-            <li> <span class="name" v-if="orderData.deliverTime">发货时间：</span><span class="content">{{orderData.deliverTime}}</span></li>
-            <li> <span class="name" v-if="orderData.finishTime">成交时间：</span><span class="content">{{orderData.finishTime}}</span></li>
-            <li> <span class="name" v-if="orderData.finishTime">获取积分：</span><span class="content">{{orderData.finishTime}}</span></li>
+            <li> <span class="name" v-if="orderData.paymentDesc&&orderData.paymentDesc!=''">支付方式：</span><span class="content">{{orderData.paymentDesc}}</span></li>
+            <li> <span class="name">下单时间：</span><span class="content">{{fromatTime(orderData.createTime)}}</span></li>
+            <li> <span class="name" v-if="orderData.payTime">付款时间：</span><span class="content">{{fromatTime(orderData.payTime)}}</span></li>
+            <li> <span class="name" v-if="orderData.deliverTime">发货时间：</span><span class="content">{{fromatTime(orderData.deliverTime)}}</span></li>
+            <li> <span class="name" v-if="orderData.finishTime">成交时间：</span><span class="content">{{fromatTime(orderData.finishTime)}}</span></li>
+            <li> <span class="name" v-if="orderData.finishTime">获取积分：</span><span class="content">{{fromatTime(orderData.finishTime)}}</span></li>
           </ul>
         </div>
       </div>
+      <!--
+              1: 待支付
+              2: 待发货
+              3: 待收货
+              4: 待评价
+              5: 交易成功
+              6: 交易关闭 -->
       <div class="orderOperBtn">
-        <span class="gray" v-if="orderData.status==2||orderData.status==3">查看物流</span>
-        <span class="gray" v-if="orderData.status==2||orderData.status==6">删除订单</span>
-        <span class="glod" v-if="orderData.status==2">评价</span>
-        <span class="gray" v-if="orderData.status==3">延长收货</span>
-        <span class="glod" v-if="orderData.status==3">确认收货</span>
-        <span class="gray" v-if="orderData.status==6">联系客服</span>
+        <span class="gray" v-if="orderData.status==1" @click="openReason">取消订单</span>
+        <span class="glod" v-if="orderData.status==1" @click="pay(orderData.orderSn)">去支付</span>
+        <span class="gray" v-if="orderData.status==2||orderData.status==3||orderData.status==4" @click="watchLogistics">查看物流</span>
+        <span class="gray" v-if="orderData.status==2||orderData.status==4||orderData.status==6" @click="deleteSure">删除订单</span>
+        <span class="glod" v-if="orderData.status==2||orderData.status==4" @click="immedEvaluate()">评价</span>
+        <span class="gray" v-if="orderData.status==3&&delayState!=0" @click="delay">延长收货</span>
+        <span class="glod" v-if="orderData.status==3" @click="confirmGoods(orderData.orderSn)">确认收货</span>
+        <span class="gray" v-if="orderData.status==6" @click="customerService">联系客服</span>
       </div>
     </div>
+    <!-- 取消订单 -->
+     <mt-popup position="bottom" v-model="reasonVisible" @touchmove.prevent>
+      <div class="popWrap">
+        <div class="title">
+          取消订单原因
+          <div class="close" @click="closeReason">×</div>
+        </div>
+        <div class="reasonTip">
+          <i>温馨提示：</i>订单取消，无法恢复，特价等优惠一并取消
+        </div>
+        <ul>
+          <li>
+            <label for="reason1">
+              <div class="top">
+                <h3 class="name">不想买了</h3>
+                <span class="radioWrap">
+                  <icon :type="reasonDesc==='不想买了'?'success':'circle'"></icon>
+                  <input type="radio" value="不想买了" v-model="reasonDesc" id="reason1">
+                </span>
+              </div>
+            </label>
+          </li>
+          <li>
+            <label for="reason2">
+              <div class="top">
+                <h3 class="name">信息填写错误，重新拍</h3>
+                <span class="radioWrap">
+                  <icon :type="reasonDesc==='信息填写错误，重新拍'?'success':'circle'"></icon>
+                  <input type="radio" value="信息填写错误，重新拍" v-model="reasonDesc" id="reason2">
+                </span>
+              </div>
+            </label>
+          </li>
+           <li >
+            <label for="reason3">
+              <div class="top">
+                <h3 class="name">其他原因</h3>
+                <span class="radioWrap">
+                  <icon :type="reasonDesc==='其他原因'?'success':'circle'"></icon>
+                  <input type="radio" value="其他原因" v-model="reasonDesc" id="reason3">
+                </span>
+              </div>
+            </label>
+          </li>
+        </ul>
+        <div class="bottomClose" @click="cancelOrder(orderData.orderSn)">
+          提交
+        </div>
+      </div>
+    </mt-popup>
   </div>
 </template>
 
@@ -93,7 +154,10 @@ import {
   orderDetails,
   cancelOrder,
   confirmGoods,
-  refundOrderDetail
+  refundOrderDetail,
+  deleteOrder,
+  customerService,
+  delayGoods
 } from 'util/netApi'
 import {
   http
@@ -104,15 +168,19 @@ import {
 } from 'util/config' // 图片路径
 import notice from 'util/notice.js'
 import {
-  Toast
+  Toast,
+  Popup
 } from 'mint-ui'
 import {
   storage
 } from 'util/storage'
 import {
-  logistics,
   aftersale
 } from 'util/const'
+import {
+  Icon
+} from 'vux'
+import { clearInterval } from 'timers'
 export default {
   data () {
     return {
@@ -123,37 +191,66 @@ export default {
       computedTime: 0,
       time: '',
       codeValue: '',
+      orderSn: '',
       remainingTime: null,
-      timer: null
+      timer: null,
+      reasonVisible: false,
+      reasonDesc: '不想买了',
+      surplus: 0,
+      none: false,
+      delayState: 0
     }
   },
   components: {
     CommonHeadLink,
-    OrderItem
+    OrderItem,
+    Icon,
+    'mt-popup': Popup
   },
   watch: {
     '$route' (to, from) {
-      // this.$router.go(0)
-      // if (to.name === 'orderDetails') {
-      //   this.orderDetailRender()
-      // }
+      if (to.name === 'orderDetails') {
+        this.orderDetailRender()
+      }
     }
+    // 倒计时结束后重新渲染
+    // surplus (v) {
+    //   if (v > 1) {
+    //     if (this.none) {
+    //       this.orderDetailRender()
+    //     }
+    //   }
+    // }
   },
-  methods: {
 
+  methods: {
     // 订单列表页面渲染
     orderDetailRender () {
       let orderCode = this.$route.params.orderSn
+      this.orderSn = orderCode
       http(orderDetails, [orderCode]).then((res) => {
         console.log(res)
         this.orderData = res.data.body
+        this.delayState = res.data.body.delayState
         let _this = this
-        _this.remainingTime = _this.formatDuring(new Date(res.data.body.allowPayTime).getTime() - new Date())
-        this.timer = setInterval(() => {
-          let time = new Date(_this.confirmTime).getTime() - new Date()
-          _this.remainingTime = _this.formatDuring(time)
-        }, 1000)
+        _this.confirmTime = res.data.body.allowPayTime
+        _this.remainingTime = _this.formatDuring(new Date(_this.confirmTime).getTime() - new Date())
+        if (new Date(_this.confirmTime).getTime() - new Date() > 0) {
+          this.timer = setInterval(() => {
+            let time = new Date(_this.confirmTime).getTime() - new Date()
+            _this.remainingTime = _this.formatDuring(time)
+            _this.surplus++
+          }, 1000)
+        } else {
+          console.log(111)
+          // let _this = this
+          clearInterval(this.timer)
+        }
       })
+    },
+    // 时间去'T'
+    fromatTime (time) {
+      if (time) return time.split('T').join(' ')
     },
     // 时间格式化
     formatDuring (mss) {
@@ -167,11 +264,36 @@ export default {
           seconds
         }
       } else {
+        this.none = true
         return {
           minutes: '00',
           seconds: '00'
         }
       }
+    },
+    // 去支付
+    pay (orderSn) {
+      this.$router.push('/immedPayment/' + orderSn)
+    },
+    // 立即评价
+    immedEvaluate () {
+      this.$router.push('/immedEvaluate/' + this.orderSn)
+    },
+    // 联系客服
+    customerService () {
+      window.location.href = customerService
+    },
+    // 确认删除弹窗
+    deleteSure () {
+      notice.confirm('确认删除订单？', '删除订单后无法恢复，请谨慎操作', this.deleteOrder)
+    },
+    // 删除订单
+    deleteOrder () {
+      http(deleteOrder, [this.orderSn]).then(res => {
+        if (res.data.code === 0) {
+          this.$router.push('/orderList/-1')
+        }
+      })
     },
     // 查看售后
     orderDetails (orderId) {
@@ -195,14 +317,58 @@ export default {
       // type 1   未发货退款 2 退货退款
       this.$router.push('/applyRefund/1/' + orderId)
     },
-    // 取消订单
-    cancelOrder (orderId) {
-      let _this = this
-      http(cancelOrder, [orderId]).then((response) => {
-        if (response.data.code === 0) {
-          notice.confirm('取消订单', '是否取消此订单', function () {
-            _this.$router.push('/orderList/1')
+    // 延长收货
+    delay () {
+      if (this.delayState === 1) {
+        Toast({
+          message: '距离结束时间3天才可以申请延长收货哦',
+          position: 'center',
+          duration: 2000
+        })
+      } else {
+        let _this = this
+        notice.confirm('确认延长收货时间？', '每笔订单只能延长一次哦', function () {
+          http(delayGoods, this.orderSn).then((response) => {
+            if (response.data.body === true) {
+              Toast({
+                message: '延长收货成功',
+                position: 'center',
+                duration: 2000
+              })
+              setTimeout(() => {
+                _this.orderDetailRender()
+              }, 2000)
+            }
           })
+        })
+      }
+    },
+    // 弹窗显示
+    openReason () {
+      this.reasonVisible = true
+    },
+    // 关闭弹窗
+    closeReason () {
+      this.reasonVisible = false
+    },
+    // 取消订单
+    cancelOrder (orderSn) {
+      let params = {
+        orderSn,
+        reasonDesc: this.reasonDesc
+      }
+      http(cancelOrder, params).then((response) => {
+        console.log(response)
+        if (response.data.code === 0) {
+          this.closeReason()
+          Toast({
+            message: '取消订单成功',
+            position: 'center',
+            duration: 2000
+          })
+          setTimeout(() => {
+            this.orderDetailRender()
+          }, 2000)
         }
       })
     },
@@ -212,31 +378,25 @@ export default {
     },
     // 确认收货
     confirmGoods (orderCode) {
+      let _this = this
       notice.confirm('您确定收到货物？', '否则可能钱财两空', function () {
         http(confirmGoods, [orderCode]).then((response) => {
           if (response.data.body === true) {
             Toast({
               message: '收货成功',
-              position: 'bottom',
+              position: 'center',
               duration: 2000
             })
-            this.$router.go(0)
+            setTimeout(() => {
+              _this.orderDetailRender()
+            }, 2000)
           }
         })
       })
     },
     // 查看物流
-    watchLogistics (logisticsName, logisticsNo) {
-      let params = {
-        logino: logisticsNo,
-        code: logisticsName
-      }
-      storage.setLocalStorage(logistics, params)
-      this.$router.push('/watchLogistics')
-    },
-    // 立即评价
-    immedEvaluate (orderCode) {
-      this.$router.push('/immedEvaluate/' + orderCode)
+    watchLogistics () {
+      this.$router.push(`/watchLogistics/${this.orderSn}`)
     },
     // 申请售后
     afterSale (data, orderId) {
@@ -247,6 +407,9 @@ export default {
   mounted () {
     this.orderDetailRender()
   }
+  // beforeRouteLeave (to, from, next) {
+  //   clearInterval(this.timer)
+  // }
 }
 </script>
 
@@ -323,18 +486,29 @@ export default {
   .bgTop
     height 370px
     background url('/static/images/statusDescBg.png')
+    display flex
     .statusDesc
       font-size 66px
       color #FFFFFF
       line-height 227px
       padding-left 108px
-      padding-right 307px
+      padding-right 260px
     .time
       font-size 40px
       line-height 227px
       color #FEFEFE
+      flex 1
+      text-align right
+      padding-right 50px
       i
         color #C39568
+    .reason
+      color #FEFEFE
+      font-size 40px
+      line-height 227px
+      flex 1
+      text-align right
+      padding-right 50px
   .orderProvide
     padding 20px 50px
     .orderName
@@ -385,7 +559,11 @@ export default {
       justify-content space-between
     .name
       color #999
+    .border-top
+      padding-top 20px
     .all
+      padding-top 0px
+      margin-top 20px
       .name
         font-size 36px
         b
@@ -402,7 +580,104 @@ export default {
         line-height 78px
       .name
         color #999
+    .tip
+      color #C5A086
+      font-size 36px
+      line-height 50px
+      padding-bottom 40px
+      i
+        width 32px
+        height 32px
+        border-radius 50%
+        display inline-block
+        border 2px solid #C5A086
+        line-height 30px
+        text-align center
+        font-size 30px
+        margin-right 20px
   .infoContent
     color #999
     padding-bottom 40px
+.popWrap
+  .bottomClose
+    height 250px
+    line-height 250px
+    background-color #F0F0F0
+    font-size 50px
+    color #BA825A
+    text-align center
+  .title
+    height 190px
+    line-height 190px
+    color #333333
+    font-size 56px
+    font-weight 600
+    text-align center
+    position relative
+    .close
+      position absolute
+      right 0
+      top 0
+      color #999999
+      font-weight normal
+      width 100px
+      height 190px
+  .reasonTip
+    font-size 40px
+    padding-left 52px
+    color #666666
+    margin-bottom 40px
+    i
+      color #333
+  ul
+    padding 0 50px
+    li
+      line-height 148px
+      .top
+        display flex
+        justify-content space-between
+        align-items center
+      label
+        display inline-block
+        width 100%
+        height 100%
+      .name
+        font-size 46px
+        color #333333
+        line-height 148px
+        display inline-block
+        opacity 1
+        font-weight 600
+  .radioWrap
+    position relative
+    width 80px
+    height 80px
+    overflow hidden
+    display inline-block
+    input
+      position absolute
+      top 0
+      left 0
+      z-index 999999
+      opacity 0
+      width 60px
+      height 60px
+
+</style>
+<style lang="stylus">
+.wrapper
+  .mint-popup
+    width 100%
+    z-index 999999 !important
+.radioWrap
+  .weui-icon
+    width 60px
+    height 60px
+    font-size 50px
+    line-height 70px
+    position absolute
+    top 0
+    left 0
+  .weui-icon-success
+    color #BA825A
 </style>

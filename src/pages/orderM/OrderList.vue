@@ -4,12 +4,12 @@
     <div class="orderListWrap">
       <div class="topTap">
         <tab>
-           <tab-item :selected="item.index==currentIndex" v-for="(item,index) in tabbar" :key="index" >
-             <router-link :to="`/orderList/${item.index}`">
-               {{item.text}}
-             </router-link>
-           </tab-item>
-      </tab>
+          <tab-item :selected="item.index==currentIndex" v-for="(item,index) in tabbar" :key="index">
+            <router-link :to="`/orderList/${item.index}`">
+              {{item.text}}
+            </router-link>
+          </tab-item>
+        </tab>
       </div>
       <router-view/>
     </div>
@@ -31,27 +31,26 @@ export default {
   },
   data () {
     return {
-      tabbar: [
-        {
-          index: -1,
-          text: '全部'
-        },
-        {
-          index: 1,
-          text: '待付款'
-        },
-        {
-          index: 2,
-          text: '待发货'
-        },
-        {
-          index: 3,
-          text: '待收货'
-        },
-        {
-          index: 4,
-          text: '待评价'
-        }
+      tabbar: [{
+        index: -1,
+        text: '全部'
+      },
+      {
+        index: 1,
+        text: '待付款'
+      },
+      {
+        index: 2,
+        text: '待发货'
+      },
+      {
+        index: 3,
+        text: '待收货'
+      },
+      {
+        index: 4,
+        text: '待评价'
+      }
       ],
       currentIndex: -1
     }
@@ -97,7 +96,7 @@ export default {
 .orderList>>>.vux-tab
     height 106px
 .orderList>>>.scrollable .vux-tab-item
-  flex 0 0 20%
+  flex 0 0 17%
 .orderList>>>.vux-tab .vux-tab-item
     height 106px
     line-height 106px

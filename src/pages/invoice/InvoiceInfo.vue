@@ -6,27 +6,27 @@
       </router-link>
     </common-nav-header>
     <div class="xpInvoiceWrap" ref="xpInvoiceWrap">
-      <group title="资质信息" class="wrap">
-        <div class="radioWrap">
+      <group :title="inputForm.invoiceStatus==1?'发票抬头':'资质信息'" class="wrap" v-if="!this.info">
+        <div class="radioWrap" v-if="inputForm.invoiceStatus==1">
           <label for="radio1">
-              <input type="radio" id="radio1" value="radio1" v-model="radio3">
-              <span :class =" {active : radio3 === 'radio1'}">个人</span>
+              <input type="radio" id="radio1" value="1" v-model="inputForm.invoiceType">
+              <span :class =" {active : inputForm.invoiceType === '1'}">个人</span>
             </label>
           <label for="radio2">
-              <input type="radio" id="radio2" value="radio2" v-model="radio3">
-              <span :class =" {active : radio3 !== 'radio1'}">单位</span>
+              <input type="radio" id="radio2" value="2" v-model="inputForm.invoiceType">
+              <span :class =" {active : inputForm.invoiceType !== '1'}">单位</span>
             </label>
         </div>
-        <x-input placeholder="请填写单位名称" v-model.trim="inputForm.name"></x-input>
+        <x-input placeholder="请填写单位名称" v-model.trim="inputForm.name" v-if="inputForm.invoiceType==2||inputForm.invoiceStatus==2"></x-input>
         <div class="iconWrap">
-          <x-input placeholder="请填写纳税人识别号/社会统一代码" v-model.trim="inputForm.idCode"></x-input>
+          <x-input placeholder="请填写纳税人识别号/社会统一代码" v-model.trim="inputForm.idCode" v-if="inputForm.invoiceType==2||inputForm.invoiceStatus==2"></x-input>
           <icon type="info-circle" class="icon" v-if="!inputForm.idCode.length" @click.native="explainShow"></icon>
         </div>
-        <x-input placeholder="请填写注册地址，确保与贵司税务登记信息一致" v-model.trim="inputForm.companyAddress"></x-input>
-        <x-input placeholder="请输入注册电话" v-model.trim="inputForm.phone"></x-input>
-        <x-input placeholder="请输入开户银行" v-model.trim="inputForm.bank"></x-input>
-        <x-input placeholder="请输入银行账户" v-model.trim="inputForm.accountNumber"></x-input>
-        <group title="资质附件">
+        <x-input placeholder="请填写注册地址，确保与贵司税务登记信息一致" v-model.trim="inputForm.companyAddress" v-if="inputForm.invoiceStatus==2"></x-input>
+        <x-input placeholder="请输入注册电话" v-model.trim="inputForm.phone" v-if="inputForm.invoiceStatus==2"></x-input>
+        <x-input placeholder="请输入开户银行" v-model.trim="inputForm.bank" v-if="inputForm.invoiceStatus==2"></x-input>
+        <x-input placeholder="请输入银行账户" v-model.trim="inputForm.accountNumber" v-if="inputForm.invoiceStatus==2"></x-input>
+        <group title="资质附件" v-if="inputForm.invoiceStatus==2">
           <p class="tip">为确保增票开具的准确性，请提交资质附件以作为开票校验依据</p>
           <div class="upWrap">
             <div v-show="inputForm.certificate===''">
@@ -55,15 +55,15 @@
               <input type="hidden" :value="inputForm.license" name="need" placeholder="开户许可证">
               <input type="file" accept="image/*" @change="headerUpfile(3)">
               <span class="info">
-                    <img src="/static/icons/invoice_carmer3.png" alt="">
-                    </span>
+                <img src="/static/icons/invoice_carmer3.png" alt="">
+              </span>
             </div>
             <img v-lazy="imageUrl+inputForm.license" alt="" class="upImg" v-show="inputForm.license!==''">
             <div class="delIcon" v-if="inputForm.license!==''" @click="delImg ('license')"></div>
           </div>
         </group>
       </group>
-     <group title="资质信息" class="wrap">
+     <group title="资质信息" class="wrap" v-if="from==1&&this.info">
        <ul class="infoWrap">
          <li>
            <span class="name">单位名称：</span>
@@ -94,7 +94,7 @@
            <span class="infoItem">深圳市星品优汇电子商务有限公司</span>
          </li>
        </ul>
-        <group title="资质附件">
+        <group title="资质附件" v-if="inputForm.invoiceStatus==2">
           <p class="tip">为确保增票开具的准确性，请提交资质附件以作为开票校验依据</p>
           <div class="upWrap">
             <img v-lazy="imageUrl+inputForm.certificate" alt="" class="upImg" v-show="inputForm.certificate!==''">
@@ -109,12 +109,12 @@
           </div>
         </group>
       </group>
-      <group title="收票人信息" class="wrap">
-        <x-input placeholder="请填写收票人姓名" v-model.trim="inputForm.name1"></x-input>
-        <x-input placeholder="请填写收票人手机号" v-model.trim="inputForm.name2"></x-input>
-        <x-input placeholder="请选择所在区域" v-model.trim="inputForm.name3"></x-input>
-        <CommonTextarea placeholder="请填写详情收票详细地址" v-model="inputForm.name4" @input="changeDetails" :max="100" class="addressText"></CommonTextarea>
-        <x-input placeholder="请填写邮箱，用来接收电子发票邮件，可选填" v-model.trim="inputForm.name5"></x-input>
+      <group title="收票人信息" class="wrap" v-if="from==2">
+        <x-input placeholder="请填写收票人姓名" v-model.trim="inputForm.name1" v-if="inputForm.invoiceStatus==2"></x-input>
+        <x-input placeholder="请填写收票人手机号" v-model.trim="inputForm.phone"></x-input>
+        <x-input placeholder="请选择所在区域" v-model.trim="inputForm.name3" v-if="inputForm.invoiceStatus==2"></x-input>
+        <CommonTextarea placeholder="请填写详情收票详细地址" v-model="inputForm.companyAddress" @input="changeDetails" :max="100" class="addressText" v-if="inputForm.invoiceStatus==2"></CommonTextarea>
+        <x-input placeholder="请填写邮箱，用来接收电子发票邮件，可选填" v-model.trim="inputForm.email" v-if="inputForm.invoiceStatus==1"></x-input>
 
       </group>
       <div class="submit">提交</div>
@@ -163,7 +163,8 @@ import {
 } from 'util/request'
 import {
   addInvoice,
-  updateInvoice
+  updateInvoice,
+  getInvoice
 } from 'util/netApi'
 import {
   Toast,
@@ -192,28 +193,32 @@ export default {
     return {
       imageUrl: config.imageUrl,
       title: '发票信息',
+      info: null, // 已经存在的发票信息
       explainVisible: false,
-      radio3: 'radio1',
+      from: 1, // 从哪个页面进来
       inputForm: {
+        invoiceType: '',
+        invoiceStatus: '',
+        invoiceStyle: '',
         certificate: '',
-        advice: '',
-        license: '',
-        headeShow: true,
-        infoShow: false,
-        infoAllShow: false,
         name: '',
         idCode: '',
+        province: '',
+        city: '',
+        area: '',
         companyAddress: '',
+        email: '',
+        tel: '',
         phone: '',
         bank: '',
         accountNumber: '',
-        remark: '',
         invoiceEnclosureList: [],
+
+        remark: '',
         name1: '',
         name2: '',
         name3: '',
-        name4: '',
-        name5: ''
+        name4: ''
       }
     }
   },
@@ -222,7 +227,6 @@ export default {
       this.explainVisible = true
     },
     explainHide () {
-      console.log(4444)
       this.explainVisible = false
     },
     changeDetails (v) {
@@ -238,9 +242,23 @@ export default {
     delImg (str) {
       this.inputForm[str] = ''
     },
+    // 查询发票信息
+    getInvoiceInfo () {
+      http(getInvoice).then(res => {
+        console.log(res)
+        this.info = res.data.body
+        Object.assign(this.inputForm, this.info)
+        console.log(this.inputForm)
+      }).catch(err => {
+        console.log(err)
+      })
+    },
     submit: function () {
       //  this.toastShow(input[i].placeholder + '不能为空')
-
+      // 假如是专票，相应的发票type为企业
+      if (this.inputForm.invoiceStatus === 2) {
+        this.inputForm.invoiceType = 2
+      }
       http(updateInvoice, this.inputForm)
       http(addInvoice, this.inputForm)
     },
@@ -264,10 +282,15 @@ export default {
     }
   },
   created () {
+    this.from = this.$route.params.from
+    this.getInvoiceInfo()
     if (storage.getLocalStorage(invoiceInfo)) {
       this.inputForm = storage.getLocalStorage(invoiceInfo)
       storage.delLocalStorage(invoiceInfo)
     }
+    this.inputForm.invoiceType = this.$route.params.invoiceType
+    this.inputForm.invoiceStatus = this.$route.params.invoiceStatus
+    this.inputForm.invoiceStyle = this.$route.params.invoiceStatus
   }
 }
 </script>

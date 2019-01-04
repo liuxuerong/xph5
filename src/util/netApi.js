@@ -88,7 +88,7 @@ export const listUseCoupon = {url: '/coupon/listUseCoupon', method: 'GET', versi
 // 发票
 export const addInvoice = { url: '/invoice/api', method: 'POST', version: v1 } // 新增
 export const updateInvoice = { url: '/invoice/api', method: 'PUT', version: v1 } // 修改
-export const getInvoice = { url: '/invoice/api/member/get', method: 'GET', version: v1 } // 修改
+export const getInvoice = { url: '/invoice/api/member/get', method: 'GET', version: v1 } // 查询当前登录会员的发票信息
 
 // 个人中心
 export const memberCenter = { url: '/member/api/center', method: 'GET', version: v1 }
@@ -97,10 +97,14 @@ export const memberCenter = { url: '/member/api/center', method: 'GET', version:
 export const OrderList1 = { url: '/order/member/orders', method: 'GET', version: v1 } // 订单列表
 export const OrderList = { url: '/order/member/orders', method: 'GET', version: v2 } // 订单列表
 export const orderDetails = {url: '/order/detail', method: 'GET', version: v2, join: true}// v2版本获取订单详情
-export const cancelOrder = { url: '/order/cancel', method: 'PUT', version: v1, join: true } // 取消订单
+export const cancelOrder1 = { url: '/order/cancel', method: 'PUT', version: v1, join: true } // 取消订单
+export const cancelOrder = { url: '/order/cancel/goods', method: 'PUT', version: v2 } // 取消订单
+export const deleteOrder = { url: '/order/delete', method: 'GET', version: v2, join: true } // 删除订单
 export const subOrderDetail = { url: '/order/detail', method: 'GET', version: v1, join: true } // 子订单详情
 export const refundOrderDetail = { url: '/order/detail', method: 'GET', version: v1, join: true } // 退款订单详情
-export const confirmGoods = { url: '/order/confirm/goods', method: 'PUT', version: v1, join: true } // 确认收货
+export const confirmGoods1 = { url: '/order/confirm/goods', method: 'PUT', version: v1, join: true } // 确认收货
+export const confirmGoods = { url: '/order/confirm/goods', method: 'PUT', version: v2, join: true } // 确认收货
+export const delayGoods = { url: '/order/delay/goods', method: 'PUT', version: v2 } // 延长收货
 export const orderSince = { url: '/order/since', method: 'GET', version: v1, join: true } // 提货信息
 export const pickUp = { url: '/order/since', method: 'PUT', version: v1, join: true } // 确认自提
 export const orderSearch = { url: '/order/member/search', method: 'GET', version: v1 } // 订单搜索
@@ -159,6 +163,7 @@ export const deliverAfterSales = { url: '/afterSales/deliverAfterSales', method:
 
 // 快递查询
 export const express = { url: '/express/order-kuaidi', method: 'GET', version: v1 }
+export const checkExpress = { url: '/order/checkExpress', method: 'GET', version: v2, join: true }// 版本2查询物流
 export const logisticsCompany = { url: '/logisticsCompany/list-logisticsCompany-all', method: 'GET', version: '' }
 
 // 客服接口

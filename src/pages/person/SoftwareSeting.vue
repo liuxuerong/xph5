@@ -35,7 +35,7 @@ export default {
       if (index === 0) {
         this.$router.push('/accountSecurity')
       } else if (index === 1) {
-        this.$router.push('/invoiceInfo')
+        this.$router.push('/invoiceInfo/1/2/1')
       } else if (index === 2) {
         this.$router.push('/agreement')
       } else if (index === 3) {

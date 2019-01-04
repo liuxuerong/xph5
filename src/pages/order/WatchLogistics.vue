@@ -24,10 +24,8 @@
 </template>
 <script>
 import SearchTitle from './ComOrderSearchTitle'
-import {express} from 'util/netApi'
+import {checkExpress} from 'util/netApi'
 import { http } from 'util/request'
-import {storage} from 'util/storage'
-import { logistics } from 'util/const'
 export default {
   data () {
     return {
@@ -41,9 +39,10 @@ export default {
   },
   methods: {
     logisticsRender () {
-      let params = storage.getLocalStorage(logistics)
-      this.params = params
-      http(express, params).then((response) => {
+      this.params = this.$route.params.orderSn
+      console.log(this.params)
+      http(checkExpress, [this.params]).then((response) => {
+        console.log(response)
         if (response.data.code === 0) {
           this.list = response.data.body.reverse()
           console.log(this.list)
