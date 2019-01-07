@@ -1,21 +1,23 @@
 <template>
   <div class="xpInvoice">
     <common-nav-header :title="title">
-      <router-link to="/instructions" class="knows">
+      <router-link to="/instructions" class="knows" v-if="from==2">
         开票须知
       </router-link>
+      <div class="btn" v-if="from==1&&showFrom1Status==1" @click="modifyStatus">修改</div>
+      <div class="btn" v-if="from==1&&showFrom1Status==2" @click="delStatus">删除</div>
     </common-nav-header>
     <div class="xpInvoiceWrap" ref="xpInvoiceWrap">
-      <group :title="inputForm.invoiceStatus==1?'发票抬头':'资质信息'" class="wrap" v-if="!this.info">
+      <group :title="inputForm.invoiceStatus==1?'发票抬头':'资质信息'" class="wrap" v-if="from==1&&showFrom1&&showFrom1Status ==2||from==2">
         <div class="radioWrap" v-if="inputForm.invoiceStatus==1">
           <label for="radio1">
-              <input type="radio" id="radio1" value="1" v-model="inputForm.invoiceType">
-              <span :class =" {active : inputForm.invoiceType === '1'}">个人</span>
-            </label>
+            <input type="radio" id="radio1" value="1" v-model="inputForm.invoiceType">
+            <span :class =" {active : inputForm.invoiceType === '1'}">个人</span>
+          </label>
           <label for="radio2">
-              <input type="radio" id="radio2" value="2" v-model="inputForm.invoiceType">
-              <span :class =" {active : inputForm.invoiceType !== '1'}">单位</span>
-            </label>
+            <input type="radio" id="radio2" value="2" v-model="inputForm.invoiceType">
+            <span :class =" {active : inputForm.invoiceType !== '1'}">单位</span>
+          </label>
         </div>
         <x-input placeholder="请填写单位名称" v-model.trim="inputForm.name" v-if="inputForm.invoiceType==2||inputForm.invoiceStatus==2"></x-input>
         <div class="iconWrap">
@@ -23,7 +25,7 @@
           <icon type="info-circle" class="icon" v-if="!inputForm.idCode.length" @click.native="explainShow"></icon>
         </div>
         <x-input placeholder="请填写注册地址，确保与贵司税务登记信息一致" v-model.trim="inputForm.companyAddress" v-if="inputForm.invoiceStatus==2"></x-input>
-        <x-input placeholder="请输入注册电话" v-model.trim="inputForm.phone" v-if="inputForm.invoiceStatus==2"></x-input>
+        <x-input placeholder="请输入注册电话" v-model.trim="inputForm.tel" v-if="inputForm.invoiceStatus==2"></x-input>
         <x-input placeholder="请输入开户银行" v-model.trim="inputForm.bank" v-if="inputForm.invoiceStatus==2"></x-input>
         <x-input placeholder="请输入银行账户" v-model.trim="inputForm.accountNumber" v-if="inputForm.invoiceStatus==2"></x-input>
         <group title="资质附件" v-if="inputForm.invoiceStatus==2">
@@ -33,10 +35,10 @@
               <input type="hidden" :value="inputForm.certificate" name="need" placeholder="公司营业执照">
               <input type="file" accept="image/*" @change="headerUpfile(1)">
               <span class="info">
-                      <img src="/static/icons/invoice_carmer1.png" alt="">
-                    </span>
+                <img src="/static/icons/invoice_carmer1.png" alt="">
+              </span>
             </div>
-            <img v-lazy="imageUrl+inputForm.certificate" alt="" class="upImg" v-show="inputForm.certificate!==''">
+            <img :src="imageUrl+inputForm.certificate" alt="" class="upImg" v-show="inputForm.certificate!==''">
             <div class="delIcon" v-if="inputForm.certificate!==''" @click="delImg ('certificate')"></div>
           </div>
           <div class="upWrap">
@@ -44,10 +46,10 @@
               <input type="hidden" :value="inputForm.advice" name="need" placeholder="一般纳税人认定通知书">
               <input type="file" accept="image/*" @change="headerUpfile(2)">
               <span class="info">
-                      <img src="/static/icons/invoice_carmer2.png" alt="">
-                    </span>
+                <img src="/static/icons/invoice_carmer2.png" alt="">
+              </span>
             </div>
-            <img v-lazy="imageUrl+inputForm.advice" alt="" class="upImg" v-show="inputForm.advice!==''">
+            <img :src="imageUrl+inputForm.advice" alt="" class="upImg" v-show="inputForm.advice!==''">
             <div class="delIcon" v-if="inputForm.advice!==''" @click="delImg ('advice')"></div>
           </div>
           <div class="upWrap">
@@ -58,66 +60,63 @@
                 <img src="/static/icons/invoice_carmer3.png" alt="">
               </span>
             </div>
-            <img v-lazy="imageUrl+inputForm.license" alt="" class="upImg" v-show="inputForm.license!==''">
+            <img :src="imageUrl+inputForm.license" alt="" class="upImg" v-show="inputForm.license!==''">
             <div class="delIcon" v-if="inputForm.license!==''" @click="delImg ('license')"></div>
           </div>
         </group>
       </group>
-     <group title="资质信息" class="wrap" v-if="from==1&&this.info">
-       <ul class="infoWrap">
-         <li>
-           <span class="name">单位名称：</span>
-           <span class="infoItem">深圳市星品优汇电子商务有限公司</span>
-         </li>
+      <group title="资质信息" class="wrap" v-if="from==1&&info&&showFrom1Status==1">
+        <ul class="infoWrap">
           <li>
-           <span class="name">纳税人识别号：</span>
-           <span class="infoItem">深圳市星品优汇电子商务有限公司</span>
-         </li>
+            <span class="name">单位名称：</span>
+            <span class="infoItem">{{inputForm.name}}</span>
+          </li>
           <li>
-           <span class="name">注册地址：</span>
-           <span class="infoItem">深圳市星品优汇电子商务有限公司</span>
-         </li>
+            <span class="name">纳税人识别号：</span>
+            <span class="infoItem">{{inputForm.idCode}}</span>
+          </li>
           <li>
-           <span class="name">注册电话：</span>
-           <span class="infoItem">深圳市星品优汇电子商务有限公司</span>
-         </li>
+            <span class="name">注册地址：</span>
+            <span class="infoItem">{{inputForm.companyAddress}}</span>
+          </li>
           <li>
-           <span class="name">开户银行：</span>
-           <span class="infoItem">深圳市星品优汇电子商务有限公司</span>
-         </li>
+            <span class="name">注册电话：</span>
+            <span class="infoItem">{{inputForm.tel}}</span>
+          </li>
           <li>
-           <span class="name">开户银行：</span>
-           <span class="infoItem">深圳市星品优汇电子商务有限公司</span>
-         </li>
-            <li>
-           <span class="name">银行账号：</span>
-           <span class="infoItem">深圳市星品优汇电子商务有限公司</span>
-         </li>
-       </ul>
+            <span class="name">开户银行：</span>
+            <span class="infoItem">{{inputForm.bank}}</span>
+          </li>
+          <li>
+            <span class="name">银行账号：</span>
+            <span class="infoItem">{{inputForm.accountNumber}}</span>
+          </li>
+        </ul>
         <group title="资质附件" v-if="inputForm.invoiceStatus==2">
           <p class="tip">为确保增票开具的准确性，请提交资质附件以作为开票校验依据</p>
           <div class="upWrap">
-            <img v-lazy="imageUrl+inputForm.certificate" alt="" class="upImg" v-show="inputForm.certificate!==''">
+            <img :src="imageUrl+inputForm.certificate" alt="" class="upImg" v-show="inputForm.certificate!==''">
           </div>
           <div class="upWrap">
             <img src="/static/icons/invoice_carmer2.png" alt="">
-            <img v-lazy="imageUrl+inputForm.advice" alt="" class="upImg" v-show="inputForm.advice!==''">
+            <img :src="imageUrl+inputForm.advice" alt="" class="upImg" v-show="inputForm.advice!==''">
           </div>
           <div class="upWrap">
-              <img src="/static/icons/invoice_carmer2.png" alt="">
-              <img v-lazy="imageUrl+inputForm.license" alt="" class="upImg" v-show="inputForm.license!==''">
+            <img src="/static/icons/invoice_carmer2.png" alt="">
+            <img :src="imageUrl+inputForm.license" alt="" class="upImg" v-show="inputForm.license!==''">
           </div>
         </group>
       </group>
       <group title="收票人信息" class="wrap" v-if="from==2">
-        <x-input placeholder="请填写收票人姓名" v-model.trim="inputForm.name1" v-if="inputForm.invoiceStatus==2"></x-input>
+        <x-input placeholder="请填写收票人姓名" v-model.trim="inputForm.consignee" v-if="inputForm.invoiceStatus==2"></x-input>
         <x-input placeholder="请填写收票人手机号" v-model.trim="inputForm.phone"></x-input>
-        <x-input placeholder="请选择所在区域" v-model.trim="inputForm.name3" v-if="inputForm.invoiceStatus==2"></x-input>
-        <CommonTextarea placeholder="请填写详情收票详细地址" v-model="inputForm.companyAddress" @input="changeDetails" :max="100" class="addressText" v-if="inputForm.invoiceStatus==2"></CommonTextarea>
+        <!-- <x-input placeholder="请选择所在区域" v-model.trim="inputForm.name3" v-if="inputForm.invoiceStatus==2"></x-input> -->
+        <x-address title="" v-model="addressList" :list="addressData" @on-hide='addressHide()' @on-shadow-change="onShadowChange" placeholder="请选择所在区域" :show.sync="showAddress" :raw-value="true"  v-if="inputForm.invoiceStatus==2"></x-address>
+        <CommonTextarea placeholder="请填写详情收票详细地址" v-model="inputForm.shippingAddress" @input="changeDetails" :max="100" class="addressText" v-if="inputForm.invoiceStatus==2"></CommonTextarea>
         <x-input placeholder="请填写邮箱，用来接收电子发票邮件，可选填" v-model.trim="inputForm.email" v-if="inputForm.invoiceStatus==1"></x-input>
 
       </group>
-      <div class="submit">提交</div>
+      <div class="submit" @click.stop="submit">提交</div>
     </div>
     <mt-popup v-model="explainVisible" @touchmove.prevent>
       <div class="explain">
@@ -151,7 +150,8 @@ import {
   storage
 } from 'util/storage'
 import {
-  invoiceInfo
+  invoiceInfo,
+  orderInfo
 } from 'util/const.js'
 import {
   uploadPic
@@ -164,7 +164,9 @@ import {
 import {
   addInvoice,
   updateInvoice,
-  getInvoice
+  getInvoice,
+  getInvoiceById,
+  delInvoice
 } from 'util/netApi'
 import {
   Toast,
@@ -175,8 +177,11 @@ import {
   Group,
   XInput,
   Cell,
-  Icon
+  Icon,
+  XAddress,
+  ChinaAddressV4Data
 } from 'vux'
+
 export default {
   name: 'Invoice',
   components: {
@@ -187,6 +192,7 @@ export default {
     Cell,
     CommonTextarea,
     Icon,
+    XAddress,
     'mt-popup': Popup
   },
   data () {
@@ -196,11 +202,21 @@ export default {
       info: null, // 已经存在的发票信息
       explainVisible: false,
       from: 1, // 从哪个页面进来
+      addressData: ChinaAddressV4Data,
+      showAddress: false,
+      addressList: [],
+      address: [],
+      showFrom1: false, // 从设置进来的时候默认都不显示
+      showFrom1Status: 0, // 从设置进来的时候查询当前登录会员的发票信息1：显示查看，2：显示填写 0不显示按钮 1修改 2删除
+      invoicingId: '', // 发票id
       inputForm: {
+        id: '',
         invoiceType: '',
         invoiceStatus: '',
         invoiceStyle: '',
-        certificate: '',
+        certificate: '', // 营业执照
+        advice: '', // 一般纳税人认定通知书
+        license: '', // 开户许可证
         name: '',
         idCode: '',
         province: '',
@@ -213,16 +229,22 @@ export default {
         bank: '',
         accountNumber: '',
         invoiceEnclosureList: [],
-
         remark: '',
-        name1: '',
-        name2: '',
-        name3: '',
-        name4: ''
+        consignee: '', // 收票人
+        shippingAddress: '' // 收票人详细地址
       }
     }
   },
   methods: {
+    onShadowChange (ids, names) {
+      console.log(ids, names)
+      this.address = names
+    },
+    addressHide () {
+      this.inputForm.province = this.address[0]
+      this.inputForm.city = this.address[1]
+      this.inputForm.area = this.address[2]
+    },
     explainShow () {
       this.explainVisible = true
     },
@@ -239,29 +261,165 @@ export default {
         duration: 1000
       })
     },
-    delImg (str) {
-      this.inputForm[str] = ''
+    // 修改按钮
+    modifyStatus () {
+      this.showFrom1Status = 2
     },
-    // 查询发票信息
-    getInvoiceInfo () {
-      http(getInvoice).then(res => {
+    // 删除按钮 删除发票资质
+    delStatus () {
+      http(delInvoice, [this.invoicingId]).then(res => {
         console.log(res)
-        this.info = res.data.body
-        Object.assign(this.inputForm, this.info)
-        console.log(this.inputForm)
+        // 重置inoutForm
+        for (let key in this.inputForm) {
+          if (key !== 'invoiceEnclosureList') {
+            this.inputForm[key] = ''
+          } else {
+            this.inputForm[key] = []
+          }
+        }
       }).catch(err => {
         console.log(err)
       })
     },
+    // 根据请求到的数据填充页面
+    setValue (res) {
+      this.info = res.data.body
+      this.showFrom1 = true
+      if (res.data.body) {
+        this.showFrom1Status = 1
+      }
+      // 发票附件赋值
+      if (res.data.body.invoiceEnclosureList.length !== 0) {
+        this.inputForm.certificate = res.data.body.invoiceEnclosureList[0].content
+        this.inputForm.advice = res.data.body.invoiceEnclosureList[1].content
+        this.inputForm.license = res.data.body.invoiceEnclosureList[2].content
+      }
+
+      // 省市区初始化
+      if (res.data.body.province) {
+        this.addressList[0] = res.data.body.province
+        this.addressList[1] = res.data.body.city
+        this.addressList[2] = res.data.body.area
+      }
+      Object.assign(this.inputForm, this.info)
+      console.log(this.inputForm)
+    },
+    // 查询发票信息
+    getInvoiceInfo () {
+      // 修改发票
+      let info = storage.getLocalStorage(orderInfo) || {}
+      this.invoicingId = info.invoicingId || ''
+      if (info.invoicingId && info.invoicingId !== '') {
+        http(getInvoiceById, [info.invoicingId]).then(res => {
+          console.log(res)
+          this.setValue(res)
+        }).catch(err => {
+          console.log(err)
+        })
+      } else {
+        // 第一次进入发票页面
+        http(getInvoice).then(res => {
+          console.log(res)
+          this.invoicingId = res.data.body.id
+          this.setValue(res)
+        }).catch(err => {
+          console.log(err)
+        })
+      }
+    },
+    // 校验
+    validate () {
+      let input = document.getElementsByTagName('input')
+      for (var i = 0; i < input.length; i++) {
+        if (input[i].type === 'text') {
+          if (input[i].placeholder.indexOf('请填写邮箱') === -1) {
+            if (input[i].value.trim() === '') {
+              this.toastShow(input[i].placeholder)
+              return
+            }
+          }
+        }
+        const isPhone = (value) => /^1\d{10}$/gi.test(value)
+        const isEmail = (value) => new RegExp('^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$').test(value)
+        if (this.inputForm.phone !== '' && !isPhone(this.inputForm.phone)) {
+          this.toastShow('请填写一个正确的手机号码')
+          return
+        }
+        if (this.inputForm.email !== '' && !isEmail(this.inputForm.email)) {
+          this.toastShow('请填写一个正确的邮箱')
+          return
+        }
+
+        if (input[i].type === 'hidden') {
+          if (input[i].name.indexOf('need') !== -1) {
+            if (input[i].value.trim() === '') {
+              this.toastShow(input[i].placeholder + '不能为空')
+              return
+            }
+          }
+        }
+      }
+      if (this.inputForm.invoiceType === 1 && this.inputForm.invoiceStatus === 2 && this.from === 2) {
+        if (!this.addressList.length) {
+          this.toastShow('所在区域不能为空')
+          return
+        }
+      }
+      let textarea = document.getElementsByTagName('textarea')
+      if (textarea[0].value.trim() === '') {
+        this.toastShow('请填写详情收票详细地址')
+      }
+    },
     submit: function () {
-      //  this.toastShow(input[i].placeholder + '不能为空')
-      // 假如是专票，相应的发票type为企业
+      this.validate()
+      if (this.inputForm.certificate !== '') {
+        this.inputForm.invoiceEnclosureList.push({
+          content: this.inputForm.certificate
+        })
+      }
+      if (this.inputForm.advice !== '') {
+        this.inputForm.invoiceEnclosureList.push({
+          content: this.inputForm.advice
+        })
+      }
+      if (this.inputForm.license !== '') {
+        this.inputForm.invoiceEnclosureList.push({
+          content: this.inputForm.license
+        })
+      }
       if (this.inputForm.invoiceStatus === 2) {
         this.inputForm.invoiceType = 2
       }
-      http(updateInvoice, this.inputForm)
-      http(addInvoice, this.inputForm)
+      if (this.inputForm === null) {
+        http(updateInvoice, this.inputForm)
+        http(addInvoice, this.inputForm).then(res => {
+          console.log(res)
+          let info = storage.getLocalStorage(orderInfo) || {}
+          info.invoicingId = res.data.body.id
+          info.invoicingType = this.inputForm.invoicingType
+          // info.shippingMethod = 1
+          storage.setLocalStorage(orderInfo, info)
+          storage.setLocalStorage(invoiceInfo, this.inputForm)
+          this.goOther()
+        }).catch(err => {
+          console.log(err)
+        })
+      }
     },
+    // 页面跳转
+    goOther () {
+      if (this.from === 2) {
+        this.$router.replace({path: '/createOrder/4'})
+      }
+    },
+    // 删除上传图片
+    delImg (str) {
+      console.log(this.inputForm[str])
+      this.inputForm[str] = ''
+      console.log(str)
+      console.log(this.inputForm[str])
+    },
+    // 图片上传
     headerUpfile (num) {
       let fileKey = uploadPic(event, axios.post)
       let key = ''
@@ -278,16 +436,17 @@ export default {
             this.inputForm.license = key
             break
         }
+        console.log(this.inputForm.license)
       })
     }
   },
   created () {
+    console.log(this.$route.params.from)
     this.from = this.$route.params.from
-    this.getInvoiceInfo()
-    if (storage.getLocalStorage(invoiceInfo)) {
-      this.inputForm = storage.getLocalStorage(invoiceInfo)
-      storage.delLocalStorage(invoiceInfo)
+    if (this.from === 1) {
+      this.title = '增票资质'
     }
+    // this.getInvoiceInfo()
     this.inputForm.invoiceType = this.$route.params.invoiceType
     this.inputForm.invoiceStatus = this.$route.params.invoiceStatus
     this.inputForm.invoiceStyle = this.$route.params.invoiceStatus
@@ -583,4 +742,30 @@ export default {
     z-index 999999 !important
   .v-modal
     z-index 9999 !important
+  .vux-popup-picker-placeholder
+    float left
+    color #666666
+    font-size 40px
+    font-weight normal
+.wrap .vux-popup-picker-value
+    color #666666
+    font-size 40px
+    text-align left
+    display inline-block
+    width 100%
+  .wrap .vux-cell-box:before
+      display none
+  .wrap .weui-cell_access .weui-cell__ft:after
+    border: solid 0.017778rem #B3B3B3;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    content: " ";
+    top: 50%;
+    z-index: 2;
+    right: 0;
+    position: absolute;
+    -webkit-transform: translateY(-50%) rotate(45deg);
+    transform: translateY(-50%) rotate(45deg);
+    width: 0.22444rem;
+    height: 0.22444rem;
 </style>

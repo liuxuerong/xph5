@@ -350,10 +350,10 @@ const router = new Router({
       component: resolve => require(['@/pages/order/ReturnGoodsMoney'], resolve)
     },
     {
-      path: '/returnLogistics',
-      name: 'returnLogistics',
+      path: '/returnLogistics1',
+      name: 'returnLogistics1',
       meta: { requireLogin: true },
-      component: resolve => require(['@/pages/order/ReturnLogistics'], resolve)
+      component: resolve => require(['@/pages/order/ReturnLogistics1'], resolve)
     },
     {
       path: '/touristToolCenter',
@@ -374,7 +374,21 @@ const router = new Router({
       path: '/classfiyGoods/:classfiyId',
       name: 'classfiyGoods',
       component: resolve => require(['@/pages/activitys/ClassfiyGoods'], resolve)
+    },
+    // 售后
+    {
+      path: '/record',
+      name: 'Record', // 服务记录
+      meta: { requireLogin: true },
+      component: resolve => require(['@/pages/afterSale/Record'], resolve)
+    },
+    {
+      path: '/returnLogistics',
+      name: 'ReturnLogistics', // 填写物流信息
+      // meta: { requireLogin: true },
+      component: resolve => require(['@/pages/afterSale/ReturnLogistics'], resolve)
     }
+
   ]
 })
 

@@ -84,11 +84,15 @@ export const getDetailById = {url: '/memberCouponRecord/getDetailById', method: 
 export const memberCouponRecord = {url: '/memberCouponRecord/add', method: 'POST', version: v1}
 export const listCouponByGoodsItemIds = {url: '/coupon/listCouponByGoodsItemIds', method: 'POST', version: v1} // 用户订单可用优惠券
 export const listUseCouponByGoodsId = {url: '/coupon/listUseCouponByGoodsId', method: 'GET', version: v1} // 用户可领取优惠券
-export const listUseCoupon = {url: '/coupon/listUseCoupon', method: 'GET', version: v1} // 查询指定会员可领取优惠券(只查未被使用的)(暂时购物车在用)
+export const listUseCoupon = { url: '/coupon/listUseCoupon', method: 'GET', version: v1 } // 查询指定会员可领取优惠券(只查未被使用的)(暂时购物车在用)
+
 // 发票
 export const addInvoice = { url: '/invoice/api', method: 'POST', version: v1 } // 新增
 export const updateInvoice = { url: '/invoice/api', method: 'PUT', version: v1 } // 修改
 export const getInvoice = { url: '/invoice/api/member/get', method: 'GET', version: v1 } // 查询当前登录会员的发票信息
+export const getInvoiceById = { url: '/invoice/api', method: 'GET', version: v1, join: true } // 根据发票id获取会员发票信息
+export const getInvoiceList = { url: '/invoice/api/list-iInvoice', method: 'GET', version: v1, join: true } // 分页查询会员发票
+export const delInvoice = { url: '/invoice/api', method: 'DELETE', version: v1, join: true } // 删除会员发票
 
 // 个人中心
 export const memberCenter = { url: '/member/api/center', method: 'GET', version: v1 }

@@ -149,13 +149,6 @@ export default {
         }
       })
     },
-    // 地址选择
-    doShowAddress () {
-      this.showAddress = true
-      setTimeout(() => {
-        this.showAddress = false
-      }, 2000)
-    },
     onShadowChange (ids, names) {
       this.user.names = names
     },
@@ -196,7 +189,6 @@ export default {
         // 1  新增加地址
         // 2  修改地址
         if (type === '1') {
-          console.log(this.user.value)
           if (!this.user.value.length) {
             return this.toastFn('请选择地址')
           }
@@ -325,19 +317,7 @@ export default {
         font-size 46px
         font-weight normal
       }
-.vux-popup-picker-container
-  .vux-no-group-title
-    margin-top 0
-  .vux-popup-header
-    height 130px
-    line-height 130px
-    font-size 40px
-  .vux-popup-header-right
-    color #ba825a
-  .vux-popup-picker-value
-    float left
-    color #808080
-    font-size 40px
+
 .goodsAddressWrapper
   .vux-label-desc
     font-size 46px

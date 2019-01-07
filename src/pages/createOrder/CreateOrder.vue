@@ -422,18 +422,18 @@ export default {
     },
     // 查询发票信息
     getInvoiceInfo () {
-      http(getInvoice).then(res => {
+      http(getInvoice, 'nolading').then(res => {
         console.log(res)
-        if (res.data.body.phone) {
+        if (res.data.body && res.data.body.phone) {
           this.invoicePhone = true
           if (this.invoicePhone) {
             let info = storage.getLocalStorage(orderInfo) || {}
             info.favorableId = res.data.body.favorableId
             info.invoicingType = 1
             storage.setLocalStorage(orderInfo, info)
-          } else {
-            this.toastShow('请填写发票抬头！')
           }
+        } else {
+          this.toastShow('请填写发票抬头！')
         }
       }).catch(err => {
         console.log(err)
