@@ -4,19 +4,20 @@
       <router-link to="/instructions" class="knows" v-if="from==2">
         开票须知
       </router-link>
-      <div class="btn" v-if="from==1&&showFrom1Status==1" @click="modifyStatus">修改</div>
-      <div class="btn" v-if="from==1&&showFrom1Status==2" @click="delStatus">删除</div>
+      <div class="btnTop" v-if="from==1&&showFrom1Status==1" @click="modifyStatus">修改</div>
+      <div class="btnTop" v-if="from==1&&showFrom1Status==2" @click="delStatus(invoicingId)">删除</div>
     </common-nav-header>
     <div class="xpInvoiceWrap" ref="xpInvoiceWrap">
-      <group :title="inputForm.invoiceStatus==1?'发票抬头':'资质信息'" class="wrap" v-if="from==1&&showFrom1&&showFrom1Status ==2||from==2">
+      <group :title="inputForm.invoiceStatus==1?'发票抬头':'资质信息'" class="wrap" v-if="from==1&&showFrom1&&showFrom1Status ==2||from==2||from==1&&!showFrom1&&showFrom1Status ==0">
         <div class="radioWrap" v-if="inputForm.invoiceStatus==1">
           <label for="radio1">
             <input type="radio" id="radio1" value="1" v-model="inputForm.invoiceType">
-            <span :class =" {active : inputForm.invoiceType === '1'}">个人</span>
+            <span :class =" {active : inputForm.invoiceType == '1'}">个人</span>
           </label>
-          <label for="radio2">
-            <input type="radio" id="radio2" value="2" v-model="inputForm.invoiceType">
-            <span :class =" {active : inputForm.invoiceType !== '1'}">单位</span>
+          <!-- @click="getInvoiceInfo" -->
+          <label for="radio2" @click="getInvoiceInfo">
+            <input type="radio" id="radio2" value="2" v-model="inputForm.invoiceType" >
+            <span :class =" {active : inputForm.invoiceType != '1' }" >单位{{inputForm.invoiceType}}</span>
           </label>
         </div>
         <x-input placeholder="请填写单位名称" v-model.trim="inputForm.name" v-if="inputForm.invoiceType==2||inputForm.invoiceStatus==2"></x-input>
@@ -31,37 +32,37 @@
         <group title="资质附件" v-if="inputForm.invoiceStatus==2">
           <p class="tip">为确保增票开具的准确性，请提交资质附件以作为开票校验依据</p>
           <div class="upWrap">
-            <div v-show="inputForm.certificate===''">
+            <div v-show="inputForm.certificate==''">
               <input type="hidden" :value="inputForm.certificate" name="need" placeholder="公司营业执照">
               <input type="file" accept="image/*" @change="headerUpfile(1)">
               <span class="info">
                 <img src="/static/icons/invoice_carmer1.png" alt="">
               </span>
             </div>
-            <img :src="imageUrl+inputForm.certificate" alt="" class="upImg" v-show="inputForm.certificate!==''">
-            <div class="delIcon" v-if="inputForm.certificate!==''" @click="delImg ('certificate')"></div>
+            <img :src="imageUrl+inputForm.certificate" alt="" class="upImg" v-show="inputForm.certificate!=''">
+            <div class="delIcon" v-if="inputForm.certificate!=''" @click="delImg ('certificate')"></div>
           </div>
           <div class="upWrap">
-            <div v-show="inputForm.advice===''">
+            <div v-show="inputForm.advice==''">
               <input type="hidden" :value="inputForm.advice" name="need" placeholder="一般纳税人认定通知书">
               <input type="file" accept="image/*" @change="headerUpfile(2)">
               <span class="info">
                 <img src="/static/icons/invoice_carmer2.png" alt="">
               </span>
             </div>
-            <img :src="imageUrl+inputForm.advice" alt="" class="upImg" v-show="inputForm.advice!==''">
-            <div class="delIcon" v-if="inputForm.advice!==''" @click="delImg ('advice')"></div>
+            <img :src="imageUrl+inputForm.advice" alt="" class="upImg" v-show="inputForm.advice!=''">
+            <div class="delIcon" v-if="inputForm.advice!=''" @click="delImg ('advice')"></div>
           </div>
           <div class="upWrap">
-            <div v-show="inputForm.license===''">
+            <div v-show="inputForm.license==''">
               <input type="hidden" :value="inputForm.license" name="need" placeholder="开户许可证">
               <input type="file" accept="image/*" @change="headerUpfile(3)">
               <span class="info">
                 <img src="/static/icons/invoice_carmer3.png" alt="">
               </span>
             </div>
-            <img :src="imageUrl+inputForm.license" alt="" class="upImg" v-show="inputForm.license!==''">
-            <div class="delIcon" v-if="inputForm.license!==''" @click="delImg ('license')"></div>
+            <img :src="imageUrl+inputForm.license" alt="" class="upImg" v-show="inputForm.license!=''">
+            <div class="delIcon" v-if="inputForm.license!=''" @click="delImg ('license')"></div>
           </div>
         </group>
       </group>
@@ -95,29 +96,33 @@
         <group title="资质附件" v-if="inputForm.invoiceStatus==2">
           <p class="tip">为确保增票开具的准确性，请提交资质附件以作为开票校验依据</p>
           <div class="upWrap">
-            <img :src="imageUrl+inputForm.certificate" alt="" class="upImg" v-show="inputForm.certificate!==''">
+            <img :src="imageUrl+inputForm.certificate" alt="" class="upImg" v-show="inputForm.certificate!=''">
           </div>
           <div class="upWrap">
-            <img src="/static/icons/invoice_carmer2.png" alt="">
-            <img :src="imageUrl+inputForm.advice" alt="" class="upImg" v-show="inputForm.advice!==''">
+            <img :src="imageUrl+inputForm.advice" alt="" class="upImg" v-show="inputForm.advice!=''">
           </div>
           <div class="upWrap">
-            <img src="/static/icons/invoice_carmer2.png" alt="">
-            <img :src="imageUrl+inputForm.license" alt="" class="upImg" v-show="inputForm.license!==''">
+            <img :src="imageUrl+inputForm.license" alt="" class="upImg" v-show="inputForm.license!=''">
           </div>
         </group>
       </group>
       <group title="收票人信息" class="wrap" v-if="from==2">
         <x-input placeholder="请填写收票人姓名" v-model.trim="inputForm.consignee" v-if="inputForm.invoiceStatus==2"></x-input>
         <x-input placeholder="请填写收票人手机号" v-model.trim="inputForm.phone"></x-input>
-        <!-- <x-input placeholder="请选择所在区域" v-model.trim="inputForm.name3" v-if="inputForm.invoiceStatus==2"></x-input> -->
-        <x-address title="" v-model="addressList" :list="addressData" @on-hide='addressHide()' @on-shadow-change="onShadowChange" placeholder="请选择所在区域" :show.sync="showAddress" :raw-value="true"  v-if="inputForm.invoiceStatus==2"></x-address>
+        <x-address title="" v-model="inputForm.addressList" :list="addressData" @on-hide='addressHide()' @on-shadow-change="onShadowChange" placeholder="请选择所在区域" :show.sync="showAddress" :raw-value="true"  v-if="inputForm.invoiceStatus==2"></x-address>
         <CommonTextarea placeholder="请填写详情收票详细地址" v-model="inputForm.shippingAddress" @input="changeDetails" :max="100" class="addressText" v-if="inputForm.invoiceStatus==2"></CommonTextarea>
         <x-input placeholder="请填写邮箱，用来接收电子发票邮件，可选填" v-model.trim="inputForm.email" v-if="inputForm.invoiceStatus==1"></x-input>
-
       </group>
-      <div class="submit" @click.stop="submit">提交</div>
+      <div v-if="invoiceList.length">
+        <div class="historyItem" v-for="(item,index) in invoiceList" :key="item.id" @click="setValue (invoiceList[index])">
+          <span v-if="item.invoiceType==1">{{item.phone}}nnnnnnn</span>
+          <span v-else>{{item.name}}</span>
+          <icon type="clear" class="icon" @click="delStatus(item.id)"></icon>
+        </div>
+      </div>
+      <div class="submit" @click.stop="submit" v-if="from==1&&showFrom1Status!=1||from!=1">提交</div>
     </div>
+
     <mt-popup v-model="explainVisible" @touchmove.prevent>
       <div class="explain">
         <div class="wrap">
@@ -150,7 +155,7 @@ import {
   storage
 } from 'util/storage'
 import {
-  invoiceInfo,
+  // invoiceInfo,
   orderInfo
 } from 'util/const.js'
 import {
@@ -165,8 +170,9 @@ import {
   addInvoice,
   updateInvoice,
   getInvoice,
-  getInvoiceById,
-  delInvoice
+  // getInvoiceById,
+  delInvoice,
+  getInvoiceList
 } from 'util/netApi'
 import {
   Toast,
@@ -204,8 +210,9 @@ export default {
       from: 1, // 从哪个页面进来
       addressData: ChinaAddressV4Data,
       showAddress: false,
-      addressList: [],
+      addressList: ['吉林省', '长春市', '南关区'],
       address: [],
+      invoiceList: [],
       showFrom1: false, // 从设置进来的时候默认都不显示
       showFrom1Status: 0, // 从设置进来的时候查询当前登录会员的发票信息1：显示查看，2：显示填写 0不显示按钮 1修改 2删除
       invoicingId: '', // 发票id
@@ -231,13 +238,13 @@ export default {
         invoiceEnclosureList: [],
         remark: '',
         consignee: '', // 收票人
-        shippingAddress: '' // 收票人详细地址
+        shippingAddress: '' , // 收票人详细地址
+        addressList: []
       }
     }
   },
   methods: {
     onShadowChange (ids, names) {
-      console.log(ids, names)
       this.address = names
     },
     addressHide () {
@@ -252,7 +259,7 @@ export default {
       this.explainVisible = false
     },
     changeDetails (v) {
-      this.inputForm.name4 = v
+      this.inputForm.shippingAddress = v
     },
     toastShow (text) {
       Toast({
@@ -266,158 +273,172 @@ export default {
       this.showFrom1Status = 2
     },
     // 删除按钮 删除发票资质
-    delStatus () {
-      http(delInvoice, [this.invoicingId]).then(res => {
-        console.log(res)
+    delStatus (invoicingId) {
+      http(delInvoice, [invoicingId]).then(res => {
         // 重置inoutForm
-        for (let key in this.inputForm) {
-          if (key !== 'invoiceEnclosureList') {
-            this.inputForm[key] = ''
-          } else {
-            this.inputForm[key] = []
-          }
-        }
+        this.$router.go(0)
       }).catch(err => {
         console.log(err)
       })
     },
+    // 分页查询会员发票
+    getInvoiceListData () {
+      let params = {
+        page: 1,
+        rows: 5,
+        invoiceType: this.inputForm.invoiceType
+      }
+      http(getInvoiceList, params).then(res => {
+        this.invoiceList = res.data.body.list
+        if (this.invoiceList.length) {
+          this.setValue(this.invoiceList[0])
+        }
+      })
+    },
     // 根据请求到的数据填充页面
-    setValue (res) {
-      this.info = res.data.body
+    setValue (data) {
+      this.info = data
       this.showFrom1 = true
-      if (res.data.body) {
+      if (data) {
         this.showFrom1Status = 1
       }
       // 发票附件赋值
-      if (res.data.body.invoiceEnclosureList.length !== 0) {
-        this.inputForm.certificate = res.data.body.invoiceEnclosureList[0].content
-        this.inputForm.advice = res.data.body.invoiceEnclosureList[1].content
-        this.inputForm.license = res.data.body.invoiceEnclosureList[2].content
+      if (data.invoiceEnclosureList && data.invoiceEnclosureList.length != 0) {
+        this.inputForm.certificate = data.invoiceEnclosureList[0].content
+        this.inputForm.advice = data.invoiceEnclosureList[1].content
+        this.inputForm.license = data.invoiceEnclosureList[2].content
       }
 
       // 省市区初始化
-      if (res.data.body.province) {
-        this.addressList[0] = res.data.body.province
-        this.addressList[1] = res.data.body.city
-        this.addressList[2] = res.data.body.area
+      if (data.province) {
+        this.inputForm.addressList[0] = data.province
+        this.inputForm.addressList[1] = data.city
+        this.inputForm.addressList[2] = data.area
       }
       Object.assign(this.inputForm, this.info)
-      console.log(this.inputForm)
     },
     // 查询发票信息
     getInvoiceInfo () {
-      // 修改发票
-      let info = storage.getLocalStorage(orderInfo) || {}
-      this.invoicingId = info.invoicingId || ''
-      if (info.invoicingId && info.invoicingId !== '') {
-        http(getInvoiceById, [info.invoicingId]).then(res => {
-          console.log(res)
-          this.setValue(res)
-        }).catch(err => {
-          console.log(err)
-        })
-      } else {
-        // 第一次进入发票页面
-        http(getInvoice).then(res => {
-          console.log(res)
-          this.invoicingId = res.data.body.id
-          this.setValue(res)
-        }).catch(err => {
-          console.log(err)
-        })
-      }
+      // 创建订单页面发票
+      setTimeout(() => {
+        if (this.from != '1' && this.inputForm.invoiceStatus == '1') {
+        // 普票
+          this.getInvoiceListData()
+        } else {
+          http(getInvoice).then(res => {
+            if (res.data.body) {
+              this.invoicingId = res.data.body.id
+              this.setValue(res.data.body)
+            }
+          }).catch(err => {
+            console.log(err)
+          })
+        }
+      }, 17)
     },
     // 校验
     validate () {
       let input = document.getElementsByTagName('input')
       for (var i = 0; i < input.length; i++) {
-        if (input[i].type === 'text') {
-          if (input[i].placeholder.indexOf('请填写邮箱') === -1) {
-            if (input[i].value.trim() === '') {
+        if (input[i].type == 'text') {
+          if (input[i].placeholder.indexOf('请填写邮箱') == -1) {
+            if (input[i].value.trim() == '') {
               this.toastShow(input[i].placeholder)
-              return
+              return false
             }
           }
         }
         const isPhone = (value) => /^1\d{10}$/gi.test(value)
         const isEmail = (value) => new RegExp('^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$').test(value)
-        if (this.inputForm.phone !== '' && !isPhone(this.inputForm.phone)) {
+        if (this.inputForm.phone != '' && !isPhone(this.inputForm.phone)) {
           this.toastShow('请填写一个正确的手机号码')
-          return
+          return false
         }
-        if (this.inputForm.email !== '' && !isEmail(this.inputForm.email)) {
+        if (this.inputForm.email != '' && !isEmail(this.inputForm.email)) {
           this.toastShow('请填写一个正确的邮箱')
-          return
+          return false
         }
 
-        if (input[i].type === 'hidden') {
-          if (input[i].name.indexOf('need') !== -1) {
-            if (input[i].value.trim() === '') {
+        if (input[i].type == 'hidden') {
+          if (input[i].name.indexOf('need') != -1) {
+            if (input[i].value.trim() == '') {
               this.toastShow(input[i].placeholder + '不能为空')
-              return
+              return false
             }
           }
         }
       }
-      if (this.inputForm.invoiceType === 1 && this.inputForm.invoiceStatus === 2 && this.from === 2) {
-        if (!this.addressList.length) {
+      if (this.inputForm.invoiceType == '2' && this.inputForm.invoiceStatus == '2' && this.from == '2') {
+        if (!this.inputForm.addressList.length) {
           this.toastShow('所在区域不能为空')
-          return
+          return false
         }
       }
       let textarea = document.getElementsByTagName('textarea')
-      if (textarea[0].value.trim() === '') {
+      if (textarea.length && textarea[0].value.trim() == '') {
         this.toastShow('请填写详情收票详细地址')
+        return false
       }
     },
-    submit: function () {
-      this.validate()
-      if (this.inputForm.certificate !== '') {
-        this.inputForm.invoiceEnclosureList.push({
-          content: this.inputForm.certificate
-        })
-      }
-      if (this.inputForm.advice !== '') {
-        this.inputForm.invoiceEnclosureList.push({
-          content: this.inputForm.advice
-        })
-      }
-      if (this.inputForm.license !== '') {
-        this.inputForm.invoiceEnclosureList.push({
-          content: this.inputForm.license
-        })
-      }
-      if (this.inputForm.invoiceStatus === 2) {
-        this.inputForm.invoiceType = 2
-      }
-      if (this.inputForm === null) {
-        http(updateInvoice, this.inputForm)
-        http(addInvoice, this.inputForm).then(res => {
-          console.log(res)
-          let info = storage.getLocalStorage(orderInfo) || {}
-          info.invoicingId = res.data.body.id
-          info.invoicingType = this.inputForm.invoicingType
-          // info.shippingMethod = 1
-          storage.setLocalStorage(orderInfo, info)
-          storage.setLocalStorage(invoiceInfo, this.inputForm)
-          this.goOther()
-        }).catch(err => {
-          console.log(err)
-        })
+    setData (id) {
+      let info = storage.getLocalStorage(orderInfo) || {}
+      info.invoicingId = id
+      info.invoiceType = this.inputForm.invoiceType
+      info.invoiceTitle = this.inputForm.name || '个人'
+      info.invoiceStatus = this.inputForm.invoiceStatus
+      // info.shippingMethod = 1
+      storage.setLocalStorage(orderInfo, info)
+      // storage.setLocalStorage(invoiceInfo, this.inputForm)
+      this.goOther()
+    },
+    submit () {
+      if (typeof (this.validate()) === 'undefined') {
+        if (this.inputForm.certificate != '') {
+          this.inputForm.invoiceEnclosureList.push({
+            content: this.inputForm.certificate
+          })
+        }
+        if (this.inputForm.advice != '') {
+          this.inputForm.invoiceEnclosureList.push({
+            content: this.inputForm.advice
+          })
+        }
+        if (this.inputForm.license != '') {
+          this.inputForm.invoiceEnclosureList.push({
+            content: this.inputForm.license
+          })
+        }
+        if (this.inputForm.invoiceStatus == 2) {
+          this.inputForm.invoiceType = 2
+        }
+        if (this.inputForm.id) {
+          http(updateInvoice, this.inputForm).then(res => {
+            console.log(this.inputForm)
+            console.log(this.inputForm.id)
+            this.setData(this.inputForm.id)
+          }).catch(err => {
+            console.log(err)
+          })
+        } else {
+          http(addInvoice, this.inputForm).then(res => {
+            this.setData(res.data.body.id)
+          }).catch(err => {
+            console.log(err)
+          })
+        }
       }
     },
     // 页面跳转
     goOther () {
-      if (this.from === 2) {
+      if (this.from == '2') {
         this.$router.replace({path: '/createOrder/4'})
+      } else {
+        this.$router.go(0)
       }
     },
     // 删除上传图片
     delImg (str) {
-      console.log(this.inputForm[str])
       this.inputForm[str] = ''
-      console.log(str)
-      console.log(this.inputForm[str])
     },
     // 图片上传
     headerUpfile (num) {
@@ -436,20 +457,21 @@ export default {
             this.inputForm.license = key
             break
         }
-        console.log(this.inputForm.license)
       })
     }
   },
   created () {
-    console.log(this.$route.params.from)
     this.from = this.$route.params.from
-    if (this.from === 1) {
+    if (this.from == 1) {
       this.title = '增票资质'
     }
-    // this.getInvoiceInfo()
     this.inputForm.invoiceType = this.$route.params.invoiceType
     this.inputForm.invoiceStatus = this.$route.params.invoiceStatus
     this.inputForm.invoiceStyle = this.$route.params.invoiceStatus
+    this.getInvoiceInfo()
+    // if (storage.getLocalStorage(invoiceInfo)) {
+    //   this.inputForm = storage.getLocalStorage(invoiceInfo)
+    // }
   }
 }
 </script>
@@ -732,7 +754,28 @@ export default {
     width 100%
     bottom 0
     left 0
-
+.historyItem
+  width 100%
+  height 140px
+  line-height 140px
+  border-radius 20px
+  display flex
+  background-color #fff
+  margin-bottom 30px
+  align-items center
+  justify-content space-between
+  padding 0 50px
+  font-size 40px
+  span
+   max-width 80%
+   ellipsis()
+.btnTop
+  position absolute
+  top 0
+  right 50px
+  color #262626
+  font-size 46px
+  font-weight normal
 </style>
 
 <style lang="stylus">

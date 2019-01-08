@@ -161,9 +161,10 @@ export const commentList = { url: '/comment', method: 'GET', version: v1 } // �
 // 退货退款
 export const applyAfterSales = { url: '/afterSales/applyAfterSales', method: 'POST', version: v1 } // 退货退款
 export const submitLogic = { url: '/afterSales/deliveryAfterSales', method: 'POST', version: v1 } // 仅退款
+export const deliverAfterSales = { url: '/afterSales/deliverAfterSales', method: 'POST', version: v1 }// 仅退款
 
-// 仅退款
-export const deliverAfterSales = { url: '/afterSales/deliverAfterSales', method: 'POST', version: v1 }
+// 售后
+export const afterSaleList = { url: '/order/afterSale/list', method: 'GET', version: v2 }// 售后列表
 
 // 快递查询
 export const express = { url: '/express/order-kuaidi', method: 'GET', version: v1 }

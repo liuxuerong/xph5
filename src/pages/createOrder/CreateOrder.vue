@@ -56,21 +56,16 @@
         </div>
         <div v-if="isInvoicing">
           <div class="cellLink">
-            <div class="text" @click="openType">发票类型<span class="fr">电子普通发票</span></div>
+            <div class="text" @click="openType">发票类型<span class="fr">{{this.invoiceStatus==1?'电子普通发票':'增值税专用发票'}}</span></div>
           </div>
           <div class="cellLink">
             <div>发票内容<span class="fr">商品明细</span></div>
           </div>
           <router-link :to="`/invoiceInfo/${invoiceType}/${invoiceStatus}/2`" class="cellLink">
-            <div class=" text">发票抬头<span class="fr">个人</span></div>
+            <div class=" text">发票抬头<span class="fr" v-if="info&&info.invoicingId">{{info.invoiceTitle}}</span></div>
           </router-link>
         </div>
       </div>
-
-      <!-- <router-link class="cellLink" to="/invoice">
-                    <div class="text">发票<span class="fr" v-if="info&&info.invoiceTypeValue">{{info.invoiceTypeValue}}&nbsp;&nbsp;{{info.invoiceStyleValue}}</span></div>
-                  </router-link> -->
-      <!-- <div class="cutOffLine30"></div> -->
       <div class="wrap">
         <div class="cellLink lh80">
           <div>商品金额<span class="fr">￥{{totalPric}}</span></div>
@@ -195,8 +190,8 @@ export default {
       isInvoicing: false,
       invoiceVisible: false,
       invoicePhone: false, // 收票人电话号码是否存在
-      invoiceStatus: 1, // 1、普票 2、专票
-      invoiceType: 1, // 1、个人 2、企业
+      invoiceStatus: '1', // 1、普票 2、专票
+      invoiceType: '1', // 1、个人 2、企业
       invoiceStatusSelect: 'One',
       params: {
         sourcePort: 1,
@@ -211,6 +206,7 @@ export default {
   watch: {
     '$route' (to, from) {
       if (to.name === 'CreateOrder' && to.params.info) {
+        console.log(789)
         this.info = storage.getLocalStorage(orderInfo)
         this.getDetails()
       } else if (to.name === 'CreateOrder' && !to.params.info) {
@@ -232,13 +228,26 @@ export default {
     // 发票类型弹窗选择
     invoiceStatusSelect (v) {
       if (v === 'Two') {
-        this.$router.push('/invoiceInfo/1/2/2')
+        this.invoiceStatus = '2'
+        this.invoiceType = '2'
+      } else {
+        // 假如重新选择
+        this.invoiceStatus = '1'
+        this.invoiceType = '1'
       }
+      let info = storage.getLocalStorage(orderInfo) || {}
+      info.invoicingType = this.invoiceStatus
+      info.invoiceStatus = this.invoiceType
+      console.log('invoicingId')
+      // info.invoicingId = null
+      storage.setLocalStorage(orderInfo, info)
+      this.info = info
     }
   },
   beforeRouteEnter (to, from, next) {
     // 第一次进入创建订单页面
     if (from.path.indexOf('/createOrder/') === -1 && to.path === '/createOrder') {
+      console.log(789)
       storage.setLocalStorage(createOrderFrom, from.path)
     }
     next()
@@ -274,49 +283,40 @@ export default {
         })
       }
     },
-    // 获取地址
-    // getAddress () {
-    //   let params = {
-    //     page: 1,
-    //     rows: 20
-    //   }
-    //   http(listDelivery, params).then(res => {
-    //     console.log(res)
-    //     let addressList = res.data.body.list
-    //     let flag = true
-    //     for (let item of addressList) {
-    //       if (item.idDefault) {
-    //         this.addressInfo = item
-    //         flag = false
-    //       }
-    //     }
-    //     if (flag) {
-    //       this.addressInfo = addressList[0]
-    //     }
-    //   }).catch(err => {
-    //     console.log(err)
-    //   })
-    // },
+    // 获取数据渲染页面
     getDetails () {
+      console.log(123)
       let goodsInfoCart = storage.getLocalStorage(goodsInfo)
-      this.unsatisfactoryData = []
+      // this.unsatisfactoryData = []
       // 库存不满足商品过滤
-      for (let i = 0; i < goodsInfoCart.goodsItems.length; i++) {
-        if (goodsInfoCart.goodsItems[i].num > goodsInfoCart.goodsItems[i].stock) {
-          this.unsatisfactoryData.push(goodsInfoCart.goodsItems[i])
-        }
-      }
-      if (!this.unsatisfactoryData.length) {
+      // for (let i = 0; i < goodsInfoCart.goodsItems.length; i++) {
+      //   if (goodsInfoCart.goodsItems[i].num > goodsInfoCart.goodsItems[i].stock) {
+      //     this.unsatisfactoryData.push(goodsInfoCart.goodsItems[i])
+      //   }
+      // }
+      // if (!this.unsatisfactoryData.length) {
         const orderInfoData = storage.getLocalStorage(orderInfo)
+        this.info = orderInfoData
+        console.log(this.info)
         let params = {}
         params = Object.assign({}, goodsInfoCart, orderInfoData)
-
+        // 从缓存中读取信息
         if (this.info) {
-          params.favorableId = this.info.couponId
+          if (this.info.couponId) {
+            params.favorableId = this.info.couponId
+          }
+          console.log(this.info)
+          if (this.info.invoicingId) {
+            params.invoicingId = this.info.invoicingId
+            this.invoiceType = this.info.invoiceType
+            this.invoiceStatus = this.info.invoiceStatus
+            this.invoiceStatusSelect = (this.info.invoiceStatus == '1' ? 'One' : 'Two')
+            console.log(4141)
+            this.isInvoicing = true
+          }
         }
         http(goodOrderData, params).then(res => {
           if (res.data.code === 0) {
-            console.log(res.data.body)
             params.key = res.data.body.key
             this.availableCoupon = res.data.body.availableCoupon
             this.availableCouponNum = res.data.body.availableCouponNum
@@ -356,19 +356,27 @@ export default {
         }).catch(err => {
           console.log(err)
         })
-      }
+      // }
     },
+    // 从缓存中获取其他页面的数据
     getOrderInfo () {
       if (this.$route.path.indexOf('/createOrder/') !== -1) {
         this.info = storage.getLocalStorage(orderInfo)
+        console.log(this.info)
       } else if (this.$route.path === '/createOrder') {
         storage.setLocalStorage(orderInfo, {})
       }
     },
-    createOrder () {
+    // 创建订单
+    async createOrder () {
       let params = {}
       const info = storage.getLocalStorage(goodsInfo)
-      const orderInfoData = storage.getLocalStorage(orderInfo)
+      let orderInfoData = storage.getLocalStorage(orderInfo)
+      // 判断是否要开发票
+      if (this.isInvoicing && !orderInfoData.invoicingId) {
+        this.toastShow('请填写发票抬头！')
+        return false
+      }
       params.fromCart = info.fromCart || false
       params.deliveryId = orderInfoData.addressId || this.addressInfo.id
       params.invoicingId = orderInfoData.invoicingId
@@ -376,39 +384,30 @@ export default {
       params.shippingMethod = 2
       params.favorableId = orderInfoData.couponId
       params.invoicingType = orderInfoData.invoicingType
-      // 判断是否要开发票
-      if (this.isInvoicing && !params.favorableId) {
-        // 查询发票信息
-        // 默认电子普票个人
-        // 收票人手机是否存在
-        this.getInvoiceInfo()
-      }
+
       params = Object.assign(this.params, params)
       // 判断配送地址有没有选择
       if (!params.deliveryId) {
         this.toastShow('请添加收货地址！')
         return false
       }
-      console.log(info)
 
-      this.canClick = false
-      if (this.canClick) {
-        // 提交订单
-        http(createOrderData, params).then(res => {
-          if (res.data.code === 0) {
-            this.$router.push('/immedPayment/' + res.data.body)
-            this.canClick = false
-          } else if (res.data.code === 40005) {
-            Toast({
-              message: res.data.message,
-              position: 'bottom',
-              duration: 1000
-            })
-          }
-        }).catch(err => {
-          console.log(err)
-        })
-      }
+      // 提交订单
+      http(createOrderData, params).then(res => {
+        if (res.data.code === 0) {
+          this.$router.push('/immedPayment/' + res.data.body)
+          this.canClick = false
+          storage.setLocalStorage(invoiceInfo, {})
+        } else if (res.data.code === 40005) {
+          Toast({
+            message: res.data.message,
+            position: 'bottom',
+            duration: 1000
+          })
+        }
+      }).catch(err => {
+        console.log(err)
+      })
     },
     toastShow (text) {
       Toast({
@@ -421,17 +420,14 @@ export default {
       window.location.href = customerService
     },
     // 查询发票信息
-    getInvoiceInfo () {
-      http(getInvoice, 'nolading').then(res => {
-        console.log(res)
+    async getInvoiceInfo () {
+      await http(getInvoice, 'nolading').then(res => {
         if (res.data.body && res.data.body.phone) {
           this.invoicePhone = true
-          if (this.invoicePhone) {
-            let info = storage.getLocalStorage(orderInfo) || {}
-            info.favorableId = res.data.body.favorableId
-            info.invoicingType = 1
-            storage.setLocalStorage(orderInfo, info)
-          }
+          let info = storage.getLocalStorage(orderInfo) || {}
+          info.invoicingId = res.data.body.id
+          info.invoicingType = '1'
+          storage.setLocalStorage(orderInfo, info)
         } else {
           this.toastShow('请填写发票抬头！')
         }
@@ -453,12 +449,8 @@ export default {
   },
 
   created () {
-    this.getDetails()
-    // this.getAddress()
-  },
-  mounted () {
-    // 获取从其他页面带过来的信息
     this.getOrderInfo()
+    this.getDetails()
   }
 }
 </script>

@@ -71,14 +71,13 @@ export default {
     },
     // 选择地址
     selectGoodsAddress (index) {
-      if (this.$route.params.need) {
-        let info = storage.getLocalStorage(orderInfo) || {}
-        info.addressInfo = this.addList[index]
-        info.addressId = this.addList[index].id
-        info.addressType = '快递配送'
-        storage.setLocalStorage(orderInfo, info)
-        this.$router.replace({path: '/createOrder/2'})
-      }
+      // if (this.$route.params.need) {
+      let info = storage.getLocalStorage(orderInfo) || {}
+      info.addressInfo = this.addList[index]
+      info.addressId = this.addList[index].id
+      storage.setLocalStorage(orderInfo, info)
+      this.$router.replace({path: '/createOrder/2'})
+      // }
     }
   },
   watch: {

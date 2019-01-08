@@ -377,6 +377,12 @@ const router = new Router({
     },
     // 售后
     {
+      path: '/afterSaleList',
+      name: 'AfterSaleList', // 服务记录
+      meta: { requireLogin: true },
+      component: resolve => require(['@/pages/afterSale/AfterSaleList'], resolve)
+    },
+    {
       path: '/record',
       name: 'Record', // 服务记录
       meta: { requireLogin: true },
@@ -385,7 +391,7 @@ const router = new Router({
     {
       path: '/returnLogistics',
       name: 'ReturnLogistics', // 填写物流信息
-      // meta: { requireLogin: true },
+      meta: { requireLogin: true },
       component: resolve => require(['@/pages/afterSale/ReturnLogistics'], resolve)
     }
 

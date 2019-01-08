@@ -11,11 +11,11 @@
       </div>
       <div class="orderInfo">
         <div class="orderProvide wrap">
-          <router-link class="cellLink" to="goodsAddress/1" v-if="orderData.status===5">
+          <router-link class="cellLink" :to="`/watchLogistics/${orderSn}`" v-if="orderData.status===5">
             <div class="text addAddress">订单签收成功，感谢您对我们无限的订单签收成功，感谢您对我们无限的...</div>
           </router-link>
-          <router-link class="cellLink" to="goodsAddress/1" v-if="orderData.status===3">
-            <div class="text addAddress">您已提交订单，请等待物流信息更新...</div>
+          <router-link class="cellLink" :to="`/watchLogistics/${orderSn}`" v-if="orderData.status===3||orderData.status===4">
+            <div class="text addAddress">{{orderData.newExpressInfo}}</div>
           </router-link>
           <span class="orderName">{{orderData.deliveryPeople}}&nbsp;&nbsp;&nbsp;&nbsp;{{orderData.deliveryPhone}}</span>
           <span class="orderAddress">{{orderData.deliveryAddr}}</span>
@@ -40,21 +40,19 @@
         <div class="wrap">
           <div class="title">
             <h4>发票信息</h4>
-            <div class="btn">查看发票</div>
+            <div class="btn" v-if="orderData.invoice">查看发票</div>
+            <div class="btn" v-else>申请开票</div>
           </div>
-          <ul class="infoItem">
-            <li><span class="name">订单编号：</span><span class="content">{{orderData.orderSn}}</span>
+          <ul class="infoItem" v-if="orderData.invoice">
+            <li><span class="name">发票类型：</span><span class="content">{{orderData.invoice.invoiceStatus==1?'电子普通发票':'增值税专用发票'}}</span>
             </li>
-            <li> <span class="name">支付方式：</span><span class="content">{{orderData.paymentDesc}}</span></li>
-            <li> <span class="name">下单时间：</span><span class="content">{{orderData.createTime}}</span></li>
-            <li> <span class="name" v-if="orderData.payTime">付款时间：</span><span class="content">{{orderData.payTime}}</span></li>
-            <li> <span class="name" v-if="orderData.deliverTime">发货时间：</span><span class="content">{{orderData.deliverTime}}</span></li>
-            <li> <span class="name" v-if="orderData.finishTime">成交时间：</span><span class="content">{{orderData.finishTime}}</span></li>
-            <li> <span class="name" v-if="orderData.finishTime">获取积分：</span><span class="content">{{orderData.finishTime}}</span></li>
+            <li> <span class="name">发票抬头：</span><span class="content">{{orderData.invoice.name||'个人'}}</span></li>
+            <li> <span class="name">发票内容：</span><span class="content">商品明细</span></li>
+            <li> <span class="name" v-if="orderData.invoice.idCode">纳税人识别号：</span><span class="content">{{orderData.invoice.idCode}}</span></li>
           </ul>
           <div class="tip"><i>!</i>订单完成后三个工作日内即可开具</div>
         </div>
-        <div class="wrap" v-if="orderData.desc&&orderData.desc==''">
+        <div class="wrap" v-if="orderData.desc&&orderData.desc!==''">
           <div class="title">
             <h4>备注信息</h4>
           </div>

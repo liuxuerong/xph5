@@ -296,7 +296,7 @@ export default {
     sureEmpty () {
       notice.confirm('是否确认清空全部失效商品？', '商品清空后将无法恢复', this.emptyNoInventory, '继续删除')
     },
-    // 清楚失效商品
+    // 清除失效商品
     emptyNoInventory () {
       let id = ''
       for (let i = 0; i < this.disabledCartList.length; i++) {
