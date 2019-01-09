@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <search-title :title="title" :oper='3' @commentSubmit="commentSubmit"></search-title>
+    <search-title :title="title"></search-title>
     <div class="evaluateCon">
       <div class="goodsItem" v-for="(item,index) in list" :key="item.goodsItemId">
         <div class="evaluateTop clearfix">
@@ -15,20 +15,22 @@
           </div>
         </div>
         <div class="evaluateText">
-          <textarea class="evaluateArea" :maxlength="100" ref="evaluateText"  v-model="item.evaluateText" placeholder="宝贝满足您的期待吗？说说他的优点和美中不足的地方吧。" cols="30" rows="10"></textarea>
-          <span class="fontNum">{{item.evaluateText.length}}/100</span>
+          <textarea class="evaluateArea" :maxlength="300" ref="evaluateText"  v-model="item.evaluateText" placeholder="宝贝满足您的期待吗？说说他的优点和美中不足的地方吧。还可以上传最多5张图片哦~" cols="30" rows="10"></textarea>
+          <span class="fontNum"><i>{{item.evaluateText.length}}</i>/300</span>
         </div>
         <div class="uploadWrapper">
+           <div class="uploadPicBtn">
+            <input name="file" @change="uploadPic($event,index)" ref="inputer"  type="file"/>
+          </div>
           <div class="uploadItem" v-for="(childImg,j) in objImgs[index]" :key="j">
             <img :src="imageUrl+childImg" alt="">
             <span class="deletePic" @click="deletePic(index,j)"></span>
           </div>
-          <div class="uploadPicBtn" v-if="(!objImgs[index]) || ( objImgs[index].length < 5)">
-            <input name="file" @change="uploadPic($event,index)" ref="inputer"  type="file"/>
-          </div>
         </div>
       </div>
+
     </div>
+      <div class="submitBtn" @click="commentSubmit">提交评价</div>
   </div>
 </template>
 <script>
@@ -77,6 +79,14 @@ export default {
       })
     },
     uploadPic (e, index) {
+      if (this.objImgs[index] && this.objImgs[index].length > 4) {
+        Toast({
+          message: '最多上传五张图片',
+          position: 'center',
+          duration: 2000
+        })
+        return
+      }
       let ss = e.target.files
       let formData = new FormData()
       formData.append('file', ss[0])
@@ -111,6 +121,7 @@ export default {
     },
     // 评论数据提交
     commentSubmit () {
+      console.log(789)
       let _this = this
       let goodsComments = []
       for (let i = 0; i < this.list.length; i++) {
@@ -152,17 +163,17 @@ export default {
   @import "~styles/mixins.styl";
   .wrapper
     width 100%
-    box-sizing border-box
-    padding-top 132px
   .evaluateCon
     width 100%
     background #F5F5F5
+    min-height 100vh
+    padding 160px 50px 30px
     .goodsItem
       width 100%
-      box-sizing border-box
       padding 50px
       background #fff
       margin-bottom 30px
+      border-radius 20px
       img
         float left
         width 286px
@@ -173,22 +184,21 @@ export default {
         width calc(100% - 336px)
         height 286px
         box-sizing border-box
-        padding-top 50px
         position relative
         .goodsName
           width 100%
-          line-height 40px
-          font-size 40px
-          color #262626
-          margin-bottom 30px
-          font-weight blod
+          font-size 46px
+          line-height 90px
+          color #333
+          ellipsis()
         .goodsPrice
           display block
           width 100%
-          font-size 40px
-          color #000000
+          font-size 46px
+          color #333333
           position absolute
           bottom 20px
+          font-weight 600
           left 0
   .evaluateText
     display block
@@ -197,32 +207,36 @@ export default {
     margin 70px auto 50px
     background #F5F5F5
     position relative
+    padding 50px 30px
     .evaluateArea
       width 100%
-      height 260px
+      height 100%
       box-sizing border-box
-      padding 50px 30px
-      background #F5F5F5
       font-size 36px
+      background #F5F5F5
       color #262626
       resize none
     .fontNum
-      float right
+      position absolute
       margin-right 40px
-      font-size 36px
-      color #CCCCCC
+      font-size 40px
+      color #999
+      bottom 10px
+      right 0
+      i
+        color #333333
   .uploadWrapper
     width 100%
-    height 190px
+    height 130px
     .uploadPicBtn
       float left
-      width 185px
-      height 185px
-      bgImage('/static/images/upLoadPic')
+      width 130px
+      height 130px
+      background url(/static/images/upLoadPic.png) no-repeat center center/70%
       input[type="file"]
         display block
-        width 185px
-        height 185px
+        width 130px
+        height 130px
         overflow hidden
         opacity 0
     .uploadItem
@@ -232,8 +246,8 @@ export default {
       height 190px
       img
         float left
-        width 180px
-        height 180px
+        width 130px
+        height 130px
         margin-right 24px
       img:nth-of-type
         margin-right 0px
@@ -245,20 +259,32 @@ export default {
       right 5px
       top -20px
       bgImage('/static/icons/deletePic')
-  ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  .goodsSpec
+    color #808080
     font-size 36px
-    color #999999
+.submitBtn
+  height 250px
+  line-height 250px
+  background #fff
+  color #333333
+  font-size 50px
+  width 100%
+  text-align center
+  font-weight 600
+    ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    font-size 36px
+    color #CCCCCC
   }
   ::-moz-placeholder { /* Firefox 19+ */
     font-size 36px
-    color #999999
+    color #CCCCCC
   }
   :-ms-input-placeholder { /* IE 10+ */
     font-size 36px
-    color #999999
+    color #CCCCCC
   }
   :-moz-placeholder { /* Firefox 18- */
     font-size 36px
-    color #999999
+    color #CCCCCC
   }
 </style>

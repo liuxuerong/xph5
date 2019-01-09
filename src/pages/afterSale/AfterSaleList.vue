@@ -124,4 +124,16 @@ export default {
   min-height 100%
   padding-top 120px
   background-color #f5f5f5
+.orderListStatus
+  height calc(100vh-(120px))
+  padding 0 50px
+  z-index -1
+  overflow hidden
+  &>div
+    padding-top 40px
+    padding-bottom 140px
+  li
+    background-color #fff
+    border-radius 20px
+    margin-bottom 30px
 </style>

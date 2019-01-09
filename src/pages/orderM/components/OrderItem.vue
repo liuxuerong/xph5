@@ -19,14 +19,14 @@
         </div>
       </div>
       <div class="wrap">
-        <p class="price">¥{{pricesData.actualPrice}}</p>
+        <p class="price">¥{{pricesData.actualPrice.toFixed(2)}}</p>
         <div class="status" v-if="!isDetails&&pricesData.saleStatus">
           {{pricesData.saleStatusStr}}
         </div>
         <div class="btn" v-if="isDetails&&status==2">
           退款
         </div>
-         <div class="btn" v-if="isDetails&&status==3">
+         <div class="btn" v-if="isDetails&&status==3&&pricesData.saleStatus!=1||isDetails&&status==5&&pricesData.saleStatus!=1" @click="afterSale(pricesData,pricesData.orderItemId)">
           申请售后
         </div>
       </div>
@@ -75,6 +75,10 @@ export default {
         console.log(this.orderSn)
         this.$router.push(`/orderDetails/${this.orderSn}`)
       }
+    },
+    // 申请售后
+    afterSale (pricesData, orderItemId) {
+      this.$emit('afterSale', pricesData, orderItemId)
     }
   },
   data () {
@@ -146,7 +150,7 @@ export default {
     line-height 60px
     font-weight normal
     display inline-block
-    width 14%
+    flex 1
     vertical-align top
     text-align right
   .status.warning

@@ -115,7 +115,7 @@
       </group>
       <div v-if="invoiceList.length">
         <div class="historyItem" v-for="(item,index) in invoiceList" :key="item.id" @click="setValue (invoiceList[index])">
-          <span v-if="item.invoiceType==1">{{item.phone}}nnnnnnn</span>
+          <span v-if="item.invoiceType==1">{{item.phone}}</span>
           <span v-else>{{item.name}}</span>
           <icon type="clear" class="icon" @click="delStatus(item.id)"></icon>
         </div>
@@ -210,7 +210,7 @@ export default {
       from: 1, // 从哪个页面进来
       addressData: ChinaAddressV4Data,
       showAddress: false,
-      addressList: ['吉林省', '长春市', '南关区'],
+      addressList: [],
       address: [],
       invoiceList: [],
       showFrom1: false, // 从设置进来的时候默认都不显示
@@ -238,13 +238,14 @@ export default {
         invoiceEnclosureList: [],
         remark: '',
         consignee: '', // 收票人
-        shippingAddress: '' , // 收票人详细地址
+        shippingAddress: '', // 收票人详细地址
         addressList: []
       }
     }
   },
   methods: {
     onShadowChange (ids, names) {
+      console.log(ids, names)
       this.address = names
     },
     addressHide () {

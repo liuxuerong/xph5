@@ -159,14 +159,14 @@ export const comment = { url: '/comment', method: 'POST', version: v2 } // 新�
 export const commentList = { url: '/comment', method: 'GET', version: v1 } // 列表
 
 // 退货退款
-export const applyAfterSales = { url: '/afterSales/applyAfterSales', method: 'POST', version: v1 } // 退货退款
+export const applyAfterSales1 = { url: '/afterSales/applyAfterSales', method: 'POST', version: v1 } // 退货退款
 export const submitLogic = { url: '/afterSales/deliveryAfterSales', method: 'POST', version: v1 } // 仅退款
 export const deliverAfterSales = { url: '/afterSales/deliverAfterSales', method: 'POST', version: v1 }// 仅退款
 
 // 售后
+export const applyAfterSales = { url: '/order/afterSale/applyAfterSales', method: 'POST', version: v2 } // v2 会员申请售后
 export const afterSaleList = { url: '/order/afterSale/list', method: 'GET', version: v2 }// 售后列表
 
-// 快递查询
 export const express = { url: '/express/order-kuaidi', method: 'GET', version: v1 }
 export const checkExpress = { url: '/order/checkExpress', method: 'GET', version: v2, join: true }// 版本2查询物流
 export const logisticsCompany = { url: '/logisticsCompany/list-logisticsCompany-all', method: 'GET', version: '' }

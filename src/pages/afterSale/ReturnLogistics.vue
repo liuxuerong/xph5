@@ -64,19 +64,6 @@
 
 <script>
 import CommonNavHeader from 'common/commonHeader/CommonNavHeader'
-// import {
-//   config
-// } from 'util/config.js'
-// import {
-//   http
-// } from 'util/request'
-// import {
-//   addInvoice,
-//   updateInvoice,
-//   getInvoice,
-//   getInvoiceById,
-//   delInvoice
-// } from 'util/netApi'
 import {
   Toast,
   Popup

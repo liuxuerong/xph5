@@ -21,7 +21,7 @@
           <span class="orderAddress">{{orderData.deliveryAddr}}</span>
         </div>
         <div class="wrap goods">
-          <order-item v-if="orderData.memberOrderGoods" v-for="goods in orderData.memberOrderGoods" :key="goods.goodsId" :pricesData="goods" :isDetails="true" :status="orderData.status"></order-item>
+          <order-item v-if="orderData.memberOrderGoods" v-for="goods in orderData.memberOrderGoods" :key="goods.goodsId" :pricesData="goods" :isDetails="true" :status="orderData.status" @afterSale="afterSale"></order-item>
           <ul class="priceItem">
             <li class="border-top">
               <span class="name">商品总额</span><span class="price">￥{{orderData.totalAmount}}</span>
@@ -397,9 +397,10 @@ export default {
       this.$router.push(`/watchLogistics/${this.orderSn}`)
     },
     // 申请售后
-    afterSale (data, orderId) {
-      storage.setLocalStorage(aftersale, data)
-      this.$router.push('/returnGoods/' + orderId)
+    afterSale (pricesData, orderItemId) {
+      pricesData.orderSn = this.orderSn
+      storage.setLocalStorage(aftersale, pricesData)
+      this.$router.push(`/afterSaleSelect/${this.orderData.status}/${orderItemId}`)
     }
   },
   mounted () {

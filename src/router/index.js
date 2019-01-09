@@ -376,15 +376,35 @@ const router = new Router({
       component: resolve => require(['@/pages/activitys/ClassfiyGoods'], resolve)
     },
     // 售后
+
+    {
+      path: '/afterSaleSelect/:orderStatus/:orderItemId', //  orderStatus:
+      // 1: 待支付
+      // 2: 待发货
+      // 3: 待收货
+      // 4: 待评价
+      // 5: 交易成功
+      // 6: 交易关闭
+      // 7: 订单完成
+      name: 'AfterSaleSelect', // 选择售后类型
+      meta: { requireLogin: true },
+      component: resolve => require(['@/pages/afterSale/AfterSaleSelect'], resolve)
+    },
+    {
+      path: '/applyAfterSales/:orderStatus/:orderItemId/:type', //  orderStatus: orderItemId:子订单编号 type:服务类型; 1=仅退款 2=退货退款 3=维修
+      name: 'ApplyAfterSales', // 会员申请售后
+      meta: { requireLogin: true },
+      component: resolve => require(['@/pages/afterSale/ApplyAfterSales'], resolve)
+    },
     {
       path: '/afterSaleList',
-      name: 'AfterSaleList', // 服务记录
+      name: 'AfterSaleList', // 售后列表
       meta: { requireLogin: true },
       component: resolve => require(['@/pages/afterSale/AfterSaleList'], resolve)
     },
     {
       path: '/record',
-      name: 'Record', // 服务记录
+      name: 'Record', // 物流
       meta: { requireLogin: true },
       component: resolve => require(['@/pages/afterSale/Record'], resolve)
     },
@@ -393,8 +413,13 @@ const router = new Router({
       name: 'ReturnLogistics', // 填写物流信息
       meta: { requireLogin: true },
       component: resolve => require(['@/pages/afterSale/ReturnLogistics'], resolve)
+    },
+    {
+      path: '/afterSaleDetails',
+      name: 'AfterSaleDetails', // 售后详情
+      meta: { requireLogin: true },
+      component: resolve => require(['@/pages/afterSale/AfterSaleDetails'], resolve)
     }
-
   ]
 })
 

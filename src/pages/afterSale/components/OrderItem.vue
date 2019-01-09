@@ -1,29 +1,30 @@
 <template>
-  <div class="orderItem">
-    <div class="imgContainer">
-      <router-link :to="'/details/'+pricesData.id">
-        <img v-lazy="imageUrl+pricesData.goodsPic" alt="">
-      </router-link>
+  <div class="wrap">
+    <div class="orderItem">
+      <div class="imgContainer">
+        <router-link :to="'/details/'+pricesData.id">
+          <img v-lazy="imageUrl+pricesData.goodsPic" alt="">
+        </router-link>
+      </div>
+      <div class="info" @click="goDetails">
+        <p class="name">
+          {{pricesData.goodsName}}
+        </p>
+        <div class="wrap goods">
+          <div class="promotion">
+            {{formatSpec}}
+          </div>
+          <div class="num">
+            x{{pricesData.num}}
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="info" @click="goDetails">
-      <p class="name">
-        {{pricesData.goodsName}}
-      </p>
-      <div class="wrap goods">
-        <div class="promotion">
-          {{formatSpec}}
-        </div>
-        <div class="num">
-          x{{pricesData.num}}
-        </div>
-      </div>
-      <div class="wrap">
-        <!-- <p class="price">¥{{pricesData.actualPrice}}</p> -->
-        <!-- <div class="status" v-if="!isDetails&&pricesData.saleStatus">
-          {{pricesData.saleStatusStr}}
-        </div> -->
-      </div>
-
+    <div class="bottom">
+      <span v-if="pricesData.type==1">仅退款</span>
+      <span v-if="pricesData.type==2">退货退款</span>
+      <span v-if="pricesData.type==3">维修</span>
+      <i>{{pricesData.statusStr}}</i>
     </div>
   </div>
 </template>
@@ -73,7 +74,7 @@ export default {
   padding 50px
   display flex
   width 100%
-  align-items center
+  align-items top
   .imgContainer
     width 286px
     height 286px
@@ -89,6 +90,7 @@ export default {
     padding-left 50px
     align-items top
     justify-content space-between
+    padding-top 20px
   .name
     width 100%
     height 60px
@@ -148,5 +150,10 @@ export default {
     width 14%
     vertical-align top
     text-align right
-
+.bottom
+  line-height 136px
+  padding-left 50px
+  font-size 40px
+  i
+    color #BA825A
 </style>

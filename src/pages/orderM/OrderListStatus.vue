@@ -243,4 +243,5 @@ export default {
       border 2px solid #BA825A
   .commonEmpty
     background-color #f5f5f5
+
 </style>
