@@ -85,12 +85,12 @@
       <div class="orderOperBtn">
         <span class="gray" v-if="orderData.status==1" @click="openReason">取消订单</span>
         <span class="glod" v-if="orderData.status==1" @click="pay(orderData.orderSn)">去支付</span>
-        <span class="gray" v-if="orderData.status==2||orderData.status==3||orderData.status==4" @click="watchLogistics">查看物流</span>
-        <span class="gray" v-if="orderData.status==2||orderData.status==4||orderData.status==6" @click="deleteSure">删除订单</span>
-        <span class="glod" v-if="orderData.status==2||orderData.status==4" @click="immedEvaluate()">评价</span>
+        <span class="gray" v-if="orderData.status==3||orderData.status==4" @click="watchLogistics">查看物流</span>
+        <span class="gray" v-if="orderData.status==4||orderData.status==6" @click="deleteSure">删除订单</span>
+        <span class="glod" v-if="orderData.status==4" @click="immedEvaluate()">评价</span>
         <span class="gray" v-if="orderData.status==3&&delayState!=0" @click="delay">延长收货</span>
         <span class="glod" v-if="orderData.status==3" @click="confirmGoods(orderData.orderSn)">确认收货</span>
-        <span class="gray" v-if="orderData.status==6" @click="customerService">联系客服</span>
+        <span class="gray" v-if="orderData.status==2||orderData.status==6" @click="customerService">联系客服</span>
       </div>
     </div>
     <!-- 取消订单 -->
@@ -161,9 +161,7 @@ import {
   http
 } from 'util/request'
 import CommonHeadLink from 'common/commonHeader/CommonHeadLink'
-import {
-  config
-} from 'util/config' // 图片路径
+import { config } from 'util/config' // 图片路径
 import notice from 'util/notice.js'
 import {
   Toast,
@@ -178,7 +176,6 @@ import {
 import {
   Icon
 } from 'vux'
-import { clearInterval } from 'timers'
 export default {
   data () {
     return {
@@ -222,7 +219,7 @@ export default {
   },
 
   methods: {
-    // 订单列表页面渲染
+    // 订单详情页面渲染
     orderDetailRender () {
       let orderCode = this.$route.params.orderSn
       this.orderSn = orderCode
@@ -484,7 +481,7 @@ export default {
       border 2px solid #BA825A
   .bgTop
     height 370px
-    background url('/static/images/statusDescBg.png')
+    background url('/static/images/statusDescBg.png') no-repeat center center /100% 100%
     display flex
     .statusDesc
       font-size 66px

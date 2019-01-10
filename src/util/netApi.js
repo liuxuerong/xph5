@@ -166,6 +166,11 @@ export const deliverAfterSales = { url: '/afterSales/deliverAfterSales', method:
 // 售后
 export const applyAfterSales = { url: '/order/afterSale/applyAfterSales', method: 'POST', version: v2 } // v2 会员申请售后
 export const afterSaleList = { url: '/order/afterSale/list', method: 'GET', version: v2 }// 售后列表
+export const afterSaleDetail = { url: '/order/afterSale/detail', method: 'GET', version: v2, join: true }// 售后详情
+export const afterSaleRevoke = { url: '/order/afterSale/revoke', method: 'GET', version: v2, join: true }// 撤销售后单
+export const afterSaleDel = { url: '/order/afterSale/delete', method: 'GET', version: v2, join: true }// 删除售后单
+export const afterSaleDelivery = { url: '/order/afterSale/afterSaleDelivery', method: 'POST', version: v2 }// 售后-退货渠道
+export const appealAfterSales = { url: '/order/afterSale/appealAfterSales', method: 'POST', version: v2 }// 售后申诉
 
 export const express = { url: '/express/order-kuaidi', method: 'GET', version: v1 }
 export const checkExpress = { url: '/order/checkExpress', method: 'GET', version: v2, join: true }// 版本2查询物流

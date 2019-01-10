@@ -2,10 +2,10 @@
  <div class="goodsItem">
     <div class="imgContainer">
       <router-link :to="'/details/'+goodsData.goodsId">
-        <img v-lazy="imageUrl+goodsData.pic" alt="">
+        <img v-lazy="imageUrl+goodsData.goodsPic" alt="">
       </router-link>
     </div>
-    <div class="info" @click="goDetails(goodsData.orderSn)">
+    <div class="info" @click="goDetails(goodsData.goodsId)">
       <p class="name">
         {{goodsData.goodsName}}
       </p>
@@ -23,7 +23,7 @@ import {
   config
 } from 'util/config'
 export default {
-  name: 'GoodsItem',
+  name: 'DetailsItem',
   props: {
     goodsData: {
       type: Object
@@ -37,7 +37,7 @@ export default {
   computed: {
     // 格式化商品信息
     formatSpec: function () {
-      let specArr = JSON.parse(this.goodsData.spec)
+      let specArr = JSON.parse(this.goodsData.goodsSpec)
       let spec = ''
       for (let item of specArr) {
         spec += item.value + '/'
@@ -48,8 +48,8 @@ export default {
   },
   methods: {
     // 订单详情
-    goDetails (orderSn) {
-      this.$router.push(`/orderDetails/${orderSn}`)
+    goDetails (goodsId) {
+      this.$router.push(`/details/${goodsId}`)
     }
   }
 
@@ -63,10 +63,10 @@ export default {
   border-radius 20px
   font-size 40px
   width 100%
-  padding 50px
   display flex
   width 100%
   align-items top
+  padding-bottom 50px
   .imgContainer
     width 286px
     height 286px

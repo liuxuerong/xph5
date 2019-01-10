@@ -1,7 +1,8 @@
 <template>
   <div class="record">
     <common-nav-header :title="title" />
-    <div class="wrap">
+   <div class="recordCont">
+      <div class="wrap">
       <i class="identity platform">
         平台
       </i>
@@ -23,6 +24,7 @@
         用户已退货,物流公司:申通快递;物流单号:71500904907667
       </div>
     </div>
+   </div>
     <div class="btn" @click="contactService">
       <i class="icon"></i>
       <span>联系客服</span>
@@ -62,38 +64,39 @@ export default {
 
 <style lang="stylus" scoped>
 .record
-  width 100%
-  min-height 100%
-  background-color #f5f5f5
-  padding 120px 50px
-  .wrap
-    background #FFFFFF
-    border-radius 20px
-    padding 50px
-    margin-top 32px
-  .identity
-    display inline-block
-    line-height 70px
-    padding 0 30px
-    border-radius 35px
-    background-color #F5F5F5
-  .platform
-    color #BA825A
-  .mine
-    color #4273FD
-  .time
-    color #B3B3B3
-    font-size 36px
-    line-height 70px
-    display inline-block
-    margin-left 52px
+  height 100%
+  .recordCont
+    width 100%
+    min-height calc(100%-(148px))
+    background-color #f5f5f5
+    padding 120px 50px
+    .wrap
+      background #FFFFFF
+      border-radius 20px
+      padding 50px
+      margin-top 32px
+    .identity
+      display inline-block
+      line-height 70px
+      padding 0 30px
+      border-radius 35px
+      background-color #F5F5F5
+    .platform
+      color #BA825A
+    .mine
+      color #4273FD
+    .time
+      color #B3B3B3
+      font-size 36px
+      line-height 70px
+      display inline-block
+      margin-left 52px
   .info
     color #333
     font-size 46px
     font-weight 600
     margin-top 20px
   .btn
-    margin-top  100px
     width 100%
     background-color #fff
     height 148px

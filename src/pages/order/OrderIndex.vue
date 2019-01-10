@@ -25,8 +25,7 @@
       <i class="orderIcon orderIcon04"></i>
       待评价
       </router-link>
-      <router-link class="orderItem" to="/orderList/5">
-      <!-- <span class="orderNumTips" v-if="orderNum.refund!=='0'">{{orderNum.refund}}</span> -->
+      <router-link class="orderItem" to="/afterSaleList">
       <i class="orderIcon orderIcon05"></i>
       退款/售后
       </router-link>

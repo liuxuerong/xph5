@@ -9,18 +9,18 @@
           <div class="orderText">
             <h3 class="goodsName">{{item.goodsName}}</h3>
             <div class="goodsSpecWrapper clearfix">
-              <span class="goodsSpec" v-for="(spec,n) in JSON.parse(item.spec)" :key="n">{{spec.value}}</span>
+              {{formatSpec(item.spec)}}
             </div>
-            <span class="goodsPrice">￥ {{item.price}}</span>
+            <!-- <span class="goodsPrice">￥ {{item.price}}</span> -->
           </div>
         </div>
         <div class="evaluateText">
           <textarea class="evaluateArea" :maxlength="300" ref="evaluateText"  v-model="item.evaluateText" placeholder="宝贝满足您的期待吗？说说他的优点和美中不足的地方吧。还可以上传最多5张图片哦~" cols="30" rows="10"></textarea>
           <span class="fontNum"><i>{{item.evaluateText.length}}</i>/300</span>
         </div>
-        <div class="uploadWrapper">
+        <div class="uploadWrapper" @click="checkLength(index)">
            <div class="uploadPicBtn">
-            <input name="file" @change="uploadPic($event,index)" ref="inputer"  type="file"/>
+            <input name="file" @change="uploadPic($event,index)" ref="inputer"  type="file" v-if="!objImgs[index]||objImgs[index]&&objImgs[index].length<5"/>
           </div>
           <div class="uploadItem" v-for="(childImg,j) in objImgs[index]" :key="j">
             <img :src="imageUrl+childImg" alt="">
@@ -65,6 +65,16 @@ export default {
     }
   },
   methods: {
+    // 格式化商品信息
+    formatSpec: function (goodsSpec) {
+      let specArr = JSON.parse(goodsSpec)
+      let spec = ''
+      for (let item of specArr) {
+        spec += item.value + '/'
+      }
+      spec = spec.substring(0, spec.length - 1)
+      return spec
+    },
     // 页面初始化渲染
     evaluateRender () {
       let orderCode = this.$route.params.orderCode
@@ -78,15 +88,17 @@ export default {
         this.list = data
       })
     },
-    uploadPic (e, index) {
+    // 检查已上传图片
+    checkLength (index) {
       if (this.objImgs[index] && this.objImgs[index].length > 4) {
         Toast({
           message: '最多上传五张图片',
           position: 'center',
           duration: 2000
         })
-        return
       }
+    },
+    uploadPic (e, index) {
       let ss = e.target.files
       let formData = new FormData()
       formData.append('file', ss[0])
@@ -165,8 +177,8 @@ export default {
     width 100%
   .evaluateCon
     width 100%
+    min-height calc(100vh-(250px))
     background #F5F5F5
-    min-height 100vh
     padding 160px 50px 30px
     .goodsItem
       width 100%
@@ -271,20 +283,20 @@ export default {
   width 100%
   text-align center
   font-weight 600
-    ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-    font-size 36px
-    color #CCCCCC
-  }
-  ::-moz-placeholder { /* Firefox 19+ */
-    font-size 36px
-    color #CCCCCC
-  }
-  :-ms-input-placeholder { /* IE 10+ */
-    font-size 36px
-    color #CCCCCC
-  }
-  :-moz-placeholder { /* Firefox 18- */
-    font-size 36px
-    color #CCCCCC
-  }
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  font-size 36px
+  color #CCCCCC
+}
+::-moz-placeholder { /* Firefox 19+ */
+  font-size 36px
+  color #CCCCCC
+}
+:-ms-input-placeholder { /* IE 10+ */
+  font-size 36px
+  color #CCCCCC
+}
+:-moz-placeholder { /* Firefox 18- */
+  font-size 36px
+  color #CCCCCC
+}
 </style>

@@ -53,9 +53,9 @@ export default {
     }
   },
   methods: {
-    // 订单详情
+    // 售后详情
     goDetails () {
-      this.$router.push(`/orderDetails/${this.orderSn}`)
+      this.$router.push(`/afterSaleDetails/${this.pricesData.saleSn}`)
     }
   },
   data () {

@@ -4,11 +4,11 @@
     </common-nav-header>
     <div class="logisticsWrap" ref="logisticsWrap">
       <group title="物流信息" class="wrap">
-        <x-input placeholder="请选择物流公司" v-model.trim="inputForm.name1" class="select"  @click.native="openPop"></x-input>
-        <x-input placeholder="请填写物流单号" v-model.trim="inputForm.name2"></x-input>
+        <x-input placeholder="请选择物流公司" v-model.trim="inputForm.logisticsName" class="select"  @click.native="openPop"></x-input>
+        <x-input placeholder="请填写物流单号" v-model.trim="inputForm.logisticsNo"></x-input>
       </group>
       <group title="联系方式" class="wrap">
-        <x-input placeholder="请填写手机号码" v-model.trim="inputForm.phone"></x-input>
+        <x-input placeholder="请填写手机号码" v-model.trim="inputForm.contactWay"></x-input>
       </group>
       <div class="submit" @click.stop="submit">保存</div>
     </div>
@@ -20,41 +20,19 @@
           <div class="close" @click="closePop">×</div>
         </div>
         <ul>
-          <li>
-            <label for="reason1">
+          <li v-for="item in expressList" :key="item.id">
+            <label >
                 <div class="top">
-                  <h3 class="name">顺丰速运</h3>
+                  <h3 class="name">{{item.name}}</h3>
                   <span class="radioWrap">
-                    <icon :type="reasonDesc==='不想买了'?'success':'circle'"></icon>
-                    <input type="radio" value="不想买了" v-model="reasonDesc" id="reason1">
-                  </span>
-                </div>
-              </label>
-          </li>
-          <li>
-            <label for="reason2">
-                <div class="top">
-                  <h3 class="name">信息填写错误，重新拍</h3>
-                  <span class="radioWrap">
-                    <icon :type="reasonDesc==='信息填写错误，重新拍'?'success':'circle'"></icon>
-                    <input type="radio" value="信息填写错误，重新拍" v-model="reasonDesc" id="reason2">
-                  </span>
-                </div>
-              </label>
-          </li>
-          <li>
-            <label for="reason3">
-                <div class="top">
-                  <h3 class="name">其他原因</h3>
-                  <span class="radioWrap">
-                    <icon :type="reasonDesc==='其他原因'?'success':'circle'"></icon>
-                    <input type="radio" value="其他原因" v-model="reasonDesc" id="reason3">
+                    <icon :type="inputForm.logisticsName===item.name?'success':'circle'"></icon>
+                    <input type="radio" :value="item.name" v-model="inputForm.logisticsName" >
                   </span>
                 </div>
               </label>
           </li>
         </ul>
-        <div class="bottomClose" @click="selectItem()">
+        <div class="bottomClose" @click="closePop">
           提交
         </div>
       </div>
@@ -74,7 +52,10 @@ import {
   Cell,
   Icon
 } from 'vux'
-
+import {
+  http
+} from 'util/request'
+import { logisticsCompany, afterSaleDelivery } from 'util/netApi'
 export default {
   name: 'ReturnLogistics',
   components: {
@@ -89,11 +70,12 @@ export default {
     return {
       title: '填写物流信息',
       popVisible: false,
-      reasonDesc: '不想买了',
+      expressList: [],
       inputForm: {
-        phone: '',
-        name1: '12',
-        name2: ''
+        saleSn: '',
+        contactWay: '',
+        logisticsName: '',
+        logisticsNo: ''
       }
     }
   },
@@ -105,10 +87,18 @@ export default {
     // 关闭弹窗
     closePop () {
       this.popVisible = false
+      // 显示选择的公司
     },
-    // 选择公司
-    selectItem () {
-
+    // 获取物流公司列表
+    getExpressList () {
+      http(logisticsCompany).then(res => {
+        console.log(res)
+        if (res.data.code == 0) {
+          this.expressList = res.data.body
+        }
+      }).catch(err => {
+        console.log(err)
+      })
     },
     toastShow (text) {
       Toast({
@@ -124,21 +114,28 @@ export default {
         if (input[i].type === 'text') {
           if (input[i].value.trim() === '') {
             this.toastShow(input[i].placeholder)
-            return
+            return false
           }
         }
       }
       const isPhone = (value) => /^1\d{10}$/gi.test(value)
-      if (this.inputForm.phone !== '' && !isPhone(this.inputForm.phone)) {
+      if (this.inputForm.phone != '' && !isPhone(this.inputForm.contactWay)) {
         this.toastShow('请填写一个正确的手机号码')
         return false
       }
     },
     submit () {
-      this.validate()
+      if (typeof (this.validate()) ==='undefined') {
+        http(afterSaleDelivery, this.inputForm).then(res => {
+          console.log(res)
+        })
+      }
     }
   },
-  created () {}
+  created () {
+    this.inputForm.saleSn = this.$route.params.saleSn
+    this.getExpressList()
+  }
 }
 </script>
 
@@ -271,6 +268,8 @@ export default {
       height 190px
   ul
     padding 0 50px
+    max-height 60vh
+    overflow-y auto
     li
       line-height 148px
       .top

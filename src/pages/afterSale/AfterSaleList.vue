@@ -74,16 +74,16 @@ export default {
       if (!this.noMore) {
         http(afterSaleList, params).then((res) => {
           console.log(res)
+          console.log(this.page)
           if (res.data.code === 0) {
-            this.list = res.data.body.list
-            console.log(this.list)
-            // this.list = [...this.list, ...res.data.body.list]
-            console.log(this.list)
-            this.scrollInit()
-            if (this.page !== 1 && res.data.body.list.length === 0) {
+            if (this.page != 1 && !res.data.body.list) {
               this.scroll.finishPullUp()
               this.noMore = true
+              console.log(777)
+              return
             }
+            this.list = [...this.list, ...res.data.body.list]
+            this.scrollInit()
           }
         })
       }

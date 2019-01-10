@@ -1,15 +1,21 @@
 <template>
   <div class="wrapper">
-    <common-nav-header :title="title" />
+    <common-nav-header title="修改申请" />
     <div class="refundCon" v-if="goodsData">
-      <goods-item :goodsData="goodsData"></goods-item>
+      <details-item :goodsData="goodsData"></details-item>
       <div class="wrap">
-        <div class="cellLink" @click="changePopStatus('statusVisible')" v-if="this.orderStatus!=2&&this.params.type!=3">
-          <div class="text">货物状态<span class="fr placeholder" v-if="params.goodsType==''">请选择</span><em v-else>{{params.goodsType==1?'已收到货':'未收到货'}}</em></div>
+        <div class="cellLink" @click="changePopStatus('typeVisible')" v-if="this.orderStatus!=2&&this.params.type!=3">
+          <div class="text">服务类型<span class="fr placeholder" v-if="params.type==''">请选择</span><em v-else>{{params.type==1?'仅退款':'退货退款'}}</em></div>
+        </div>
+        <div class="cellLink" @click="changePopStatus('typeVisible')" v-else>
+           <div class="infoWrap">
+              <span class="left">服务类型</span>
+              <span class="right">维修</span>
+            </div>
         </div>
         <div class="cellLink" @click="changePopStatus('reasonVisible')" v-if="this.params.type!=3">
           <div class="text">退款原因<span class="fr placeholder" v-if="params.reason==''">请选择</span><em v-else>{{params.reason}}</em>
-            <p class="tip" v-if="params.reason!=''">请在退款说明处填写具体情况</p>
+            <!-- <p class="tip" v-if="params.reason!=''">请在退款说明处填写具体情况</p> -->
           </div>
         </div>
         <div class="cellLink" @click="changePopStatus('reasonVisible')" v-if="this.params.type==3">
@@ -45,10 +51,10 @@
           <span class="fontNum"><i>{{params.desc.length}}</i>/300</span>
         </div>
       </div>
-      <div class="uploadWrapper" >
-        <div class="uploadPicBtn" @click="checkLength">
-            <input name="file" @change="uploadPic($event)" ref="inputer" type="file" v-if="objImgs.length<5"/>
-          </div>
+       <div class="uploadWrapper" >
+          <div class="uploadPicBtn" >
+          <input name="file" @change="uploadPic($event)" ref="inputer"  type="file"/>
+        </div>
         <div class="uploadItem" v-for="(childImg,j) in objImgs" :key="j">
           <img :src="imageUrl+childImg" alt="">
           <span class="deletePic" @click="deletePic(j)"></span>
@@ -67,26 +73,26 @@
   </div>
 
   <!-- 货物状态 -->
-  <mt-popup position="bottom" v-model="statusVisible" @touchmove.prevent>
+  <mt-popup position="bottom" v-model="typeVisible" @touchmove.prevent>
     <div class="popWrap">
       <div class="title">
-        货物状态
-        <div class="close" @click="changePopStatus('statusVisible')">×</div>
+        服务类型
+        <div class="close" @click="changePopStatus('typeVisible')">×</div>
       </div>
       <ul>
-        <li v-for="(item,index) in statusData" :key="index">
+        <li v-for="(item,index) in typaData" :key="index">
           <label for="">
             <div class="top">
               <h3 class="name">{{item.value}}</h3>
               <span class="radioWrap">
-                <icon :type="params.goodsType===item.type?'success':'circle'"></icon>
-                <input type="radio" :value="item.type" v-model="params.goodsType">
+                <icon :type="params.type===item.type?'success':'circle'"></icon>
+                <input type="radio" :value="item.type" v-model="params.type">
               </span>
             </div>
           </label>
         </li>
       </ul>
-      <div class="bottomClose" @click="changePopStatus('statusVisible')">
+      <div class="bottomClose" @click="changePopStatus('typeVisible')">
         提交
       </div>
     </div>
@@ -121,7 +127,7 @@
 
 <script>
 import CommonNavHeader from 'common/commonHeader/CommonNavHeader'
-import GoodsItem from './components/GoodsItem'
+import DetailsItem from './components/DetailsItem'
 import {
   Icon
 } from 'vux'
@@ -147,24 +153,23 @@ import {
 } from 'util/const'
 import axios from 'axios'
 export default {
-  name: 'ApplyAfterSales',
+  name: 'ModifyAfterSales',
   data () {
     return {
-      title: '',
       goodsData: null, // 页面渲染数据
-      statusVisible: false, // 货物状态弹窗状态
+      typeVisible: false, // 货物状态弹窗状态
       reasonVisible: false, // 退款原因弹窗状态
       subDisabled: false,
       addDisabled: false,
       orderStatus: '',
       reasonData: ['多拍/错拍/不想要', '协商一致退款', '未按照指定时间发货', '其他'], // 退款原因
-      statusData: [{
-        type: 1,
-        value: '已收到货'
+      typaData: [{
+        type: 2,
+        value: '退货退款'
       },
       {
-        type: 2,
-        value: '未收到货'
+        type: 1,
+        value: '仅退款'
       }
       ],
       params: {
@@ -184,7 +189,7 @@ export default {
   },
   components: {
     CommonNavHeader,
-    GoodsItem,
+    DetailsItem,
     Icon,
     'mt-popup': Popup
   },
@@ -198,10 +203,12 @@ export default {
   methods: {
     // 页面初始化渲染
     applyRefundRender () {
-      this.params.type = this.$route.params.type
-      this.params.orderItemId = this.$route.params.orderItemId
+      // this.params.type = this.$route.params.type
+      // this.params.orderItemId = this.$route.params.orderItemId
       this.goodsData = storage.getLocalStorage(aftersale)
-      this.orderStatus = this.$route.params.orderStatus
+      console.log(this.goodsData)
+      this.objImgs = this.goodsData.voucher.split(',')
+      this.params = Object.assign(this.params, this.goodsData)
       if (this.params.type == 1) { // 仅退款
         if (this.orderStatus == 2) {
           this.reasonData = ['错拍/多拍/不想要', '协商一致退款', '未按照指定时间发货', '其他'] // 待发货
@@ -216,14 +223,6 @@ export default {
         this.reasonData = ['商品故障', '保质期外问题', '其他']
       }
       console.log(this.goodsData)
-
-      if (this.params.type == '1') {
-        this.title = '申请退款'
-      } else if (this.params.type == '2') {
-        this.title = '申请退款'
-      } else {
-        this.title = '申请维修'
-      }
     },
     addCount () {
       this.params.num++
@@ -255,16 +254,6 @@ export default {
         } else {
           this.subDisabled = false
         }
-      }
-    },
-    // 检查已上传图片
-    checkLength () {
-      if (this.objImgs.length > 4) {
-        Toast({
-          message: '最多上传五张图片',
-          position: 'center',
-          duration: 2000
-        })
       }
     },
     uploadPic (e) {
@@ -366,11 +355,11 @@ export default {
           return
         }
       }
-
+      this.params.saleId = this.params.id
       http(applyAfterSales, this.params).then((response) => {
         if (response.data.code === 0) {
           Toast({
-            message: '提交成功',
+            message: '修改成功',
             position: 'bottom',
             duration: 1000
           })
