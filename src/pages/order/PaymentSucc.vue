@@ -5,7 +5,7 @@
       <div class="paymentImg"></div>
       <span class="paymentText">支付成功</span>
       <p class="tip">我们将尽快为安排发货</p>
-      <ul class="infoPay">
+      <ul class="infoPay" v-if="immedPaymentMony">
         <li>
           <span class="name">订单号</span>
           <span class="info">{{immedPaymentMony.orderSn}}</span>
@@ -23,8 +23,8 @@
           <span class="info price">￥{{immedPaymentMony.needPayAmount}}</span>
         </li>
       </ul>
-      <div class="paymentBtn clearfix">
-        <router-link class="pageJump" to="/orderList/2">查看订单</router-link>
+      <div class="paymentBtn clearfix" v-if="immedPaymentMony">
+        <router-link class="pageJump" :to="'/orderDetails/'+immedPaymentMony.orderSn">查看订单</router-link>
         <router-link class="pageJump" to="/find">返回首页</router-link>
       </div>
     </div>

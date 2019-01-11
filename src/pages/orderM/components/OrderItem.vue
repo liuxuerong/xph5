@@ -19,14 +19,14 @@
         </div>
       </div>
       <div class="wrap">
-        <p class="price">¥{{pricesData.actualPrice.toFixed(2)}}</p>
-        <div class="status" v-if="!isDetails&&pricesData.saleStatus">
+        <p class="price">¥{{pricesData.price.toFixed(2)}}</p>
+        <div class="status" v-if="!isDetails&&pricesData.saleStatus" :class="{warning:pricesData.saleStatus==2}">
           {{pricesData.saleStatusStr}}
         </div>
-        <div class="btn" v-if="isDetails&&status==2">
+        <div class="btn" v-if="isDetails&&status==2&&pricesData.saleStatus!=1" @click="afterSale(pricesData,pricesData.orderItemId,2)">
           退款
         </div>
-         <div class="btn" v-if="isDetails&&status==3&&pricesData.saleStatus!=1||isDetails&&status==5&&pricesData.saleStatus!=1" @click="afterSale(pricesData,pricesData.orderItemId)">
+         <div class="btn" v-if="isDetails&&status==3&&pricesData.saleStatus!=1||isDetails&&status==5&&pricesData.saleStatus!=1" @click="afterSale(pricesData,pricesData.orderItemId,1)">
           申请售后
         </div>
       </div>
@@ -76,9 +76,12 @@ export default {
         this.$router.push(`/orderDetails/${this.orderSn}`)
       }
     },
-    // 申请售后
-    afterSale (pricesData, orderItemId) {
-      this.$emit('afterSale', pricesData, orderItemId)
+    /**
+     * 申请售后
+     * type 1:申请售后  2：直接退款
+     */
+    afterSale (pricesData, orderItemId, type) {
+      this.$emit('afterSale', pricesData, orderItemId, type)
     }
   },
   data () {

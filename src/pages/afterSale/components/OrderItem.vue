@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="orderItem">
       <div class="imgContainer">
-        <router-link :to="'/details/'+pricesData.id">
+        <router-link :to="'/details/'+pricesData.goodsId">
           <img v-lazy="imageUrl+pricesData.goodsPic" alt="">
         </router-link>
       </div>

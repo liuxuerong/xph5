@@ -59,7 +59,11 @@ export default {
 
   },
   watch: {
-
+    '$route' (to, from) {
+      if (to.name === 'orderListStatus') {
+        this.currentIndex = this.$route.path.split('/')[2]
+      }
+    }
   },
   methods: {
 

@@ -33,8 +33,12 @@
             <p class="addAddress">因后台审核未通过，导致售后服务关闭</p>
             <p class="infoTip">{{orderData.noPassReason}}</p>
           </div>
-          <div class="cellLink" v-if="orderData.type===2&&orderData.status===7">
+          <div class="cellLink" v-if="(orderData.type===1||orderData.type===3)&&orderData.status===5||orderData.type===2&&orderData.status===7">
             <p class="addAddress">因您撤销售后申请，售后服务已关闭，交易将正常进行</p>
+          </div>
+          <div class="cellLink" v-if="orderData.type===1&&orderData.status===6||orderData.type===2&&orderData.status===8">
+            <p class="addAddress">后台关闭售后服务单</p>
+            <p class="infoTip">{{orderData.noPassReason}}</p>
           </div>
           <div v-if="orderData.type===2&&orderData.status===2">
             <span class="orderName">{{orderData.saleGroupName}}&nbsp;&nbsp;&nbsp;&nbsp;{{orderData.saleGroupPhone}}</span>
@@ -57,7 +61,7 @@
           </router-link>
         </div>
         <div class="wrap">
-          <router-link class="cellLink" to="/record" v-if="orderData.type!==3&&orderData.status!==2||orderData.type===3">
+          <router-link class="cellLink" to="/record">
             <div class="text">服务记录</div>
           </router-link>
         </div>
@@ -68,21 +72,22 @@
             <li><span class="name">售后单号：</span><span class="content">{{orderData.saleSn}}</span></li>
             <li><span class="name">售后类型：</span><span class="content">{{orderData.typeStr}}</span></li>
             <li><span class="name">售后原因：</span><span class="content">{{orderData.reason}}</span></li>
-            <li><span class="name">退款金额：</span><span class="content">￥{{orderData.actualPrice}}</span></li>
-            <li><span class="name">申请件数：</span><span class="content">{{orderData.num}}</span></li>
+            <li v-if="orderData.type!=3"><span class="name">退款金额：</span><span class="content">￥{{orderData.actualPrice}}</span></li>
+            <li v-if="orderData.type!=3"><span class="name">申请件数：</span><span class="content">{{orderData.num}}</span></li>
             <li><span class="name">申请时间：</span><span class="content">{{fromatTime(orderData.applyDate)}}</span></li>
-            <li><span class="name">退款说明：</span><span class="content">{{orderData.desc}}</span></li>
+            <li v-if="orderData.type!=3"><span class="name">退款说明：</span><span class="content">{{orderData.desc}}</span></li>
+            <li v-if="orderData.type==3"><span class="name">问题描述：</span><span class="content">{{orderData.desc}}</span></li>
           </ul>
         </div>
       </div>
     </div>
     <div class="orderOperBtn" v-if="orderData">
-      <span class="gray" @click="revokeSure" v-if="(orderData.status===1||orderData.status===2)&&orderData.type!==3||orderData.type===3&&orderData.status===1">撤消申请</span>
+      <span class="gray" @click="revokeSure" v-if="(orderData.status===1||orderData.status===2)&&orderData.type===2||(orderData.type===1||orderData.type===3)&&orderData.status===1">撤消申请</span>
       <span class="gray" @click="modifyOrder" v-if="orderData.status===1">修改申请</span>
-      <span class="gray" @click="delSure" v-if="orderData.type===1&&(orderData.status===3)||orderData.type===2&&(orderData.status===5||orderData.status===7)||orderData.type===3&&(orderData.status===3)">删除订单</span>
+      <span class="gray" @click="delSure" v-if="orderData.type===1&&(orderData.status===3||orderData.status===5)||orderData.type===2&&(orderData.status===5||orderData.status===7)||orderData.type===3&&(orderData.status===3)">删除订单</span>
       <span class="gray" @click="customerService">联系客服</span>
-      <span class="glod" v-if="orderData.type===1&&(orderData.status===3)||orderData.type===2&&(orderData.status===5)">售后评价</span>
-      <span class="glod" @click="appealOrder" v-if="orderData.type===1&&(orderData.status===4||orderData.status===6)||orderData.type===2&&(orderData.status===6||orderData.status===8)||orderData.type===3&&orderData.status===4">我要申诉</span>
+      <span class="glod" @click="afterEval" v-if="orderData.type===1&&(orderData.status===3)||orderData.type===2&&(orderData.status===5)">售后评价</span>
+      <span class="glod" @click="appealOrder" v-if="(orderData.type===1&&(orderData.status===4||orderData.status===6)||orderData.type===2&&(orderData.status===6||orderData.status===8)||orderData.type===3&&orderData.status===4)&&orderData.appealStatus==0">我要申诉</span>
     </div>
   </div>
 </template>
@@ -185,6 +190,10 @@ export default {
     // 售后申诉
     appealOrder () {
       this.$router.push(`/appeal/${this.saleSn}`)
+    },
+    // 售后评价
+    afterEval () {
+      this.$router.push(`/afterEvaluation/${this.saleSn}`)
     },
     // 删除订单
     delOrder () {
@@ -371,7 +380,6 @@ export default {
   .glod
     color #BA825A
     border 2px solid #BA825A
-
 .infoWrap
   display flex
   justify-content space-between

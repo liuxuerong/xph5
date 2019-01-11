@@ -384,7 +384,7 @@ const router = new Router({
       component: resolve => require(['@/pages/afterSale/AfterSaleSelect'], resolve)
     },
     {
-      path: '/applyAfterSales/:orderStatus/:orderItemId/:type', //  orderStatus: orderItemId:子订单编号 type:服务类型; 1=仅退款 2=退货退款 3=维修
+      path: '/applyAfterSales/:orderStatus/:orderItemId/:type', //  orderStatus:主订单状态 orderItemId:子订单编号 type:服务类型; 1=仅退款 2=退货退款 3=维修
       name: 'ApplyAfterSales', // 会员申请售后
       meta: { requireLogin: true },
       component: resolve => require(['@/pages/afterSale/ApplyAfterSales'], resolve)
@@ -407,6 +407,7 @@ const router = new Router({
       meta: { requireLogin: true },
       component: resolve => require(['@/pages/afterSale/Record'], resolve)
     },
+
     {
       path: '/returnLogistics/:saleSn',
       name: 'ReturnLogistics', // 填写物流信息
@@ -418,6 +419,12 @@ const router = new Router({
       name: 'Appeal', // 申诉
       meta: { requireLogin: true },
       component: resolve => require(['@/pages/afterSale/Appeal'], resolve)
+    },
+    {
+      path: '/afterEvaluation/:saleSn',
+      name: 'AfterEvaluation', // 售后评价
+      meta: { requireLogin: true },
+      component: resolve => require(['@/pages/afterSale/AfterEvaluation'], resolve)
     },
     {
       path: '/afterSaleDetails/:saleSn',

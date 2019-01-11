@@ -1,8 +1,9 @@
 <template>
   <div class="wrapper logisticsWrapper">
     <common-head-link title="我的订单" />
-    <div class="allTip" v-if="logisticsData&&logisticsData.unsentCount">{{logisticsData.alreadyCount}}个包裹已发出，{{logisticsData.unsentCount}}个包裹未发出</div>
+    <!-- <div class="allTip" v-if="logisticsData&&logisticsData.unsentCount">{{logisticsData.alreadyCount}}个包裹已发出，{{logisticsData.unsentCount}}个包裹未发出</div> -->
     <div class="tip" v-if="logisticsData&&(logisticsData.alreadyCount+logisticsData.unsentCount)>1">以下商品被拆成{{logisticsData.alreadyCount+logisticsData.unsentCount}}个包裹</div>
+    <div class="cutOffLine30" v-if="logisticsData&&(logisticsData.alreadyCount+logisticsData.unsentCount)<=1"></div>
     <div class="logisticsCon" v-for="(logisticsItem,index) in expressList " :key="logisticsItem.logisticsNo" v-if="expressList">
       {{logisticsItem.showContent}}
       <div class="logisticsInfo" @click="toggle(index)">

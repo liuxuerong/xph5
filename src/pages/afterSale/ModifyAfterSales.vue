@@ -4,26 +4,26 @@
     <div class="refundCon" v-if="goodsData">
       <details-item :goodsData="goodsData"></details-item>
       <div class="wrap">
-        <div class="cellLink" @click="changePopStatus('typeVisible')" v-if="this.orderStatus!=2&&this.params.type!=3">
+        <div class="cellLink" @click="changePopStatus('typeVisible')" v-if="params.orderStatus!=2&&params.type!=3">
           <div class="text">服务类型<span class="fr placeholder" v-if="params.type==''">请选择</span><em v-else>{{params.type==1?'仅退款':'退货退款'}}</em></div>
         </div>
-        <div class="cellLink" @click="changePopStatus('typeVisible')" v-else>
+        <div class="cellLink" @click="changePopStatus('typeVisible')" v-if="params.type==3">
            <div class="infoWrap">
               <span class="left">服务类型</span>
               <span class="right">维修</span>
             </div>
         </div>
-        <div class="cellLink" @click="changePopStatus('reasonVisible')" v-if="this.params.type!=3">
+        <div class="cellLink" @click="changePopStatus('reasonVisible')" v-if="params.type!=3">
           <div class="text">退款原因<span class="fr placeholder" v-if="params.reason==''">请选择</span><em v-else>{{params.reason}}</em>
             <!-- <p class="tip" v-if="params.reason!=''">请在退款说明处填写具体情况</p> -->
           </div>
         </div>
-        <div class="cellLink" @click="changePopStatus('reasonVisible')" v-if="this.params.type==3">
+        <div class="cellLink" @click="changePopStatus('reasonVisible')" v-if="params.type==3">
           <div class="text">维修原因<span class="fr placeholder" v-if="params.reason==''">请选择</span><em v-else>{{params.reason}}</em>
-            <p class="tip" v-if="params.reason!=''">请在问题描述处填写具体情况</p>
+            <!-- <p class="tip" v-if="params.reason!=''">请在问题描述处填写具体情况</p> -->
           </div>
         </div>
-        <div class="cellLink">
+        <div class="cellLink" v-if="params.type!=3">
           <div>商品数量
             <span class="modify fr">
               <div class="num" ref="num">
@@ -161,7 +161,6 @@ export default {
       reasonVisible: false, // 退款原因弹窗状态
       subDisabled: false,
       addDisabled: false,
-      orderStatus: '',
       reasonData: ['多拍/错拍/不想要', '协商一致退款', '未按照指定时间发货', '其他'], // 退款原因
       typaData: [{
         type: 2,
@@ -209,10 +208,11 @@ export default {
       console.log(this.goodsData)
       this.objImgs = this.goodsData.voucher.split(',')
       this.params = Object.assign(this.params, this.goodsData)
+      this.params.num = this.goodsData.num
       if (this.params.type == 1) { // 仅退款
-        if (this.orderStatus == 2) {
+        if (this.params.orderStatus == 2) {
           this.reasonData = ['错拍/多拍/不想要', '协商一致退款', '未按照指定时间发货', '其他'] // 待发货
-        } else if (this.orderStatus == 3) {
+        } else if (this.params.orderStatus == 3) {
           this.reasonData = ['不喜欢/不想要', '空包裹', '未按约定时间发货', '快递物流无跟踪记录', '货物破损已拒收'] // 已发货-未收到货（包含未签收）
         } else {
           this.reasonData = ['退运费', '实物与商品描述不符', '质量问题', '少件/漏发', '包装/商品破损/污渍', '未按约定时间发货'] // 已发货-已收到货
@@ -292,7 +292,7 @@ export default {
       // contactName: ''
 
       // 未发货仅退款
-      if (this.orderStatus == 2 && this.params.type == 1) {
+      if (this.params.orderStatus == 2 && this.params.type == 1) {
         if (this.params.reason == '') {
           Toast({
             message: '请选择退款原因',
@@ -302,7 +302,7 @@ export default {
           return
         }
         // 退货退款
-      } else if (this.orderStatus != 2 && this.params.type != 3) {
+      } else if (this.params.orderStatus != 2 && this.params.type != 3) {
         if (this.params.goodsType == '') {
           Toast({
             message: '请选择货物状态',
@@ -656,4 +656,10 @@ export default {
       left 0
     .weui-icon-success
       color #BA825A
+.infoWrap
+  display flex
+  justify-content space-between
+  .right
+    font-size 40px
+    font-weight normal      
 </style>

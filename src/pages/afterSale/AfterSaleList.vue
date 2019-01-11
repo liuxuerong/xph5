@@ -74,7 +74,6 @@ export default {
       if (!this.noMore) {
         http(afterSaleList, params).then((res) => {
           console.log(res)
-          console.log(this.page)
           if (res.data.code === 0) {
             if (this.page != 1 && !res.data.body.list) {
               this.scroll.finishPullUp()

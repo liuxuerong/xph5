@@ -38,7 +38,7 @@
              <span class="glod"  v-if="item.status==4" @click="immedEvaluate(item.orderSn)">
                 评价
               </span>
-               <span class="gray"  v-if="item.status==4">
+               <span class="gray"  v-if="(item.status==4||item.status==5)&&item.invoiceId">
                 查看发票
               </span>
             </div>
@@ -118,7 +118,6 @@ export default {
           console.log(res)
           if (res.data.code === 0) {
             this.list = [...this.list, ...res.data.body.list]
-            console.log(this.list)
             this.scrollInit()
             if (this.page !== 1 && res.data.body.list.length === 0) {
               this.scroll.finishPullUp()

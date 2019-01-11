@@ -17,7 +17,7 @@
             <p class="tip" v-if="params.reason!=''">请在问题描述处填写具体情况</p>
           </div>
         </div>
-        <div class="cellLink">
+        <div class="cellLink" v-if="params.type!=3">
           <div>商品数量
             <span class="modify fr">
               <div class="num" ref="num">
@@ -201,6 +201,7 @@ export default {
       this.params.type = this.$route.params.type
       this.params.orderItemId = this.$route.params.orderItemId
       this.goodsData = storage.getLocalStorage(aftersale)
+      this.params.num = this.goodsData.num
       this.orderStatus = this.$route.params.orderStatus
       if (this.params.type == 1) { // 仅退款
         if (this.orderStatus == 2) {
@@ -371,7 +372,7 @@ export default {
         if (response.data.code === 0) {
           Toast({
             message: '提交成功',
-            position: 'bottom',
+            position: 'center',
             duration: 1000
           })
           setTimeout(() => {

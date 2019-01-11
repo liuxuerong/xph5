@@ -50,7 +50,12 @@
             <li> <span class="name">发票内容：</span><span class="content">商品明细</span></li>
             <li> <span class="name" v-if="orderData.invoice.idCode">纳税人识别号：</span><span class="content">{{orderData.invoice.idCode}}</span></li>
           </ul>
-          <div class="tip"><i>!</i>订单完成后三个工作日内即可开具</div>
+          <ul class="infoItem" v-else>
+            <li>
+              <span class="name">发票类型：</span><span class="content">不开发票</span>
+            </li>
+          </ul>
+          <div class="tip" v-if="orderData.invoice"><i>!</i>订单完成后三个工作日内即可开具</div>
         </div>
         <div class="wrap" v-if="orderData.desc&&orderData.desc!==''">
           <div class="title">
@@ -81,12 +86,13 @@
               3: 待收货
               4: 待评价
               5: 交易成功
-              6: 交易关闭 -->
+              6: 交易关闭 
+              7: 订单完成-->
       <div class="orderOperBtn">
         <span class="gray" v-if="orderData.status==1" @click="openReason">取消订单</span>
         <span class="glod" v-if="orderData.status==1" @click="pay(orderData.orderSn)">去支付</span>
-        <span class="gray" v-if="orderData.status==3||orderData.status==4" @click="watchLogistics">查看物流</span>
-        <span class="gray" v-if="orderData.status==4||orderData.status==6" @click="deleteSure">删除订单</span>
+        <span class="gray" v-if="orderData.status==3||orderData.status==4||orderData.status==5||orderData.status==7" @click="watchLogistics">查看物流</span>
+        <span class="gray" v-if="orderData.status==4||orderData.status==5||orderData.status==6||orderData.status==7" @click="deleteSure">删除订单</span>
         <span class="glod" v-if="orderData.status==4" @click="immedEvaluate()">评价</span>
         <span class="gray" v-if="orderData.status==3&&delayState!=0" @click="delay">延长收货</span>
         <span class="glod" v-if="orderData.status==3" @click="confirmGoods(orderData.orderSn)">确认收货</span>
@@ -307,11 +313,6 @@ export default {
     goodsDetails (goodsId) {
       this.$router.push('/details/' + goodsId)
     },
-    // 申请退款
-    unGoodsapplyRefund (orderId) {
-      // type 1   未发货退款 2 退货退款
-      this.$router.push('/applyRefund/1/' + orderId)
-    },
     // 延长收货
     delay () {
       if (this.delayState === 1) {
@@ -393,11 +394,15 @@ export default {
     watchLogistics () {
       this.$router.push(`/watchLogistics/${this.orderSn}`)
     },
-    // 申请售后
-    afterSale (pricesData, orderItemId) {
+    // 申请售后 type 1:申请售后  2：直接退款
+    afterSale (pricesData, orderItemId, type) {
       pricesData.orderSn = this.orderSn
       storage.setLocalStorage(aftersale, pricesData)
-      this.$router.push(`/afterSaleSelect/${this.orderData.status}/${orderItemId}`)
+      if (type == 1) {
+        this.$router.push(`/afterSaleSelect/${this.orderData.status}/${orderItemId}`)
+      } else {
+        this.$router.push(`/applyAfterSales/${this.orderData.status}/${orderItemId}/1`)
+      }
     }
   },
   mounted () {
