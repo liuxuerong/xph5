@@ -197,6 +197,7 @@ export default {
           this.goodsListData = this.goodsListData.concat(res.data.body.list)
           this.$nextTick(function () {
             this.timer = setTimeout(() => {
+              console.log(5555)
               this.commonHeader = this.$refs.commonHeader.$el.offsetHeight
               this.index = this.$refs.index
               if (this.$refs.goodsItem && this.$refs.goodsItem.length) {
@@ -236,7 +237,6 @@ export default {
     }
   },
   mounted () {
-    // this.getTabbar()
     this.getFindData()
   },
   destroyed () {

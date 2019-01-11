@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <common-nav-header :title="title"/>
+    <common-nav-no-memory :title="title" :routeName="routeName"/>
     <div class="paymentCon">
       <div class="paymentTitle">支付中心</div>
       <div class="paymentOrder" v-if="list">
@@ -31,7 +31,7 @@ import {
 import {
   immedPaymentMony
 } from 'util/const.js'
-import CommonNavHeader from 'common/commonHeader/CommonNavHeader'
+import CommonNavNoMemory from 'common/commonHeader/CommonNavNoMemory'
 import {payMoney, orderDetails} from 'util/netApi'
 import {http} from 'util/request'
 import notice from 'util/notice'
@@ -43,11 +43,12 @@ export default {
       list: null,
       readioActive: '',
       confirmTime: '',
-      remainingTime: ''
+      remainingTime: '',
+      routeName: '/orderList/-1'
     }
   },
   components: {
-    CommonNavHeader,
+    CommonNavNoMemory,
     Confirm
   },
   watch: {
@@ -56,7 +57,7 @@ export default {
     }
   },
   beforeRouteLeave (to, from, next) {
-    if (this.remainingTime !== '00:00') {
+    if (this.confirmTime !== '00:00') {
       notice.confirm2('确认离开收银台', `离开后订单在${this.remainingTime}后将取消`, next, '继续支付', '确认离开')
     } else {
       next()
@@ -69,12 +70,13 @@ export default {
       http(orderDetails, [orderSn]).then((response) => {
         console.log(response)
         this.list = response.data.body
-        this.confirmTime = this.list.allowPayTime.replace('T', ' ')
         let _this = this
-        _this.remainingTime = _this.formatDuring(new Date(_this.confirmTime).getTime() - new Date())
+        _this.confirmTime = response.data.body.allowPayTimeSecond
+        _this.remainingTime = _this.formatDuring(_this.confirmTime)
         this.timer = setInterval(() => {
-          let time = new Date(_this.confirmTime).getTime() - new Date()
-          _this.remainingTime = _this.formatDuring(time)
+          console.log(789)
+          _this.confirmTime = _this.confirmTime - 1000
+          _this.remainingTime = _this.formatDuring(_this.confirmTime)
         }, 1000)
       }).catch((err) => {
         console.log(err)

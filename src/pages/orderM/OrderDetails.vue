@@ -86,7 +86,7 @@
               3: 待收货
               4: 待评价
               5: 交易成功
-              6: 交易关闭 
+              6: 交易关闭
               7: 订单完成-->
       <div class="orderOperBtn">
         <span class="gray" v-if="orderData.status==1" @click="openReason">取消订单</span>
@@ -234,12 +234,13 @@ export default {
         this.orderData = res.data.body
         this.delayState = res.data.body.delayState
         let _this = this
-        _this.confirmTime = res.data.body.allowPayTime
-        _this.remainingTime = _this.formatDuring(new Date(_this.confirmTime).getTime() - new Date())
-        if (new Date(_this.confirmTime).getTime() - new Date() > 0) {
+        _this.confirmTime = res.data.body.allowPayTimeSecond
+        _this.remainingTime = _this.formatDuring(_this.confirmTime)
+        if (_this.confirmTime > 0) {
           this.timer = setInterval(() => {
-            let time = new Date(_this.confirmTime).getTime() - new Date()
-            _this.remainingTime = _this.formatDuring(time)
+            console.log(41111)
+            _this.confirmTime = _this.confirmTime - 1000
+            _this.remainingTime = _this.formatDuring(_this.confirmTime)
             _this.surplus++
           }, 1000)
         } else {
@@ -407,10 +408,11 @@ export default {
   },
   mounted () {
     this.orderDetailRender()
+  },
+  beforeRouteLeave (to, from, next) {
+    clearInterval(this.timer)
+    next()
   }
-  // beforeRouteLeave (to, from, next) {
-  //   clearInterval(this.timer)
-  // }
 }
 </script>
 

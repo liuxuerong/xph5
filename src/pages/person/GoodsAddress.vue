@@ -197,8 +197,8 @@ export default {
             if (response.data.code === 0) {
               notice.toast('添加地址成功', '1000', 'success', function () {
                 setTimeout(() => {
-                  _this.fromRoute = storage.getLocalStorage(fromRoute) || '/addressAdmin'
-                  _this.$router.push(_this.fromRoute)
+                  // _this.fromRoute = storage.getLocalStorage(fromRoute) || '/addressAdmin'
+                  _this.$router.push('/addressAdmin')
                 }, 1000)
               })
             }

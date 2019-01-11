@@ -295,67 +295,67 @@ export default {
       //   }
       // }
       // if (!this.unsatisfactoryData.length) {
-        const orderInfoData = storage.getLocalStorage(orderInfo)
-        this.info = orderInfoData
-        console.log(this.info)
-        let params = {}
-        params = Object.assign({}, goodsInfoCart, orderInfoData)
-        // 从缓存中读取信息
-        if (this.info) {
-          if (this.info.couponId) {
-            params.favorableId = this.info.couponId
-          }
-          console.log(this.info)
-          if (this.info.invoicingId) {
-            params.invoicingId = this.info.invoicingId
-            this.invoiceType = this.info.invoiceType
-            this.invoiceStatus = this.info.invoiceStatus
-            this.invoiceStatusSelect = (this.info.invoiceStatus == '1' ? 'One' : 'Two')
-            console.log(4141)
-            this.isInvoicing = true
-          }
+      const orderInfoData = storage.getLocalStorage(orderInfo)
+      this.info = orderInfoData
+      console.log(this.info)
+      let params = {}
+      params = Object.assign({}, goodsInfoCart, orderInfoData)
+      // 从缓存中读取信息
+      if (this.info) {
+        if (this.info.couponId) {
+          params.favorableId = this.info.couponId
         }
-        http(goodOrderData, params).then(res => {
-          if (res.data.code === 0) {
-            params.key = res.data.body.key
-            this.availableCoupon = res.data.body.availableCoupon
-            this.availableCouponNum = res.data.body.availableCouponNum
-            this.pricesData = res.data.body.orderGoodsItems
-            this.shippingAmount = res.data.body.shippingAmount
-            this.offerAmount = res.data.body.offerAmount
-            this.addressInfo = res.data.body.delivery
-            for (let i = 0; i < this.pricesData.length; i++) {
-              let spec = JSON.parse(this.pricesData[i].spec)
-              this.pricesData[i].spec = []
-              for (let j = 0; j < spec.length; j++) {
-                this.pricesData[i].spec.push(spec[j].value)
-              }
+        console.log(this.info)
+        if (this.info.invoicingId) {
+          params.invoicingId = this.info.invoicingId
+          this.invoiceType = this.info.invoiceType
+          this.invoiceStatus = this.info.invoiceStatus
+          this.invoiceStatusSelect = (this.info.invoiceStatus == '1' ? 'One' : 'Two')
+          console.log(4141)
+          this.isInvoicing = true
+        }
+      }
+      http(goodOrderData, params).then(res => {
+        if (res.data.code === 0) {
+          params.key = res.data.body.key
+          this.availableCoupon = res.data.body.availableCoupon
+          this.availableCouponNum = res.data.body.availableCouponNum
+          this.pricesData = res.data.body.orderGoodsItems
+          this.shippingAmount = res.data.body.shippingAmount
+          this.offerAmount = res.data.body.offerAmount
+          this.addressInfo = res.data.body.delivery
+          for (let i = 0; i < this.pricesData.length; i++) {
+            let spec = JSON.parse(this.pricesData[i].spec)
+            this.pricesData[i].spec = []
+            for (let j = 0; j < spec.length; j++) {
+              this.pricesData[i].spec.push(spec[j].value)
             }
-            let goodsItems = res.data.body.orderGoodsItems
-            let goodsItemsNew = []
-            for (let index in goodsItems) {
-              for (let k in this.pricesData) {
-                if (goodsItems[index].id === this.pricesData[k].id) {
-                  goodsItems[index].goodsItemId = goodsItems[index].id
-                  goodsItemsNew.push(goodsItems[index])
-                }
-              }
-            }
-            this.params.key = res.data.body.key
-            this.params.goodsItems = goodsItemsNew
-            this.totalPric = res.data.body.totalPrice
-            this.needPayPrice = res.data.body.needPayPrice
-            storage.setLocalStorage(goodsInfo, params)
-          } else {
-            Toast({
-              message: res.data.message,
-              position: 'center',
-              duration: 1000
-            })
           }
-        }).catch(err => {
-          console.log(err)
-        })
+          let goodsItems = res.data.body.orderGoodsItems
+          let goodsItemsNew = []
+          for (let index in goodsItems) {
+            for (let k in this.pricesData) {
+              if (goodsItems[index].id === this.pricesData[k].id) {
+                goodsItems[index].goodsItemId = goodsItems[index].id
+                goodsItemsNew.push(goodsItems[index])
+              }
+            }
+          }
+          this.params.key = res.data.body.key
+          this.params.goodsItems = goodsItemsNew
+          this.totalPric = res.data.body.totalPrice
+          this.needPayPrice = res.data.body.needPayPrice
+          storage.setLocalStorage(goodsInfo, params)
+        } else {
+          Toast({
+            message: res.data.message,
+            position: 'center',
+            duration: 1000
+          })
+        }
+      }).catch(err => {
+        console.log(err)
+      })
       // }
     },
     // 从缓存中获取其他页面的数据
@@ -372,6 +372,11 @@ export default {
       let params = {}
       const info = storage.getLocalStorage(goodsInfo)
       let orderInfoData = storage.getLocalStorage(orderInfo)
+      // 判断配送地址有没有选择
+      if (!params.deliveryId) {
+        this.toastShow('请添加收货地址！')
+        return false
+      }
       // 判断是否要开发票
       if (this.isInvoicing && !orderInfoData.invoicingId) {
         this.toastShow('请填写发票抬头！')
@@ -386,11 +391,6 @@ export default {
       params.invoicingType = orderInfoData.invoicingType
 
       params = Object.assign(this.params, params)
-      // 判断配送地址有没有选择
-      if (!params.deliveryId) {
-        this.toastShow('请添加收货地址！')
-        return false
-      }
 
       // 提交订单
       http(createOrderData, params).then(res => {

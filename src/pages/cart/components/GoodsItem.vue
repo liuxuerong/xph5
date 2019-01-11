@@ -21,7 +21,7 @@
                 </span>
               </div>
               <div class="inventoryWrap" v-if="goodsItem.status==1&&goodsItem.stock!=0">
-                <div class="inventory" v-if="goodsItem.stock<5&&goodsItem.stock>0&&goodsItem.status==1">
+                <div class="inventory" v-if="goodsItem.stock<6&&goodsItem.stock>0&&goodsItem.status==1">
                 库存紧张
                 </div>
                 <div class="inventory notEnough" v-if="goodsItem.stock<goodsItem.num&&goodsItem.stock!=0&&goodsItem.status==1&&goodsItem.stock>=5">
@@ -38,6 +38,10 @@
                 <div class="opera able  fl" v-if="goodsItem.stock==0&&goodsItem.status==1&&goodsItem.stockAdequate">
                   <i class="text">请重新选择规格</i>
                   <div class="btn" @click="reselect(goodsItem.goodsId,goodsItem.id)">重新选择</div>
+                </div>
+                <div class="opera disabled  fl" v-if="goodsItem.stock==0&&goodsItem.status==1&&!goodsItem.stockAdequate">
+                  <i class="text">请重新选择规格</i>
+                  <div class="btn" >重新选择</div>
                 </div>
               <div class="bottom clearfix " v-if="goodsItem.status==1">
                 <i class="price fl" v-if="goodsItem.stock!=0">￥{{goodsItem.price.toFixed(2)}}</i>
@@ -447,7 +451,7 @@ export default {
   .btn
     color #BA825A
     border 2px solid #BA825A
-.bottom .opera.disabled
+.opera.disabled
   i
     color #666666
   .btn

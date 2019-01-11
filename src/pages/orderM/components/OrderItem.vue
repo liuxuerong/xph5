@@ -20,15 +20,27 @@
       </div>
       <div class="wrap">
         <p class="price">¥{{pricesData.price.toFixed(2)}}</p>
-        <div class="status" v-if="!isDetails&&pricesData.saleStatus" :class="{warning:pricesData.saleStatus==2}">
+        <div class="status" v-if="!isDetails&&pricesData.saleStatus">
           {{pricesData.saleStatusStr}}
         </div>
-        <div class="btn" v-if="isDetails&&status==2&&pricesData.saleStatus!=1" @click="afterSale(pricesData,pricesData.orderItemId,2)">
+        <div class="btn" v-if="isDetails&&status==2&&pricesData.saleStatus==0" @click="afterSale(pricesData,pricesData.orderItemId,2)">
           退款
         </div>
-         <div class="btn" v-if="isDetails&&status==3&&pricesData.saleStatus!=1||isDetails&&status==5&&pricesData.saleStatus!=1" @click="afterSale(pricesData,pricesData.orderItemId,1)">
+        <router-link :to="`/afterSaleDetails/${pricesData.saleSn}`" class="btn" v-if="isDetails&&status==2&&pricesData.saleStatus==1" >
+          退款中
+        </router-link>
+         <router-link :to="`/afterSaleDetails/${pricesData.saleSn}`" class="btn" v-if="isDetails&&status==2&&pricesData.saleStatus==2" >
+          退款中
+        </router-link>
+         <div class="btn" v-if="isDetails&&status==3&&pricesData.saleStatus!=1||isDetails&&status==5&&pricesData.saleStatus==0" @click="afterSale(pricesData,pricesData.orderItemId,1)">
           申请售后
         </div>
+         <router-link :to="`/afterSaleDetails/${pricesData.saleSn}`" class="btn" v-if="isDetails&&status==3&&pricesData.saleStatus==1||isDetails&&status==5&&pricesData.saleStatus==1">
+          申请售后中
+        </router-link>
+         <router-link :to="`/afterSaleDetails/${pricesData.saleSn}`" class="btn" v-if="isDetails&&status==3&&pricesData.saleStatus==2||isDetails&&status==5&&pricesData.saleStatus==1">
+          申请售后中
+        </router-link>
       </div>
 
     </div>
@@ -148,7 +160,7 @@ export default {
     border 2px solid #808080
   .status
     font-size 36px
-    color #50CF62
+    color #BA825A
     height 60px
     line-height 60px
     font-weight normal
@@ -156,8 +168,6 @@ export default {
     flex 1
     vertical-align top
     text-align right
-  .status.warning
-    color #D54B4B
   .promotion
     flex 1
     display inline-block

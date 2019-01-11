@@ -21,10 +21,8 @@
       </div>
     </div>
     <div class="bottom">
-      <span v-if="pricesData.type==1">仅退款</span>
-      <span v-if="pricesData.type==2">退货退款</span>
-      <span v-if="pricesData.type==3">维修</span>
-      <i>{{pricesData.statusStr}}</i>
+      <span>{{pricesData.statusStr.split('-')[0]}}</span>
+      <i>{{pricesData.statusStr.split('-')[1]}}</i>
     </div>
   </div>
 </template>

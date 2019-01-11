@@ -259,3 +259,6 @@ html,
   color: #808080;
   font-size: 40px;
 }
+.vux-popover{
+  position: fixed !important;
+}
