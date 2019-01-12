@@ -67,7 +67,7 @@ import {
   storage
 } from 'util/storage'
 import {
-  couponByGoods
+  couponByGoods, goodsInfo
 } from 'util/const.js'
 export default {
   name: 'Cart',
@@ -145,7 +145,6 @@ export default {
     // 重新选择
     reselect (goodsId, id) {
       this.shoppingCartId = id
-      console.log(id)
       this.goodsId = goodsId
       this.changePopupVisible(true)
       // 商品详情
@@ -198,13 +197,51 @@ export default {
         this.scroll.finishPullUp()
       }
     },
-    changeData (v) {
-      this.unsatisfactoryData = v
+    changeData () {
+      let parmas = {
+        page: 1,
+        rows: this.totals
+      }
+      let goodsObj = {
+        key: '',
+        shippingMethod: '',
+        favorableId: '',
+        fromCart: true
+      }
+      http(listCart, parmas).then(res => {
+        if (res.data.code === 0) {
+          let newList = res.data.body.list
+          for (let i = 0; i < this.clearNum.length; i++) {
+            for (let j = 0; j < newList.length; j++) {
+              if (this.clearNum[i].goodsItemId == newList[j].goodsItemId) {
+                this.goodsList.stock = newList[j].stock
+                this.clearNum[i].stock = newList[j].stock
+              }
+            }
+          }
+          this.changeGoodsList(this.goodsList)
+          goodsObj.goodsItems = []
+          for (let i = 0; i < this.clearNum.length; i++) {
+            if (this.clearNum[i].status === '1') {
+              if (this.clearNum[i].value) {
+                if (this.clearNum[i].num > this.clearNum[i].stock) {
+                  this.unsatisfactoryData.push(this.clearNum[i])
+                } else {
+                  goodsObj.goodsItems.push(this.clearNum[i])
+                }
+              }
+            }
+          }
+          storage.setLocalStorage(goodsInfo, goodsObj)
+          if (!this.unsatisfactoryData.length) {
+            this.$router.push('/createOrder')
+          }
+        }
+      })
     },
     remove () {
       let goodsList = this.goodsList
       let newClearNum = []
-      console.log(this.clearNum)
       for (let i = 0; i < goodsList.length; i++) {
         if (goodsList[i].num > goodsList[i].stock) {
           goodsList[i].value = false

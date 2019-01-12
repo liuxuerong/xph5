@@ -41,7 +41,7 @@
           <div class="title">
             <h4>发票信息</h4>
             <div class="btn" v-if="orderData.invoice">查看发票</div>
-            <div class="btn" v-else>申请开票</div>
+            <div class="btn" v-if="!orderData.invoice&&orderData.status!=1">申请开票</div>
           </div>
           <ul class="infoItem" v-if="orderData.invoice">
             <li><span class="name">发票类型：</span><span class="content">{{orderData.invoice.invoiceStatus==1?'电子普通发票':'增值税专用发票'}}</span>
@@ -230,9 +230,7 @@ export default {
       let orderCode = this.$route.params.orderSn
       this.orderSn = orderCode
       http(orderDetails, [orderCode]).then((res) => {
-        console.log(res)
         this.orderData = res.data.body
-        console.log(this.orderData)
         this.delayState = res.data.body.delayState
         let _this = this
         _this.confirmTime = res.data.body.allowPayTimeSecond
@@ -241,9 +239,7 @@ export default {
           this.timer = setInterval(() => {
             _this.confirmTime = _this.confirmTime - 1000
             _this.remainingTime = _this.formatDuring(_this.confirmTime)
-            console.log(this.confirmTime)
             if (_this.confirmTime < 0) {
-              console.log(789)
               // _this.$router.go(0)
               // setTimeout(() => {
               //   _this.orderDetailRender()

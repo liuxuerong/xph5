@@ -8,9 +8,12 @@
       </div>
       <div class="orderInfo">
         <div class="orderProvide wrap">
-          <div class="cellLink" v-if="orderData.status===1||orderData.type===1&&orderData.status===2">
+          <div class="cellLink" v-if="orderData.status===1">
             <p class="addAddress">审核一般需等待2个小时，请您耐心等待</p>
             <p class="infoTip" v-if="orderData.type===2">审核通过后，请按照给出的地址退货，并记录退货运单号;若审核未通过，您可以发起申诉，客服会重新受理。</p>
+          </div>
+            <div class="cellLink" v-if="orderData.type===1&&orderData.status===2">
+            <p class="addAddress">客服审核已通过</p>
           </div>
           <div class="cellLink" v-if="orderData.type===2&&orderData.status===2">
             <p class="addAddress needLine">申请已通过，请您根据平台提供的退货地址退货</p>
@@ -36,9 +39,9 @@
           <div class="cellLink" v-if="(orderData.type===1||orderData.type===3)&&orderData.status===5||orderData.type===2&&orderData.status===7">
             <p class="addAddress">因您撤销售后申请，售后服务已关闭，交易将正常进行</p>
           </div>
-          <div class="cellLink" v-if="orderData.type===1&&orderData.status===6||orderData.type===2&&orderData.status===8">
+          <div class="cellLink" v-if="orderData.type==1&&orderData.status==6||orderData.type===2&&orderData.status===8">
             <p class="addAddress">后台关闭售后服务单</p>
-            <p class="infoTip">{{orderData.noPassReason}}</p>
+            <p class="infoTip">{{orderData.closeReason}}</p>
           </div>
           <div v-if="orderData.type===2&&orderData.status===2">
             <span class="orderName">{{orderData.saleGroupName}}&nbsp;&nbsp;&nbsp;&nbsp;{{orderData.saleGroupPhone}}</span>

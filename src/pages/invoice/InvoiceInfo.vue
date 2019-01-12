@@ -10,19 +10,19 @@
     <div class="xpInvoiceWrap" ref="xpInvoiceWrap">
       <group :title="inputForm.invoiceStatus==1?'发票抬头':'资质信息'" class="wrap" v-if="from==1&&showFrom1&&showFrom1Status ==2||from==2||from==1&&!showFrom1&&showFrom1Status ==0">
         <div class="radioWrap" v-if="inputForm.invoiceStatus==1">
-          <label for="radio1">
+          <label for="radio1" @click="getInvoiceInfo">
             <input type="radio" id="radio1" value="1" v-model="inputForm.invoiceType">
             <span :class =" {active : inputForm.invoiceType == '1'}">个人</span>
           </label>
           <!-- @click="getInvoiceInfo" -->
           <label for="radio2" @click="getInvoiceInfo">
             <input type="radio" id="radio2" value="2" v-model="inputForm.invoiceType" >
-            <span :class =" {active : inputForm.invoiceType != '1' }" >单位{{inputForm.invoiceType}}</span>
+            <span :class =" {active : inputForm.invoiceType != '1' }" >单位</span>
           </label>
         </div>
-        <x-input placeholder="请填写单位名称" v-model.trim="inputForm.name" v-if="inputForm.invoiceType==2||inputForm.invoiceStatus==2"></x-input>
+        <x-input placeholder="请填写单位名称" v-model.trim="inputForm.name" v-if="inputForm.invoiceType==2||inputForm.invoiceStatus==2" @click.native="addNew"></x-input>
         <div class="iconWrap">
-          <x-input placeholder="请填写纳税人识别号/社会统一代码" v-model.trim="inputForm.idCode" v-if="inputForm.invoiceType==2||inputForm.invoiceStatus==2"></x-input>
+          <x-input placeholder="请填写纳税人识别号/社会统一代码" v-model.trim="inputForm.idCode" v-if="inputForm.invoiceType==2||inputForm.invoiceStatus==2" @click.native="addNew"></x-input>
           <icon type="info-circle" class="icon" v-if="!inputForm.idCode.length" @click.native="explainShow"></icon>
         </div>
         <x-input placeholder="请填写注册地址，确保与贵司税务登记信息一致" v-model.trim="inputForm.companyAddress" v-if="inputForm.invoiceStatus==2"></x-input>
@@ -107,8 +107,8 @@
         </group>
       </group>
       <group title="收票人信息" class="wrap" v-if="from==2">
-        <x-input placeholder="请填写收票人姓名" v-model.trim="inputForm.consignee" v-if="inputForm.invoiceStatus==2"></x-input>
-        <x-input placeholder="请填写收票人手机号" v-model.trim="inputForm.phone"></x-input>
+        <x-input placeholder="请填写收票人姓名" v-model.trim="inputForm.consignee" v-if="inputForm.invoiceStatus==2" @click.native="addNew"></x-input>
+        <x-input placeholder="请填写收票人手机号" v-model.trim="inputForm.phone" @click.native="addNew"></x-input>
         <x-address title="" v-model="inputForm.addressList" :list="addressData" @on-hide='addressHide()' @on-shadow-change="onShadowChange" placeholder="请选择所在区域" :show.sync="showAddress" :raw-value="true"  v-if="inputForm.invoiceStatus==2"></x-address>
         <CommonTextarea placeholder="请填写详情收票详细地址" v-model="inputForm.shippingAddress" @input="changeDetails" :max="100" class="addressText" v-if="inputForm.invoiceStatus==2"></CommonTextarea>
         <x-input placeholder="请填写邮箱，用来接收电子发票邮件，可选填" v-model.trim="inputForm.email" v-if="inputForm.invoiceStatus==1"></x-input>
@@ -117,7 +117,7 @@
         <div class="historyItem" v-for="(item,index) in invoiceList" :key="item.id" @click="setValue (invoiceList[index])">
           <span v-if="item.invoiceType==1">{{item.phone}}</span>
           <span v-else>{{item.name}}</span>
-          <icon type="clear" class="icon" @click="delStatus(item.id)"></icon>
+          <icon type="clear" class="icon" @click.native="delStatus(item.id,2)"></icon>
         </div>
       </div>
       <div class="submit" @click.stop="submit" v-if="from==1&&showFrom1Status!=1||from!=1">提交</div>
@@ -216,6 +216,7 @@ export default {
       showFrom1: false, // 从设置进来的时候默认都不显示
       showFrom1Status: 0, // 从设置进来的时候查询当前登录会员的发票信息1：显示查看，2：显示填写 0不显示按钮 1修改 2删除
       invoicingId: '', // 发票id
+      isAddNew: false, // addNew在选择发票时当输入框获取焦点属于新增
       inputForm: {
         id: '',
         invoiceType: '',
@@ -274,10 +275,21 @@ export default {
       this.showFrom1Status = 2
     },
     // 删除按钮 删除发票资质
-    delStatus (invoicingId) {
+    delStatus (invoicingId, type = 1) {
+      console.log(7411)
       http(delInvoice, [invoicingId]).then(res => {
-        // 重置inoutForm
-        this.$router.go(0)
+        console.log(res)
+        if (res.data.code == 0) {
+          this.toastShow('删除成功')
+          // 重置inoutForm
+          setTimeout(() => {
+            if (type == 1) {
+              this.$router.go(0)
+            } else {
+              this.getInvoiceListData()
+            }
+          }, 1000)
+        }
       }).catch(err => {
         console.log(err)
       })
@@ -291,6 +303,7 @@ export default {
       }
       http(getInvoiceList, params).then(res => {
         this.invoiceList = res.data.body.list
+        console.log(res.data.body.list)
         if (this.invoiceList.length) {
           this.setValue(this.invoiceList[0])
         }
@@ -337,6 +350,11 @@ export default {
         }
       }, 17)
     },
+    // 在选择发票时当输入框获取焦点属于新增
+    addNew () {
+      console.log(74)
+      this.isAddNew = true
+    },
     // 校验
     validate () {
       let input = document.getElementsByTagName('input')
@@ -351,6 +369,7 @@ export default {
         }
         const isPhone = (value) => /^1\d{10}$/gi.test(value)
         const isEmail = (value) => new RegExp('^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$').test(value)
+
         if (this.inputForm.phone != '' && !isPhone(this.inputForm.phone)) {
           this.toastShow('请填写一个正确的手机号码')
           return false
@@ -375,6 +394,15 @@ export default {
           return false
         }
       }
+      if (this.inputForm.idCode != '' && this.inputForm.idCode.length < 18) {
+        this.toastShow('请填写正确的识别号')
+        return false
+      }
+      const isAccountNumber = (value) => /^\d{19}$/g.test(value)
+      if (this.inputForm.accountNumber != '' && !isAccountNumber(this.inputForm.accountNumber)) {
+        this.toastShow('请填写正确的银行账户')
+        return false
+      }
       let textarea = document.getElementsByTagName('textarea')
       if (textarea.length && textarea[0].value.trim() == '') {
         this.toastShow('请填写详情收票详细地址')
@@ -385,7 +413,7 @@ export default {
       let info = storage.getLocalStorage(orderInfo) || {}
       info.invoicingId = id
       info.invoiceType = this.inputForm.invoiceType
-      info.invoiceTitle = this.inputForm.name || '个人'
+      info.invoiceTitle = info.invoiceType != 1 ? this.inputForm.name : '个人'
       info.invoiceStatus = this.inputForm.invoiceStatus
       // info.shippingMethod = 1
       storage.setLocalStorage(orderInfo, info)
@@ -412,10 +440,9 @@ export default {
         if (this.inputForm.invoiceStatus == 2) {
           this.inputForm.invoiceType = 2
         }
-        if (this.inputForm.id) {
+        if (this.inputForm.id && !this.isAddNew) {
+          console.log(7447)
           http(updateInvoice, this.inputForm).then(res => {
-            console.log(this.inputForm)
-            console.log(this.inputForm.id)
             this.setData(this.inputForm.id)
           }).catch(err => {
             console.log(err)
@@ -622,7 +649,7 @@ export default {
       color #999999
       font-size 32px
 .upWrap
-    width 295px
+    width 280px
     height 208px
     margin 48px 20px 48px 0
     display inline-block
@@ -704,7 +731,7 @@ export default {
     font-size 46px
     font-weight 600
     display inline-block
-    max-width 80%
+    max-width 78%
     ellipsis()
     vertical-align middle
 .explain

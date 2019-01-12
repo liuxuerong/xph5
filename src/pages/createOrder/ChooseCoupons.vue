@@ -25,7 +25,9 @@
                 <div v-else class="fullSub">
                   <span>无门槛</span>
                 </div>
-                <span class="operBtn newReceive" v-if="type == '1'" @click.stop="receiveCard(item.id)">立即领取</span>
+                <span class="operBtn newReceive" v-if="type == '1'&&item.useStatus == '1'" @click.stop="receiveCard(item.id)">立即领取</span>
+                <span class="operBtn noReceive" v-if="type == '1'&&item.useStatus == '2'">已领取</span>
+                <span class="operBtn noReceive" v-if="type == '1'&&item.useStatus == '3'">领光了</span>
                 <span class="operBtn newUse" v-if="type == '2'" @click="useCoupon(item.id,item.name,item.type)">立即使用</span>
               </div>
               <div class="activityTime">
@@ -57,7 +59,7 @@ import {
 import {
   listCouponByGoodsItemIds,
   memberCouponRecord,
-  listUseCoupon
+  listUseCouponByGoodsId
 } from 'util/netApi'
 import {
   http
@@ -114,7 +116,7 @@ export default {
         if (response.data.code === 0) {
           this.list = []
           for (let item of response.data.body) {
-            if (this.type === '1' && item.useStatus === 1) {
+            if (this.type === '1') {
               this.list.push(item)
             } else if (this.type === '2' && item.useStatus === 2) {
               this.list.push(item)
@@ -159,7 +161,7 @@ export default {
             position: 'bottom',
             duration: 2000
           })
-          this.headleTabsChange(listUseCoupon)
+          this.headleTabsChange(listUseCouponByGoodsId)
         }
       }).catch((err) => {
         console.log(err)
@@ -171,7 +173,7 @@ export default {
     if (this.type === '1') {
       this.title = '领取优惠券'
       this.routeName = '/cart'
-      this.headleTabsChange(listUseCoupon)
+      this.headleTabsChange(listUseCouponByGoodsId)
     } else {
       this.title = '选择优惠券'
       this.routeName = '/createOrder/3'
@@ -229,9 +231,9 @@ export default {
       bgImage('/static/images/cardVouItemBg')
   .cardVoucherPage
     width 100%
-    box-sizing border-box
     padding 34px 30px 0
-    max-height 80vh
+    height 100vh
+    padding-bottom 160px
     overflow-y scroll
     .cardVouItem
       width 100%
@@ -316,7 +318,7 @@ export default {
     font-size 30px
     color #666666
   .noCoupons
-    width calc(100% - 100px)
+    width 100%
     height 140px
     line-height 140px
     font-size 50px
@@ -327,5 +329,5 @@ export default {
     margin auto
     left 0
     right 0
-    bottom 100px
+    bottom 0
 </style>

@@ -210,13 +210,14 @@ export default {
         this.getDetails()
       } else if (to.name === 'CreateOrder' && !to.params.info) {
         this.info = null
+        this.isInvoicing = false
         storage.delLocalStorage(orderInfo)
         storage.delLocalStorage(invoiceInfo)
         this.getDetails()
       }
       if (from.path.indexOf('/createOrder/') !== -1 && to.path.indexOf('/createOrder') !== -1) {
         let fromPath = storage.getLocalStorage(createOrderFrom)
-        this.$router.push(fromPath)
+        this.$router.replace(fromPath)
         storage.delLocalStorage(fromPath)
       }
     },
@@ -231,9 +232,9 @@ export default {
         this.invoiceType = '1'
       }
       let info = storage.getLocalStorage(orderInfo) || {}
-      info.invoicingType = this.invoiceStatus
-      info.invoiceStatus = this.invoiceType
-      // info.invoicingId = null
+      info.invoicingType = this.invoiceType
+      info.invoiceStatus = this.invoiceStatus
+      info.invoicingId = null
       storage.setLocalStorage(orderInfo, info)
       this.info = info
     }
@@ -278,7 +279,6 @@ export default {
     },
     // 获取数据渲染页面
     getDetails () {
-      console.log(51451454)
       let goodsInfoCart = storage.getLocalStorage(goodsInfo)
       // this.unsatisfactoryData = []
       // 库存不满足商品过滤
@@ -289,7 +289,6 @@ export default {
       // }
       // if (!this.unsatisfactoryData.length) {
       const orderInfoData = storage.getLocalStorage(orderInfo)
-      console.log(orderInfoData, goodsInfoCart)
       this.info = orderInfoData
       let params = {}
       params = Object.assign({}, goodsInfoCart, orderInfoData)
@@ -365,12 +364,11 @@ export default {
 
       params.fromCart = info.fromCart || false
       params.deliveryId = (orderInfoData && orderInfoData.addressId) || (this.addressInfo && this.addressInfo.id)
-      console.log(orderInfoData)
       params.invoicingId = orderInfoData && orderInfoData.invoicingId
       // params.shippingMethod = orderInfoData.shippingMethod
       params.shippingMethod = 2
-      params.favorableId = orderInfoData.couponId
-      params.invoicingType = orderInfoData.invoicingType
+      params.favorableId = orderInfoData && orderInfoData.couponId
+      params.invoicingType = orderInfoData && orderInfoData.invoicingType
 
       params = Object.assign(this.params, params)
       // 判断配送地址有没有选择
@@ -379,7 +377,7 @@ export default {
         return false
       }
       // 判断是否要开发票
-      if (this.isInvoicing && !orderInfoData.invoicingId) {
+      if (this.isInvoicing && orderInfoData && !orderInfoData.invoicingId) {
         this.toastShow('请填写发票抬头！')
         return false
       }

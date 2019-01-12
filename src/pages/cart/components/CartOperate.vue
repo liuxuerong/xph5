@@ -14,13 +14,7 @@
 </template>
 
 <script>
-import {
-  storage
-} from 'util/storage'
-import {
-  goodsInfo
-  // cartGoods
-} from 'util/const.js'
+
 import {
   http
 } from 'util/request'
@@ -177,37 +171,7 @@ export default {
       if (this.clearNum.length === 0) {
         return
       }
-
-      let goodsObj = {
-        key: '',
-        shippingMethod: '',
-        favorableId: '',
-        fromCart: true
-      }
-      goodsObj.goodsItems = []
-      this.unsatisfactoryData = []
-      for (let i = 0; i < this.clearNum.length; i++) {
-        if (this.clearNum[i].status === '1') {
-          if (this.clearNum[i].value) {
-            if (this.clearNum[i].num > this.clearNum[i].stock) {
-              this.unsatisfactoryData.push(this.clearNum[i])
-            } else {
-              goodsObj.goodsItems.push(this.clearNum[i])
-            }
-          }
-        }
-      }
-
-      // storage.setLocalStorage(cartGoods, {
-      //   goodsList: this.goodsList,
-      //   page: this.page,
-      //   rows: this.rows
-      // })
-      storage.setLocalStorage(goodsInfo, goodsObj)
-      this.$emit('buy', this.unsatisfactoryData)
-      if (!this.unsatisfactoryData.length) {
-        this.$router.push('/createOrder')
-      }
+      this.$emit('buy')
     }
   }
 }

@@ -79,9 +79,9 @@ export const updateMemberPhone = { url: '/member/api/updateMemberPhone', method:
 export const getMemberIntegral = {url: '/integral/getMemberIntegral', method: 'GET', version: v1}
 
 // 优惠券
-export const coupon = {url: '/coupon/page', method: 'GET', version: v1} // 列表
-export const getDetailById = {url: '/memberCouponRecord/getDetailById', method: 'GET', version: v1}
-export const memberCouponRecord = {url: '/memberCouponRecord/add', method: 'POST', version: v1}
+export const coupon = {url: '/coupon/page', method: 'GET', version: v1} // 分页查询用户卡券中心
+export const getDetailById = {url: '/memberCouponRecord/getDetailById', method: 'GET', version: v1}// 获取指定优惠券领取明细
+export const memberCouponRecord = {url: '/memberCouponRecord/add', method: 'POST', version: v1}// 添加优惠券领取记录
 export const listCouponByGoodsItemIds = {url: '/coupon/listCouponByGoodsItemIds', method: 'POST', version: v1} // 用户订单可用优惠券
 export const listUseCouponByGoodsId = {url: '/coupon/listUseCouponByGoodsId', method: 'GET', version: v1} // 用户可领取优惠券
 export const listUseCoupon = { url: '/coupon/listUseCoupon', method: 'GET', version: v1 } // 查询指定会员可领取优惠券(只查未被使用的)(暂时购物车在用)

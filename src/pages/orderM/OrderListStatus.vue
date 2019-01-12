@@ -41,6 +41,9 @@
                <span class="gray"  v-if="(item.status==4||item.status==5)&&item.invoiceId">
                 查看发票
               </span>
+              <span class="glod" v-if="item.status==6" @click="deleteSure(item.orderSn)">
+                删除订单
+              </span>
             </div>
           </div>
         </li>
@@ -60,6 +63,7 @@ import {
 } from 'util/request'
 import {
   OrderList,
+  deleteOrder,
   confirmGoods
 } from 'util/netApi'
 import {
@@ -82,10 +86,11 @@ export default {
       list: [],
       page: 1,
       noMore: false,
+      orderSn: '',
       emptyObj: {
-        emptyImg: '/static/images/commentEmptyGoods.png',
-        emptyBold: '暂无商品',
-        emptyP: '此类商品暂未上架，星品君正在努力挖掘中..',
+        emptyImg: '/static/images/commentEmptyList.png',
+        emptyBold: '暂无订单',
+        emptyP: '您还没有购买的订单',
         buttonText: null,
         buttonRouter: null
       }
@@ -138,6 +143,22 @@ export default {
     // 立即评价
     immedEvaluate (orderCode) {
       this.$router.push('/immedEvaluate/' + orderCode)
+    },
+    // 确认删除弹窗
+    deleteSure (orderSn) {
+      this.orderSn = orderSn
+      notice.confirm('确认删除订单？', '删除订单后无法恢复，请谨慎操作', this.deleteOrder)
+    },
+    // 删除订单
+    deleteOrder () {
+      http(deleteOrder, [this.orderSn]).then(res => {
+        if (res.data.code === 0) {
+          this.page = 1
+          this.list = []
+          this.getList()
+          // this.$router.push('/orderList/-1')
+        }
+      })
     },
     // 确认收货
     confirmGoods (orderCode) {

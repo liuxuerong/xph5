@@ -43,9 +43,9 @@ export default {
       page: 1,
       noMore: false,
       emptyObj: {
-        emptyImg: '/static/images/commentEmptyGoods.png',
-        emptyBold: '暂无商品',
-        emptyP: '此类商品暂未上架，星品君正在努力挖掘中..',
+        emptyImg: '/static/images/commentEmptyList.png',
+        emptyBold: '暂无订单',
+        emptyP: '暂无退款/售后订单',
         buttonText: null,
         buttonRouter: null
       }

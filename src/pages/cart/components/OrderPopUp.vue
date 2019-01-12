@@ -28,7 +28,7 @@
                 无库存
               </div> -->
               <span class="price">¥{{goods.price}}</span>
-              <i class="text">最多可{{goods.stock}}购买件</i>
+              <i class="text">最多可购买{{goods.stock}}件</i>
               </div>
           </div>
         </li>

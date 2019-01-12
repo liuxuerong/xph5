@@ -80,11 +80,11 @@ export default {
           Toast({
             message: '登录成功',
             position: 'bottom',
-            duration: 2000
+            duration: 1000
           })
           setTimeout(() => {
             _this.$router.push('/')
-          }, 2000)
+          }, 1000)
         } else {
           Toast({
             message: '账号和密码不匹配，请重新输入',
