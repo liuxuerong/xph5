@@ -3,7 +3,7 @@
     <common-nav-no-memory :title="title" :routeName='routeName'></common-nav-no-memory>
     <div class="cardVoucherCon">
       <div class="cardVoucherPage" v-if="list.length > 0">
-        <div class="cardVouItem" v-for="item in list" :key="item.id" >
+        <div class="cardVouItem" v-for="item in list" :key="item.id">
           <div class="top">
             <div class="left">
               <span v-if="item.type == '1' || item.type == '3'">￥<i>{{item.subMoney}}</i></span>
@@ -25,13 +25,13 @@
                 <div v-else class="fullSub">
                   <span>无门槛</span>
                 </div>
-                 <span class="operBtn newReceive" v-if="type == '1'" @click.stop="receiveCard(item.id)">立即领取</span>
-                <span class="operBtn newUse" v-if="type == '2'"  @click="useCoupon(item.id,item.name,item.type)">立即使用</span>
+                <span class="operBtn newReceive" v-if="type == '1'" @click.stop="receiveCard(item.id)">立即领取</span>
+                <span class="operBtn newUse" v-if="type == '2'" @click="useCoupon(item.id,item.name,item.type)">立即使用</span>
               </div>
               <div class="activityTime">
                 <span class="drawTime" v-if="type==1">
-                    {{item.activityStart|timeFormat}}-{{item.activityEnd|timeFormat}}
-                </span>
+                      {{item.activityStart|timeFormat}}-{{item.activityEnd|timeFormat}}
+                  </span>
                 <span class="countDown" v-if="item.invalidDay > 0&&type==2">{{item.invalidDay}}天后过期</span>
                 <span class="countDown" v-else-if="item.invalidDay === 0&&type==2">1天后过期</span>
               </div>
@@ -41,19 +41,34 @@
         <div class="noCoupons" @click="noCoupons" v-if="type!=1">不使用优惠券</div>
       </div>
       <div class="cardVoucherPage" v-else>
-        <common-empty :emptyObj="emptyObj"/>
+        <common-empty :emptyObj="emptyObj" />
       </div>
     </div>
   </div>
 </template>
+
 <script>
 // import UserinfoHeader from '../person/components/ComUserSetHeader'
 import CommonNavNoMemory from 'common/commonHeader/CommonNavNoMemory'
-import { Tab, TabItem } from 'vux'
-import {listCouponByGoodsItemIds, memberCouponRecord, listUseCoupon} from 'util/netApi'
-import {http} from 'util/request'
-import {storage} from 'util/storage'
-import {couponByGoods, orderInfo} from 'util/const.js'
+import {
+  Tab,
+  TabItem
+} from 'vux'
+import {
+  listCouponByGoodsItemIds,
+  memberCouponRecord,
+  listUseCoupon
+} from 'util/netApi'
+import {
+  http
+} from 'util/request'
+import {
+  storage
+} from 'util/storage'
+import {
+  couponByGoods,
+  orderInfo
+} from 'util/const.js'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
 import {
   Toast
@@ -93,11 +108,12 @@ export default {
     headleTabsChange (url) {
       let parmas = storage.getLocalStorage(couponByGoods)
       console.log(url)
+      console.log(parmas)
       http(url, parmas).then((response) => {
         console.log(response)
         if (response.data.code === 0) {
+          this.list = []
           for (let item of response.data.body) {
-            // this.list.push(item)
             if (this.type === '1' && item.useStatus === 1) {
               this.list.push(item)
             } else if (this.type === '2' && item.useStatus === 2) {
@@ -116,7 +132,9 @@ export default {
       info.couponId = id
       info.couponName = name
       storage.setLocalStorage(orderInfo, info)
-      this.$router.push({path: '/createOrder/3'})
+      this.$router.replace({
+        path: '/createOrder/3'
+      })
     },
     // 不使用优惠券
     noCoupons () {
@@ -124,7 +142,9 @@ export default {
       info.couponId = null
       info.couponName = null
       storage.setLocalStorage(orderInfo, info)
-      this.$router.replace({path: '/createOrder/3'})
+      this.$router.replace({
+        path: '/createOrder/3'
+      })
     },
     // 领取优惠券
     receiveCard (id) {
@@ -170,6 +190,7 @@ export default {
   }
 }
 </script>
+
 <style lang="stylus" scoped>
   @import "~styles/mixins.styl";
   .wrapper >>> .commonEmpty
@@ -210,6 +231,8 @@ export default {
     width 100%
     box-sizing border-box
     padding 34px 30px 0
+    max-height 80vh
+    overflow-y scroll
     .cardVouItem
       width 100%
       height 280px

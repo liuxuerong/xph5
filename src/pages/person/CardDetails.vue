@@ -171,9 +171,11 @@ export default {
           Toast({
             message: '优惠券领取成功',
             position: 'bottom',
-            duration: 5000
+            duration: 1000
           })
-          this.$router.push('/cardDetails/2/0/' + id)
+          setTimeout(() => {
+            this.$router.push('/cardDetails/2/0/' + id)
+          }, 1000)
         }
       }).catch((err) => {
         console.log(err)
@@ -192,6 +194,7 @@ export default {
 <style lang="stylus">
   .wrapper
     background #f5f5f5
+    min-height 100%
     .cardIntroduce
       background #fff
       width calc(100% - 100px)

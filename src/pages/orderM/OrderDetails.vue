@@ -232,20 +232,26 @@ export default {
       http(orderDetails, [orderCode]).then((res) => {
         console.log(res)
         this.orderData = res.data.body
+        console.log(this.orderData)
         this.delayState = res.data.body.delayState
         let _this = this
         _this.confirmTime = res.data.body.allowPayTimeSecond
         _this.remainingTime = _this.formatDuring(_this.confirmTime)
         if (_this.confirmTime > 0) {
           this.timer = setInterval(() => {
-            console.log(41111)
             _this.confirmTime = _this.confirmTime - 1000
             _this.remainingTime = _this.formatDuring(_this.confirmTime)
-            _this.surplus++
+            console.log(this.confirmTime)
+            if (_this.confirmTime < 0) {
+              console.log(789)
+              // _this.$router.go(0)
+              // setTimeout(() => {
+              //   _this.orderDetailRender()
+              // }, 4000)
+              clearInterval(this.timer)
+            }
           }, 1000)
         } else {
-          console.log(111)
-          // let _this = this
           clearInterval(this.timer)
         }
       })

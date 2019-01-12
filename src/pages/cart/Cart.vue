@@ -203,17 +203,29 @@ export default {
     },
     remove () {
       let goodsList = this.goodsList
+      let newClearNum = []
+      console.log(this.clearNum)
       for (let i = 0; i < goodsList.length; i++) {
         if (goodsList[i].num > goodsList[i].stock) {
           goodsList[i].value = false
         }
       }
+      for (let i = 0; i < this.clearNum.length; i++) {
+        if (this.clearNum[i].num <= this.clearNum[i].stock) {
+          newClearNum.push(this.clearNum[i])
+        }
+      }
+      this.changeClearNum(newClearNum)
       this.unsatisfactoryData = []
       this.refreshCart({
         isAllSelect: false,
         goodsList: goodsList,
-        clearNum: []
+        clearNum: this.clearNum
       })
+      if (this.clearNum.length) {
+        this.$router.push('/createOrder')
+      }
+
       // this.changeIsAllSelect(false)
       // this.changeGoodsList(goodsList)
       // this.changeClearNum(clearNum)
@@ -223,14 +235,6 @@ export default {
       //     this.changeIsAllSelect(false)
       //   }
       // }
-
-      // goodsInfoCart.goodsItemsNew = []
-      // for (let i = 0; i < goodsInfoCart.goodsItems.length; i++) {
-      //   if (goodsInfoCart.goodsItems[i].num <= goodsInfoCart.goodsItems[i].stock) {
-      //     goodsInfoCart.goodsItemsNew.push(goodsInfoCart.goodsItems[i])
-      //   }
-      // }
-      // goodsInfoCart.goodsItems = goodsInfoCart.goodsItemsNew
     },
     orderPopUpShow (v) {
       if (!v) {

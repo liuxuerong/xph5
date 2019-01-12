@@ -26,20 +26,14 @@
         <div class="btn" v-if="isDetails&&status==2&&pricesData.saleStatus==0" @click="afterSale(pricesData,pricesData.orderItemId,2)">
           退款
         </div>
-        <router-link :to="`/afterSaleDetails/${pricesData.saleSn}`" class="btn" v-if="isDetails&&status==2&&pricesData.saleStatus==1" >
-          退款中
+        <router-link :to="`/afterSaleDetails/${pricesData.saleSn}`" class="btn" v-if="isDetails&&status==2&&pricesData.saleStatus!=0" >
+          {{pricesData.saleStatusStr}}
         </router-link>
-         <router-link :to="`/afterSaleDetails/${pricesData.saleSn}`" class="btn" v-if="isDetails&&status==2&&pricesData.saleStatus==2" >
-          退款中
-        </router-link>
-         <div class="btn" v-if="isDetails&&status==3&&pricesData.saleStatus!=1||isDetails&&status==5&&pricesData.saleStatus==0" @click="afterSale(pricesData,pricesData.orderItemId,1)">
+         <div class="btn" v-if="isDetails&&(status==3||status==4||status==5)&&pricesData.saleStatus==0" @click="afterSale(pricesData,pricesData.orderItemId,1)">
           申请售后
         </div>
-         <router-link :to="`/afterSaleDetails/${pricesData.saleSn}`" class="btn" v-if="isDetails&&status==3&&pricesData.saleStatus==1||isDetails&&status==5&&pricesData.saleStatus==1">
-          申请售后中
-        </router-link>
-         <router-link :to="`/afterSaleDetails/${pricesData.saleSn}`" class="btn" v-if="isDetails&&status==3&&pricesData.saleStatus==2||isDetails&&status==5&&pricesData.saleStatus==1">
-          申请售后中
+         <router-link :to="`/afterSaleDetails/${pricesData.saleSn}`" class="btn"  v-if="isDetails&&(status==3||status==4||status==5)&&pricesData.saleStatus!=0">
+          {{pricesData.saleStatusStr}}
         </router-link>
       </div>
 
