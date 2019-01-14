@@ -178,7 +178,6 @@ export default {
     },
     // 确认收货
     confirmGoods (orderCode) {
-      let _this = this
       notice.confirm('您确定收到货物？', '否则可能钱财两空', function () {
         http(confirmGoods, [orderCode]).then((response) => {
           if (response.data.body === true) {
@@ -188,7 +187,7 @@ export default {
               duration: 2000
             })
             setTimeout(() => {
-              _this.orderDetailRender()
+              this.getList()
             }, 2000)
           }
         })

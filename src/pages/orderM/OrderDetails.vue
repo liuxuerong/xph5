@@ -55,7 +55,6 @@
               <span class="name">发票类型：</span><span class="content">不开发票</span>
             </li>
           </ul>
-          <div class="tip" v-if="orderData.invoice"><i>!</i>订单完成后三个工作日内即可开具</div>
         </div>
         <div class="wrap" v-if="orderData.desc&&orderData.desc!==''">
           <div class="title">

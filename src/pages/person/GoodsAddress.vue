@@ -61,7 +61,7 @@ import {
   Cell,
   Value2nameFilter as value2name
 } from 'vux'
-import { required, maxLength } from 'vuelidate/lib/validators'
+import { required, maxLength, minLength } from 'vuelidate/lib/validators'
 import {fromRoute} from 'util/const.js'
 import {
   storage
@@ -107,10 +107,13 @@ export default {
       },
       receiverName: {
         required,
+        minLength: minLength(2),
         maxLength: maxLength(25)
       },
       detailedAddr: {
-        required
+        required,
+        minLength: minLength(5),
+        maxLength: maxLength(150)
       }
 
     }
@@ -223,8 +226,10 @@ export default {
         if (!this.$v.user.receiverName.required) {
           return this.toastFn('请填写联系人')
         }
-        if (!this.$v.user.receiverName.maxLength) {
-          return this.toastFn('联系不要超过25个字')
+        console.log(this.$v.user)
+        console.log(!this.$v.user.receiverName.maxLength, !this.$v.user.receiverName.minLength)
+        if (!this.$v.user.receiverName.maxLength || !this.$v.user.receiverName.minLength) {
+          return this.toastFn('联系人需要2-25个字符')
         }
         if (!this.$v.user.phone.required) {
           return this.toastFn('请填写电话号码')
@@ -238,6 +243,9 @@ export default {
         // }
         if (!this.$v.user.detailedAddr.required) {
           return this.toastFn('请填写详细地址')
+        }
+        if (!this.$v.user.detailedAddr.maxLength || !this.$v.user.detailedAddr.minLength) {
+          return this.toastFn('详细地址需要5-150个字符')
         }
       }
     },

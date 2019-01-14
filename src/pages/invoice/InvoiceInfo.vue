@@ -368,10 +368,16 @@ export default {
           }
         }
         const isPhone = (value) => /^1\d{10}$/gi.test(value)
+        const regTel = (value) => /^0[\d]{2,3} -[\d]{7,8}$/.test(value) // 座机带区号
+
         const isEmail = (value) => new RegExp('^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$').test(value)
 
         if (this.inputForm.phone != '' && !isPhone(this.inputForm.phone)) {
           this.toastShow('请填写一个正确的手机号码')
+          return false
+        }
+        if (this.inputForm.tel != '' && (regTel(this.inputForm.tel))) {
+          this.toastShow('请填写一个正确的电话号码')
           return false
         }
         if (this.inputForm.email != '' && !isEmail(this.inputForm.email)) {
@@ -394,7 +400,7 @@ export default {
           return false
         }
       }
-      if (this.inputForm.idCode != '' && this.inputForm.idCode.length < 18) {
+      if (this.inputForm.idCode != '' && this.inputForm.idCode.length != 18) {
         this.toastShow('请填写正确的识别号')
         return false
       }

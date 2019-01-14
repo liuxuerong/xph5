@@ -51,7 +51,8 @@ export default {
       imageUrl: config.imageUrl,
       objImgs: [],
       evaluateText: '',
-      Surplus: 0
+      Surplus: 0,
+      isNotEva: true
     }
   },
   components: {
@@ -154,16 +155,40 @@ export default {
         orderItemSn: this.orderCode,
         goodsComments: goodsComments
       }
-      http(comment, params).then((response) => {
-        if (response.data.body === true) {
-          Toast({
-            message: '评论成功',
-            position: 'bottom',
-            duration: 2000
-          })
-          _this.$router.push('/personCenter')
+      for (let i = 0; i < params.goodsComments.length; i++) {
+        if (params.goodsComments[i].commentsPics != '' || params.goodsComments[i].comments != '') {
+          this.isNotEva = false
+          break
         }
-      })
+      }
+      if (!this.isNotEva) {
+        http(comment, params).then((response) => {
+          if (response.data.body === true) {
+            Toast({
+              message: '评论成功',
+              position: 'center',
+              duration: 2000
+            })
+            setTimeout(() => {
+              _this.$router.push('/personCenter')
+            }, 2000)
+          } else {
+            Toast({
+              message: '请重新提交',
+              position: 'center',
+              duration: 2000
+            })
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+      } else {
+        Toast({
+          message: '请为至少一个商品填写评论',
+          position: 'center',
+          duration: 2000
+        })
+      }
     }
   },
   mounted () {

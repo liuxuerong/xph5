@@ -217,7 +217,7 @@ export default {
       float left
       width 185px
       height 185px
-      bgImage('/static/images/upLoadPic')
+      background url(/static/images/upLoadPic.png) no-repeat center center/70%
       input[type="file"]
         display block
         width 185px

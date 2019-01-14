@@ -20,7 +20,7 @@
           </li>
           <li >
             <span class="icon"><img src="/static/icons/feedback_icon.png" alt=""></span>
-            <router-link to="/search" class="item">反馈</router-link>
+            <router-link to="/feedBack" class="item">反馈</router-link>
           </li>
         </ul>
       </div>
