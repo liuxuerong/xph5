@@ -9,7 +9,7 @@
               <i class="status">{{item.statusDesc}}</i>
               <span class="right">
                 <em>
-                  共<b>{{item.memberOrderGoods.length}}</b>件商品
+                  共<b>{{item.goodsCount}}</b>件商品
                 </em>
                 <em>合计：
                   <i class="price">
@@ -64,7 +64,8 @@ import {
 import {
   OrderList,
   deleteOrder,
-  confirmGoods
+  confirmGoods,
+  orderDetails
 } from 'util/netApi'
 import {
   Toast
@@ -138,7 +139,22 @@ export default {
     },
     // 去支付
     pay (orderSn) {
-      this.$router.push('/immedPayment/' + orderSn)
+      // 点击了去支付之后判断当前订单是否超时
+      http(orderDetails, [orderSn]).then((res) => {
+        let status = res.data.body.status
+        if (status != 1) {
+          Toast({
+            message: '支付超时',
+            position: 'center',
+            duration: 2000
+          })
+          setTimeout(() => {
+            this.$router.go(0)
+          }, 2000)
+        } else {
+          this.$router.push('/immedPayment/' + orderSn)
+        }
+      })
     },
     // 立即评价
     immedEvaluate (orderCode) {

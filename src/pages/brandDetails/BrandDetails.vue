@@ -105,6 +105,7 @@ export default {
   destroyed () {
     document.querySelectorAll('html')[0].classList.remove('overH')
     document.querySelectorAll('body')[0].classList.remove('overH')
+    clearInterval(this.timer)
   },
   updated () {
     this.$nextTick(function () {

@@ -154,6 +154,9 @@ export default {
         }, 16)
       }
     })
+  },
+  beforeDestroy () {
+    clearInterval(this.timer)
   }
 }
 </script>

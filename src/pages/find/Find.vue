@@ -240,7 +240,7 @@ export default {
     this.getFindData()
   },
   destroyed () {
-    this.timer = null
+    clearInterval(this.timer)
     const _this = this
     window.removeEventListener('scroll', _this.getTop)
   }

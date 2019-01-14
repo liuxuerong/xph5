@@ -26,15 +26,13 @@
         <div class="btn" v-if="isDetails&&status==2&&pricesData.saleStatus==0" @click="afterSale(pricesData,pricesData.orderItemId,2)">
           退款
         </div>
-        <router-link :to="`/afterSaleDetails/${pricesData.saleSn}`" class="btn" v-if="isDetails&&status==2&&pricesData.saleStatus!=0" >
-          {{pricesData.saleStatusStr}}
-        </router-link>
-         <div class="btn" v-if="isDetails&&(status==3||status==4||status==5)&&pricesData.saleStatus==0" @click="afterSale(pricesData,pricesData.orderItemId,1)">
+        <div class="btn" v-if="isDetails&&(status==3||status==4||status==5)&&pricesData.saleStatus==0" @click="afterSale(pricesData,pricesData.orderItemId,1)">
           申请售后
         </div>
-         <router-link :to="`/afterSaleDetails/${pricesData.saleSn}`" class="btn"  v-if="isDetails&&(status==3||status==4||status==5)&&pricesData.saleStatus!=0">
+        <router-link :to="`/afterSaleDetails/${pricesData.saleSn}`" class="btn" v-if="isDetails&&pricesData.saleStatus!=0">
           {{pricesData.saleStatusStr}}
         </router-link>
+
       </div>
 
     </div>
@@ -83,9 +81,9 @@ export default {
       }
     },
     /**
-     * 申请售后
-     * type 1:申请售后  2：直接退款
-     */
+       * 申请售后
+       * type 1:申请售后  2：直接退款
+       */
     afterSale (pricesData, orderItemId, type) {
       this.$emit('afterSale', pricesData, orderItemId, type)
     }

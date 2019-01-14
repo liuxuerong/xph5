@@ -240,10 +240,7 @@ export default {
             _this.confirmTime = _this.confirmTime - 1000
             _this.remainingTime = _this.formatDuring(_this.confirmTime)
             if (_this.confirmTime < 0) {
-              // _this.$router.go(0)
-              // setTimeout(() => {
-              //   _this.orderDetailRender()
-              // }, 4000)
+              _this.orderDetailRender()
               clearInterval(this.timer)
             }
           }, 1000)

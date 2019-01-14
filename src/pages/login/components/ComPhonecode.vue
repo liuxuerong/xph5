@@ -123,6 +123,9 @@ export default {
         _this.submitCode()
       }
     }
+  },
+  beforeDestroy () {
+    clearInterval(this.timer)
   }
 }
 </script>

@@ -236,6 +236,7 @@ export default {
       this.changeStyle()
     },
     changeStyle () {
+      console.log(this.params.num, this.goodsData.num)
       if (this.params.num > this.goodsData.num) {
         this.addDisabled = true
         Toast({
@@ -245,6 +246,7 @@ export default {
         })
         this.params.num = this.goodsData.num
       } else {
+        this.addDisabled = false
         if (this.params.num < 2) {
           this.subDisabled = true
           this.params.num = 1

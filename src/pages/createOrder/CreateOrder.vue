@@ -143,7 +143,6 @@ import {
 import {
   goodOrderData,
   createOrderData,
-  customerService,
   getInvoice
 } from 'util/netApi'
 import {
@@ -404,9 +403,6 @@ export default {
         position: 'center',
         duration: 1000
       })
-    },
-    customerService () {
-      window.location.href = customerService
     },
     // 查询发票信息
     async getInvoiceInfo () {

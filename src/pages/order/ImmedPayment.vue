@@ -59,6 +59,7 @@ export default {
   beforeRouteLeave (to, from, next) {
     if (this.confirmTime !== '00:00') {
       notice.confirm2('确认离开收银台', `离开后订单在${this.remainingTime}后将取消`, next, '继续支付', '确认离开')
+      clearInterval(this.timer)
     } else {
       next()
     }
@@ -74,9 +75,12 @@ export default {
         _this.confirmTime = response.data.body.allowPayTimeSecond
         _this.remainingTime = _this.formatDuring(_this.confirmTime)
         this.timer = setInterval(() => {
-          console.log(789)
           _this.confirmTime = _this.confirmTime - 1000
           _this.remainingTime = _this.formatDuring(_this.confirmTime)
+          if (_this.confirmTime < 0) {
+            _this.orderDetailRender()
+            this.$router.go('/orderList/-1')
+          }
         }, 1000)
       }).catch((err) => {
         console.log(err)
@@ -144,9 +148,6 @@ export default {
   },
   mounted () {
     this.paymentRender()
-  },
-  beforeDestroy () {
-    this.timer = null
   }
 }
 </script>

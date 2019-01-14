@@ -55,7 +55,7 @@
 
                 <div class="opera disabled fl">
                   <i class="text">商品已不能购买</i>
-                  <div class="btn"  @click="contactService">联系客服</div>
+                  <div class="btn"  @click="contactService(goodsItem)">联系客服</div>
                 </div>
                 <div class="fr goodsOpera">
                   <i @click="doCollection(goodsItem.goodsId)">移入收藏</i>
@@ -188,8 +188,13 @@ export default {
       })
     },
     // 联系客服
-    contactService () {
-      window.location.href = customerService
+    contactService (goodsItem) {
+      let spec = this.specs.join('/')
+      let productTitle = goodsItem.goodsItemName
+      let productUrl = `${config.url}/#/details/${goodsItem.goodsId}`
+      let productImage = this.imageUrl + goodsItem.goodsItemPic
+      let prodect = `&product_title=${productTitle}&product_url=${productUrl}&product_image=${productImage}&product_规格=${spec}`
+      window.location.href = customerService + prodect
     },
     // 删除
     delCheck (id, toast = false) {

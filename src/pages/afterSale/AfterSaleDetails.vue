@@ -12,13 +12,13 @@
             <p class="addAddress">审核一般需等待2个小时，请您耐心等待</p>
             <p class="infoTip" v-if="orderData.type===2">审核通过后，请按照给出的地址退货，并记录退货运单号;若审核未通过，您可以发起申诉，客服会重新受理。</p>
           </div>
-            <div class="cellLink" v-if="orderData.type===1&&orderData.status===2">
+          <div class="cellLink" v-if="orderData.type===1&&orderData.status===2">
             <p class="addAddress">客服审核已通过</p>
           </div>
           <div class="cellLink" v-if="orderData.type===2&&orderData.status===2">
             <p class="addAddress needLine">申请已通过，请您根据平台提供的退货地址退货</p>
           </div>
-        <div class="cellLink" v-if="orderData.type===2&&(orderData.status===3||orderData.status===4)">
+          <div class="cellLink" v-if="orderData.type===2&&(orderData.status===3||orderData.status===4)">
             <p class="addAddress">等待平台收货并退款</p>
             <p class="infoTip">平台将在收到货物并验收入库后，发起退款退款一般在商品入库后3个工作日</p>
           </div>
@@ -47,7 +47,7 @@
             <span class="orderName">{{orderData.saleGroupName}}&nbsp;&nbsp;&nbsp;&nbsp;{{orderData.saleGroupPhone}}</span>
             <span class="orderAddress">{{orderData.saleGroupAddress}}</span>
           </div>
-           <div class="cellLink" v-if="orderData.type===3&&orderData.status===2">
+          <div class="cellLink" v-if="orderData.type===3&&orderData.status===2">
             <p class="addAddress">已安排进行售后维修中，请保持手机畅通</p>
           </div>
           <div class="cellLink" v-if="orderData.type===3&&orderData.status===3">
@@ -75,7 +75,8 @@
             <li><span class="name">售后单号：</span><span class="content">{{orderData.saleSn}}</span></li>
             <li><span class="name">售后类型：</span><span class="content">{{orderData.typeStr}}</span></li>
             <li><span class="name">售后原因：</span><span class="content">{{orderData.reason}}</span></li>
-            <li v-if="orderData.type!=3"><span class="name">退款金额：</span><span class="content">￥{{orderData.actualPrice}}</span></li>
+            <li v-if="orderData.type===2&&orderData.status===5||orderData.type===1&&orderData.status===3"><span class="name">退款金额：</span><span class="content">￥{{orderData.actualPrice}}</span></li>
+            <li v-if="orderData.type===2&&orderData.status!==5||orderData.type===1&&orderData.status!==3"><span class="name">退款金额：</span><span class="content">￥{{orderData.price}}</span></li>
             <li v-if="orderData.type!=3"><span class="name">申请件数：</span><span class="content">{{orderData.num}}</span></li>
             <li><span class="name">申请时间：</span><span class="content">{{fromatTime(orderData.applyDate)}}</span></li>
             <li v-if="orderData.type!=3"><span class="name">退款说明：</span><span class="content">{{orderData.desc}}</span></li>
@@ -130,7 +131,8 @@ export default {
     return {
       imageUrl: config.imageUrl,
       orderData: null,
-      saleSn: ''
+      saleSn: '',
+      spec: ''
     }
   },
   watch: {
@@ -139,9 +141,6 @@ export default {
         this.orderDetailRender()
       }
     }
-  },
-  computed: {
-
   },
   methods: {
     // 售后详情页面渲染
@@ -159,7 +158,12 @@ export default {
     },
     // 联系客服
     customerService () {
-      window.location.href = customerService
+      this.formatSpec()
+      let productTitle = this.orderData.goodsName
+      let productUrl = `${config.url}/#/details/${this.orderData.goodsId}`
+      let productImage = this.imageUrl + this.orderData.goodsPic
+      let prodect = `&product_title=${productTitle}&product_url=${productUrl}&product_image=${productImage}&product_规格=${this.spec}`
+      window.location.href = customerService + prodect
     },
     // 撤销弹窗
     revokeSure () {
@@ -184,6 +188,15 @@ export default {
           }, 1000)
         }
       })
+    },
+    // 格式化商品信息
+    formatSpec: function () {
+      let specArr = JSON.parse(this.orderData.goodsSpec)
+      let spec = ''
+      for (let item of specArr) {
+        spec += item.value + '/'
+      }
+      this.spec = spec.substring(0, spec.length - 1)
     },
     // 修改申请
     modifyOrder () {

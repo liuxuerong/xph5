@@ -89,7 +89,7 @@ export default {
     }, 1000)
   },
   destroyed () {
-    this.timer = null
+    clearInterval(this.timer)
   }
 }
 </script>

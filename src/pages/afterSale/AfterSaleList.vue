@@ -44,8 +44,8 @@ export default {
       noMore: false,
       emptyObj: {
         emptyImg: '/static/images/commentEmptyList.png',
-        emptyBold: '暂无订单',
-        emptyP: '暂无退款/售后订单',
+        emptyBold: '暂无售后订单',
+        emptyP: '您还没有发起售后订单',
         buttonText: null,
         buttonRouter: null
       }
@@ -135,4 +135,9 @@ export default {
     background-color #fff
     border-radius 20px
     margin-bottom 30px
+</style>
+<style lang="stylus">
+.orderList
+  .commonEmpty
+    background #f5f5f5!important
 </style>
