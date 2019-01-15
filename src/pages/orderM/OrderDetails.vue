@@ -21,7 +21,7 @@
           <span class="orderAddress">{{orderData.deliveryAddr}}</span>
         </div>
         <div class="wrap goods">
-          <order-item v-if="orderData.memberOrderGoods" v-for="goods in orderData.memberOrderGoods" :key="goods.goodsId" :pricesData="goods" :isDetails="true" :status="orderData.status" @afterSale="afterSale"></order-item>
+          <order-item v-if="orderData.memberOrderGoods" v-for="goods in orderData.memberOrderGoods" :key="goods.goodsItemId" :pricesData="goods" :isDetails="true" :status="orderData.status" @afterSale="afterSale"></order-item>
           <ul class="priceItem">
             <li class="border-top">
               <span class="name">商品总额</span><span class="price">￥{{orderData.totalAmount}}</span>

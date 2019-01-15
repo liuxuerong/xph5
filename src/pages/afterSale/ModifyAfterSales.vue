@@ -38,9 +38,9 @@
     <div class="wrap">
       <div class="moneyWrap clearfix">
         <span class="fl">退款金额 </span>
-        <span class="money fr">￥{{(goodsData.price*params.num).toFixed(2)}}</span>
+        <span class="money fr">￥{{(goodsData.unitPrice*params.num).toFixed(2)}}</span>
       </div>
-      <p class="info">最多退款 <i> ￥{{(goodsData.price*params.num).toFixed(2)}}</i>元，不包含运费</p>
+      <p class="info">最多退款 <i> ￥{{(goodsData.unitPrice*params.num).toFixed(2)}}</i>元，不包含运费</p>
     </div>
     <div class="wrap">
       <div class="padding50">
