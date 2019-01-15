@@ -43,6 +43,7 @@ import {
   aftersale
 } from 'util/const'
 export default {
+  name: 'AfterSaleSelect',
   data () {
     return {
       // imageUrl: config.imageUrl,

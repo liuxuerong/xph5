@@ -38,9 +38,9 @@
     <div class="wrap">
       <div class="moneyWrap clearfix">
         <span class="fl">退款金额 </span>
-        <span class="money fr">￥{{(goodsData.actualPrice*params.num).toFixed(2)}}</span>
+        <span class="money fr">￥{{(goodsData.price*params.num).toFixed(2)}}</span>
       </div>
-      <p class="info">最多退款 <i> ￥{{(goodsData.actualPrice*params.num).toFixed(2)}}</i>元，不包含运费</p>
+      <p class="info">最多退款 <i> ￥{{(goodsData.price*params.num).toFixed(2)}}</i>元，不包含运费</p>
     </div>
     <div class="wrap">
       <div class="padding50">
@@ -213,9 +213,11 @@ export default {
         if (this.params.orderStatus == 2) {
           this.reasonData = ['错拍/多拍/不想要', '协商一致退款', '未按照指定时间发货', '其他'] // 待发货
         } else if (this.params.orderStatus == 3) {
-          this.reasonData = ['不喜欢/不想要', '空包裹', '未按约定时间发货', '快递物流无跟踪记录', '货物破损已拒收'] // 已发货-未收到货（包含未签收）
-        } else {
-          this.reasonData = ['退运费', '实物与商品描述不符', '质量问题', '少件/漏发', '包装/商品破损/污渍', '未按约定时间发货'] // 已发货-已收到货
+          if (this.params.goodsType == 2) {
+            this.reasonData = ['不喜欢/不想要', '空包裹', '未按约定时间发货', '快递物流无跟踪记录', '货物破损已拒收'] // 已发货-未收到货（包含未签收）
+          } else {
+            this.reasonData = ['退运费', '实物与商品描述不符', '质量问题', '少件/漏发', '包装/商品破损/污渍', '未按约定时间发货'] // 已发货-已收到货
+          }
         }
       } else if (this.params.type == 2) { // 退货退款
         this.reasonData = ['个人原因', '实物与商品描述不符', '质量问题', '少件/漏发', '包装/商品破损/污渍', '未按约定时间发货', '假冒品牌', '发票问题', '发错货']
@@ -371,6 +373,25 @@ export default {
     },
     // 弹窗显示与隐藏
     changePopStatus (v) {
+      console.log(this.params.type)
+      console.log(this.params.orderStatus)
+      if (this.params.type == 1) { // 仅退款
+        if (this.params.orderStatus == 2) {
+          this.reasonData = ['错拍/多拍/不想要', '协商一致退款', '未按照指定时间发货', '其他'] // 待发货
+        } else {
+          if (this.params.goodsType == 2) {
+            this.reasonData = ['不喜欢/不想要', '空包裹', '未按约定时间发货', '快递物流无跟踪记录', '货物破损已拒收'] // 已发货-未收到货（包含未签收）
+          } else {
+            this.reasonData = ['退运费', '实物与商品描述不符', '质量问题', '少件/漏发', '包装/商品破损/污渍', '未按约定时间发货'] // 已发货-已收到货
+          }
+        }
+      } else if (this.params.type == 2) { // 退货退款
+        this.reasonData = ['个人原因', '实物与商品描述不符', '质量问题', '少件/漏发', '包装/商品破损/污渍', '未按约定时间发货', '假冒品牌', '发票问题', '发错货']
+      }
+      if (v == 'typeVisible' && !this[v]) {
+        console.log(44444)
+        this.params.reason = ''
+      }
       this[v] = !this[v]
     },
     // 退货理由选择
@@ -661,5 +682,5 @@ export default {
   justify-content space-between
   .right
     font-size 40px
-    font-weight normal      
+    font-weight normal
 </style>

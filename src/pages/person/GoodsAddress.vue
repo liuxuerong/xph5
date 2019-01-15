@@ -121,7 +121,6 @@ export default {
   beforeRouteEnter (to, from, next) {
     // 如果是从创建订单页面进入的话，新增地址保存之后跳转至创建订单页面
     if (from.path.indexOf('/createOrder') !== -1) {
-      console.log(this)
       storage.setLocalStorage(fromRoute, from.path)
     }
     next()

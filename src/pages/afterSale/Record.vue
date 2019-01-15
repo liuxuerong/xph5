@@ -12,8 +12,7 @@
         <span class="time">
           {{item.createTime|fromatTime}}
         </span>
-        <div class="info">
-            {{item.remarksInfo}}
+        <div class="info" v-html="item.remarksInfo">
         </div>
       </div>
     </div>

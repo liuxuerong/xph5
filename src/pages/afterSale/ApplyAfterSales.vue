@@ -29,7 +29,7 @@
         </div>
       </div>
     </div>
-    <div class="wrap">
+    <div class="wrap" v-if="this.params.type!=3">
       <div class="moneyWrap clearfix">
         <span class="fl">退款金额 </span>
         <span class="money fr">￥{{(goodsData.actualPrice*params.num).toFixed(2)}}</span>
@@ -191,7 +191,9 @@ export default {
   watch: {
     '$route' (to, from) {
       if (to.name === 'ApplyAfterSales') {
-        this.applyRefundRender()
+        for (let key in this.params) {
+          this.params[key] = ''
+        }
       }
     }
   },
@@ -207,16 +209,17 @@ export default {
         if (this.orderStatus == 2) {
           this.reasonData = ['错拍/多拍/不想要', '协商一致退款', '未按照指定时间发货', '其他'] // 待发货
         } else if (this.orderStatus == 3) {
-          this.reasonData = ['不喜欢/不想要', '空包裹', '未按约定时间发货', '快递物流无跟踪记录', '货物破损已拒收'] // 已发货-未收到货（包含未签收）
-        } else {
-          this.reasonData = ['退运费', '实物与商品描述不符', '质量问题', '少件/漏发', '包装/商品破损/污渍', '未按约定时间发货'] // 已发货-已收到货
+          if (this.params.goodsType == 2) {
+            this.reasonData = ['不喜欢/不想要', '空包裹', '未按约定时间发货', '快递物流无跟踪记录', '货物破损已拒收'] // 已发货-未收到货（包含未签收）
+          } else {
+            this.reasonData = ['退运费', '实物与商品描述不符', '质量问题', '少件/漏发', '包装/商品破损/污渍', '未按约定时间发货'] // 已发货-已收到货
+          }
         }
       } else if (this.params.type == 2) { // 退货退款
         this.reasonData = ['个人原因', '实物与商品描述不符', '质量问题', '少件/漏发', '包装/商品破损/污渍', '未按约定时间发货', '假冒品牌', '发票问题', '发错货']
       } else { // 维修
         this.reasonData = ['商品故障', '保质期外问题', '其他']
       }
-      console.log(this.goodsData)
 
       if (this.params.type == '1') {
         this.title = '申请退款'
@@ -236,7 +239,6 @@ export default {
       this.changeStyle()
     },
     changeStyle () {
-      console.log(this.params.num, this.goodsData.num)
       if (this.params.num > this.goodsData.num) {
         this.addDisabled = true
         Toast({
@@ -385,6 +387,24 @@ export default {
     },
     // 弹窗显示与隐藏
     changePopStatus (v) {
+      // 选择退款理由前选择货物状态
+      if (this.orderStatus != 2 && this.params.type != 3) {
+        if (v == 'reasonVisible') {
+          if (this.params.goodsType == '') {
+            Toast({
+              message: '请选选择货物状态',
+              position: 'center',
+              duration: 1000
+            })
+            return false
+          }
+          this.applyRefundRender()
+        } else {
+          if (v == 'statusVisible' && !this[v]) {
+            this.params.reason = ''
+          }
+        }
+      }
       this[v] = !this[v]
     },
     // 退货理由选择
