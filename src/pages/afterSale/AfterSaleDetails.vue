@@ -64,7 +64,7 @@
           </router-link>
         </div>
         <div class="wrap">
-          <router-link class="cellLink" to="/record">
+          <router-link class="cellLink" :to="`/record/${saleSn}`">
             <div class="text">服务记录</div>
           </router-link>
         </div>

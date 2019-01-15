@@ -378,22 +378,8 @@ export default {
       clearNum: []
     })
     this.getCartList()
-    // let goods = storage.getLocalStorage(cartGoods)
-    // if (goods) {
-    //   for (let i in goods.goodsList) {
-    //     if (goods.goodsList[i].num > goods.goodsList[i].stock) {
-    //       goods.goodsList[i].value = false
-    //     }
-    //   }
-    //   this.changeGoodsList(goods.goodsList)
-    //   this.page = goods.page
-    //   this.rows = goods.rows
-    //   storage.delLocalStorage(cartGoods)
-    //   this.scrollInit()
-    //   // this.noMore = true
-    // } else {
-    //   this.getCartList()
-    // }
+    document.querySelectorAll('html')[0].classList.add('overH')
+    document.querySelectorAll('body')[0].classList.add('overH')
   },
   destroyed () {
     this.refreshCart({
@@ -401,6 +387,8 @@ export default {
       goodsList: [],
       clearNum: []
     })
+    document.querySelectorAll('html')[0].classList.remove('overH')
+    document.querySelectorAll('body')[0].classList.remove('overH')
   }
 }
 </script>

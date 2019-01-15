@@ -1,30 +1,22 @@
 <template>
   <div class="record">
     <common-nav-header :title="title" />
-   <div class="recordCont">
-      <div class="wrap">
-      <i class="identity platform">
-        平台
-      </i>
-      <span class="time">
-        2018-12-34 15:30:28
-      </span>
-      <div class="info">
-        用户已退货,物流公司:申通快递;物流单号:71500904907667
+    <div class="recordCont" >
+      <div class="wrap" v-for="item in recordList" :key=item.id v-if="recordList.length">
+        <i class="identity platform" v-if="item.createType==2">
+          平台
+        </i>
+         <i class="identity mine" v-else>
+          我
+        </i>
+        <span class="time">
+          {{item.createTime|fromatTime}}
+        </span>
+        <div class="info">
+            {{item.remarksInfo}}
+        </div>
       </div>
     </div>
-    <div class="wrap">
-      <i class="identity mine">
-        我
-      </i>
-      <span class="time">
-        2018-12-34 15:30:28
-      </span>
-      <div class="info">
-        用户已退货,物流公司:申通快递;物流单号:71500904907667
-      </div>
-    </div>
-   </div>
     <div class="btn" @click="contactService">
       <i class="icon"></i>
       <span>联系客服</span>
@@ -35,8 +27,12 @@
 <script>
 import CommonNavHeader from 'common/commonHeader/CommonNavHeader'
 import {
-  customerService
+  customerService,
+  operatingLog
 } from 'util/netApi'
+import {
+  http
+} from 'util/request'
 export default {
   name: 'Record',
   components: {
@@ -44,7 +40,9 @@ export default {
   },
   data () {
     return {
-      title: '服务纪录'
+      title: '服务纪录',
+      saleSn: '',
+      recordList: []
     }
   },
   computed: {
@@ -53,11 +51,32 @@ export default {
   watch: {
 
   },
+  filters: {
+    // 时间去'T'
+    fromatTime (time) {
+      if (time) return time.split('T').join(' ')
+    }
+  },
   methods: {
-  // 联系客服
+    // 联系客服
     contactService () {
       window.location.href = customerService
+    },
+
+    // 获取操作记录
+    getList () {
+      this.saleSn = this.$route.params.saleSn
+      http(operatingLog, [this.saleSn]).then(res => {
+        console.log(res)
+        this.recordList = res.data.body
+      }).catch(err => {
+        console.log(err)
+      })
     }
+
+  },
+  created () {
+    this.getList()
   }
 }
 </script>
@@ -94,8 +113,10 @@ export default {
   .info
     color #333
     font-size 46px
-    font-weight 600
     margin-top 20px
+  .wrap:first-child
+    .info
+      font-weight 600
   .btn
     width 100%
     background-color #fff

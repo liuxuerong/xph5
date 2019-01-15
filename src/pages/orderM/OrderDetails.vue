@@ -41,7 +41,7 @@
           <div class="title">
             <h4>发票信息</h4>
             <div class="btn" v-if="orderData.invoice">查看发票</div>
-            <div class="btn" v-if="!orderData.invoice&&orderData.status!=1">申请开票</div>
+            <router-link to="/invoiceApply" class="btn" v-if="!orderData.invoice&&orderData.status!=1">申请开票</router-link>
           </div>
           <ul class="infoItem" v-if="orderData.invoice">
             <li><span class="name">发票类型：</span><span class="content">{{orderData.invoice.invoiceStatus==1?'电子普通发票':'增值税专用发票'}}</span>

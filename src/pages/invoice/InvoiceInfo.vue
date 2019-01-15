@@ -400,6 +400,7 @@ export default {
           return false
         }
       }
+      console.log(this.inputForm.idCode)
       if (this.inputForm.idCode != '' && this.inputForm.idCode.length != 18) {
         this.toastShow('请填写正确的识别号')
         return false

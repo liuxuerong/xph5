@@ -172,6 +172,7 @@ export const afterSaleDel = { url: '/order/afterSale/delete', method: 'GET', ver
 export const afterSaleDelivery = { url: '/order/afterSale/afterSaleDelivery', method: 'POST', version: v2 }// 售后-退货渠道
 export const appealAfterSales = { url: '/order/afterSale/appealAfterSales', method: 'POST', version: v2 }// 售后申诉
 export const evaluateAfterSales = { url: '/order/afterSale/evaluate', method: 'POST', version: v2 }// 售后评价
+export const operatingLog = { url: '/order/afterSale/listSaleLog', method: 'GET', version: v2, join: true }// 查看操作记录
 
 export const express = { url: '/express/order-kuaidi', method: 'GET', version: v1 }
 export const checkExpress = { url: '/order/checkExpress', method: 'GET', version: v2, join: true }// 版本2查询物流

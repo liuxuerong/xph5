@@ -24,8 +24,8 @@
         </li>
       </ul>
       <div class="paymentBtn clearfix" v-if="immedPaymentMony">
-        <router-link class="pageJump" :to="'/orderDetails/'+immedPaymentMony.orderSn">查看订单</router-link>
-        <router-link class="pageJump" to="/find">返回首页</router-link>
+        <router-link class="pageJump" :to="'/orderDetails/'+immedPaymentMony.orderSn" replace>查看订单</router-link>
+        <router-link class="pageJump" to="/find" replace>返回首页</router-link>
       </div>
     </div>
   </div>
