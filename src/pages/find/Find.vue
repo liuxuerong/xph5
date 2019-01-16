@@ -17,17 +17,17 @@
           <index-swiper ref="indexSwiper" v-if="IndexSwiperShow" />
           <div class="navBox">
             <div class="item wrap left" @click="touristToolCenter">
-              <h2>会员福利</h2>
-              <h4>material comforts</h4>
+              <!-- <h2>会员福利</h2>
+              <h4>material comforts</h4> -->
             </div>
             <div class="right wrap">
               <router-link to="/activitysList" class="item top">
-                <h2>活动精选</h2>
-                <h4>Featured</h4>
+                <!-- <h2>活动精选</h2>
+                <h4>Featured</h4> -->
               </router-link>
               <router-link to="/hotel" class="item bottom">
-                <h2>酒店用品</h2>
-                <h4>hotel supplies</h4>
+                <!-- <h2>酒店用品</h2>
+                <h4>hotel supplies</h4> -->
               </router-link>
             </div>
           </div>

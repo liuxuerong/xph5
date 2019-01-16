@@ -317,8 +317,8 @@ export default {
           })
           return
         }
-        // 退货退款
-      } else if (this.orderStatus != 2 && this.params.type != 3) {
+        // 已发货仅退款
+      } else if (this.orderStatus != 2 && this.params.type == 1) {
         if (this.params.goodsType == '') {
           Toast({
             message: '请选择货物状态',
@@ -327,6 +327,16 @@ export default {
           })
           return
         }
+        if (this.params.reason == '') {
+          Toast({
+            message: '请选择退款原因',
+            position: 'center',
+            duration: 2000
+          })
+          return
+        }
+        // 退货退款
+      } else if (this.orderStatus != 2 && this.params.type == 2) {
         if (this.params.reason == '') {
           Toast({
             message: '请选择退款原因',

@@ -19,13 +19,27 @@
 </template>
 
 <script>
-// import dsbridge from 'dsbridge'
+import dsbridge from 'dsbridge'
+import { getUrlParam } from '@/func/params'
 // import wx from 'weixin-js-sdk'
 export default {
   name: 'IdCodeExplain',
 
   data () {
     return {
+    }
+  },
+  methods: {
+    returnTitle () {
+      dsbridge.call('getTitle', '关于发票税号的说明', function (v) {
+        alert(v)
+      })
+    }
+  },
+  mounted () {
+    this.platform = getUrlParam('platform')
+    if (this.platform === 'i' || this.platform === 'a' || this.platform === 'wx') {
+      this.returnTitle()
     }
   }
 }

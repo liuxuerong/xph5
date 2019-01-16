@@ -19,8 +19,8 @@ export default {
         {
           id: 'tabbar1',
           to: '/find',
-          imgSrc: '/static/icons/find_icon_Tabbar@2x.png',
-          imgSrcSelect: '/static/icons/find_icon_Tabbar_active@2x.png',
+          imgSrc: '/static/icons/find_icon_Tabbar.png',
+          imgSrcSelect: '/static/icons/find_icon_Tabbar_active.png',
           text: '发现',
           selected: true
         },
@@ -35,24 +35,24 @@ export default {
         {
           id: 'tabbar3',
           to: '/hall',
-          imgSrc: '/static/icons/logo@2x.png',
-          imgSrcSelect: '/static/icons/logo_active@2x.png',
+          imgSrc: '/static/icons/logo.png',
+          imgSrcSelect: '/static/icons/logo_active.png',
           text: '',
           selected: false
         },
         {
           id: 'tabbar4',
           to: '/story',
-          imgSrc: '/static/icons/story_icon_Tabbar@2x.png',
-          imgSrcSelect: '/static/icons/story_icon_Tabbar_active@2x.png',
+          imgSrc: '/static/icons/story_icon_Tabbar.png',
+          imgSrcSelect: '/static/icons/story_icon_Tabbar_active.png',
           text: '故事',
           selected: false
         },
         {
           id: 'tabbar5',
           to: '/personCenter',
-          imgSrc: '/static/icons/person_icon_Tabbar@2x.png',
-          imgSrcSelect: '/static/icons/person_icon_Tabbar_active@2x.png',
+          imgSrc: '/static/icons/person_icon_Tabbar.png',
+          imgSrcSelect: '/static/icons/person_icon_Tabbar_active.png',
           text: '我',
           selected: false
         }

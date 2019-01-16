@@ -108,7 +108,6 @@ const router = new Router({
     {
       path: '/idCodeExplain',
       name: 'IdCodeExplain',
-      meta: { requireLogin: true },
       component: resolve => require(['@/pages/invoice/IdCodeExplain'], resolve)
     },
     {
