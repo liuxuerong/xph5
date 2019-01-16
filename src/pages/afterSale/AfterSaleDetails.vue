@@ -370,6 +370,7 @@ export default {
       width 78%
       display inline-block
       vertical-align top
+      word-break break-all
 .orderOperBtn
   width 100%
   height 148px

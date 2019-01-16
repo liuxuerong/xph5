@@ -118,21 +118,34 @@ export default {
       for (let item of this.clearNum) {
         params.push({collectionDataId: item.goodsId, collectionType: 1})
       }
-
-      http(batchCollection, params, 'noloading').then(res => {
-        if (res.data.code === 0) {
-          notice.alert('', '成功移入收藏夹，你可以在  我的-商品收藏  中找到。')
-          this.delCheck(false)
-        }
-      }).catch(err => {
-        console.log(err)
-      })
+      if (this.clearNum.length === 0) {
+        Toast({
+          message: '请至少选中一件商品',
+          position: 'center',
+          duration: 1000
+        })
+      } else {
+        http(batchCollection, params, 'noloading').then(res => {
+          if (res.data.code === 0) {
+            notice.alert('', '成功移入收藏夹，你可以在  我的-商品收藏  中找到。')
+            this.delCheck(false)
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+      }
     },
     sureDel () {
       for (let v of this.goodsList) {
         if (v.value) {
           notice.confirm('是否确认删除选定商品？', '', this.delCheck, '删除')
           break
+        } else {
+        Toast({
+          message: '请至少选中一件商品',
+          position: 'center',
+          duration: 1000
+        })
         }
       }
     },

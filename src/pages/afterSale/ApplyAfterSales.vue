@@ -208,7 +208,7 @@ export default {
       if (this.params.type == 1) { // 仅退款
         if (this.orderStatus == 2) {
           this.reasonData = ['错拍/多拍/不想要', '协商一致退款', '未按照指定时间发货', '其他'] // 待发货
-        } else if (this.orderStatus == 3) {
+        } else if (this.orderStatus != 2) {
           if (this.params.goodsType == 2) {
             this.reasonData = ['不喜欢/不想要', '空包裹', '未按约定时间发货', '快递物流无跟踪记录', '货物破损已拒收'] // 已发货-未收到货（包含未签收）
           } else {
@@ -392,12 +392,13 @@ export default {
         if (v == 'reasonVisible') {
           if (this.params.goodsType == '') {
             Toast({
-              message: '请选选择货物状态',
+              message: '请先选择货物状态',
               position: 'center',
               duration: 1000
             })
             return false
           }
+          console.log(7878)
           this.applyRefundRender()
         } else {
           if (v == 'statusVisible' && !this[v]) {

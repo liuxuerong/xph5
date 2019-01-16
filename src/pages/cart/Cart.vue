@@ -398,6 +398,8 @@ export default {
   z-index 99999999!important
 .xpCart >>> .mint-popup
   z-index 999999999!important
+.xpCart >>> .commonEmpty
+  padding-top 200px !important
 .xpCart
   height 100%
   padding-top 120px
