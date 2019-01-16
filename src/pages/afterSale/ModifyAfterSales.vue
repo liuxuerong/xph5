@@ -7,7 +7,7 @@
         <div class="cellLink" @click="changePopStatus('typeVisible')" v-if="params.orderStatus!=2&&params.type!=3">
           <div class="text">服务类型<span class="fr placeholder" v-if="params.type==''">请选择</span><em v-else>{{params.type==1?'仅退款':'退货退款'}}</em></div>
         </div>
-        <div class="cellLink" @click="changePopStatus('typeVisible')" v-if="params.type==3">
+        <div class="cellLink" v-if="params.type==3">
            <div class="infoWrap">
               <span class="left">服务类型</span>
               <span class="right">维修</span>
@@ -35,7 +35,7 @@
         </div>
       </div>
     </div>
-    <div class="wrap">
+    <div class="wrap" v-if="params.type!=3">
       <div class="moneyWrap clearfix">
         <span class="fl">退款金额 </span>
         <span class="money fr">￥{{(goodsData.unitPrice*params.num).toFixed(2)}}</span>

@@ -2,7 +2,7 @@
   <div class="wrapper logisticsWrapper">
     <common-head-link title="我的订单" />
     <!-- <div class="allTip" v-if="logisticsData&&logisticsData.unsentCount">{{logisticsData.alreadyCount}}个包裹已发出，{{logisticsData.unsentCount}}个包裹未发出</div> -->
-    <div class="tip" v-if="logisticsData&&(logisticsData.alreadyCount+logisticsData.unsentCount)>1">以下商品被拆成{{logisticsData.alreadyCount+logisticsData.unsentCount}}个包裹</div>
+    <div class="tip" v-if="logisticsData&&logisticsData.alreadyCount>1">以下商品被拆成{{logisticsData.alreadyCount}}个包裹</div>
     <div class="cutOffLine30" v-if="logisticsData&&(logisticsData.alreadyCount+logisticsData.unsentCount)<=1"></div>
     <div class="logisticsCon" v-for="(logisticsItem,index) in expressList " :key="logisticsItem.logisticsNo" v-if="expressList">
       {{logisticsItem.showContent}}
@@ -29,7 +29,7 @@
       </div>
 
     </div>
-    <div v-if="logisticsData&&logisticsData.unsentCount" class="noLogisticsList">
+    <div v-if="logisticsData&&logisticsData.alreadyCount<1" class="noLogisticsList">
       <i class="noLogisticsDizhi"> </i>暂无物流信息 请耐心等待
     </div>
   </div>

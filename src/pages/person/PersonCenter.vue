@@ -134,6 +134,7 @@ import OrderIndex from '../order/OrderIndex'
 import { config } from 'util/config'
 import BScroll from 'better-scroll'
 export default {
+  name: 'PersonCenter',
   data () {
     return {
       list: [],

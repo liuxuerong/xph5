@@ -174,5 +174,4 @@ export default {
         display block !important
         font-size 36px
         line-height 60px
-
 </style>

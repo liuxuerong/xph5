@@ -136,12 +136,12 @@ const router = new Router({
     {
       path: '/login',
       name: 'Login',
-      component: resolve => require(['@/pages/login/Login'], resolve)
+      component: resolve => require(['@/pages/login/PhoneCode'], resolve)
     },
     {
       path: '/phoneCode',
       name: 'phoneCode',
-      component: resolve => require(['@/pages/login/PhoneCode'], resolve)
+      component: resolve => require(['@/pages/login/Login'], resolve)
     },
     {
       path: '/remberPassword',

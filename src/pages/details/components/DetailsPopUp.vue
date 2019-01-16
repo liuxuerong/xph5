@@ -73,6 +73,7 @@ export default {
   data () {
     return {
       SKUResult: {},
+      olderCartCount: 1,
       cartCount: 1,
       type: 1,
       goodsItemsId: '',
@@ -88,7 +89,7 @@ export default {
   watch: {
     cartCount (v) {
       this.changeStyle(v)
-      if (this.cartCount >= this.maxCount) {
+      if (this.cartCount > this.maxCount) {
         Toast({
           message: '数量超出库存范围',
           position: 'center',
@@ -98,8 +99,9 @@ export default {
           return
         }
         this.cartCount = this.maxCount
+        return
       }
-      if (this.cartCount < 2) {
+      if (this.cartCount !== '' && this.cartCount < 1) {
         this.cartCount = 1
         Toast({
           message: '不能再少了',
@@ -122,7 +124,9 @@ export default {
     addCount () {
       this.cartCount++
     },
+    setCartCount () {
 
+    },
     subCount () {
       this.cartCount--
     },
