@@ -2,7 +2,7 @@
   <div class="wrapper logisticsWrapper">
     <common-head-link title="我的订单" />
     <!-- <div class="allTip" v-if="logisticsData&&logisticsData.unsentCount">{{logisticsData.alreadyCount}}个包裹已发出，{{logisticsData.unsentCount}}个包裹未发出</div> -->
-    <div class="tip" v-if="logisticsData&&logisticsData.alreadyCount>1">以下商品被拆成{{logisticsData.alreadyCount}}个包裹</div>
+    <div class="tip" v-if="logisticsData&&logisticsData.alreadyCount">以下商品被拆成{{logisticsData.alreadyCount}}个包裹</div>
     <div class="cutOffLine30" v-if="logisticsData&&(logisticsData.alreadyCount+logisticsData.unsentCount)<=1"></div>
     <div class="logisticsCon" v-for="(logisticsItem,index) in expressList " :key="logisticsItem.logisticsNo" v-if="expressList">
       {{logisticsItem.showContent}}
@@ -14,6 +14,10 @@
         <div class="bottom" v-if="logisticsItem.traces.length > 0">
           <p class="infoItem">{{logisticsItem.traces[0].AcceptStation}}</p>
           <div class="time">{{logisticsItem.traces[0].AcceptTime}}</div>
+        </div>
+        <div class="bottom" v-else>
+          <p class="infoItem">暂无物流消息，请耐心等待</p>
+          <div class="time">&nbsp;</div>
         </div>
       </div>
       <div class="slide" :class="showContent[index]?'animate':''" v-if="logisticsItem.traces.length > 0">
@@ -48,6 +52,7 @@ import {
   Group
 } from 'vux'
 export default {
+  name: 'WatchLogistics',
   data () {
     return {
       title: '物流信息',
