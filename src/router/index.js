@@ -106,6 +106,12 @@ const router = new Router({
       component: resolve => require(['@/pages/invoice/Invoice'], resolve)
     },
     {
+      path: '/idCodeExplain',
+      name: 'IdCodeExplain',
+      meta: { requireLogin: true },
+      component: resolve => require(['@/pages/invoice/IdCodeExplain'], resolve)
+    },
+    {
       path: '/invoiceInfo/:invoiceType/:invoiceStatus/:from', // from 1设置页面 2创建订单
       name: 'invoiceInfo',
       meta: { requireLogin: true },

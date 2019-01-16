@@ -4,7 +4,7 @@
     <div class="refundCon" v-if="goodsData">
       <goods-item :goodsData="goodsData"></goods-item>
       <div class="wrap">
-        <div class="cellLink" @click="changePopStatus('statusVisible')" v-if="this.orderStatus!=2&&this.params.type!=3">
+        <div class="cellLink" @click="changePopStatus('statusVisible')" v-if="this.orderStatus!=2&&this.params.type==1">
           <div class="text">货物状态<span class="fr placeholder" v-if="params.goodsType==''">请选择</span><em v-else>{{params.goodsType==1?'已收到货':'未收到货'}}</em></div>
         </div>
         <div class="cellLink" @click="changePopStatus('reasonVisible')" v-if="this.params.type!=3">
@@ -34,7 +34,7 @@
         <span class="fl">退款金额 </span>
         <span class="money fr">￥{{(goodsData.actualPrice*params.num).toFixed(2)}}</span>
       </div>
-      <p class="info">最多退款 <i> ￥{{(goodsData.actualPrice*params.num).toFixed(2)}}</i>元，不包含运费</p>
+      <p class="info">最多退款 <i> ￥{{(goodsData.actualPrice*goodsData.num).toFixed(2)}}</i>元，不包含运费</p>
     </div>
     <div class="wrap">
       <div class="padding50">
@@ -388,7 +388,7 @@ export default {
     // 弹窗显示与隐藏
     changePopStatus (v) {
       // 选择退款理由前选择货物状态
-      if (this.orderStatus != 2 && this.params.type != 3) {
+      if (this.orderStatus != 2 && this.params.type == 1) {
         if (v == 'reasonVisible') {
           if (this.params.goodsType == '') {
             Toast({
@@ -543,6 +543,8 @@ export default {
       height 190px
   ul
     padding 0 50px
+    max-height 50vh
+    overflow-y auto
     li
       line-height 148px
       .top

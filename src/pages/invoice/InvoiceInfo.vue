@@ -276,7 +276,6 @@ export default {
     },
     // 删除按钮 删除发票资质
     delStatus (invoicingId, type = 1) {
-      console.log(7411)
       http(delInvoice, [invoicingId]).then(res => {
         console.log(res)
         if (res.data.code == 0) {
@@ -352,7 +351,6 @@ export default {
     },
     // 在选择发票时当输入框获取焦点属于新增
     addNew () {
-      console.log(74)
       this.isAddNew = true
     },
     // 校验
@@ -368,15 +366,17 @@ export default {
           }
         }
         const isPhone = (value) => /^1\d{10}$/gi.test(value)
-        const regTel = (value) => /^0[\d]{2,3} -[\d]{7,8}$/.test(value) // 座机带区号
 
-        const isEmail = (value) => new RegExp('^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$').test(value)
+        const regTel = (value) => /^0((\d{2}-\d{8})|(\d{3}-\d{7,8}))/.test(value) // 座机带区号
+
+        const isEmail = (value) => /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/.test(value)
 
         if (this.inputForm.phone != '' && !isPhone(this.inputForm.phone)) {
           this.toastShow('请填写一个正确的手机号码')
           return false
         }
-        if (this.inputForm.tel != '' && (regTel(this.inputForm.tel))) {
+        console.log(this.inputForm.tel)
+        if (this.inputForm.tel != '' && !regTel(this.inputForm.tel)) {
           this.toastShow('请填写一个正确的电话号码')
           return false
         }
@@ -400,12 +400,14 @@ export default {
           return false
         }
       }
-      console.log(this.inputForm.idCode)
-      if (this.inputForm.idCode != '' && this.inputForm.idCode.length != 18) {
+
+      const isidCode = (value) => /^[0-9a-zA-Z]{15,18}$/.test(value)
+      if (this.inputForm.idCode != '' && !isidCode(this.inputForm.idCode)) {
         this.toastShow('请填写正确的识别号')
         return false
       }
-      const isAccountNumber = (value) => /^\d{19}$/g.test(value)
+
+      const isAccountNumber = (value) => /^([1-9]{1})(\d{15}|\d{18})$/.test(value)
       if (this.inputForm.accountNumber != '' && !isAccountNumber(this.inputForm.accountNumber)) {
         this.toastShow('请填写正确的银行账户')
         return false
@@ -448,7 +450,6 @@ export default {
           this.inputForm.invoiceType = 2
         }
         if (this.inputForm.id && !this.isAddNew) {
-          console.log(7447)
           http(updateInvoice, this.inputForm).then(res => {
             this.setData(this.inputForm.id)
           }).catch(err => {
@@ -468,7 +469,12 @@ export default {
       if (this.from == '2') {
         this.$router.replace({path: '/createOrder/4'})
       } else {
-        this.$router.go(0)
+        // alert(123)
+        this.isRouterAlive = false
+        this.$nextTick(function () {
+          this.isRouterAlive = true
+          window.location.reload()
+        })
       }
     },
     // 删除上传图片
