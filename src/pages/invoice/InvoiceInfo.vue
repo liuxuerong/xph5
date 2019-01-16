@@ -375,7 +375,6 @@ export default {
           this.toastShow('请填写一个正确的手机号码')
           return false
         }
-        console.log(this.inputForm.tel)
         if (this.inputForm.tel != '' && !regTel(this.inputForm.tel)) {
           this.toastShow('请填写一个正确的电话号码')
           return false
