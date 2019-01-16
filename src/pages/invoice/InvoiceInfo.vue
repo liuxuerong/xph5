@@ -1,14 +1,14 @@
 <template>
   <div class="xpInvoice">
     <common-nav-header :title="title">
-      <router-link to="/instructions" class="knows" v-if="from==2">
+      <router-link to="/instructions" class="knows" v-if="from!=1">
         开票须知
       </router-link>
       <div class="btnTop" v-if="from==1&&showFrom1Status==1" @click="modifyStatus">修改</div>
       <div class="btnTop" v-if="from==1&&showFrom1Status==2" @click="delStatus(invoicingId)">删除</div>
     </common-nav-header>
     <div class="xpInvoiceWrap" ref="xpInvoiceWrap">
-      <group :title="inputForm.invoiceStatus==1?'发票抬头':'资质信息'" class="wrap" v-if="from==1&&showFrom1&&showFrom1Status ==2||from==2||from==1&&!showFrom1&&showFrom1Status ==0">
+      <group :title="inputForm.invoiceStatus==1?'发票抬头':'资质信息'" class="wrap" v-if="from==1&&showFrom1&&showFrom1Status ==2||from!=1||from==1&&!showFrom1&&showFrom1Status ==0">
         <div class="radioWrap" v-if="inputForm.invoiceStatus==1">
           <label for="radio1" @click="getInvoiceInfo">
             <input type="radio" id="radio1" value="1" v-model="inputForm.invoiceType">
@@ -106,7 +106,7 @@
           </div>
         </group>
       </group>
-      <group title="收票人信息" class="wrap" v-if="from==2">
+      <group title="收票人信息" class="wrap" v-if="from!=1">
         <x-input placeholder="请填写收票人姓名" v-model.trim="inputForm.consignee" v-if="inputForm.invoiceStatus==2" @click.native="addNew"></x-input>
         <x-input placeholder="请填写收票人手机号" v-model.trim="inputForm.phone" @click.native="addNew"></x-input>
         <x-address title="" v-model="inputForm.addressList" :list="addressData" @on-hide='addressHide()' @on-shadow-change="onShadowChange" placeholder="请选择所在区域" :show.sync="showAddress" :raw-value="true"  v-if="inputForm.invoiceStatus==2"></x-address>
@@ -467,13 +467,10 @@ export default {
     goOther () {
       if (this.from == '2') {
         this.$router.replace({path: '/createOrder/4'})
+      } else if (this.from == '3') {
+        this.$router.replace({path: '/invoiceApply'})
       } else {
-        // alert(123)
-        this.isRouterAlive = false
-        this.$nextTick(function () {
-          this.isRouterAlive = true
-          window.location.reload()
-        })
+        window.location.reload()
       }
     },
     // 删除上传图片

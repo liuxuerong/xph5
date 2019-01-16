@@ -39,7 +39,7 @@
           <div class="cellLink" v-if="(orderData.type===1||orderData.type===3)&&orderData.status===5||orderData.type===2&&orderData.status===7">
             <p class="addAddress">因您撤销售后申请，售后服务已关闭，交易将正常进行</p>
           </div>
-          <div class="cellLink" v-if="orderData.type==1&&orderData.status==6||orderData.type===2&&orderData.status===8">
+          <div class="cellLink" v-if="(orderData.type===1||orderData.type===3)&&orderData.status==6||orderData.type===2&&orderData.status===8">
             <p class="addAddress">后台关闭售后服务单</p>
             <p class="infoTip">{{orderData.closeReason}}</p>
           </div>

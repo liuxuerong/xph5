@@ -93,6 +93,7 @@ export const getInvoice = { url: '/invoice/api/member/get', method: 'GET', versi
 export const getInvoiceById = { url: '/invoice/api', method: 'GET', version: v1, join: true } // 根据发票id获取会员发票信息
 export const getInvoiceList = { url: '/invoice/api/list-iInvoice', method: 'GET', version: v1, join: true } // 分页查询会员发票
 export const delInvoice = { url: '/invoice/api', method: 'DELETE', version: v1, join: true } // 删除会员发票
+export const addOrderInvoice = { url: '/order/invoice/bind', method: 'PUT', version: v2, join: true } // 订单绑定发票
 
 // 个人中心
 export const memberCenter = { url: '/member/api/center', method: 'GET', version: v1 }

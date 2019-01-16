@@ -10,7 +10,7 @@
           <div class="cellLink">
             <div class="text" @click="openType">发票类型<span>{{this.invoiceStatus==1?'电子普通发票':'增值税专用发票'}}</span></div>
           </div>
-          <router-link :to="`/invoiceInfo/${invoiceType}/${invoiceStatus}/2`" class="cellLink">
+          <router-link :to="`/invoiceInfo/${invoiceType}/${invoiceStatus}/3`" class="cellLink">
             <div class=" text">发票抬头<span v-if="info&&info.invoicingId">{{info.invoiceTitle}}</span></div>
           </router-link>
           <div class="cellLink">
