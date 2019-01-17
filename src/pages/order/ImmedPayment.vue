@@ -57,12 +57,12 @@ export default {
     }
   },
   beforeRouteLeave (to, from, next) {
-    if (this.confirmTime !== '00:00') {
-      notice.confirm2('确认离开收银台', `离开后订单在${this.remainingTime}后将取消`, next, '继续支付', '确认离开')
+      notice.confirm2('确认离开收银台', `离开后订单在${this.remainingTime}后将取消`, ()=>{
+        console.log(this.$router.replace)
+        window.location.href = '/#/orderList/-1'
+        next()
+      }, '继续支付', '确认离开')
       clearInterval(this.timer)
-    } else {
-      next()
-    }
   },
   methods: {
     // 支付页面渲染
@@ -135,8 +135,6 @@ export default {
               obj = Object.assign(obj, {
                 payWay: '微信'
               })
-              // console.log('weixin://wap/pay?appid=' + response.data.body.appid + '&noncestr=' + response.data.body.noncestr + '&package=' + response.data.body.package + '&prepayid=' + response.data.body.prepayid + '&sign=' + response.data.body.sign + '&timestamp=' + response.data.body.timestamp)
-              // window.location.href = 'weixin://wap/pay?appid=' + response.data.body.appid + '&noncestr=' + response.data.body.noncestr + '&package=' + response.data.body.package + '&prepayid=' + response.data.body.prepayid + '&sign=' + response.data.body.sign + '&timestamp=' + response.data.body.timestamp
             }
             storage.setLocalStorage(immedPaymentMony, obj)
           }
