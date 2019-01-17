@@ -89,7 +89,7 @@ const router = new Router({
       component: resolve => require(['@/pages/createOrder/StoreAddress'], resolve)
     },
     {
-      path: '/invoiceApply', // 申请开票
+      path: '/invoiceApply/:info?', // 申请开票
       name: 'InvoiceApply',
       meta: { requireLogin: true },
       component: resolve => require(['@/pages/invoice/InvoiceApply'], resolve)

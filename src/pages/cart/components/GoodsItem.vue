@@ -24,7 +24,7 @@
                 <div class="inventory notEnough" v-if="(goodsItem.stock<goodsItem.num)&&goodsItem.stock!=0&&goodsItem.status==1">
                   库存不足
                 </div>
-                <div class="inventory" v-if="goodsItem.stock<6&&goodsItem.stock>0&&goodsItem.status==1&&(goodsItem.stock>goodsItem.num)">
+                <div class="inventory" v-if="goodsItem.stock<6&&goodsItem.stock>0&&goodsItem.status==1&&(goodsItem.stock>=goodsItem.num)">
                   库存紧张
                 </div>
                 <span class="modify fr" v-if="goodsItem.stock!=0">

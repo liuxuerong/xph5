@@ -10,7 +10,7 @@
           <div class="cellLink">
             <div class="text" @click="openType">发票类型<span>{{this.invoiceStatus==1?'电子普通发票':'增值税专用发票'}}</span></div>
           </div>
-          <router-link :to="`/invoiceInfo/${invoiceType}/${invoiceStatus}/3`" class="cellLink">
+          <router-link :to="`/invoiceInfo/${invoiceType}/${invoiceStatus}/3`" class="cellLink" >
             <div class=" text">发票抬头<span v-if="info&&info.invoicingId">{{info.invoiceTitle}}</span></div>
           </router-link>
           <div class="cellLink">
@@ -70,11 +70,19 @@ import {
   storage
 } from 'util/storage'
 import {
-  orderInfo
-} from 'util/const.js'
-import {
   Icon
 } from 'vux'
+import {
+
+  addOrderInvoice
+} from 'util/netApi'
+import {
+  http
+} from 'util/request'
+import {
+  orderInfo,
+  orderSn
+} from 'util/const'
 export default {
   name: 'InvoiceApply',
   data: function () {
@@ -83,7 +91,8 @@ export default {
       invoiceStatus: '1', // 1、普票 2、专票
       invoiceType: '1', // 1、个人 2、企业
       info: null, // 创建订单参数
-      invoiceStatusSelect: 'One'
+      invoiceStatusSelect: 'One',
+      orderSn: ''
     }
   },
   components: {
@@ -93,11 +102,16 @@ export default {
   },
   watch: {
     '$route' (to, from) {
-      if (to.name === 'CreateOrder' && to.params.info) {
+      console.log(to.name)
+      if (to.name === 'InvoiceApply' && to.params.info) {
         this.info = storage.getLocalStorage(orderInfo)
-      } else if (to.name === 'CreateOrder' && !to.params.info) {
+      } else if (to.name === 'InvoiceApply' && !to.params.info) {
         this.info = null
         storage.delLocalStorage(orderInfo)
+      }
+      if (from.path.indexOf('/invoiceApply/') !== -1 && to.path.indexOf('/invoiceApply') !== -1) {
+        console.log(this.orderSn)
+        this.$router.replace(`/orderDetails/${this.orderSn}`)
       }
     },
     // 发票类型弹窗选择
@@ -141,8 +155,20 @@ export default {
         this.toastShow('请填写发票抬头！')
         return false
       }
+      console.log(this.orderSn)
+      http(addOrderInvoice, [this.orderSn, this.info.invoicingId]).then(res => {
+        console.log(res)
+        this.toastShow('申请成功')
+        setTimeout(() => {
+          this.$router.replace(`/orderDetails/${this.orderSn}`)
+        }, 1000)
+      })
     }
 
+  },
+  mounted () {
+    this.info = storage.getLocalStorage(orderInfo)
+    this.orderSn = storage.getLocalStorage(orderSn)
   }
 }
 </script>

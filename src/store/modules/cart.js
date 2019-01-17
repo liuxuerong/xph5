@@ -2,7 +2,7 @@ const cart = {
   state: {
     cartNum: 0, // 商品数量
     from: 1,
-    goodsList: [], // 所有的有效商品
+    goodsList: [], // 所有的商品
     clearNum: [], // 选择的goods
     isAllSelect: false// 全选
   },

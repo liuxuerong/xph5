@@ -29,7 +29,7 @@
         <div class="btn" v-if="isDetails&&(status==3||status==4||status==5)&&pricesData.saleStatus==0" @click="afterSale(pricesData,pricesData.orderItemId,1)">
           申请售后
         </div>
-        <router-link :to="`/afterSaleDetails/${pricesData.saleSn}`" class="btn" v-if="isDetails&&pricesData.saleStatus!=0">
+        <router-link :to="`/afterSaleDetails/${pricesData.saleSn}`" class="btn" v-if="isDetails&&pricesData.saleStatus!=0&&pricesData.saleStatusStr">
           {{pricesData.saleStatusStr}}
         </router-link>
 

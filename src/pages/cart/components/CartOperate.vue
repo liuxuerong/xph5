@@ -38,7 +38,7 @@ export default {
   props: {
     showModify: Boolean,
     page: Number,
-    roews: Number
+    rows: Number
   },
   components: {
     CheckIcon,
@@ -136,16 +136,17 @@ export default {
       }
     },
     sureDel () {
+      console.log(this.goodsList)
       for (let v of this.goodsList) {
         if (v.value) {
           notice.confirm('是否确认删除选定商品？', '', this.delCheck, '删除')
           break
         } else {
-        Toast({
-          message: '请至少选中一件商品',
-          position: 'center',
-          duration: 1000
-        })
+          Toast({
+            message: '请至少选中一件商品',
+            position: 'center',
+            duration: 1000
+          })
         }
       }
     },
@@ -154,7 +155,7 @@ export default {
       let notCheckGoodsList = []
       let id = ''
       for (let i = 0; i < this.goodsList.length; i++) {
-        if (this.goodsList[i].value) {
+        if (this.goodsList[i].value && this.goodsList[i].status === '1') {
           id += (',' + this.goodsList[i].id)
           checkGoodsList.push(this.goodsList[i])
         } else {
@@ -186,6 +187,9 @@ export default {
       }
       this.$emit('buy')
     }
+  },
+  mounted () {
+    console.log(this.goodsList)
   }
 }
 </script>

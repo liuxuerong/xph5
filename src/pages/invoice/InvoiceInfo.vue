@@ -109,7 +109,7 @@
       <group title="收票人信息" class="wrap" v-if="from!=1">
         <x-input placeholder="请填写收票人姓名" v-model.trim="inputForm.consignee" v-if="inputForm.invoiceStatus==2" @click.native="addNew"></x-input>
         <x-input placeholder="请填写收票人手机号" v-model.trim="inputForm.phone" @click.native="addNew"></x-input>
-        <x-address title="" v-model="inputForm.addressList" :list="addressData" @on-hide='addressHide()' @on-shadow-change="onShadowChange" placeholder="请选择所在区域" :show.sync="showAddress" :raw-value="true"  v-if="inputForm.invoiceStatus==2"></x-address>
+        <x-address title="" v-model="inputForm.addressList" :list="addressData" @on-hide='addressHide()' @on-shadow-change="onShadowChange" placeholder="请选择所在区域" :show.sync="showAddress" :raw-value="true"  v-if="inputForm.invoiceStatus==2&&inputForm.addressList.length==3"></x-address>
         <CommonTextarea placeholder="请填写详情收票详细地址" v-model="inputForm.shippingAddress" @input="changeDetails" :max="100" class="addressText" v-if="inputForm.invoiceStatus==2"></CommonTextarea>
         <x-input placeholder="请填写邮箱，用来接收电子发票邮件，可选填" v-model.trim="inputForm.email" v-if="inputForm.invoiceStatus==1"></x-input>
       </group>
@@ -212,6 +212,11 @@ export default {
       showAddress: false,
       addressList: [],
       address: [],
+      test: [
+        '北京市',
+        '市辖区',
+        '东城区'
+      ],
       invoiceList: [],
       showFrom1: false, // 从设置进来的时候默认都不显示
       showFrom1Status: 0, // 从设置进来的时候查询当前登录会员的发票信息1：显示查看，2：显示填写 0不显示按钮 1修改 2删除
@@ -468,7 +473,7 @@ export default {
       if (this.from == '2') {
         this.$router.replace({path: '/createOrder/4'})
       } else if (this.from == '3') {
-        this.$router.replace({path: '/invoiceApply'})
+        this.$router.replace({path: '/invoiceApply/1'})
       } else {
         window.location.reload()
       }

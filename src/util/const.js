@@ -12,6 +12,7 @@ export const cartGoods = 'CARTGOODS'// 在页面跳转之前购物车的数据�
 export const couponByGoods = 'COUPONBYGOODS' // 创建订单选择相关优惠券
 export const logistics = 'LOGISTICS' // 物流订单
 export const aftersale = 'AFTERSALE' // 售后
+export const orderSn = 'ORDERSN' // 申请开票需要的订单号
 export const searchorder = 'SEARCHORDER' // 订单搜索
 export const retrunLogistics = 'RETRUNLOGISTICS' // 退货物流
 export const immedPaymentMony = 'IMMEDPAYMENTMONY' // 支付金额

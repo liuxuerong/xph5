@@ -40,7 +40,7 @@
         <div class="wrap">
           <div class="title">
             <h4>发票信息</h4>
-            <div class="btn" v-if="orderData.invoice">查看发票</div>
+            <!-- <div class="btn" v-if="orderData.invoice">查看发票</div> -->
             <router-link to="/invoiceApply" class="btn" v-if="!orderData.invoice&&orderData.status!=1">申请开票</router-link>
           </div>
           <ul class="infoItem" v-if="orderData.invoice">
@@ -176,7 +176,8 @@ import {
   storage
 } from 'util/storage'
 import {
-  aftersale
+  aftersale,
+  orderSn
 } from 'util/const'
 import {
   Icon
@@ -227,6 +228,7 @@ export default {
     // 订单详情页面渲染
     orderDetailRender () {
       let orderCode = this.$route.params.orderSn
+      storage.setLocalStorage(orderSn, orderCode)
       this.orderSn = orderCode
       http(orderDetails, [orderCode]).then((res) => {
         this.orderData = res.data.body

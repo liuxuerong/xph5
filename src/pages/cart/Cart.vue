@@ -306,16 +306,17 @@ export default {
                   }
                 }
               }
-
+              console.log(cartList, 'cartList')
+              if (!this.isAllSelect) {
+                cartList = [...this.goodsList, ...cartList]
+              }
               if (cartList[i].status === '1') {
                 this.cartList.push(cartList[i])
               } else {
                 this.disabledCartList.push(cartList[i])
               }
             }
-            if (!this.isAllSelect) {
-              cartList = [...this.goodsList, ...cartList]
-            }
+
             this.changeGoodsList(cartList)
             this.scrollInit()
           }
