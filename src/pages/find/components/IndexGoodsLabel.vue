@@ -3,7 +3,7 @@
     <h4>口碑爆款</h4>
     <img :src="imageUrl+goodsLabel.appImage" alt="" class="banner">
     <div class="goodsContainer">
-      <common-img-prices class="goodsItem" v-for="(item,index) in goodsLabel.goodsDetails" :key="item.id" :pricesData="item" v-if="bestChoiceGoods.length&&index<5"/>
+      <common-img-prices class="goodsItem" v-for="(item,index) in goodsLabel.goodsDetails" :key="item.id" :pricesData="item" v-if="bestChoiceGoods.length&&index<3"/>
       <div class="moreGoods">
         <router-link to="/hotGoods" v-if="bestChoiceGoods.length">查看<br>更多商品</router-link>
       </div>
