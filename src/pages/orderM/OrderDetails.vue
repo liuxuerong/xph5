@@ -75,7 +75,7 @@
             <li> <span class="name" v-if="orderData.payTime">付款时间：</span><span class="content">{{fromatTime(orderData.payTime)}}</span></li>
             <li> <span class="name" v-if="orderData.deliverTime">发货时间：</span><span class="content">{{fromatTime(orderData.deliverTime)}}</span></li>
             <li> <span class="name" v-if="orderData.finishTime">成交时间：</span><span class="content">{{fromatTime(orderData.finishTime)}}</span></li>
-            <li> <span class="name" v-if="orderData.finishTime">获取积分：</span><span class="content">{{fromatTime(orderData.finishTime)}}</span></li>
+            <li> <span class="name" v-if="orderData.integral">获取积分：</span><span class="content">{{fromatTime(orderData.integral)}}</span></li>
           </ul>
         </div>
       </div>
@@ -400,7 +400,12 @@ export default {
       pricesData.orderSn = this.orderSn
       storage.setLocalStorage(aftersale, pricesData)
       if (type == 1) {
-        this.$router.push(`/afterSaleSelect/${this.orderData.status}/${orderItemId}`)
+       
+        if(this.orderData.status==7){
+           this.$router.push(`/applyAfterSales/${this.orderData.status}/${orderItemId}/3`)
+        } else {
+           this.$router.push(`/afterSaleSelect/${this.orderData.status}/${orderItemId}`)
+        }
       } else {
         this.$router.push(`/applyAfterSales/${this.orderData.status}/${orderItemId}/1`)
       }

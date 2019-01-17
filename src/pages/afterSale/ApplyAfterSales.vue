@@ -408,7 +408,6 @@ export default {
             })
             return false
           }
-          console.log(7878)
           this.applyRefundRender()
         } else {
           if (v == 'statusVisible' && !this[v]) {

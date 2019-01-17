@@ -440,7 +440,7 @@ const router = new Router({
     {
       path: '/afterSaleDetails/:saleSn',
       name: 'AfterSaleDetails', // 售后详情
-      meta: { requireLogin: true },
+      meta: {  requireLogin: true },
       component: resolve => require(['@/pages/afterSale/AfterSaleDetails'], resolve)
     }
   ]

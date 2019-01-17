@@ -7,6 +7,10 @@
         <div class="cellLink" @click="changePopStatus('typeVisible')" v-if="params.orderStatus!=2&&params.type!=3">
           <div class="text">服务类型<span class="fr placeholder" v-if="params.type==''">请选择</span><em v-else>{{params.type==1?'仅退款':'退货退款'}}</em></div>
         </div>
+         <div class="cellLink" @click="changePopStatus('statusVisible')" v-if="params.orderStatus!=2&&params.type==1">
+          <div class="text">货物状态<span class="fr placeholder" v-if="params.goodsType==''">请选择</span><em v-else>{{params.goodsType==1?'已收到货':'未收到货'}}</em>
+          </div>
+        </div>
         <div class="cellLink" v-if="params.type==3">
            <div class="infoWrap">
               <span class="left">服务类型</span>
@@ -71,8 +75,32 @@
     </div>
     <div class="refundOperBtn" @click="sureRefundOper">提交</div>
   </div>
-
   <!-- 货物状态 -->
+  <mt-popup position="bottom" v-model="statusVisible" @touchmove.prevent>
+    <div class="popWrap">
+      <div class="title">
+        货物状态
+        <div class="close" @click="changePopStatus('statusVisible')">×</div>
+      </div>
+      <ul>
+        <li v-for="(item,index) in statusData" :key="index">
+          <label for="">
+            <div class="top">
+              <h3 class="name">{{item.value}}</h3>
+              <span class="radioWrap">
+                <icon :type="params.goodsType===item.type?'success':'circle'"></icon>
+                <input type="radio" :value="item.type" v-model="params.goodsType">
+              </span>
+            </div>
+          </label>
+        </li>
+      </ul>
+      <div class="bottomClose" @click="changePopStatus('statusVisible')">
+        提交
+      </div>
+    </div>
+  </mt-popup>
+  <!-- 服务类型 -->
   <mt-popup position="bottom" v-model="typeVisible" @touchmove.prevent>
     <div class="popWrap">
       <div class="title">
@@ -157,7 +185,8 @@ export default {
   data () {
     return {
       goodsData: null, // 页面渲染数据
-      typeVisible: false, // 货物状态弹窗状态
+      statusVisible: false, // 货物状态弹窗状态
+      typeVisible: false, // 退款类型弹窗状态
       reasonVisible: false, // 退款原因弹窗状态
       subDisabled: false,
       addDisabled: false,
@@ -169,6 +198,15 @@ export default {
       {
         type: 1,
         value: '仅退款'
+      }
+      ],
+      statusData: [{
+        type: 1,
+        value: '已收到货'
+      },
+      {
+        type: 2,
+        value: '未收到货'
       }
       ],
       params: {
@@ -358,6 +396,9 @@ export default {
         }
       }
       this.params.saleId = this.params.id
+      if (this.params.type == 2) {
+        this.params.goodsType = 1
+      }
       http(applyAfterSales, this.params).then((response) => {
         if (response.data.code === 0) {
           Toast({
@@ -375,6 +416,7 @@ export default {
     changePopStatus (v) {
       console.log(this.params.type)
       console.log(this.params.orderStatus)
+      console.log(this.params.goodsType)
       if (this.params.type == 1) { // 仅退款
         if (this.params.orderStatus == 2) {
           this.reasonData = ['错拍/多拍/不想要', '协商一致退款', '未按照指定时间发货', '其他'] // 待发货
@@ -388,8 +430,17 @@ export default {
       } else if (this.params.type == 2) { // 退货退款
         this.reasonData = ['个人原因', '实物与商品描述不符', '质量问题', '少件/漏发', '包装/商品破损/污渍', '未按约定时间发货', '假冒品牌', '发票问题', '发错货']
       }
+      // if (v == 'reasonVisible' && !this[v]) {
+      //   if (this.params.goodsType == '') {
+      //     Toast({
+      //       message: '请先选择货物状态',
+      //       position: 'center',
+      //       duration: 1000
+      //     })
+      //     return false
+      //   }
+      // }
       if (v == 'typeVisible' && !this[v]) {
-        console.log(44444)
         this.params.reason = ''
       }
       this[v] = !this[v]

@@ -26,7 +26,7 @@
         <div class="btn" v-if="isDetails&&status==2&&pricesData.saleStatus==0" @click="afterSale(pricesData,pricesData.orderItemId,2)">
           退款
         </div>
-        <div class="btn" v-if="isDetails&&(status==3||status==4||status==5)&&pricesData.saleStatus==0" @click="afterSale(pricesData,pricesData.orderItemId,1)">
+        <div class="btn" v-if="isDetails&&(status==3||status==4||status==5||status==7)&&pricesData.saleStatus==0" @click="afterSale(pricesData,pricesData.orderItemId,1)">
           申请售后
         </div>
         <router-link :to="`/afterSaleDetails/${pricesData.saleSn}`" class="btn" v-if="isDetails&&pricesData.saleStatus!=0&&pricesData.saleStatusStr">
