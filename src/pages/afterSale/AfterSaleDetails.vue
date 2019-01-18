@@ -214,7 +214,6 @@ export default {
     // 删除订单
     delOrder () {
       http(afterSaleDel, [this.saleSn]).then(res => {
-        console.log(res)
         if (res.data.body) {
           Toast({
             message: '删除成功',
@@ -403,4 +402,5 @@ export default {
   .right
     font-size 40px
     font-weight normal
+
 </style>

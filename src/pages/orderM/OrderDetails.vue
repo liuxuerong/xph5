@@ -41,7 +41,8 @@
           <div class="title">
             <h4>发票信息</h4>
             <!-- <div class="btn" v-if="orderData.invoice">查看发票</div> -->
-            <router-link to="/invoiceApply" class="btn" v-if="!orderData.invoice&&orderData.status!=1">申请开票</router-link>
+            <router-link to="/invoiceApply" class="btn" v-if="orderData.invoiceStatus==4">申请开票</router-link>
+             <div class="btn" @click="invoiceToast" v-if="orderData.invoiceStatus==5">申请开票</div>
           </div>
           <ul class="infoItem" v-if="orderData.invoice">
             <li><span class="name">发票类型：</span><span class="content">{{orderData.invoice.invoiceStatus==1?'电子普通发票':'增值税专用发票'}}</span>
@@ -347,6 +348,14 @@ export default {
     // 关闭弹窗
     closeReason () {
       this.reasonVisible = false
+    },
+    // 申请开票提示
+    invoiceToast(){
+    Toast({
+      message: '抱歉开票时间已超过30天',
+      position: 'center',
+      duration: 2000
+    })
     },
     // 取消订单
     cancelOrder (orderSn) {
