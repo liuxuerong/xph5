@@ -75,7 +75,7 @@
             <li> <span class="name" v-if="orderData.payTime">付款时间：</span><span class="content">{{fromatTime(orderData.payTime)}}</span></li>
             <li> <span class="name" v-if="orderData.deliverTime">发货时间：</span><span class="content">{{fromatTime(orderData.deliverTime)}}</span></li>
             <li> <span class="name" v-if="orderData.finishTime">成交时间：</span><span class="content">{{fromatTime(orderData.finishTime)}}</span></li>
-            <li> <span class="name" v-if="orderData.integral">获取积分：</span><span class="content">{{orderData.integral}}</span></li>
+            <li> <span class="name" v-if="orderData.integral&&(orderData.status==7||orderData.status==8)">获取积分：</span><span class="content">{{orderData.integral}}</span></li>
           </ul>
         </div>
       </div>
