@@ -109,7 +109,7 @@
       <group title="收票人信息" class="wrap" v-if="from!=1">
         <x-input placeholder="请填写收票人姓名" v-model.trim="inputForm.consignee" v-if="inputForm.invoiceStatus==2" @click.native="addNew"></x-input>
         <x-input placeholder="请填写收票人手机号" v-model.trim="inputForm.phone" @click.native="addNew"></x-input>
-        <x-address title="" v-model="inputForm.addressList" :list="addressData" @on-hide='addressHide()' @on-shadow-change="onShadowChange" placeholder="请选择所在区域" :show.sync="showAddress" :raw-value="true" v-if="inputForm.invoiceStatus==2&&(inputForm.addressList.length==3||noAddress)"></x-address>
+        <x-address title="" v-model="inputForm.addressList" :list="addressData" @on-hide='addressHide()' @on-shadow-change="onShadowChange" placeholder="请选择所在区域" :show.sync="showAddress" :raw-value="true" v-if="inputForm.invoiceStatus==2&&inputForm.addressList.length==3" ></x-address>
         <CommonTextarea placeholder="请填写详情收票详细地址" v-model="inputForm.shippingAddress" @input="changeDetails" :max="100" class="addressText" v-if="inputForm.invoiceStatus==2"></CommonTextarea>
         <x-input placeholder="请填写邮箱，用来接收电子发票邮件，可选填" v-model.trim="inputForm.email" v-if="inputForm.invoiceStatus==1"></x-input>
       </group>
@@ -171,7 +171,8 @@ import {
   updateInvoice,
   getInvoice,
   delInvoice,
-  getInvoiceList
+  getInvoiceList,
+  areaTree
 } from 'util/netApi'
 import {
   Toast,
@@ -344,6 +345,7 @@ export default {
               console.log(res)
               this.invoicingId = res.data.body.id
               this.setValue(res.data.body)
+              this.noAddress = false
             } else {
               this.noAddress = true
             }
@@ -424,7 +426,6 @@ export default {
     },
     setData (id) {
       let info = storage.getLocalStorage(orderInfo) || {}
-      console.log(id)
       info.invoicingId = id
       info.invoiceType = this.inputForm.invoiceType
       info.invoiceTitle = info.invoiceType != 1 ? this.inputForm.name : '个人'
@@ -517,10 +518,6 @@ export default {
     this.inputForm.invoiceStatus = this.$route.params.invoiceStatus
     this.inputForm.invoiceStyle = this.$route.params.invoiceStatus
     this.getInvoiceInfo()
-    console.log(741)
-    // if (storage.getLocalStorage(invoiceInfo)) {
-    //   this.inputForm = storage.getLocalStorage(invoiceInfo)
-    // }
   }
 }
 </script>
