@@ -350,12 +350,12 @@ export default {
       this.reasonVisible = false
     },
     // 申请开票提示
-    invoiceToast(){
-    Toast({
-      message: '抱歉开票时间已超过30天',
-      position: 'center',
-      duration: 2000
-    })
+    invoiceToast () {
+      Toast({
+        message: '抱歉开票时间已超过30天',
+        position: 'center',
+        duration: 2000
+      })
     },
     // 取消订单
     cancelOrder (orderSn) {

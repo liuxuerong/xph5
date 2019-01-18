@@ -11,14 +11,14 @@
       <group :title="inputForm.invoiceStatus==1?'发票抬头':'资质信息'" class="wrap" v-if="from==1&&showFrom1&&showFrom1Status ==2||from!=1||from==1&&!showFrom1&&showFrom1Status ==0">
         <div class="radioWrap" v-if="inputForm.invoiceStatus==1">
           <label for="radio1" @click="getInvoiceInfo">
-            <input type="radio" id="radio1" value="1" v-model="inputForm.invoiceType">
-            <span :class =" {active : inputForm.invoiceType == '1'}">个人</span>
-          </label>
+              <input type="radio" id="radio1" value="1" v-model="inputForm.invoiceType">
+              <span :class =" {active : inputForm.invoiceType == '1'}">个人</span>
+            </label>
           <!-- @click="getInvoiceInfo" -->
           <label for="radio2" @click="getInvoiceInfo">
-            <input type="radio" id="radio2" value="2" v-model="inputForm.invoiceType" >
-            <span :class =" {active : inputForm.invoiceType != '1' }" >单位</span>
-          </label>
+              <input type="radio" id="radio2" value="2" v-model="inputForm.invoiceType" >
+              <span :class =" {active : inputForm.invoiceType != '1' }" >单位</span>
+            </label>
         </div>
         <x-input placeholder="请填写单位名称" v-model.trim="inputForm.name" v-if="inputForm.invoiceType==2||inputForm.invoiceStatus==2" @click.native="addNew"></x-input>
         <div class="iconWrap">
@@ -36,8 +36,8 @@
               <input type="hidden" :value="inputForm.certificate" name="need" placeholder="公司营业执照">
               <input type="file" accept="image/*" @change="headerUpfile(1)">
               <span class="info">
-                <img src="/static/icons/invoice_carmer1.png" alt="">
-              </span>
+                  <img src="/static/icons/invoice_carmer1.png" alt="">
+                </span>
             </div>
             <img :src="imageUrl+inputForm.certificate" alt="" class="upImg" v-show="inputForm.certificate!=''">
             <div class="delIcon" v-if="inputForm.certificate!=''" @click="delImg ('certificate')"></div>
@@ -47,8 +47,8 @@
               <input type="hidden" :value="inputForm.advice" name="need" placeholder="一般纳税人认定通知书">
               <input type="file" accept="image/*" @change="headerUpfile(2)">
               <span class="info">
-                <img src="/static/icons/invoice_carmer2.png" alt="">
-              </span>
+                  <img src="/static/icons/invoice_carmer2.png" alt="">
+                </span>
             </div>
             <img :src="imageUrl+inputForm.advice" alt="" class="upImg" v-show="inputForm.advice!=''">
             <div class="delIcon" v-if="inputForm.advice!=''" @click="delImg ('advice')"></div>
@@ -58,8 +58,8 @@
               <input type="hidden" :value="inputForm.license" name="need" placeholder="开户许可证">
               <input type="file" accept="image/*" @change="headerUpfile(3)">
               <span class="info">
-                <img src="/static/icons/invoice_carmer3.png" alt="">
-              </span>
+                  <img src="/static/icons/invoice_carmer3.png" alt="">
+                </span>
             </div>
             <img :src="imageUrl+inputForm.license" alt="" class="upImg" v-show="inputForm.license!=''">
             <div class="delIcon" v-if="inputForm.license!=''" @click="delImg ('license')"></div>
@@ -109,7 +109,7 @@
       <group title="收票人信息" class="wrap" v-if="from!=1">
         <x-input placeholder="请填写收票人姓名" v-model.trim="inputForm.consignee" v-if="inputForm.invoiceStatus==2" @click.native="addNew"></x-input>
         <x-input placeholder="请填写收票人手机号" v-model.trim="inputForm.phone" @click.native="addNew"></x-input>
-        <x-address title="" v-model="inputForm.addressList" :list="addressData" @on-hide='addressHide()' @on-shadow-change="onShadowChange" placeholder="请选择所在区域" :show.sync="showAddress" :raw-value="true"  v-if="inputForm.invoiceStatus==2&&(inputForm.addressList.length==3||inputForm.addressList.length==0&&info.province=='')"></x-address>
+        <x-address title="" v-model="inputForm.addressList" :list="addressData" @on-hide='addressHide()' @on-shadow-change="onShadowChange" placeholder="请选择所在区域" :show.sync="showAddress" :raw-value="true" v-if="inputForm.invoiceStatus==2&&(inputForm.addressList.length==3||noAddress)"></x-address>
         <CommonTextarea placeholder="请填写详情收票详细地址" v-model="inputForm.shippingAddress" @input="changeDetails" :max="100" class="addressText" v-if="inputForm.invoiceStatus==2"></CommonTextarea>
         <x-input placeholder="请填写邮箱，用来接收电子发票邮件，可选填" v-model.trim="inputForm.email" v-if="inputForm.invoiceStatus==1"></x-input>
       </group>
@@ -170,7 +170,6 @@ import {
   addInvoice,
   updateInvoice,
   getInvoice,
-  // getInvoiceById,
   delInvoice,
   getInvoiceList
 } from 'util/netApi'
@@ -211,12 +210,8 @@ export default {
       addressData: ChinaAddressV4Data,
       showAddress: false,
       addressList: [],
+      noAddress: true,
       address: [],
-      test: [
-        '北京市',
-        '市辖区',
-        '东城区'
-      ],
       invoiceList: [],
       showFrom1: false, // 从设置进来的时候默认都不显示
       showFrom1Status: 0, // 从设置进来的时候查询当前登录会员的发票信息1：显示查看，2：显示填写 0不显示按钮 1修改 2删除
@@ -315,6 +310,7 @@ export default {
     },
     // 根据请求到的数据填充页面
     setValue (data) {
+      console.log(data, 1111)
       this.info = data
       this.showFrom1 = true
       if (data) {
@@ -340,13 +336,16 @@ export default {
       // 创建订单页面发票
       setTimeout(() => {
         if (this.from != '1' && this.inputForm.invoiceStatus == '1') {
-        // 普票
+          // 普票
           this.getInvoiceListData()
         } else {
           http(getInvoice).then(res => {
             if (res.data.body) {
+              console.log(res)
               this.invoicingId = res.data.body.id
               this.setValue(res.data.body)
+            } else {
+              this.noAddress = true
             }
           }).catch(err => {
             console.log(err)
@@ -425,6 +424,7 @@ export default {
     },
     setData (id) {
       let info = storage.getLocalStorage(orderInfo) || {}
+      console.log(id)
       info.invoicingId = id
       info.invoiceType = this.inputForm.invoiceType
       info.invoiceTitle = info.invoiceType != 1 ? this.inputForm.name : '个人'
@@ -463,6 +463,7 @@ export default {
         } else {
           http(addInvoice, this.inputForm).then(res => {
             this.setData(res.data.body.id)
+            console.log(res.data.body.id)
           }).catch(err => {
             console.log(err)
           })
@@ -472,9 +473,13 @@ export default {
     // 页面跳转
     goOther () {
       if (this.from == '2') {
-        this.$router.replace({path: '/createOrder/4'})
+        this.$router.replace({
+          path: '/createOrder/4'
+        })
       } else if (this.from == '3') {
-        this.$router.replace({path: '/invoiceApply/1'})
+        this.$router.replace({
+          path: '/invoiceApply/1'
+        })
       } else {
         window.location.reload()
       }
@@ -512,6 +517,7 @@ export default {
     this.inputForm.invoiceStatus = this.$route.params.invoiceStatus
     this.inputForm.invoiceStyle = this.$route.params.invoiceStatus
     this.getInvoiceInfo()
+    console.log(741)
     // if (storage.getLocalStorage(invoiceInfo)) {
     //   this.inputForm = storage.getLocalStorage(invoiceInfo)
     // }
