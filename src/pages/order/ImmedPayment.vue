@@ -57,12 +57,13 @@ export default {
     }
   },
   beforeRouteLeave (to, from, next) {
-      notice.confirm2('确认离开收银台', `离开后订单在${this.remainingTime}后将取消`, ()=>{
-        console.log(this.$router.replace)
-        window.location.href = '/#/orderList/-1'
-        next()
-      }, '继续支付', '确认离开')
-      clearInterval(this.timer)
+    notice.confirm2('确认离开收银台', `离开后订单在${this.remainingTime}后将取消`, () => {
+      console.log(this.$router.replace)
+      window.location.href = '/#/orderList/-1'
+      this.$router.go(0)
+      next()
+    }, '继续支付', '确认离开')
+    clearInterval(this.timer)
   },
   methods: {
     // 支付页面渲染
