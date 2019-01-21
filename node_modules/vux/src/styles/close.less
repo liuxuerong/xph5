@@ -2,21 +2,36 @@
   position: relative;
   display: inline-block;
   vertical-align: middle;
-  color: #999;
   width: 24px;
   height: 24px;
-  &:before,
-  &:after {
+  overflow: hidden;
+  color: #ccc;
+  &::before,
+  &::after {
     content: '';
     position: absolute;
-    left: 0;
-    top: 11px;
-    width: 24px;
     height: 1px;
-    background-color: currentColor;
-    transform: rotate(-45deg);
+    width: 100%;
+    top: 50%;
+    left: 0;
+    background: #98979d;
   }
-  &:after {
+  &::before {
     transform: rotate(45deg);
   }
+  &::after {
+    transform: rotate(-45deg);
+  }
 }
+
+/**
+--------custom line width and color----------
+.vux-close-2px{
+  &::before,
+  &::after {
+    height: 2px;
+    margin-top: -1px;
+    background-color: green;
+  }
+}
+*/

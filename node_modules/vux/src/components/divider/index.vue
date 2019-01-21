@@ -4,12 +4,6 @@
   </p>
 </template>
 
-<script>
-export default {
-  name: 'divider'
-}
-</script>
-
 <style>
 .vux-divider {
   display: table;

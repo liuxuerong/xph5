@@ -4,12 +4,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'dev-tip'
-}
-</script>
-
 <style>
 .vux-dev-tip {
   padding:5px 10px;
