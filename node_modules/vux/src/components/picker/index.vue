@@ -1,8 +1,8 @@
 <template>
   <div class="vux-picker">
     <flexbox :gutter="0">
-      <flexbox-item v-for="(index, one) in data" style="margin-left:0;">
-        <div class="vux-picker-item" :id="'vux-picker-' + uuid + '-' + index"></div>
+      <flexbox-item :span="columnWidth && columnWidth[index]" v-for="(one, index) in currentData" :key="index" style="margin-left:0;">
+        <div class="vux-picker-item" :id="`vux-picker-${uuid}-${index}`"></div>
       </flexbox-item>
     </flexbox>
   </div>
@@ -12,8 +12,11 @@
 import Scroller from './scroller'
 import { Flexbox, FlexboxItem } from '../flexbox'
 import Manager from './chain'
+import value2name from '../../filters/value2name'
+import isArray from '../../libs/is-array'
 
 export default {
+  name: 'picker',
   components: {
     Flexbox,
     FlexboxItem
@@ -21,19 +24,18 @@ export default {
   created () {
     if (this.columns !== 0) {
       const length = this.columns
-      this.store = new Manager(this.data, length, this.fixedColumns)
-      this.data = this.store.getColumns(this.value)
+      this.store = new Manager(this.data, length, this.fixedColumns || this.columns)
+      this.currentData = this.store.getColumns(this.value)
     }
   },
-  ready () {
+  mounted () {
+    this.uuid = Math.random().toString(36).substring(3, 8)
     this.$nextTick(() => {
-      this.render(this.data, this.value)
+      this.render(this.currentData, this.currentValue)
     })
   },
   props: {
-    data: {
-      type: Array
-    },
+    data: Array,
     columns: {
       type: Number,
       default: 0
@@ -46,23 +48,35 @@ export default {
     itemClass: {
       type: String,
       default: 'scroller-item'
-    }
+    },
+    columnWidth: Array
   },
   methods: {
+    getNameValues () {
+      return value2name(this.currentValue, this.data)
+    },
     getId (i) {
       return `#vux-picker-${this.uuid}-${i}`
     },
     render (data, value) {
-      this.count = this.data.length
+      this.count = this.currentData.length
       const _this = this
       if (!data || !data.length) {
         return
       }
-      let count = this.data.length
+      let count = this.currentData.length
       // set first item as value
       if (value.length < count) {
         for (let i = 0; i < count; i++) {
-          _this.value.$set(i, data[i][0].value || data[i][0])
+          if (process.env.NODE_ENV === 'development' &&
+            typeof data[i][0] === 'undefined' &&
+            isArray(this.data) &&
+            this.data[0] &&
+            typeof this.data[0].value !== 'undefined' &&
+            !this.columns) {
+            console.error('[VUX error] 渲染出错，如果为联动模式，需要指定 columns(列数)')
+          }
+          this.$set(_this.currentValue, i, data[i][0].value || data[i][0])
         }
       }
 
@@ -78,18 +92,20 @@ export default {
         _this.scroller[i] = new Scroller(_this.getId(i), {
           data: data[i],
           defaultValue: value[i] || data[i][0].value,
-          itemClass: _this.item_class,
+          itemClass: _this.itemClass,
           onSelect (value) {
-            _this.value.$set(i, value)
+            _this.$set(_this.currentValue, i, value)
             if (!this.columns || (this.columns && _this.getValue().length === _this.store.count)) {
-              _this.$emit('on-change', _this.getValue())
+              _this.$nextTick(() => {
+                _this.$emit('on-change', _this.getValue())
+              })
             }
             if (_this.columns !== 0) {
               _this.renderChain(i + 1)
             }
           }
         })
-        if (_this.value) {
+        if (_this.currentValue) {
           _this.scroller[i].select(value[i])
         }
       }
@@ -113,17 +129,24 @@ export default {
         data: list,
         itemClass: _this.item_class,
         onSelect (value) {
-          _this.value.$set(i, value)
-          _this.$emit('on-change', _this.getValue())
+          _this.$set(_this.currentValue, i, value)
+          _this.$nextTick(() => {
+            _this.$emit('on-change', _this.getValue())
+          })
           _this.renderChain(i + 1)
         }
       })
-      this.value.$set(i, list[0].value)
-      this.renderChain(i + 1)
+      // list is Array(empty) as maybe
+      if (list.length) {
+        this.$set(this.currentValue, i, list[0].value)
+        this.renderChain(i + 1)
+      } else {
+        this.$set(this.currentValue, i, null)
+      }
     },
     getValue () {
       let data = []
-      for (let i = 0; i < this.data.length; i++) {
+      for (let i = 0; i < this.currentData.length; i++) {
         if (this.scroller[i]) {
           data.push(this.scroller[i].value)
         } else {
@@ -142,40 +165,57 @@ export default {
     return {
       scroller: [],
       count: 0,
-      uuid: Math.random().toString(36).substring(3, 8)
+      uuid: '',
+      currentData: this.data,
+      currentValue: this.value
     }
   },
   watch: {
-    value (val, oldVal) {
+    value (val) {
+      if (JSON.stringify(val) !== JSON.stringify(this.currentValue)) {
+        this.currentValue = val
+      }
+    },
+    currentValue (val, oldVal) {
+      this.$emit('input', val)
       // render all the scroller for chain datas
       if (this.columns !== 0) {
         if (val.length > 0) {
           if (JSON.stringify(val) !== JSON.stringify(oldVal)) {
-            this.data = this.store.getColumns(val)
+            this.currentData = this.store.getColumns(val)
             this.$nextTick(function () {
-              this.render(this.data, val)
+              this.render(this.currentData, val)
             })
           }
         }
       } else {
-        for (let i = 0; i < val.length; i++) {
-          if (this.scroller[i] && this.scroller[i].value !== val[i]) {
-            this.scroller[i].select(val[i])
+        if (val.length) {
+          for (let i = 0; i < val.length; i++) {
+            if (this.scroller[i] && this.scroller[i].value !== val[i]) {
+              this.scroller[i].select(val[i])
+            }
           }
+        } else {
+          this.render(this.currentData, [])
         }
       }
     },
-    data (newData) {
+    data (val) {
+      if (JSON.stringify(val) !== JSON.stringify(this.currentData)) {
+        this.currentData = val
+      }
+    },
+    currentData (newData) {
       if (Object.prototype.toString.call(newData[0]) === '[object Array]') {
         this.$nextTick(() => {
-          this.render(newData, this.value)
+          this.render(newData, this.currentValue)
           // emit on-change after rerender
           this.$nextTick(() => {
             this.emitValueChange(this.getValue())
 
-            if (JSON.stringify(this.getValue()) !== JSON.stringify(this.value)) {
+            if (JSON.stringify(this.getValue()) !== JSON.stringify(this.currentValue)) {
               if (!this.columns || (this.columns && this.getValue().length === this.store.count)) {
-                this.value = this.getValue()
+                this.currentValue = this.getValue()
               }
             }
           })
@@ -186,15 +226,15 @@ export default {
             return
           }
           const length = this.columns
-          this.store = new Manager(newData, length, this.fixedColumns)
-          this.data = this.store.getColumns(this.value)
+          this.store = new Manager(newData, length, this.fixedColumns || this.columns)
+          this.currentData = this.store.getColumns(this.currentValue)
         }
       }
     }
   },
   beforeDestroy () {
     for (let i = 0; i < this.count; i++) {
-      this.scroller[i].destroy()
+      this.scroller[i] && this.scroller[i].destroy()
       this.scroller[i] = null
     }
   }

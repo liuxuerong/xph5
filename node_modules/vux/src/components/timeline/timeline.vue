@@ -8,6 +8,7 @@
 
 <script>
 export default {
+  name: 'timeline',
   props: {
     color: String,
     isShowIcon: {
@@ -83,12 +84,16 @@ export default {
     width: 100%;
     position: absolute;
     left: 0;
-    top: 45%;
-    transform: translateY(-50%);
+    top: 0;
+    width: 20px;
+    height: 20px;
 
-    &.weui_icon_success_no_circle::before {
-      font-size: 12px;
-      width: 20px;
+    &.weui-icon-success-no-circle::before {
+      font-size: 14px;
+      position: absolute;
+      left: 3px;
+      top: 3px;
+      margin: 0!important;
       color: #FFF;
     }
   }

@@ -1,25 +1,20 @@
 @import "../../../base/fn";
 
 // method2 accessbility
-.weui_cells_radio{
-    .weui_cell_ft {
+.weui-cells_radio{
+    .weui-cell__ft {
         padding-left: @weuiCellInnerGapH;
     }
-    .weui_cell {
-        &:active {
-            background-color: #ECECEC;
-        }
-    }
 }
-.weui_check {
+.weui-check {
     // radio
-    .weui_cells_radio & {
+    .weui-cells_radio & {
         &:checked {
-            & + .weui_icon_checked {
+            & + .weui-icon-checked {
                 &:before {
                     display: block;
                     content: '\EA08';
-                    color: #09BB07;
+                    color: @radio-checked-icon-color;
                     font-size: 16px;
                 }
             }

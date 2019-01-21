@@ -18,6 +18,18 @@ export function trimZero (val) {
   return val
 }
 
+export function generateRange (start = 0, end) {
+  let results = []
+  for (let i = start; i <= end; i++) {
+    results.push(addZero(i))
+  }
+  return results
+}
+
+export function isToday (val1, val2) {
+  return val1.getFullYear() === val2.getFullYear() && val1.getMonth() === val2.getMonth() && val1.getDate() === val2.getDate()
+}
+
 export function addZero (val) {
   val = String(val)
   return val.length < 2 ? '0' + val : val
@@ -42,17 +54,17 @@ export function parseRow (tmpl, value) {
 
 // parse Date String
 export function parseDate (format, value) {
-  var formatParts = format.split(/[^A-Za-z]+/)
-  var valueParts = value.split(/\D+/)
+  const formatParts = format.split(/[^A-Za-z]+/)
+  let valueParts = value.replace(/\s/g, '-').replace(/:/g, '-').replace(/\//g, '-').split('-')
   if (formatParts.length !== valueParts.length) {
     // if it is error date, use current date
-    var date = formater(new Date(), format)
+    const date = formater(new Date(), format)
     valueParts = date.split(/\D+/)
   }
 
-  var result = {}
+  let result = {}
 
-  for (var i = 0; i < formatParts.length; i++) {
+  for (let i = 0; i < formatParts.length; i++) {
     if (formatParts[i]) {
       result[formatParts[i]] = valueParts[i]
     }
@@ -65,7 +77,7 @@ export function getElement (expr) {
 }
 
 export function toElement (html) {
-  var tempContainer = document.createElement('div')
+  const tempContainer = document.createElement('div')
   tempContainer.innerHTML = html
   return tempContainer.firstElementChild
 }

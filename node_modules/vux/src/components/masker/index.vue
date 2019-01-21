@@ -1,7 +1,7 @@
 <template>
   <div class="vux-masker-box">
     <slot></slot>
-    <div class="vux-masker" :style="style">
+    <div class="vux-masker" :class="{'vux-masker-fullscreen': fullscreen}" :style="style">
       <slot name="content"></slot>
     </div>
   </div>
@@ -11,6 +11,7 @@
 import { toRGB } from './converter'
 
 export default {
+  name: 'masker',
   props: {
     color: {
       type: String,
@@ -19,6 +20,10 @@ export default {
     opacity: {
       type: Number,
       default: 0.5
+    },
+    fullscreen: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -43,5 +48,9 @@ export default {
   bottom: 0;
   right: 0;
   border-radius: inherit;
+}
+.vux-masker-fullscreen {
+  position: fixed;
+  z-index: 10001;
 }
 </style>

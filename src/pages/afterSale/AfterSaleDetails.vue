@@ -79,7 +79,7 @@
             <li v-if="orderData.type===2&&orderData.status!==5||orderData.type===1&&orderData.status!==3"><span class="name">退款金额：</span><span class="content">￥{{orderData.price}}</span></li>
             <li v-if="orderData.type!=3"><span class="name">申请件数：</span><span class="content">{{orderData.num}}</span></li>
             <li><span class="name">申请时间：</span><span class="content">{{fromatTime(orderData.applyDate)}}</span></li>
-            <li v-if="orderData.type!=3"><span class="name">退款说明：</span><span class="content">{{orderData.desc}}</span></li>
+            <li v-if="orderData.type!=3&&orderData.desc!=''"><span class="name">退款说明：</span><span class="content">{{orderData.desc}}</span></li>
             <li v-if="orderData.type==3"><span class="name">问题描述：</span><span class="content">{{orderData.desc}}</span></li>
           </ul>
         </div>

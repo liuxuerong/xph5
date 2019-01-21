@@ -44,7 +44,7 @@
         <span class="fl">退款金额 </span>
         <span class="money fr">￥{{(goodsData.unitPrice*params.num).toFixed(2)}}</span>
       </div>
-      <p class="info">最多退款 <i> ￥{{(goodsData.unitPrice*goodsData.num).toFixed(2)}}</i>元，不包含运费</p>
+      <p class="info">最多退款 <i> ￥{{(goodsData.unitPrice*goodsData.totalNum).toFixed(2)}}</i>元，不包含运费</p>
     </div>
     <div class="wrap">
       <div class="padding50">
@@ -240,11 +240,10 @@ export default {
   methods: {
     // 页面初始化渲染
     applyRefundRender () {
-      // this.params.type = this.$route.params.type
-      // this.params.orderItemId = this.$route.params.orderItemId
       this.goodsData = storage.getLocalStorage(aftersale)
-      console.log(this.goodsData)
-      this.objImgs = this.goodsData.voucher.split(',')
+      if (this.goodsData.voucher) {
+        this.objImgs = this.goodsData.voucher.split(',')
+      }
       this.params = Object.assign(this.params, this.goodsData)
       this.params.num = this.goodsData.num
       if (this.params.type == 1) { // 仅退款
@@ -274,14 +273,14 @@ export default {
       this.changeStyle()
     },
     changeStyle () {
-      if (this.params.num > this.goodsData.num) {
+      if (this.params.num > this.goodsData.totalNum) {
         this.addDisabled = true
         Toast({
           message: '数量超出购买数量',
           position: 'center',
           duration: 1000
         })
-        this.params.num = this.goodsData.num
+        this.params.num = this.goodsData.totalNum
       } else {
         if (this.params.num < 2) {
           this.subDisabled = true

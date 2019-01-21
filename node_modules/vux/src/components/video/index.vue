@@ -9,15 +9,15 @@
 
 <script>
 import Media from './zy.media.js'
-console.log(Media)
+
 export default {
+  name: 'video',
   props: {
     cover: String,
     video: String
   },
-  ready () {
+  beforeCreate () {
     this._player = Media(this.$el.querySelector('video'))
-    console.log(this._player)
   }
 }
 </script>

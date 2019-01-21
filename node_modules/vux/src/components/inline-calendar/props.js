@@ -1,6 +1,6 @@
 export default () => ({
   value: {
-    type: String,
+    type: [String, Array],
     default: ''
   },
   renderMonth: {
@@ -47,9 +47,14 @@ export default () => ({
   },
   weeksList: {
     type: Array,
-    default: () => ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
+    validator (val) {
+      if (val) {
+        return val.length === 7 || val.length === 0
+      }
+      return true
+    }
   },
-  customSlotFn: {
+  renderFunction: {
     type: Function,
     default: () => ''
   },
@@ -64,5 +69,16 @@ export default () => ({
   disableFuture: {
     type: Boolean,
     default: false
+  },
+  disableWeekend: {
+    type: Boolean,
+    default: false
+  },
+  disableDateFunction: Function,
+  marks: {
+    type: Array,
+    default () {
+      return []
+    }
   }
 })

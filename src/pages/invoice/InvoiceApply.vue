@@ -4,7 +4,7 @@
     <div class="applyWrap">
       <div class="wrap">
         <div class="cellLink">
-          <div>实付金额<span>¥45648</span></div>
+          <div>实付金额<span>¥</span></div>
         </div>
         <div>
           <div class="cellLink">
@@ -92,7 +92,8 @@ export default {
       invoiceType: '1', // 1、个人 2、企业
       info: null, // 创建订单参数
       invoiceStatusSelect: 'One',
-      orderSn: ''
+      orderSn: '',
+      money: ''
     }
   },
   components: {
@@ -102,7 +103,6 @@ export default {
   },
   watch: {
     '$route' (to, from) {
-      console.log(to.name)
       if (to.name === 'InvoiceApply' && to.params.info) {
         this.info = storage.getLocalStorage(orderInfo)
       } else if (to.name === 'InvoiceApply' && !to.params.info) {
@@ -110,7 +110,6 @@ export default {
         storage.delLocalStorage(orderInfo)
       }
       if (from.path.indexOf('/invoiceApply/') !== -1 && to.path.indexOf('/invoiceApply') !== -1) {
-        console.log(this.orderSn)
         this.$router.replace(`/orderDetails/${this.orderSn}`)
       }
     },
@@ -167,6 +166,7 @@ export default {
 
   },
   mounted () {
+    // this.money = this.$route.params.money
     this.info = storage.getLocalStorage(orderInfo)
     this.orderSn = storage.getLocalStorage(orderSn)
   }

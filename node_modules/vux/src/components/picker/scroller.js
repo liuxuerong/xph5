@@ -1,10 +1,13 @@
 /*
- * Anima Scroller
- * Based Zynga Scroller (http://github.com/zynga/scroller)
- * Copyright 2011, Zynga Inc.
- * Licensed under the MIT License.
- * https://raw.github.com/zynga/scroller/master/MIT-LICENSE.txt
- */
+* Anima Scroller
+* Based Zynga Scroller (http://github.com/zynga/scroller)
+* Copyright 2011, Zynga Inc.
+* Licensed under the MIT License.
+* https://raw.github.com/zynga/scroller/master/MIT-LICENSE.txt
+*/
+
+const isBrowser = typeof window === 'object'
+
 const TEMPLATE = `
 <div class="scroller-component" data-role="component">
   <div class="scroller-mask" data-role="mask"></div>
@@ -13,11 +16,24 @@ const TEMPLATE = `
 </div>
 `
 
-import Animate from './animate'
-import { getElement, getComputedStyle, easeOutCubic, easeInOutCubic } from './util'
+const Animate = require('./animate')
+const { getElement, getComputedStyle, easeOutCubic, easeInOutCubic } = require('./util')
+const passiveSupported = require('../../libs/passive_supported')
 
-var Scroller = function (container, options) {
-  var self = this
+const getDpr = function () {
+  let dpr = 1
+  if (isBrowser) {
+    if (window.VUX_CONFIG && window.VUX_CONFIG.$picker && window.VUX_CONFIG.$picker.respectHtmlDataDpr) {
+      dpr = document.documentElement.getAttribute('data-dpr') || 1
+    }
+  }
+  return dpr
+}
+
+const Scroller = function (container, options) {
+  const self = this
+
+  self.dpr = getDpr()
 
   options = options || {}
 
@@ -47,21 +63,23 @@ var Scroller = function (container, options) {
   var html = ''
   if (data.length && data[0].constructor === Object) {
     data.forEach(function (row) {
-      html += '<div class="' + self.options.itemClass + '" data-value="' + row.value + '">' + row.name + '</div>'
+      html += '<div class="' + self.options.itemClass + '" data-value=' + JSON.stringify({value: encodeURI(row.value)}) + '>' + row.name + '</div>'
     })
   } else {
     data.forEach(function (val) {
-      html += '<div class="' + self.options.itemClass + '" data-value="' + val + '">' + val + '</div>'
+      html += '<div class="' + self.options.itemClass + '" data-value=' + JSON.stringify({value: encodeURI(val)}) + '>' + val + '</div>'
     })
   }
   content.innerHTML = html
 
   self.__container.appendChild(component)
 
-  self.__itemHeight = parseInt(getComputedStyle(indicator, 'height'), 10)
+  self.__itemHeight = parseFloat(getComputedStyle(indicator, 'height'), 10)
 
   self.__callback = options.callback || function (top) {
-    content.style.webkitTransform = 'translate3d(0, ' + (-top) + 'px, 0)'
+    const distance = -top * self.dpr
+    content.style.webkitTransform = 'translate3d(0, ' + distance + 'px, 0)'
+    content.style.transform = 'translate3d(0, ' + distance + 'px, 0)'
   }
 
   var rect = component.getBoundingClientRect()
@@ -71,25 +89,37 @@ var Scroller = function (container, options) {
   self.__setDimensions(component.clientHeight, content.offsetHeight)
 
   if (component.clientHeight === 0) {
-    self.__setDimensions(parseInt(getComputedStyle(component, 'height'), 10), 204)
+    self.__setDimensions(parseFloat(getComputedStyle(component, 'height'), 10), 204)
   }
   self.select(self.options.defaultValue, false)
 
-  component.addEventListener('touchstart', function (e) {
+  const touchStartHandler = function (e) {
     if (e.target.tagName.match(/input|textarea|select/i)) {
       return
     }
     e.preventDefault()
-    self.__doTouchStart(e.touches, e.timeStamp)
-  }, false)
+    self.__doTouchStart(e, e.timeStamp)
+  }
 
-  component.addEventListener('touchmove', function (e) {
-    self.__doTouchMove(e.touches, e.timeStamp)
-  }, false)
+  const touchMoveHandler = function (e) {
+    self.__doTouchMove(e, e.timeStamp)
+  }
 
-  component.addEventListener('touchend', function (e) {
+  const touchEndHandler = function (e) {
     self.__doTouchEnd(e.timeStamp)
-  }, false)
+  }
+
+  const willPreventDefault = passiveSupported ? {passive: false} : false
+  const willNotPreventDefault = passiveSupported ? {passive: true} : false
+
+  component.addEventListener('touchstart', touchStartHandler, willPreventDefault)
+  component.addEventListener('mousedown', touchStartHandler, willPreventDefault)
+
+  component.addEventListener('touchmove', touchMoveHandler, willNotPreventDefault)
+  component.addEventListener('mousemove', touchMoveHandler, willNotPreventDefault)
+
+  component.addEventListener('touchend', touchEndHandler, willNotPreventDefault)
+  component.addEventListener('mouseup', touchEndHandler, willNotPreventDefault)
 }
 
 var members = {
@@ -147,7 +177,7 @@ var members = {
 
     var children = self.__content.children
     for (var i = 0, len = children.length; i < len; i++) {
-      if (children[i].dataset.value === value) {
+      if (decodeURI(JSON.parse(children[i].dataset.value).value) === value) {
         self.selectByIndex(i, animate)
         return
       }
@@ -170,7 +200,7 @@ var members = {
       self.__isDecelerating = false
     }
 
-    top = Math.round(top / self.__itemHeight) * self.__itemHeight
+    top = Math.round((top / self.__itemHeight).toFixed(5)) * self.__itemHeight
     top = Math.max(Math.min(self.__maxScrollTop, top), self.__minScrollTop)
 
     if (top === self.__scrollTop || !animate) {
@@ -199,7 +229,7 @@ var members = {
       self.__prevValue = self.value
     }
 
-    self.value = selectedItem.dataset.value
+    self.value = decodeURI(JSON.parse(selectedItem.dataset.value).value)
   },
 
   __scrollingComplete () {
@@ -214,10 +244,13 @@ var members = {
     }
   },
 
-  __doTouchStart (touches, timeStamp) {
-    var self = this
+  __doTouchStart (ev, timeStamp) {
+    const touches = ev.touches
+    const self = this
+    const target = ev.touches ? ev.touches[0] : ev
+    const isMobile = !!ev.touches
 
-    if (touches.length == null) {
+    if (ev.touches && touches.length == null) {
       throw new Error('Invalid touch list: ' + touches)
     }
     if (timeStamp instanceof Date) {
@@ -243,11 +276,11 @@ var members = {
 
     // Use center point when dealing with two fingers
     var currentTouchTop
-    var isSingleTouch = touches.length === 1
+    var isSingleTouch = (isMobile && touches.length === 1) || !isMobile
     if (isSingleTouch) {
-      currentTouchTop = touches[0].pageY
+      currentTouchTop = target.pageY
     } else {
-      currentTouchTop = Math.abs(touches[0].pageY + touches[1].pageY) / 2
+      currentTouchTop = Math.abs(target.pageY + touches[1].pageY) / 2
     }
 
     self.__initialTouchTop = currentTouchTop
@@ -262,10 +295,13 @@ var members = {
     self.__positions = []
   },
 
-  __doTouchMove (touches, timeStamp, scale) {
-    var self = this
+  __doTouchMove (ev, timeStamp, scale) {
+    const self = this
+    const touches = ev.touches
+    const target = ev.touches ? ev.touches[0] : ev
+    const isMobile = !!ev.touches
 
-    if (touches.length == null) {
+    if (touches && touches.length == null) {
       throw new Error('Invalid touch list: ' + touches)
     }
     if (timeStamp instanceof Date) {
@@ -283,10 +319,10 @@ var members = {
     var currentTouchTop
 
     // Compute move based around of center of fingers
-    if (touches.length === 2) {
-      currentTouchTop = Math.abs(touches[0].pageY + touches[1].pageY) / 2
+    if (isMobile && touches.length === 2) {
+      currentTouchTop = Math.abs(target.pageY + touches[1].pageY) / 2
     } else {
-      currentTouchTop = touches[0].pageY
+      currentTouchTop = target.pageY
     }
 
     var positions = self.__positions
@@ -533,4 +569,4 @@ for (var key in members) {
   Scroller.prototype[key] = members[key]
 }
 
-module.exports = Scroller
+export default Scroller

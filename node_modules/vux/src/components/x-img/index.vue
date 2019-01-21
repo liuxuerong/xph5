@@ -1,39 +1,59 @@
 <template>
-  <img :src="defaultSrc" class="vux-x-img" :class="class"/>
+  <img :src="defaultSrc" :data-src="currentSrc" class="vux-x-img"/>
 </template>
 
 <script>
 import Blazy from 'vux-blazy'
-import webpSupport from 'webp-support'
+import { isSupported, detectWebp } from '../../libs/webp-support'
 import uuidMixin from '../../libs/mixin_uuid'
 
 export default {
+  name: 'x-img',
   mixins: [uuidMixin],
-  compiled () {
-    // use webp or default
-    if (webpSupport() && this.src && this.webpSrc) {
-      this.src = this.webpSrc
+  created () {
+    this.$vux && this.$vux.bus && this.$vux.bus.$on('vux:after-view-enter', this.init)
+  },
+  methods: {
+    init () {
+      const _this = this
+
+      this.blazy && this.blazy.destroy()
+      this.$el.src = this.defaultSrc
+      this.$el.className = this.$el.className.replace('b-loaded', '')
+
+      this.blazy = new Blazy({
+        scroller: this.scroller,
+        container: this.container,
+        selector: `#vux-ximg-${this.uuid}`,
+        offset: _this.offset,
+        errorClass: _this.errorClass,
+        successClass: _this.successClass,
+        separator: _this.separator,
+        success (ele) {
+          _this.$emit('on-success', _this.src, ele)
+        },
+        error (ele, msg) {
+          _this.$emit('on-error', _this.src, ele, msg)
+        }
+      })
     }
   },
-  ready () {
-    const _this = this
-    const id = `vux-ximg-${this.uuid}`
-    this.$el.setAttribute('id', id)
-    this.$el.setAttribute('data-src', this.src)
-    this.blazy = new Blazy({
-      scroller: this.scroller,
-      container: this.container,
-      selector: `#${id}`,
-      offset: _this.offset,
-      errorClass: _this.errorClass,
-      successClass: _this.successClass,
-      success (ele) {
-        _this.$emit('on-success', _this.src, ele)
-      },
-      error (ele, msg) {
-        _this.$emit('on-error', _this.src, ele, msg)
-      }
+  mounted () {
+    this.$el.setAttribute('id', `vux-ximg-${this.uuid}`)
+    this.$nextTick(() => {
+      setTimeout(() => {
+        this.init()
+      }, this.delay)
     })
+    detectWebp()
+  },
+  computed: {
+    currentSrc () {
+      if (isSupported() && this.webpSrc) {
+        return this.webpSrc
+      }
+      return this.src
+    }
   },
   props: {
     src: String,
@@ -46,22 +66,35 @@ export default {
     successClass: String,
     offset: {
       type: Number,
-      defaut: 100
+      default: 100
     },
-    class: String,
     scroller: Object,
-    container: String
+    container: String,
+    delay: {
+      type: Number,
+      default: 0
+    },
+    separator: String
+  },
+  watch: {
+    src (val) {
+      this.init()
+    }
   },
   beforeDestroy () {
     this.blazy && this.blazy.destroy()
+    this.blazy = null
+    this.$vux && this.$vux.bus && this.$vux.bus.$off('vux:after-view-enter', this.init)
   }
 }
 </script>
 
 <style>
-.b-lazy {
+.vux-x-img, .b-lazy {
   transition: opacity 500ms ease-in-out;
   max-width: 100%;
+}
+.b-lazy {
   opacity: 0;
 }
 

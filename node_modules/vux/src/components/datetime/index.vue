@@ -1,38 +1,79 @@
 <template>
- 
-    <a class="weui_cell" href="javascript:">
-      <slot>
-        <div class="weui_cell_bd weui_cell_primary">
-          <p>{{title}}</p>
-          <inline-desc v-if="inlineDesc">{{inlineDesc}}</inline-desc>
-        </div>
-        <div class="weui_cell_ft with_arrow vux-datetime-value">{{value || placeholder}}</div>
-      </slot>
-    </a>
- 
+  <a
+    class="vux-datetime weui-cell"
+    :class="{'weui-cell_access': !readonly}"
+    :data-cancel-text="$t('cancel_text')"
+    :data-confirm-text="$t('confirm_text')"
+    href="javascript:">
+    <slot>
+      <div>
+        <slot name="title">
+          <p
+            :style="styles"
+            :class="labelClass"
+            v-html="title"></p>
+        </slot>
+        <inline-desc v-if="inlineDesc">{{ inlineDesc }}</inline-desc>
+      </div>
+      <div
+        class="weui-cell__ft vux-cell-primary vux-datetime-value"
+        :style="{
+          textAlign: valueTextAlign
+        }">
+        <span
+          class="vux-cell-placeholder"
+          v-if="!currentValue && placeholder">{{ placeholder }}</span>
+        <span
+          class="vux-cell-value"
+          v-if="currentValue">{{ displayFormat ? displayFormat(currentValue) : currentValue }}</span>
+        <icon
+          class="vux-input-icon"
+          type="warn"
+          v-show="!valid"
+          :title="firstError"></icon>
+      </div>
+    </slot>
+  </a>
 </template>
 
+<i18n>
+cancel_text:
+  en: cancel
+  zh-CN: 取消
+confirm_text:
+  en: done
+  zh-CN: 确定
+</i18n>
+
 <script>
+import Icon from '../icon'
 import Picker from './datetimepicker'
 import Group from '../group'
 import InlineDesc from '../inline-desc'
-import Base from '../../libs/base'
+import Uuid from '../../mixins/uuid'
+import format from '../../tools/date/format'
 
 export default {
-  mixins: [Base],
+  name: 'datetime',
+  mixins: [Uuid],
   components: {
     Group,
-    InlineDesc
+    InlineDesc,
+    Icon
   },
   props: {
     format: {
       type: String,
-      default: 'YYYY-MM-DD'
+      default: 'YYYY-MM-DD',
+      validator (val) {
+        /* istanbul ignore if */
+        if (process.env.NODE_ENV === 'development' && val && /A/.test(val) && val !== 'YYYY-MM-DD A') {
+          return console.error('[VUX] Datetime prop:format 使用 A 时只允许的值为： YYYY-MM-DD A')
+        }
+        return true
+      }
     },
-    title: {
-      type: String,
-      required: true
-    },
+    title: String,
     value: {
       type: String,
       default: ''
@@ -41,18 +82,9 @@ export default {
     placeholder: String,
     minYear: Number,
     maxYear: Number,
-    confirmText: {
-      type: String,
-      default: 'ok'
-    },
-    cancelText: {
-      type: String,
-      default: 'cancel'
-    },
-    clearText: {
-      type: String,
-      default: ''
-    },
+    confirmText: String,
+    cancelText: String,
+    clearText: String,
     yearRow: {
       type: String,
       default: '{value}'
@@ -72,37 +104,145 @@ export default {
     minuteRow: {
       type: String,
       default: '{value}'
-    }
+    },
+    required: {
+      type: Boolean,
+      default: false
+    },
+    minHour: {
+      type: Number,
+      default: 0
+    },
+    maxHour: {
+      type: Number,
+      default: 23
+    },
+    startDate: {
+      type: String,
+      validator (val) {
+        /* istanbul ignore if */
+        if (process.env.NODE_ENV === 'development' && val && val.length !== 10) {
+          console.error('[VUX] Datetime prop:start-date 必须为 YYYY-MM-DD 格式')
+        }
+        return val ? val.length === 10 : true
+      }
+    },
+    endDate: {
+      type: String,
+      validator (val) {
+        /* istanbul ignore if */
+        if (process.env.NODE_ENV === 'development' && val && val.length !== 10) {
+          console.error('[VUX] Datetime prop:end-date 必须为 YYYY-MM-DD 格式')
+        }
+        return val ? val.length === 10 : true
+      }
+    },
+    valueTextAlign: String,
+    displayFormat: Function,
+    readonly: Boolean,
+    hourList: Array,
+    minuteList: Array,
+    show: Boolean,
+    defaultSelectedValue: String,
+    computeHoursFunction: Function,
+    computeDaysFunction: Function,
+    orderMap: Object
   },
   created () {
-    this.handleChangeEvent = true
+    this.isFirstSetValue = false
+    this.currentValue = this.value
   },
-  ready () {
+  data () {
+    return {
+      currentShow: false,
+      currentValue: null,
+      valid: true,
+      errors: {}
+    }
+  },
+  mounted () {
     const uuid = this.uuid
-    this.$el.setAttribute('id', 'vux-datetime-' + uuid)
-    this.render()
+    this.$el.setAttribute('id', `vux-datetime-${uuid}`)
+    if (!this.readonly) {
+      this.$nextTick(() => {
+        this.render()
+
+        if (this.show) {
+          this.$nextTick(() => {
+            this.picker && this.picker.show(this.currentValue)
+          })
+        }
+      })
+    }
   },
   computed: {
+    styles () {
+      if (!this.$parent) {
+        return {}
+      }
+      return {
+        width: this.$parent.labelWidth,
+        textAlign: this.$parent.labelAlign,
+        marginRight: this.$parent.labelMarginRight
+      }
+    },
     pickerOptions () {
       const _this = this
       const options = {
         trigger: '#vux-datetime-' + this.uuid,
         format: this.format,
-        value: this.value,
+        value: this.currentValue,
         output: '.vux-datetime-value',
-        confirmText: this.confirmText,
-        cancelText: _this.cancelText,
+        confirmText: _this.getButtonText('confirm'),
+        cancelText: _this.getButtonText('cancel'),
         clearText: _this.clearText,
         yearRow: this.yearRow,
         monthRow: this.monthRow,
         dayRow: this.dayRow,
         hourRow: this.hourRow,
         minuteRow: this.minuteRow,
+        minHour: this.minHour,
+        maxHour: this.maxHour,
+        startDate: this.startDate,
+        endDate: this.endDate,
+        hourList: this.hourList,
+        minuteList: this.minuteList,
+        defaultSelectedValue: this.defaultSelectedValue,
+        computeHoursFunction: this.computeHoursFunction,
+        computeDaysFunction: this.computeDaysFunction,
+        orderMap: this.orderMap || {},
+        onSelect (type, val, wholeValue) {
+          if (_this.picker && _this.picker.config.renderInline) {
+            _this.$emit('input', wholeValue)
+            _this.$emit('on-change', wholeValue)
+          }
+        },
         onConfirm (value) {
-          _this.value = value
+          _this.currentValue = value
         },
         onClear (value) {
           _this.$emit('on-clear', value)
+        },
+        onHide (type) {
+          _this.currentShow = false
+          _this.$emit('update:show', false)
+          _this.validate()
+          _this.$emit('on-hide', type)
+          if (type === 'cancel') {
+            _this.$emit('on-cancel')
+          }
+          if (type === 'confirm') {
+            setTimeout(() => {
+              _this.$nextTick(() => {
+                _this.$emit('on-confirm', _this.value)
+              })
+            })
+          }
+        },
+        onShow () {
+          _this.currentShow = true
+          _this.$emit('update:show', true)
+          _this.$emit('on-show')
         }
       }
       if (this.minYear) {
@@ -112,152 +252,101 @@ export default {
         options.maxYear = this.maxYear
       }
       return options
+    },
+    firstError () {
+      let key = Object.keys(this.errors)[0]
+      return this.errors[key]
+    },
+    labelClass () {
+      if (!this.$parent) {
+        return {}
+      }
+      return {
+        'vux-cell-justify': this.$parent.labelAlign === 'justify' || this.$parent.$parent.labelAlign === 'justify'
+      }
     }
   },
   methods: {
-    render () {
-      if (this.picker) {
-        this.picker.destroy()
+    getButtonText (type) {
+      if (type === 'cancel' && this.cancelText) {
+        return this.cancelText
+      } else if (type === 'confirm' && this.confirmText) {
+        return this.confirmText
       }
-      this.picker = new Picker(this.pickerOptions)
+      return this.$el.getAttribute(`data-${type}-text`)
+    },
+    render () {
+      this.$nextTick(() => {
+        this.picker && this.picker.destroy()
+        this.picker = new Picker(this.pickerOptions)
+      })
+    },
+    validate () {
+      if (!this.currentValue && this.required) {
+        this.valid = false
+        this.errors.required = '必填'
+        return
+      }
+      this.valid = true
+      this.errors = {}
     }
   },
   watch: {
+    readonly (val) {
+      if (val) {
+        this.picker && this.picker.destroy()
+      } else {
+        this.render()
+      }
+    },
+    show (val) {
+      if (val === this.currentShow) return
+      if (val) {
+        this.picker && this.picker.show(this.currentValue)
+      } else {
+        this.picker && this.picker.hide(this.currentValue)
+      }
+    },
+    currentValue (val, oldVal) {
+      this.$emit('input', val)
+      if (!this.isFirstSetValue) {
+        this.isFirstSetValue = true
+        oldVal && this.$emit('on-change', val)
+      } else {
+        this.$emit('on-change', val)
+      }
+      this.validate()
+    },
+    startDate () {
+      this.render()
+    },
+    endDate () {
+      this.render()
+    },
+    format (val) {
+      if (this.currentValue) {
+        this.currentValue = format(this.currentValue, val)
+      }
+      this.render()
+    },
     value (val) {
-      this.$emit('on-change', val)
+      // do not force render when renderInline is true
+      if (this.readonly || (this.picker && this.picker.config.renderInline)) {
+        this.currentValue = val
+        return
+      }
+      if (this.currentValue !== val) {
+        this.currentValue = val
+        this.render()
+      }
     }
   },
   beforeDestroy () {
-    this.picker.destroy()
+    this.picker && this.picker.destroy()
   }
 }
 </script>
 
-<style>
-.weui_cell_ft.with_arrow:after {
-  content: " ";
-  display: inline-block;
-  transform: rotate(45deg);
-  height: 6px;
-  width: 6px;
-  border-width: 2px 2px 0 0;
-  border-color: #C8C8CD;
-  border-style: solid;
-  position: relative;
-  top: -1px;
-  margin-left: .3em;
-}
-.scroller-component {
-  display: block;
-  position: relative;
-  height: 238px;
-  overflow: hidden;
-  width: 100%;
-}
-
-.scroller-content {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  z-index: -1;
-}
-
-.scroller-mask {
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  margin: 0 auto;
-  width: 100%;
-  z-index: 3;
-  background-image:
-    linear-gradient(to bottom, rgba(255,255,255,0.95), rgba(255,255,255,0.6)),
-    linear-gradient(to top, rgba(255,255,255,0.95), rgba(255,255,255,0.6));
-  background-position: top, bottom;
-  background-size: 100% 102px;
-  background-repeat: no-repeat;
-}
-
-.scroller-item {
-  text-align: center;
-  font-size: 16px;
-  height: 34px;
-  line-height: 34px;
-  color: #000;
-}
-
-.scroller-indicator {
-  width: 100%;
-  height: 34px;
-  position: absolute;
-  left: 0;
-  top: 102px;
-  z-index: 3;
-  background-image:
-    linear-gradient(to bottom, #d0d0d0, #d0d0d0, transparent, transparent),
-    linear-gradient(to top, #d0d0d0, #d0d0d0, transparent, transparent);
-  background-position: top, bottom;
-  background-size: 100% 1px;
-  background-repeat: no-repeat;
-}
-
-.dp-container {
-  position: fixed;
-  width: 100%;
-  left: 0;
-  bottom: 0;
-  z-index: 10000;
-  background-color: #fff;
-  display: none;
-  transition: transform 0.3s ease;
-  transform: translateY(100%);
-}
-
-.dp-mask {
-  z-index: 998;
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  left: 0px;
-  top: 0px;
-  opacity: 0;
-  transition: opacity 0.1s ease;
-  background-color: #000;
-  z-index: 9999;
-}
-
-.dp-header {
-  display: flex;
-  width: 100%;
-  box-align: center;
-  align-items: center;
-  background-image: linear-gradient(to bottom, #e7e7e7, #e7e7e7, transparent, transparent);
-  background-position: bottom;
-  background-size: 100% 1px;
-  background-repeat: no-repeat;
-}
-
-.dp-header .dp-item {
-  color: #04BE02;
-  font-size: 18px;
-  height: 44px;
-  line-height: 44px;
-  cursor: pointer;
-}
-
-.dp-content {
-  display: flex;
-  width: 100%;
-  box-align: center;
-  align-items: center;
-  padding: 10px 0;
-}
-
-.dp-header .dp-item,
-.dp-content .dp-item {
-  box-sizing: border-box;
-  flex: 1;
-  text-align: center;
-}
+<style lang="less">
+@import './style.less';
 </style>

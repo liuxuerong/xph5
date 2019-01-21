@@ -8,13 +8,16 @@
 import Blur from './blur'
 
 export default {
-  ready () {
-    this._blur = new Blur(this.$el, {
-      url: this.url,
-      blurAmount: this.blurAmount,
-      imageClass: 'vux-bg-blur',
-      duration: 100, // If the image needs to be faded in, how long that should take
-      opacity: 1 // Specify the final opacity that the image will have
+  name: 'blur',
+  mounted () {
+    this.$nextTick(() => {
+      this._blur = new Blur(this.$el, {
+        url: this.url,
+        blurAmount: this.blurAmount,
+        imageClass: 'vux-bg-blur',
+        duration: 100, // If the image needs to be faded in, how long that should take
+        opacity: 1 // Specify the final opacity that the image will have
+      })
     })
   },
   props: {

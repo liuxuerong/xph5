@@ -48,27 +48,18 @@ function getTime (str) {
   return typeof str === 'string' ? new Date(str.replace(/-/g, '/')).getTime() : str.getTime()
 }
 
-function isBetween (value, start, end) {
+export function isBetween (value, disablePast, disableFuture, rangeBegin, rangeEnd) {
+  const { start, end } = getRange(disablePast, disableFuture, rangeBegin, rangeEnd)
   value = getTime(value)
   let isGte = start ? value >= getTime(start) : true
   let isLte = end ? value <= getTime(end) : true
   return isGte && isLte
 }
 
-export function getDays ({year, month, value, isRange = false, rangeBegin, rangeEnd, returnSixRows = true, disablePast = false, disableFuture = false}) {
-  let today = format(new Date(), 'YYYY-MM-DD')
+function getRange (disablePast = false, disableFuture = false, rangeBegin, rangeEnd) {
   let startOfToday = new Date()
   startOfToday.setHours(0, 0, 0, 0)
 
-  let _splitValue = splitValue(value || today)
-
-  // if year or month is not specified, get them from value
-  if (typeof year !== 'number' || typeof month !== 'number' || month < 0) {
-    year = _splitValue.year
-    month = _splitValue.month
-  }
-
-  // if disablePast === true
   if (disablePast) {
     if (!rangeBegin) {
       rangeBegin = startOfToday
@@ -77,13 +68,28 @@ export function getDays ({year, month, value, isRange = false, rangeBegin, range
     }
   }
 
-  // if disableFuture === true
   if (disableFuture) {
     if (!rangeEnd) {
       rangeEnd = startOfToday
     } else {
       rangeEnd = Math.min(startOfToday.getTime(), getTime(rangeEnd))
     }
+  }
+  return {
+    start: rangeBegin,
+    end: rangeEnd
+  }
+}
+
+export function getDays ({year, month, value, rangeBegin, rangeEnd, returnSixRows = true}) {
+  let today = format(new Date(), 'YYYY-MM-DD')
+
+  let _splitValue = splitValue(value || today)
+
+  // if year or month is not specified, get them from value
+  if (typeof year !== 'number' || typeof month !== 'number' || month < 0) {
+    year = _splitValue.year
+    month = _splitValue.month
   }
 
   var firstDayOfMonth = new Date(year, month, 1).getDay()
@@ -109,7 +115,6 @@ export function getDays ({year, month, value, isRange = false, rangeBegin, range
           month: rs.month,
           month_str: rs.month + 1,
           day: k,
-          disabled: true,
           isLastMonth: true
         })
         k++
@@ -123,7 +128,6 @@ export function getDays ({year, month, value, isRange = false, rangeBegin, range
       month_str: month + 1,
       day: i,
       isCurrent: value && format(new Date(value), 'YYYY/MM/DD') === _format,
-      disabled: !isBetween(_format, rangeBegin, rangeEnd),
       isToday: format(new Date(), 'YYYY/MM/DD') === _format
     }
     temp[line].push(options)
@@ -139,7 +143,6 @@ export function getDays ({year, month, value, isRange = false, rangeBegin, range
           month: rs.month,
           month_str: rs.month + 1,
           day: k,
-          disabled: true,
           isNextMonth: true
         })
         k++
@@ -152,12 +155,12 @@ export function getDays ({year, month, value, isRange = false, rangeBegin, range
     let start = temp[4][6].isNextMonth ? temp[4][6].day : 0
     temp[5] = []
     for (let i = 0; i < 7; i++) {
+      let day = ++start
       temp[5].push({
         year: rs.year,
         month: rs.month,
         month_str: rs.month + 1,
-        day: ++start,
-        disabled: true,
+        day: day,
         isNextMonth: true
       })
     }
@@ -170,20 +173,20 @@ export function getDays ({year, month, value, isRange = false, rangeBegin, range
     temp[4] = []
     temp[5] = []
     for (let i = 0; i < 7; i++) {
+      let day = ++start
       temp[4].push({
         year: rs.year,
         month: rs.month,
         month_str: rs.month + 1,
-        day: ++start,
-        disabled: true,
+        day: day,
         isNextMonth: true
       })
+      day = ++start
       temp[5].push({
         year: rs.year,
         month: rs.month,
         month_str: rs.month + 1,
-        day: ++start,
-        disabled: true,
+        day: day,
         isNextMonth: true
       })
     }
@@ -193,6 +196,19 @@ export function getDays ({year, month, value, isRange = false, rangeBegin, range
     year: year,
     month: month,
     month_str: month + 1,
-    days: temp
+    days: temp.map(line => {
+      /**
+      * https://github.com/airyland/vux/issues/1361
+      * @todo day will be changed to weekDay after v3.0
+      */
+      line.map((item, index) => {
+        item.date = item.day
+        item.weekDay = index
+        item.isWeekend = index === 0 || index === 6
+        item.formatedDate = format(new Date(`${item.year}/${item.month_str}/${item.date}`), 'YYYY-MM-DD')
+        return item
+      })
+      return line
+    })
   }
 }

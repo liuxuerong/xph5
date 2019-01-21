@@ -1,10 +1,11 @@
 <template>
-  <a href="javascript:;" class="weui_tabbar_item" :class="{'weui_bar_item_on': $parent.index === index}" @click="onItemClick">
-    <div class="weui_tabbar_icon" :class="[iconClass || $parent.iconClass, {'vux-reddot': showDot}]">
-      <slot name="icon"></slot>
-      <sup><badge v-if="badge" :text="badge"></badge></sup>
+  <a href="javascript:;" class="weui-tabbar__item" :class="{'weui-bar__item_on': isActive, 'vux-tabbar-simple': simple}" @click="onItemClick(true)">
+    <div class="weui-tabbar__icon" :class="[iconClass || $parent.iconClass, {'vux-reddot': showDot}]" v-if="!simple">
+      <slot name="icon" v-if="!simple && !(hasActiveIcon && isActive)"></slot>
+      <slot name="icon-active" v-if="!simple && hasActiveIcon && isActive"></slot>
+      <sup v-if="badge"><badge :text="badge"></badge></sup>
     </div>
-    <p class="weui_tabbar_label">
+    <p class="weui-tabbar__label">
       <slot name="label"></slot>
     </p>
   </a>
@@ -12,12 +13,20 @@
 
 <script>
 import { childMixin } from '../../mixins/multi-items'
-import { go } from '../../libs/router'
 import Badge from '../badge'
 
 export default {
+  name: 'tabbar-item',
   components: {
     Badge
+  },
+  mounted () {
+    if (!this.$slots.icon) {
+      this.simple = true
+    }
+    if (this.$slots['icon-active']) {
+      this.hasActiveIcon = true
+    }
   },
   mixins: [childMixin],
   props: {
@@ -29,9 +38,15 @@ export default {
     link: [String, Object],
     iconClass: String
   },
-  events: {
-    'on-item-click': function () {
-      go(this.link, this.$router)
+  computed: {
+    isActive () {
+      return this.$parent.index === this.currentIndex
+    }
+  },
+  data () {
+    return {
+      simple: false,
+      hasActiveIcon: false
     }
   }
 }

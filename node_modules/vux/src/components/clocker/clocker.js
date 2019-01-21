@@ -1,3 +1,5 @@
+import Eventor from '../../libs/eventor'
+
 // https://github.com/MoeKit/clocker
 var instances = []
 var matchers = []
@@ -8,7 +10,7 @@ matchers.push(/([0-9]{1,2}\/){2}[0-9]{4}( [0-9]{1,2}(:[0-9]{2}){2})?/
   .source)
 // Year/Day/Month [hours:minutes:seconds] and
 // Year-Day-Month [hours:minutes:seconds]
-matchers.push(/[0-9]{4}([\/\-][0-9]{1,2}){2}( [0-9]{1,2}(:[0-9]{2}){2})?/
+matchers.push(/[0-9]{4}([/-][0-9]{1,2}){2}( [0-9]{1,2}(:[0-9]{2}){2})?/
   .source)
 // Cast the matchers to a regular expression object
 matchers = new RegExp(matchers.join('|'))
@@ -27,8 +29,8 @@ function parseDateString (dateString) {
       dateString = Number(dateString)
     }
     // Replace dashes to slashes
-    if (String(dateString).match(/\-/)) {
-      dateString = String(dateString).replace(/\-/g, '/')
+    if (String(dateString).match(/-/)) {
+      dateString = String(dateString).replace(/-/g, '/')
     }
     return new Date(dateString)
   } else {
@@ -91,10 +93,13 @@ function strftime (offsetObject) {
       .replace('%_M2', offsetObject.minutes_2)
       .replace('%_S1', offsetObject.seconds_1)
       .replace('%_S2', offsetObject.seconds_2)
+      .replace('%_S3', offsetObject.seconds_3)
       .replace('%_H1', offsetObject.hours_1)
       .replace('%_H2', offsetObject.hours_2)
+      .replace('%_H3', offsetObject.hours_3)
       .replace('%_D1', offsetObject.days_1)
       .replace('%_D2', offsetObject.days_2)
+      .replace('%_D3', offsetObject.days_3)
     format = format.replace(/%%/, '%')
     return format
   }
@@ -138,7 +143,7 @@ var Countdown = function (finalDate, option) {
   // Set the final date and start
   this.setFinalDate(finalDate)
 }
-var Eventor = require('../../libs/eventor')
+
 Eventor.mixTo(Countdown)
 var pro = Countdown.prototype
 
@@ -207,8 +212,9 @@ var fns = {
     for (var i = 0; i < list.length; i++) {
       var key = list[i]
       var numbers = splitNumber(this.offset[key])
-      this.offset[key + '_1'] = numbers[0]
-      this.offset[key + '_2'] = numbers[1]
+      for (let n = 0; n < numbers.length; n++) {
+        this.offset[`${key}_${n + 1}`] = numbers[n]
+      }
     }
     // Dispatch an event
     if (this.totalSecsLeft === 0) {
@@ -233,4 +239,4 @@ for (var i in fns) {
   pro[i] = fns[i]
 }
 
-module.exports = Countdown
+export default Countdown

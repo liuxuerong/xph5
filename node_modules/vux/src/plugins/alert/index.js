@@ -1,59 +1,41 @@
-import AlertComponent from '../../components/alert'
+import { createVM, show, hide } from './util'
 
 let $vm
-let watcher
 
-export default {
-  install (vue) {
+const plugin = {
+  install (Vue) {
     if (!$vm) {
-      const Alert = vue.extend(AlertComponent)
-      $vm = new Alert({
-        el: document.createElement('div')
-      })
-      document.body.appendChild($vm.$el)
+      $vm = createVM(Vue)
     }
 
     const alert = {
-      show (options) {
-        // destroy watcher
-        watcher && watcher()
-        if (typeof options === 'object') {
-          for (let i in options) {
-            if (i !== 'content') {
-              $vm[i] = options[i]
-            } else {
-              $vm.$el.querySelector('.weui_dialog_bd').innerHTML = options['content']
-            }
-          }
-        } else if (typeof options === 'string') {
-          $vm.$el.querySelector('.weui_dialog_bd').innerHTML = options
-        }
-        if (typeof options === 'object' && (options.onShow || options.onHide)) {
-          watcher = $vm.$watch('show', (val) => {
-            val && options.onShow && options.onShow($vm)
-            val === false && options.onHide && options.onHide($vm)
-          })
-        }
-        $vm.show = true
+      show (options = {}) {
+        return show.call(this, $vm, options)
       },
       hide () {
-        $vm.show = false
+        return hide.call(this, $vm)
+      },
+      isVisible () {
+        return $vm.showValue
       }
     }
 
-    // all Vux's plugins are included in this.$vux
-    if (!vue.$vux) {
-      vue.$vux = {
+    if (!Vue.$vux) {
+      Vue.$vux = {
         alert
       }
     } else {
-      vue.$vux.alert = alert
+      Vue.$vux.alert = alert
     }
 
-    vue.mixin({
+    Vue.mixin({
       created: function () {
-        this.$vux = vue.$vux
+        this.$vux = Vue.$vux
       }
     })
   }
 }
+
+export default plugin
+export const install = plugin.install
+

@@ -1,11 +1,26 @@
 <template>
   <div class="vux-header">
     <div class="vux-header-left">
-      <a class="vux-header-back" @click.preventDefault v-show="leftOptions.showBack" :transition="transition" @click="onClickBack">{{leftOptions.backText}}</a>
-      <div class="left-arrow" @click="onClickBack" v-show="leftOptions.showBack" :transition="transition"></div>
+      <slot name="overwrite-left">
+        <transition :name="transition">
+          <a class="vux-header-back" @click.preventDefault v-show="_leftOptions.showBack" @click="onClickBack">{{ typeof _leftOptions.backText === 'undefined' ? $t('back_text') : _leftOptions.backText}}</a>
+        </transition>
+        <transition :name="transition">
+          <div class="left-arrow" @click="onClickBack" v-show="_leftOptions.showBack"></div>
+        </transition>
+      </slot>
       <slot name="left"></slot>
     </div>
-    <h1 class="vux-header-title" @click="$emit('on-click-title')"><span v-show="title" :transition="transition">{{title}}</span><slot></slot></h1>
+    <h1 class="vux-header-title" @click="$emit('on-click-title')" v-if="!shouldOverWriteTitle">
+      <slot>
+        <transition :name="transition">
+          <span v-show="title">{{title}}</span>
+        </transition>
+      </slot>
+    </h1>
+    <div class="vux-header-title-area" v-if="shouldOverWriteTitle">
+      <slot name="overwrite-title"></slot>
+    </div>
     <div class="vux-header-right">
       <a class="vux-header-more" @click.preventDefault @click="$emit('on-click-more')" v-if="rightOptions.showMore"></a>
       <slot name="right"></slot>
@@ -13,19 +28,19 @@
   </div>
 </template>
 
+<i18n>
+back_text:
+  en: Back
+  zh-CN: 返回
+</i18n>
+
 <script>
+import objectAssign from 'object-assign'
+
 export default {
+  name: 'x-header',
   props: {
-    leftOptions: {
-      type: Object,
-      default () {
-        return {
-          showBack: true,
-          backText: 'Back',
-          preventGoBack: false
-        }
-      }
-    },
+    leftOptions: Object,
     title: String,
     transition: String,
     rightOptions: {
@@ -37,13 +52,31 @@ export default {
       }
     }
   },
+  beforeMount () {
+    if (this.$slots['overwrite-title']) {
+      this.shouldOverWriteTitle = true
+    }
+  },
+  computed: {
+    _leftOptions () {
+      return objectAssign({
+        showBack: true,
+        preventGoBack: false
+      }, this.leftOptions || {})
+    }
+  },
   methods: {
     onClickBack () {
-      if (this.leftOptions.preventGoBack) {
+      if (this._leftOptions.preventGoBack) {
         this.$emit('on-click-back')
       } else {
-        history.back()
+        this.$router ? this.$router.back() : window.history.back()
       }
+    }
+  },
+  data () {
+    return {
+      shouldOverWriteTitle: false
     }
   }
 }
@@ -56,21 +89,22 @@ export default {
   position: relative;
   padding: 3px 0;
   box-sizing: border-box;
-  background-color: @x-header-background-color;
+  background-color: @header-background-color;
 }
-.vux-header .vux-header-title,.vux-header h1 {
-  margin: 0 88px;
-  margin-left: 100px;
+.vux-header .vux-header-title {
   line-height: 40px;
   text-align: center;
-  height: 40px;
   font-size: 18px;
   font-weight: 400;
+  color: @header-title-color;
+}
+.vux-header-title-area, .vux-header .vux-header-title {
+  margin: 0 88px;
+  height: 40px;
   width: auto;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: @x-header-title-color;
 }
 .vux-header .vux-header-title > span {
   display: inline-block;
@@ -81,12 +115,12 @@ export default {
   display: block;
   font-size: 14px;
   line-height: 21px;
-  color: @x-header-text-color;
+  color: @header-text-color;
 }
 .vux-header .vux-header-left a,.vux-header .vux-header-left button,.vux-header .vux-header-right a,.vux-header .vux-header-right button {
   float: left;
   margin-right: 8px;
-  color: @x-header-text-color;
+  color: @header-text-color;
 }
 .vux-header .vux-header-left a:active,.vux-header .vux-header-left button:active,.vux-header .vux-header-right a:active,.vux-header .vux-header-right button:active {
   opacity: .5
@@ -109,7 +143,7 @@ export default {
     position: absolute;
     width: 12px;
     height: 12px;
-    border: 1px solid @x-header-arrow-color;
+    border: 1px solid @header-arrow-color;
     border-width: 1px 0 0 1px;
     transform: rotate(315deg);
     top: 8px;
@@ -127,18 +161,30 @@ export default {
   content: "\2022\0020\2022\0020\2022\0020";
   font-size: 16px;
 }
-.vux-header-fade-in-right-enter {
+.vux-header-fade-in-right-enter-active {
   animation: fadeinR .5s;
 }
-.vux-header-fade-in-left-enter {
+.vux-header-fade-in-left-enter-active {
   animation: fadeinL .5s;
 }
-@keyframes fadeinR{
-  0%{opacity:0;transform:translateX(80px);}
-  100%{opacity:1;transform:translateX(0);}
+@keyframes fadeinR {
+  0% {
+    opacity: 0;
+    transform: translateX(150px);
+  }
+  100% {
+    opacity:1;
+    transform:translateX(0);
+  }
 }
 @keyframes fadeinL{
-  0%{opacity:0;transform:translateX(-80px);}
-  100%{opacity:1;transform:translateX(0);}
+  0% {
+    opacity: 0;
+    transform: translateX(-150px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 </style>

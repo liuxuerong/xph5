@@ -1,5 +1,5 @@
 <template>
- <div class="goodsItem">
+  <div class="goodsItem">
     <div class="imgContainer">
       <router-link :to="'/details/'+goodsData.goodsId">
         <img v-lazy="imageUrl+goodsData.goodsPic" alt="">
@@ -38,11 +38,14 @@ export default {
     // 格式化商品信息
     formatSpec: function () {
       let specArr = JSON.parse(this.goodsData.goodsSpec)
-      let spec = ''
-      for (let item of specArr) {
-        spec += item.value + '/'
+      let spec = null
+      if (specArr.length) {
+        spec = ''
+        for (let item of specArr) {
+          spec += item.value + '/'
+        }
+        spec = spec.substring(0, spec.length - 1)
       }
-      spec = spec.substring(0, spec.length - 1)
       return spec
     }
   },

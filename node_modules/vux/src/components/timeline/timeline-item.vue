@@ -14,6 +14,7 @@
 import Icon from '../icon'
 
 export default {
+  name: 'timeline-item',
   data () {
     return {
       isLast: true,
@@ -21,7 +22,7 @@ export default {
       headStyle: { backgroundColor: this.$parent.color }
     }
   },
-  ready () {
+  mounted () {
     this.$parent.setChildProps()
   },
   beforeDestroy () {

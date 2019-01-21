@@ -8,9 +8,13 @@
 const prefixList = ['-moz-box-', '-webkit-box-', '']
 
 export default {
+  name: 'flexbox-item',
   props: {
     span: [Number, String],
     order: [Number, String]
+  },
+  beforeMount () {
+    this.bodyWidth = document.documentElement.offsetWidth
   },
   methods: {
     buildWidth (width) {
@@ -29,11 +33,14 @@ export default {
     style () {
       let styles = {}
       let marginName = this.$parent.orient === 'horizontal' ? 'marginLeft' : 'marginTop'
-      styles[marginName] = `${this.$parent.gutter}px`
+
+      if (this.$parent.gutter * 1 !== 0) {
+        styles[marginName] = `${this.$parent.gutter}px`
+      }
 
       if (this.span) {
         for (let i = 0; i < prefixList.length; i++) {
-          styles[prefixList[i] + 'flex'] = `0 0 ${this.buildWidth(this.span) * 100}%`
+          styles[`${prefixList[i]}flex`] = `0 0 ${this.buildWidth(this.span) * 100}%`
         }
       }
       if (typeof this.order !== 'undefined') {
@@ -44,7 +51,7 @@ export default {
   },
   data () {
     return {
-      bodyWidth: document.documentElement.offsetWidth
+      bodyWidth: 0
     }
   }
 }
