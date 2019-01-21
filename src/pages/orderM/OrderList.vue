@@ -70,6 +70,12 @@ export default {
   },
   mounted () {
     this.currentIndex = this.$route.path.split('/')[2]
+    window.addEventListener('pageshow', function(e) {
+    // 通过persisted属性判断是否存在 BF Cache
+    if (e.persisted) {
+        location.reload();
+     }
+    });
   }
 }
 </script>
