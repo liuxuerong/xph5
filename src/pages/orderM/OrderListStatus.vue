@@ -38,9 +38,9 @@
              <span class="glod"  v-if="item.status==4" @click="immedEvaluate(item.orderSn)">
                 评价
               </span>
-               <span class="gray"  v-if="(item.status==4||item.status==5)&&item.invoiceId">
+               <!-- <span class="gray"  v-if="(item.status==4||item.status==5)&&item.invoiceId">
                 查看发票
-              </span>
+              </span> -->
               <span class="glod" v-if="item.status==6" @click="deleteSure(item.orderSn)">
                 删除订单
               </span>
