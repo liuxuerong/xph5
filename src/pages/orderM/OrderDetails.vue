@@ -37,7 +37,7 @@
             </li>
           </ul>
         </div>
-        <div class="wrap" v-if="orderData.invoice&&orderData.invoice.invoiceStatus==1&&orderData.examineStatus!=6">
+        <div class="wrap" v-if="orderData.invoice&&orderData.invoice.invoiceStatus==1&&orderData.invoice.examineStatus!=6">
           <div class="title">
             <h4>发票信息</h4>
             <!-- <div class="btn" v-if="orderData.invoice">查看发票</div> -->
@@ -51,7 +51,7 @@
           </ul>
 
         </div>
-        <div class="wrap" v-else>
+        <div class="wrap" v-if="!orderData.invoice">
           <div class="title">
             <h4>发票信息</h4>
             <!-- <div class="btn" v-if="orderData.invoice">查看发票</div> -->
