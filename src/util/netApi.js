@@ -97,7 +97,7 @@ export const delInvoice = { url: '/invoice/api', method: 'DELETE', version: v1, 
 export const addOrderInvoice = { url: '/order/invoice/bind', method: 'PUT', version: v2, join: true } // 订单绑定发票
 
 // 个人中心
-export const memberCenter = { url: '/member/api/center', method: 'GET', version: v1 }
+export const memberCenter = { url: '/member/api/center', method: 'GET', version: v2 }
 
 // 订单
 export const OrderList1 = { url: '/order/member/orders', method: 'GET', version: v1 } // 订单列表
