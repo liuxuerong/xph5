@@ -69,6 +69,7 @@ export default {
       padding 0 50px 40px
       .collection
         margin-top 30px
+        margin-left 30px
     .title
       font-size 56px
       font-weight 600
