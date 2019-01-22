@@ -21,7 +21,7 @@
     </div>
     <mt-popup position="bottom" v-model="popVisible" @touchmove.prevent>
       <div class="popWrap">
-        <img class="logisticsInfo" src="/static/images/logisticsInform.png" alt="">
+        <div class="logisticsInfo"></div>
         <div class="btn" @click="closeLogistics">
           <img src="/static/images/indexClose.png" alt="">
         </div>
@@ -118,7 +118,7 @@ export default {
     }
   },
   created () {
-    this.popVisible = !storage.getLocalStorage(logisticsInform)
+    // this.popVisible = !storage.getLocalStorage(logisticsInform)
   },
   mounted () {
     this.getHallData()
@@ -175,9 +175,12 @@ export default {
 .swiper-container
   width 100%
 .popWrap
+  padding-top 10vh
   .logisticsInfo
-    width calc(100%-(100px))
-    margin 100px 50px
+    width 53vh
+    height 70vh
+    margin 0 auto 100px
+    background url('/static/images/logisticsInform.png') no-repeat center center /100% 100%
   .btn
     margin 0 auto
     width 200px

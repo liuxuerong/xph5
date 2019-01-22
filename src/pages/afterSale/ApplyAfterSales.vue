@@ -203,7 +203,6 @@ export default {
       this.params.type = this.$route.params.type
       this.params.orderItemId = this.$route.params.orderItemId
       this.goodsData = storage.getLocalStorage(aftersale)
-         console.log(  this.goodsData )
       this.params.num = this.goodsData.num
       this.orderStatus = this.$route.params.orderStatus
       if (this.params.type == 1) { // 仅退款
