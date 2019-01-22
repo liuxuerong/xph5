@@ -5,18 +5,21 @@
         <img v-lazy="imageUrl+pricesData.pic" alt="">
       </div>
       <div class="info">
-        <div class="left">
-          <p class="name">
-            {{pricesData.name}}
-          </p>
-          <div class="promotion" >
-            <span class="promotionItem" v-for="(item,index) in pricesData.spec" :key="index">{{item}}</span>
+        <p class="name">
+          {{pricesData.name}}
+        </p>
+        <div class="wrap">
+          <div class="promotion">
+            <span class="promotionItem" v-for="(item,index) in pricesData.spec" :key="index">
+              <i v-if="index+1<pricesData.spec.length">{{item}}/</i>
+              <i v-else>{{item}}</i>
+              </span>
           </div>
-          <p class="price">¥{{pricesData.price}}</p>
+          <div class="num">
+            x{{pricesData.num}}
+          </div>
         </div>
-        <div class="num">
-          x{{pricesData.num}}
-        </div>
+        <p class="price">¥{{pricesData.price}}</p>
       </div>
     </router-link>
   </div>
@@ -58,35 +61,39 @@ export default {
       height 100%
   .info
     flex 1
-    display flex
+    width 60%
     padding-left 50px
     align-items top
     justify-content space-between
-  .left
-    width 600px
   .name
-    flex 1
+    width 100%
     height 60px
     line-height 60px
+    font-size 46px
     ellipsis()
-    color #262626
+    font-weight bold
+    color #333
   .price
     height 50px
     line-height 50px
     ellipsis()
-    font-size 36px
-    color #000
+    font-size 46px
+    color #333
   .promotion
-    width 100%
+    width 80%
+    display inline-block
     .promotionItem
-      font-size 30px
+      font-size 36px
       color #808080
       display inline-block
-      margin-right 20px
   .num
-    font-size 36px
-    color #262626
+    font-size 40px
+    color #333333
     height 60px
     line-height 60px
-
+    display inline-block
+    width 14%
+    vertical-align top
+    text-align right
+    font-weight 600
 </style>

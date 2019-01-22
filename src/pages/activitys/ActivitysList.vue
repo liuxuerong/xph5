@@ -138,4 +138,7 @@ export default {
   .activityCategoryBox
     width 100%
     background #fff
+.isEmpty >>> .commonEmpty img
+  width 895px
+  height 540px
 </style>

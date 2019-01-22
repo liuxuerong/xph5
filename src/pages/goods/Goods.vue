@@ -9,7 +9,6 @@
           <div class="xpGoodsTopContent">
             <tab v-if="tabbar.length" :scroll-threshold="2">
               <tab-item :selected="index==currentIndex" @on-item-click="onItemClick" v-for="(item,index) in tabbar" :key="item.id" :id="item.id" ref="tabItem">{{item.catName}}</tab-item>
-              <!-- <tab-item></tab-item> -->
             </tab>
           </div>
         </div>

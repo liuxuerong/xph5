@@ -109,6 +109,7 @@ export default {
     // 获取页面资料信息
     getUserInfo () {
       http(memberData).then((response) => {
+        console.log(response)
         let data = response.data.body
         this.memberLevelName = data.memberLevelName + '会员'
         this.name = data.name
@@ -125,7 +126,7 @@ export default {
           this.phone = data.phone.substring(0, 3) + '****' + data.phone.substring(7, 11)
         }
         if (data.ageGroup !== '' && data.ageGroup != null) {
-          this.age = data.ageGroup
+          this.age = data.birthday
           if (data.birthdayStatus === 2) {
             this.birthdayStatus = 2
           }
@@ -198,9 +199,10 @@ export default {
         headImage: this.headImage,
         name: this.modifyName,
         sex: this.sexIndex,
-        ageGroup: this.age
+        birthday: this.age
       }
       http(setMemberData, param).then((response) => {
+        console.log(response)
         if (response.data.code === 0) {
           notice.toast('设置成功', '2000', 'success')
           storage.delLocalStorage('modifyName')

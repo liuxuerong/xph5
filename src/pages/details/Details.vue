@@ -25,7 +25,7 @@
       </div>
     </div>
     <div class="goodsStatus" v-if="goodsStatus!=1">商品已经{{goodsStatusText}}</div>
-    <details-operate class="detailsOperate" :goodsItems="goodsItems" :goodsStatus="goodsStatus"/>
+    <details-operate class="detailsOperate" :goodsItems="goodsItems" :goodsStatus="goodsStatus" :goods="goods"/>
     <details-pop-up :sku="sku" v-if="sku" :goods="goods" :goodsStatus="goodsStatus"/>
     <details-coupon :couponData = "couponData"></details-coupon>
     </div>
@@ -135,9 +135,6 @@ export default {
   watch: {
     $route (to, from) {
       this.scroll.refresh()
-      // if (to.name === 'Details') {
-      //   this.initDeatils()
-      // }
     },
     popupVisible: function (curval) {
       if (curval) {
@@ -292,7 +289,6 @@ export default {
             this.goodsComment = res.data.body.goodsComments
             this.changeNowPrice(res.data.body.goods.minPrice)
             storage.setLocalStorage(comment, res.data.body.goodsComments)
-            console.log(comment)
             let totals = res.data.body.goodsComments.totals
             if (totals >= 999) {
               totals = '999+'

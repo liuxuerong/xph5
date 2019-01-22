@@ -68,6 +68,9 @@ export default {
     this.timer = setInterval(() => {
       this.setNewSwiperData()
     }, 1000)
+  },
+  beforeDestroy () {
+    clearInterval(this.timer)
   }
 }
 </script>

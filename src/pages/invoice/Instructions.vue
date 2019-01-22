@@ -1,6 +1,6 @@
 <template>
-  <div class="instructions">
-    <common-nav-header :title="title" />
+  <div class="instructions" :class="{pt0:hideHead}">
+    <common-nav-header :title="title"  v-if="!hideHead" />
     <div class="instructionsWrap" ref="instructionsWrap">
       <div>
         <h4>一、开票条件
@@ -32,6 +32,8 @@
 <script>
 import CommonNavHeader from 'common/commonHeader/CommonNavHeader'
 import BScroll from 'better-scroll'
+import { getUrlParam } from '@/func/params'
+import dsbridge from 'dsbridge'
 export default {
   name: 'Instructions',
   components: {
@@ -39,7 +41,8 @@ export default {
   },
   data () {
     return {
-      title: '发票须知'
+      title: '发票须知',
+      hideHead: false
     }
   },
   methods: {
@@ -56,11 +59,24 @@ export default {
       } else {
         this.scroll.refresh()
       }
+    },
+    returnTitle (title) {
+      dsbridge.call('getTitle', title, function (v) {
+        alert(v)
+      })
+    },
+    hideHeads () {
+      this.platform = getUrlParam('platform')
+      if (this.platform && this.platform !== '') {
+        this.hideHead = true
+      }
     }
   },
   mounted () {
     setTimeout(() => {
       this.scrollInit()
+      this.returnTitle(this.title.trim())
+      this.hideHeads()
     }, 16)
   }
 }
@@ -70,6 +86,8 @@ export default {
 .instructions
   height 100%
   padding-top 120px
+.pt0
+  padding-top 0
 .instructionsWrap
   color #262626
   padding 0 50px

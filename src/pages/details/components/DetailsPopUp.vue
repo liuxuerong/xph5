@@ -64,11 +64,16 @@ export default {
   props: {
     sku: Object,
     goods: Object,
-    goodsStatus: Number
+    goodsStatus: Number,
+    shoppingCartId: {
+      type: String,
+      default: ''
+    }
   },
   data () {
     return {
       SKUResult: {},
+      olderCartCount: 1,
       cartCount: 1,
       type: 1,
       goodsItemsId: '',
@@ -84,7 +89,7 @@ export default {
   watch: {
     cartCount (v) {
       this.changeStyle(v)
-      if (this.cartCount >= this.maxCount) {
+      if (this.cartCount > this.maxCount) {
         Toast({
           message: '数量超出库存范围',
           position: 'center',
@@ -94,8 +99,9 @@ export default {
           return
         }
         this.cartCount = this.maxCount
+        return
       }
-      if (this.cartCount < 2) {
+      if (this.cartCount !== '' && this.cartCount < 1) {
         this.cartCount = 1
         Toast({
           message: '不能再少了',
@@ -118,12 +124,13 @@ export default {
     addCount () {
       this.cartCount++
     },
+    setCartCount () {
 
+    },
     subCount () {
       this.cartCount--
     },
     changeStyle (v) {
-      console.log(this.maxCount)
       if (v >= this.maxCount) {
         this.addDisabled = true
       } else {
@@ -188,16 +195,18 @@ export default {
       if (this.isAllCheck()) {
         const params = {
           goodsItemId: this.goodsItemsId,
-          num: this.cartCount
+          num: this.cartCount,
+          shoppingCartId: this.shoppingCartId
         }
         http(addCart, params).then(res => {
           if (res.data.code === 0) {
             Toast({
               message: '添加购物车成功',
               position: 'bottom',
-              duration: 500
+              duration: 1000
             })
             this.changePopupVisible(false)
+            this.$emit('addCart')
           } else {
             Toast({
               message: res.data.message,

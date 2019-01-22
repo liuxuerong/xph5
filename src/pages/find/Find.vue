@@ -17,17 +17,17 @@
           <index-swiper ref="indexSwiper" v-if="IndexSwiperShow" />
           <div class="navBox">
             <div class="item wrap left" @click="touristToolCenter">
-              <h2>会员福利</h2>
-              <h4>material comforts</h4>
+              <!-- <h2>会员福利</h2>
+              <h4>material comforts</h4> -->
             </div>
             <div class="right wrap">
               <router-link to="/activitysList" class="item top">
-                <h2>活动精选</h2>
-                <h4>Featured</h4>
+                <!-- <h2>活动精选</h2>
+                <h4>Featured</h4> -->
               </router-link>
               <router-link to="/hotel" class="item bottom">
-                <h2>酒店用品</h2>
-                <h4>hotel supplies</h4>
+                <!-- <h2>酒店用品</h2>
+                <h4>hotel supplies</h4> -->
               </router-link>
             </div>
           </div>
@@ -35,9 +35,9 @@
           <index-store-activity :swiperData="franchiseeActivitys" v-if="franchiseeActivitys.length" />
           <index-new-products :swiperData="newProducts" v-if="newProducts.length" />
           <index-goods-label :goodsLabel="goodsLabel" v-if="goodsLabel" />
-          <h6 class="className">热门品类</h6>
+          <h6 class="className" v-if="tabbar.length">热门品类</h6>
         </div>
-        <div ref="xpStoryContent" class="xpStoryContent" :class="{fixed:isFixed}">
+        <div ref="xpStoryContent" class="xpStoryContent" :class="{fixed:isFixed}" v-if="tabbar.length">
           <div class="xpStoryContentChild">
             <div class="xpGoodsTop" ref="xpGoodsTop" v-show="!isFixed">
               <div class="xpGoodsTopContent">
@@ -46,7 +46,7 @@
                 </tab>
               </div>
             </div>
-            <ul class="goodsContainer" v-if="goodsListData.length">
+            <ul class="goodsContainer" v-if="goodsListData.length&&tabbar.length">
               <div class="classfiyBanner" ref="classfiyBanner">
                 <img :src="imageUrl+tabbar[pageIndex].appImage" alt="">
               </div>
@@ -89,7 +89,6 @@ import {
   http
 } from 'util/request'
 import {
-  // category,
   goodsList,
   findData
 } from 'util/netApi'
@@ -182,6 +181,7 @@ export default {
       this.noMore = false
       this.getGoodsList(this.categoryId, this.page)
     },
+    // 热门品类
     getGoodsList (categoryId, page) {
       const param = {
         page: page,
@@ -190,15 +190,17 @@ export default {
       }
       if (!this.noMore) {
         http(goodsList, param).then(res => {
+          console.log(res)
           if (this.page !== 1 && res.data.body.list.length === 0) {
             this.noMore = true
           }
           this.goodsListData = this.goodsListData.concat(res.data.body.list)
           this.$nextTick(function () {
             this.timer = setTimeout(() => {
+              console.log(5555)
               this.commonHeader = this.$refs.commonHeader.$el.offsetHeight
               this.index = this.$refs.index
-              if (this.$refs.goodsItem.length) {
+              if (this.$refs.goodsItem && this.$refs.goodsItem.length) {
                 this.goodsItemH = this.$refs.goodsItem[0].offsetHeight
                 this.classfiyBannerH = this.$refs.classfiyBanner.offsetHeight
               }
@@ -235,11 +237,10 @@ export default {
     }
   },
   mounted () {
-    // this.getTabbar()
     this.getFindData()
   },
   destroyed () {
-    this.timer = null
+    clearInterval(this.timer)
     const _this = this
     window.removeEventListener('scroll', _this.getTop)
   }

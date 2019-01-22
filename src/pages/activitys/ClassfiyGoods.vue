@@ -122,7 +122,11 @@ export default {
     this.setNewSwiperData()
     this.timer = setInterval(() => {
       this.setNewSwiperData()
+      console.log(789)
     }, 1000)
+  },
+  destroyed () {
+    this.timer = null
   }
 }
 </script>

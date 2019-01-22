@@ -2,31 +2,30 @@
   <div class="orderIndex">
     <div class="centerTitle">
       <h3 class="bgFontTitle">我的订单</h3>
-      <span class="seeMore" @click="oderListMore(-1)">查看全部<i class="moreIcon"></i></span>
+      <router-link class="seeMore" to="/orderList/-1">查看全部<i class="moreIcon"></i></router-link>
     </div>
     <div class="orderBox">
-      <router-link class="orderItem" to="./orderList/1">
+      <router-link class="orderItem" to="/orderList/1">
       <span class="orderNumTips" v-if="orderNum.pendingPayment!=='0'">{{orderNum.pendingPayment}}</span>
       <i class="orderIcon orderIcon01"></i>
       待付款
       </router-link>
-      <router-link class="orderItem" to="./orderList/2">
+      <router-link class="orderItem" to="/orderList/2">
       <span class="orderNumTips" v-if="orderNum.delivered!=='0'">{{orderNum.delivered}}</span>
       <i class="orderIcon orderIcon02"></i>
       待发货
       </router-link>
-      <router-link class="orderItem" to="./orderList/3">
+      <router-link class="orderItem" to="/orderList/3">
       <span class="orderNumTips" v-if="orderNum.receive!=='0'">{{orderNum.receive}}</span>
       <i class="orderIcon orderIcon03"></i>
       待收货
       </router-link>
-      <router-link class="orderItem" to="./orderList/4">
+      <router-link class="orderItem" to="/orderList/4">
       <span class="orderNumTips" v-if="orderNum.evaluated!=='0'">{{orderNum.evaluated}}</span>
       <i class="orderIcon orderIcon04"></i>
       待评价
       </router-link>
-      <router-link class="orderItem" to="./orderList/5">
-      <!-- <span class="orderNumTips" v-if="orderNum.refund!=='0'">{{orderNum.refund}}</span> -->
+      <router-link class="orderItem" to="/afterSaleList">
       <i class="orderIcon orderIcon05"></i>
       退款/售后
       </router-link>
@@ -49,7 +48,7 @@ export default {
   },
   methods: {
     oderListMore (type) {
-      this.$router.push('/orderList/' + type)
+      this.$router.push('/orderList1/' + type)
     }
   },
   mounted () {

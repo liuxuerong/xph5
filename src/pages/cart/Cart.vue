@@ -1,24 +1,37 @@
 <template>
   <div class="xpCart">
     <common-nav-header :title="title">
-      <div class="edit"  v-if="goodsList.length" @click.prevent="changeShowModify()">
+      <div class="edit" v-if="goodsList.length" @click.prevent="changeShowModify()">
         {{text}}
       </div>
     </common-nav-header>
+
     <div class="goodsWrap" ref="goodsWrap">
       <div>
-        <div v-if="cartList.length">
-          <goods-item  v-for="item in cartList" :key="item.id" :goodsItem="item" :showModify="showModify"></goods-item>
+        <div class="topWrap clearfix" v-if="goodsList.length">
+          <div class="goodsNum fl" v-if="goodsList.length">
+            共
+            <i>{{totals}}</i> 件商品
+          </div>
+          <div @click="chooseCoupons" class="fr btn">
+            优惠券</div>
         </div>
-        <div class="disabledWrap" v-if="disabledCartList.length" >
-          <div class="empty" @click="emptyNoInventory">清空失效商品</div>
-          <goods-item  v-for="item in disabledCartList" :key="item.id" :goodsItem="item" :disabled="true"></goods-item>
+        <div v-if="cartList.length" class="abledWrap">
+          <goods-item v-for="item in cartList" :key="item.id" :goodsItem="item" :showModify="showModify " @reselect="reselect" @refresh="getCartList"></goods-item>
+        </div>
+        <div class="disabledWrap" v-if="disabledCartList.length">
+          <div class="empty">
+            <div class="text">以下商品为失效商品，不可购买</div>
+            <div  class="btn" @click="sureEmpty">清空失效商品</div></div>
+          <goods-item v-for="item in disabledCartList" :key="item.id" :goodsItem="item" :disabled="true" @reselect="reselect"></goods-item>
         </div>
         <divider v-if="noMore&&goodsList.length">已经到达最底部</divider>
       </div>
-      <common-empty v-if="goodsList.length<1" :emptyObj="emptyObj"/>
+      <common-empty v-if="goodsList.length<1" :emptyObj="emptyObj" />
     </div>
-    <cart-operate  v-if="goodsList.length" :showModify="showModify" :page="page" :rows="rows"/>
+    <cart-operate v-if="goodsList.length" :showModify="showModify" :page="page" :rows="rows" @buy="changeData" :cartList="cartList"/>
+    <order-pop-up :unsatisfactoryData="unsatisfactoryData" v-if="unsatisfactoryData.length" @remove="remove" @orderPopUpShow="orderPopUpShow"/>
+    <details-pop-up :sku="sku" v-if="sku" :goods="goods" :goodsStatus="goodsStatus" :shoppingCartId="shoppingCartId" @addCart="addCart"/>
   </div>
 </template>
 
@@ -28,10 +41,11 @@ import CommonEmpty from 'common/commonEmpty/CommonEmpty'
 import CommonNavHeader from 'common/commonHeader/CommonNavHeader'
 import GoodsItem from './components/GoodsItem'
 import CartOperate from './components/CartOperate'
-
+import DetailsPopUp from '../details/components/DetailsPopUp'
 import {
   Toast
 } from 'mint-ui'
+import notice from 'util/notice'
 import {
   Divider
 } from 'vux'
@@ -40,15 +54,21 @@ import {
 } from 'util/request'
 import {
   listCart,
-  delCart
+  delCart,
+  goodsDetail
 } from 'util/netApi'
 import {
   mapState,
   mapMutations,
   mapActions
 } from 'vuex'
-import { cartGoods } from 'util/const'
-import {storage} from 'util/storage'
+import OrderPopUp from './components/OrderPopUp'
+import {
+  storage
+} from 'util/storage'
+import {
+  couponByGoods, goodsInfo
+} from 'util/const.js'
 export default {
   name: 'Cart',
   components: {
@@ -56,7 +76,9 @@ export default {
     CommonNavHeader,
     GoodsItem,
     CartOperate,
-    Divider
+    Divider,
+    OrderPopUp,
+    DetailsPopUp
   },
   data () {
     return {
@@ -71,11 +93,17 @@ export default {
       cartList: [],
       disabledCartList: [],
       showModify: false,
-      text: '编辑',
+      text: '管理',
       page: 1,
       noMore: false,
       totals: 0,
-      rows: 20
+      rows: 20,
+      unsatisfactoryData: [],
+      goodsId: '',
+      goodsStatus: 1,
+      goods: null,
+      sku: null,
+      shoppingCartId: ''
     }
   },
   watch: {
@@ -84,9 +112,9 @@ export default {
       this.disabledCartList = []
       for (let i = 0; i < v.length; i++) {
         if (v[i].status === '1') {
-          this.cartList.push(v[i])
+          this.cartList.push(v[i]) // 能够编辑的
         } else {
-          this.disabledCartList.push(v[i])
+          this.disabledCartList.push(v[i]) // 失效的
         }
       }
     },
@@ -94,9 +122,6 @@ export default {
       if (to.name === 'Cart') {
         this.page = 0
         this.getCartList()
-      }
-      if (from.path === '/cart/1' && to.path === '/cart') {
-        this.$router.go(-1)
       }
     },
     isAllSelect (v) {
@@ -111,12 +136,41 @@ export default {
   },
   computed: mapState({
     goodsList: state => state.cart.goodsList,
-    clearNum: state => state.cart.clearNum,
-    isAllSelect: state => state.cart.isAllSelect
+    isAllSelect: state => state.cart.isAllSelect,
+    clearNum: state => state.cart.clearNum
   }),
   methods: {
-    ...mapMutations(['changeGoodsList', 'changeClearNum', 'changeIsAllSelect']),
-    ...mapActions(['refreshCart']),
+    ...mapMutations(['changeGoodsList', 'changeIsAllSelect', 'changeClearNum', 'changePopupVisible', 'changeFrom']),
+    ...mapActions(['refreshCart', 'pushKeys']),
+    // 重新选择
+    reselect (goodsId, id) {
+      this.shoppingCartId = id
+      this.goodsId = goodsId
+      this.changePopupVisible(true)
+      // 商品详情
+      if (this.goodsId !== '' || this.goodsId !== undefined) {
+        http(goodsDetail, [this.goodsId])
+          .then(res => {
+            console.log(res)
+            this.goodsStatus = res.data.body.status
+            this.goods = res.data.body.goods
+            this.changeFrom(2)
+            this.pushKeys(res.data.body.goodsItems).then(res => {
+              console.log(res, 122)
+              this.sku = res
+            }).catch(err => {
+              console.log(err, 444)
+            })
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+    },
+    // 加入之后重新刷新页面
+    addCart () {
+      this.$router.go(0)
+    },
     scrollInit () {
       if (!this.scroll) {
         this.scroll = new BScroll(this.$refs.goodsWrap, {
@@ -143,6 +197,87 @@ export default {
         this.scroll.finishPullUp()
       }
     },
+    changeData () {
+      let parmas = {
+        page: 1,
+        rows: this.totals
+      }
+      let goodsObj = {
+        key: '',
+        shippingMethod: '',
+        favorableId: '',
+        fromCart: true
+      }
+      http(listCart, parmas).then(res => {
+        if (res.data.code === 0) {
+          let newList = res.data.body.list
+          for (let i = 0; i < this.clearNum.length; i++) {
+            for (let j = 0; j < newList.length; j++) {
+              if (this.clearNum[i].goodsItemId == newList[j].goodsItemId) {
+                this.goodsList.stock = newList[j].stock
+                this.clearNum[i].stock = newList[j].stock
+              }
+            }
+          }
+          this.changeGoodsList(this.goodsList)
+          goodsObj.goodsItems = []
+          for (let i = 0; i < this.clearNum.length; i++) {
+            if (this.clearNum[i].status === '1') {
+              if (this.clearNum[i].value) {
+                if (this.clearNum[i].num > this.clearNum[i].stock) {
+                  this.unsatisfactoryData.push(this.clearNum[i])
+                } else {
+                  goodsObj.goodsItems.push(this.clearNum[i])
+                }
+              }
+            }
+          }
+          storage.setLocalStorage(goodsInfo, goodsObj)
+          if (!this.unsatisfactoryData.length) {
+            this.$router.push('/createOrder')
+          }
+        }
+      })
+    },
+    remove () {
+      let goodsList = this.goodsList
+      let newClearNum = []
+      for (let i = 0; i < goodsList.length; i++) {
+        if (goodsList[i].num > goodsList[i].stock) {
+          goodsList[i].value = false
+        }
+      }
+      for (let i = 0; i < this.clearNum.length; i++) {
+        if (this.clearNum[i].num <= this.clearNum[i].stock) {
+          newClearNum.push(this.clearNum[i])
+        }
+      }
+      this.changeClearNum(newClearNum)
+      this.unsatisfactoryData = []
+      this.refreshCart({
+        isAllSelect: false,
+        goodsList: goodsList,
+        clearNum: this.clearNum
+      })
+      if (this.clearNum.length) {
+        this.$router.push('/createOrder')
+      }
+
+      // this.changeIsAllSelect(false)
+      // this.changeGoodsList(goodsList)
+      // this.changeClearNum(clearNum)
+      // for (let i = 0; i < this.clearNum.length; i++) {
+      //   if (this.clearNum[i].num < this.clearNum[i].stock) {
+      //     this.clearNum[i].value = false
+      //     this.changeIsAllSelect(false)
+      //   }
+      // }
+    },
+    orderPopUpShow (v) {
+      if (!v) {
+        this.unsatisfactoryData = []
+      }
+    },
     getCartList () {
       let parmas = {
         page: this.page,
@@ -159,21 +294,29 @@ export default {
             }
             let cartList = res.data.body.list
             for (let i = 0; i < cartList.length; i++) {
+              // 假如为管理状态的话，所有库存不符合的也可以选择
               if (!this.isAllSelect) {
                 cartList[i].value = false
               } else {
-                cartList[i].value = true
+                if (this.showModify) {
+                  cartList[i].value = true
+                } else {
+                  if (cartList[i].stock !== 0) {
+                    cartList[i].value = true
+                  }
+                }
               }
-
+              console.log(cartList, 'cartList')
+              if (!this.isAllSelect) {
+                cartList = [...this.goodsList, ...cartList]
+              }
               if (cartList[i].status === '1') {
                 this.cartList.push(cartList[i])
               } else {
                 this.disabledCartList.push(cartList[i])
               }
             }
-            if (!this.isAllSelect) {
-              cartList = [...this.goodsList, ...cartList]
-            }
+
             this.changeGoodsList(cartList)
             this.scrollInit()
           }
@@ -184,13 +327,18 @@ export default {
     },
     changeShowModify () {
       this.showModify = !this.showModify
+      this.changeIsAllSelect(false)
       if (this.showModify) {
         this.text = '完成'
         // 修改购物车数量
       } else {
-        this.text = '编辑'
+        this.text = '管理'
       }
     },
+    sureEmpty () {
+      notice.confirm('是否确认清空全部失效商品？', '商品清空后将无法恢复', this.emptyNoInventory, '继续删除')
+    },
+    // 清除失效商品
     emptyNoInventory () {
       let id = ''
       for (let i = 0; i < this.disabledCartList.length; i++) {
@@ -210,54 +358,97 @@ export default {
       }).catch(err => {
         console.log(err)
       })
+    },
+    // 使用优惠券
+    chooseCoupons () {
+      let couponArr = []
+      for (let i = 0; i < this.cartList.length; i++) {
+        couponArr[i] = {
+          'goodsItemId': this.cartList[i].goodsItemId,
+          'num': this.cartList[i].num
+        }
+      }
+      storage.setLocalStorage(couponByGoods, couponArr)
+      this.$router.replace('/chooseCoupons/1')
     }
   },
   mounted () {
-    this.refreshCart({isAllSelect: false, goodsList: [], clearNum: []})
-    let goods = storage.getLocalStorage(cartGoods)
-    if (goods) {
-      for (let i in goods.goodsList) {
-        if (goods.goodsList[i].num > goods.goodsList[i].stock) {
-          goods.goodsList[i].value = false
-        }
-      }
-      this.changeGoodsList(goods.goodsList)
-      this.page = goods.page
-      this.rows = goods.rows
-      storage.delLocalStorage(cartGoods)
-      this.scrollInit()
-      // this.noMore = true
-    } else {
-      this.getCartList()
-    }
+    this.refreshCart({
+      isAllSelect: false,
+      goodsList: [],
+      clearNum: []
+    })
+    this.getCartList()
+    document.querySelectorAll('html')[0].classList.add('overH')
+    document.querySelectorAll('body')[0].classList.add('overH')
   },
   destroyed () {
-    this.refreshCart({isAllSelect: false, goodsList: [], clearNum: []})
+    this.refreshCart({
+      isAllSelect: false,
+      goodsList: [],
+      clearNum: []
+    })
+    document.querySelectorAll('html')[0].classList.remove('overH')
+    document.querySelectorAll('body')[0].classList.remove('overH')
   }
 }
 </script>
 
 <style lang="stylus" scoped>
-  .xpCart
+.xpCart >>> .v-modal
+  z-index 99999999!important
+.xpCart >>> .mint-popup
+  z-index 999999999!important
+.xpCart >>> .commonEmpty
+  padding-top 200px !important
+.xpCart
+  height 100%
+  padding-top 120px
+  padding-bottom 148px
+  background #f5f5f5
+  .edit
+    font-size 40px
+    color #666666
+    position absolute
+    right 50px
+    top 0
+    font-weight normal
+  .goodsWrap
     height 100%
-    padding-top 120px
-    padding-bottom 148px
-    .edit
-      font-size 40px
-      color #262626
-      position absolute
-      right 50px
-      top 0
-    .goodsWrap
-      height 100%
-    .commonEmpty
-      background-color #fff
+    &>div
+      background #f5f5f5
+      padding 0 50px
+  .commonEmpty
+    background-color #fff
+.abledWrap
+  background-color #fff
+  border-radius 20px
 .disabledWrap
+  margin-top 30px
+  background-color #fff
+  border-radius 20px
   .empty
+    display flex
     height 138px
     line-height 138px
     text-align right
-    padding-right 50px
+    padding 0 50px
+    font-size 040px
+    justify-content space-between
+    .btn
+      color #BA825A
+    .text
+      color #666
+.topWrap
+  height 152px
+  line-height 152px
+  font-size #999999
+  padding 0 50px
+  font-size 40px
+  .btn
     font-size 40px
+    font-weight 600
+    color #333
+  i
     color #BA825A
 </style>

@@ -3,8 +3,8 @@ import Vue from 'vue'
 const notice = {
   alert: (title = '提示', content, showFn, hideFn) => {
     return Vue.$vux.alert.show({
-      title: title,
-      content: content,
+      title,
+      content,
       onShow () {
         if (typeof showFn === 'function') {
           showFn()
@@ -34,13 +34,31 @@ const notice = {
   },
   // 操作弹窗
   // 操作框标题，操作框内容，确定按钮的回调函数
-  confirm: (title, content, confirmGoods) => {
+  confirm: (title, content, confirmFn, cancelFn, confirmText = '确定', cancelText = '取消') => {
     return Vue.$vux.confirm.show({
-      title: title,
-      content: content,
+      title,
+      content,
+      confirmText,
+      cancelText,
       onConfirm  () {
-        if (typeof confirmGoods === 'function') {
-          confirmGoods()
+        if (typeof confirmFn === 'function') {
+          confirmFn()
+        }
+      },
+      onCancel () {
+
+      }
+    })
+  },
+  confirm2: (title, content, cancelFn, confirmText = '确定', cancelText = '取消') => {
+    return Vue.$vux.confirm.show({
+      title,
+      content,
+      confirmText,
+      cancelText,
+      onCancel () {
+        if (typeof cancelFn === 'function') {
+          cancelFn()
         }
       }
     })

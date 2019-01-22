@@ -33,6 +33,9 @@ import {
   cartNum,
   customerService
 } from 'util/netApi'
+import {
+  config
+} from 'util/config.js'
 import {storage} from 'util/storage'
 import {accessToken} from 'util/const'
 export default {
@@ -40,12 +43,14 @@ export default {
   data () {
     return {
       collect: false,
-      params: null
+      params: null,
+      imageUrl: config.imageUrl
     }
   },
   props: {
     goodsItems: Array,
-    goodsStatus: Number
+    goodsStatus: Number,
+    goods: Object
   },
   computed: mapState({
     details: state => state.details,
@@ -106,13 +111,18 @@ export default {
     },
     popUpShowBuy () {
       if (this.goodsStatus === 1) {
+        console.log('this.changeFrom')
         this.changeFrom(3)
         this.changePopupVisible(true)
       }
     },
     // 联系客服
     contactService () {
-      window.location.href = customerService
+      let productTitle = this.goods.name
+      let productUrl = `${config.url}/#/details/${this.goods.id}`
+      let productImage = this.imageUrl + this.goods.coverImage
+      let prodect = `&product_title=${productTitle}&product_url=${productUrl}&product_image=${productImage}`
+      window.location.href = customerService + prodect
     }
   },
   created () {
@@ -122,6 +132,7 @@ export default {
     }
   },
   mounted () {
+    console.log(this.goodsItems)
     this.hasCollection(this.params)
     if (storage.getLocalStorage(accessToken)) {
       this.getCartNum()

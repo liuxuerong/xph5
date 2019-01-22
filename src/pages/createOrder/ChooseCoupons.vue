@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <userinfo-header title="选择优惠券" oper=''></userinfo-header>
+    <common-nav-no-memory :title="title" :routeName='routeName'></common-nav-no-memory>
     <div class="cardVoucherCon">
       <div class="cardVoucherPage" v-if="list.length > 0">
         <div class="cardVouItem" v-for="item in list" :key="item.id">
@@ -25,36 +25,64 @@
                 <div v-else class="fullSub">
                   <span>无门槛</span>
                 </div>
-                <span class="operBtn newUse" v-if="item.type == '1' || item.type == '3'"  @click="useCoupon(item.id,item.name,item.type)">立即使用</span>
-                <span class="operBtn newUse" v-else  @click="useCoupon(item.id,item.name,item.type)">立即使用</span>
+                <span class="operBtn newReceive" v-if="type == '1'&&item.useStatus == '1'" @click.stop="receiveCard(item.id)">立即领取</span>
+                <span class="operBtn noReceive" v-if="type == '1'&&item.useStatus == '2'">已领取</span>
+                <span class="operBtn noReceive" v-if="type == '1'&&item.useStatus == '3'">领光了</span>
+                <span class="operBtn newUse" v-if="type == '2'" @click="useCoupon(item.id,item.name,item.type)">立即使用</span>
               </div>
               <div class="activityTime">
-                <span class="countDown" v-if="item.invalidDay > 0">{{item.invalidDay}}天后过期</span>
-                <span class="countDown" v-else-if="item.invalidDay === 0">1天后过期</span>
+                <span class="drawTime" v-if="type==1">
+                      {{item.activityStart|timeFormat}}-{{item.activityEnd|timeFormat}}
+                  </span>
+                <span class="countDown" v-if="item.invalidDay > 0&&type==2">{{item.invalidDay}}天后过期</span>
+                <span class="countDown" v-else-if="item.invalidDay === 0&&type==2">1天后过期</span>
               </div>
             </div>
           </div>
         </div>
-        <div class="noCoupons" @click="noCoupons">不使用优惠券</div>
+        <div class="noCoupons" @click="noCoupons" v-if="type!=1">不使用优惠券</div>
       </div>
       <div class="cardVoucherPage" v-else>
-        <common-empty :emptyObj="emptyObj"/>
+        <common-empty :emptyObj="emptyObj" />
       </div>
     </div>
   </div>
 </template>
+
 <script>
-import UserinfoHeader from '../person/components/ComUserSetHeader'
-import { Tab, TabItem } from 'vux'
-import {listCouponByGoodsItemIds} from 'util/netApi'
-import {http} from 'util/request'
-import {storage} from 'util/storage'
-import {couponByGoods, orderInfo} from 'util/const.js'
+// import UserinfoHeader from '../person/components/ComUserSetHeader'
+import CommonNavNoMemory from 'common/commonHeader/CommonNavNoMemory'
+import {
+  Tab,
+  TabItem
+} from 'vux'
+import {
+  listCouponByGoodsItemIds,
+  memberCouponRecord,
+  listUseCouponByGoodsId
+} from 'util/netApi'
+import {
+  http
+} from 'util/request'
+import {
+  storage
+} from 'util/storage'
+import {
+  couponByGoods,
+  orderInfo
+} from 'util/const.js'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
+import {
+  Toast
+} from 'mint-ui'
 export default {
+  name: 'ChooseCoupons',
   data () {
     return {
       list: [],
+      title: '',
+      type: 1,
+      routeName: '',
       emptyObj: {
         emptyImg: '/static/images/emptyCard.png',
         emptyBold: '暂无卡券',
@@ -65,30 +93,50 @@ export default {
     }
   },
   components: {
-    UserinfoHeader,
+    CommonNavNoMemory,
     Tab,
     TabItem,
     CommonEmpty
   },
+  filters: {
+    timeFormat: function (value) {
+      if (!value) return ''
+      value = value.toString()
+      return value.split('T')[0].replace(/-/g, ',')
+    }
+  },
   methods: {
     // 优惠券页面渲染
-    headleTabsChange () {
+    headleTabsChange (url) {
       let parmas = storage.getLocalStorage(couponByGoods)
-      http(listCouponByGoodsItemIds, parmas).then((response) => {
+      console.log(url)
+      console.log(parmas)
+      http(url, parmas).then((response) => {
+        console.log(response)
         if (response.data.code === 0) {
-          this.list = response.data.body
+          this.list = []
+          for (let item of response.data.body) {
+            if (this.type === '1') {
+              this.list.push(item)
+            } else if (this.type === '2' && item.useStatus === 2) {
+              this.list.push(item)
+            }
+          }
         }
       }).catch((err) => {
         console.log(err)
       })
     },
+
     // 立即使用优惠券
     useCoupon (id, name, type) {
       let info = storage.getLocalStorage(orderInfo) || {}
       info.couponId = id
       info.couponName = name
       storage.setLocalStorage(orderInfo, info)
-      this.$router.replace({path: '/createOrder/3'})
+      this.$router.replace({
+        path: '/createOrder/3'
+      })
     },
     // 不使用优惠券
     noCoupons () {
@@ -96,32 +144,66 @@ export default {
       info.couponId = null
       info.couponName = null
       storage.setLocalStorage(orderInfo, info)
-      this.$router.replace({path: '/createOrder/3'})
+      this.$router.replace({
+        path: '/createOrder/3'
+      })
+    },
+    // 领取优惠券
+    receiveCard (id) {
+      let params = {
+        couponId: id
+      }
+      http(memberCouponRecord, params).then((response) => {
+        console.log(response)
+        if (response.data.code === 0) {
+          Toast({
+            message: '优惠券领取成功',
+            position: 'bottom',
+            duration: 2000
+          })
+          this.headleTabsChange(listUseCouponByGoodsId)
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    }
+  },
+  created () {
+    this.type = this.$route.params.type
+    if (this.type === '1') {
+      this.title = '领取优惠券'
+      this.routeName = '/cart'
+      this.headleTabsChange(listUseCouponByGoodsId)
+    } else {
+      this.title = '选择优惠券'
+      this.routeName = '/createOrder/3'
+      this.headleTabsChange(listCouponByGoodsItemIds)
     }
   },
   mounted () {
-    this.headleTabsChange()
+
   },
   watch: {
     '$route' (to, from) {
-      if (to.name === 'chooseCoupons') {
-        this.headleTabsChange()
-      }
+      // if (to.name === 'chooseCoupons') {
+      //   this.headleTabsChange()
+      // }
     }
   }
 }
 </script>
-<style lang="stylus">
-.commonEmpty
-  padding-top 400px!important
-</style>
+
 <style lang="stylus" scoped>
   @import "~styles/mixins.styl";
+  .wrapper >>> .commonEmpty
+    padding-top 400px
+    background #f5f5f5
   .wrapper
     width 100%
     box-sizing border-box
     padding-top 132px
-    background #fff
+    background #f5f5f5
+    min-height 100vh
   .cardVoucherTitle
     width 100%
     height 120px
@@ -149,8 +231,10 @@ export default {
       bgImage('/static/images/cardVouItemBg')
   .cardVoucherPage
     width 100%
-    box-sizing border-box
     padding 34px 30px 0
+    height 100vh
+    padding-bottom 160px
+    overflow-y scroll
     .cardVouItem
       width 100%
       height 280px
@@ -190,10 +274,10 @@ export default {
         float left
         width 70%
         box-sizing border-box
-        padding 40px 34px 0
+        padding 20px 34px 0
         h3
           width 100%
-          font-size 40px
+          font-size 46px
           font-weight bold
           color #333333
         .displayBtn
@@ -214,7 +298,7 @@ export default {
     box-shadow 0px 16px 24px 0px rgba(207,154,111,0.66)
   .newReceive
     color #BA825A
-    border 1px solid #BA825A
+    border 2px solid #BA825A
   .noReceive
     color #fff
     background #E6E6E6
@@ -234,16 +318,16 @@ export default {
     font-size 30px
     color #666666
   .noCoupons
-    width calc(100% - 100px)
+    width 100%
     height 140px
     line-height 140px
-    border 1px solid #ba825a
     font-size 50px
+    background #fff
     color #ba825a
     text-align center
     position fixed
     margin auto
     left 0
     right 0
-    bottom 100px
+    bottom 0
 </style>

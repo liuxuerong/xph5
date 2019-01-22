@@ -13,6 +13,7 @@ import 'styles/reset.css'
 import 'styles/common.css'
 import 'styles/border.css'
 import { AlertPlugin, LoadingPlugin, Confirm, ConfirmPlugin, ToastPlugin } from 'vux'
+import Vuelidate from 'vuelidate'
 /* eslint-disable no-unused-vars */
 // import vConsole from '@/assets/vconsole.js'
 Vue.use(AlertPlugin)
@@ -26,7 +27,7 @@ Vue.use(VueLazyLoad, {
   loading: '/static/images/defaultImg.png'
 })
 fastClick.attach(document.body)
-
+Vue.use(Vuelidate)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

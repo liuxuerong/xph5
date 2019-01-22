@@ -4,24 +4,23 @@
       <check-icon :value.sync="check" @click.native="checkAll"> </check-icon>
     </div>
     <span class="all">全选</span>
-    <span class="price" v-if="!showModify">￥{{price.toFixed(2)}}</span>
-    <span class="btn" :class="{active:clearBtn}" v-if="!showModify" @click="buy">去结算</span>
-    <span class="btn delBtn" :class="{active:clearBtn}" v-else @click="delCheck">删除所选</span>
+    <span class="price" v-if="!showModify"><i>合计：</i>￥{{price.toFixed(2)}}</span>
+    <span class="btn" v-if="!showModify" @click="buy">结算<i>({{clearNum.length}})</i></span>
+    <div class="btnWrap" v-else>
+      <span class="collect" @click="collectBatch">移入收藏夹</span>
+      <span class="delBtn" :class="{active:clearBtn}" @click="sureDel">删除</span>
+    </div>
   </div>
 </template>
 
 <script>
-import {
-  storage
-} from 'util/storage'
-import {
-  goodsInfo, cartGoods
-} from 'util/const.js'
+
 import {
   http
 } from 'util/request'
 import {
-  delCart
+  delCart,
+  batchCollection
 } from 'util/netApi'
 import {
   CheckIcon
@@ -33,12 +32,13 @@ import {
   mapState,
   mapMutations
 } from 'vuex'
+import notice from 'util/notice'
 export default {
   name: 'CartOperate',
   props: {
     showModify: Boolean,
     page: Number,
-    roews: Number
+    rows: Number
   },
   components: {
     CheckIcon,
@@ -48,7 +48,8 @@ export default {
     return {
       check: false,
       price: 0,
-      clearBtn: false
+      clearBtn: false,
+      unsatisfactoryData: []
     }
   },
   computed: mapState({
@@ -82,6 +83,17 @@ export default {
       },
       deep: true,
       immediate: true
+    },
+    showModify: function (v) {
+      if (!v) {
+        let goodsList = this.goodsList
+        for (let i in goodsList) {
+          if (goodsList[i].stock === 0) {
+            goodsList[i].value = false
+          }
+        }
+        this.changeGoodsList(goodsList)
+      }
     }
   },
   methods: {
@@ -100,12 +112,50 @@ export default {
       }
       this.changeGoodsList(goodsList)
     },
-    delCheck () {
+    // 批量移入收藏夹
+    collectBatch () {
+      let params = []
+      for (let item of this.clearNum) {
+        params.push({collectionDataId: item.goodsId, collectionType: 1})
+      }
+      if (this.clearNum.length === 0) {
+        Toast({
+          message: '请至少选中一件商品',
+          position: 'center',
+          duration: 1000
+        })
+      } else {
+        http(batchCollection, params, 'noloading').then(res => {
+          if (res.data.code === 0) {
+            notice.alert('', '成功移入收藏夹，你可以在  我的-商品收藏  中找到。')
+            this.delCheck(false)
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+      }
+    },
+    sureDel () {
+      console.log(this.goodsList)
+      for (let v of this.goodsList) {
+        if (v.value) {
+          notice.confirm('是否确认删除选定商品？', '', this.delCheck, '删除')
+          break
+        } else {
+          Toast({
+            message: '请至少选中一件商品',
+            position: 'center',
+            duration: 1000
+          })
+        }
+      }
+    },
+    delCheck (toast = true) {
       let checkGoodsList = []
       let notCheckGoodsList = []
       let id = ''
       for (let i = 0; i < this.goodsList.length; i++) {
-        if (this.goodsList[i].value) {
+        if (this.goodsList[i].value && this.goodsList[i].status === '1') {
           id += (',' + this.goodsList[i].id)
           checkGoodsList.push(this.goodsList[i])
         } else {
@@ -116,12 +166,14 @@ export default {
       if (checkGoodsList.length) {
         http(delCart, [id]).then(res => {
           if (res.data.code === 0) {
-            // this.show5 = true
-            Toast({
-              message: '删除成功',
-              position: 'center',
-              duration: 1000
-            })
+            if (toast) {
+              Toast({
+                message: '删除成功',
+                position: 'center',
+                duration: 1000
+              })
+            }
+
             this.changeGoodsList(notCheckGoodsList)
           }
         }).catch(err => {
@@ -133,35 +185,11 @@ export default {
       if (this.clearNum.length === 0) {
         return
       }
-
-      let goodsObj = {
-        key: '',
-        shippingMethod: '',
-        favorableId: '',
-        fromCart: true
-      }
-      goodsObj.goodsItems = []
-      console.log(this.clearNum, 'this.clearNum')
-      for (let i = 0; i < this.clearNum.length; i++) {
-        if (this.clearNum[i].status === '1') {
-          if (this.clearNum[i].value) {
-            goodsObj.goodsItems.push(this.clearNum[i])
-          }
-          // {
-          //     goodsId: this.clearNum[i].goodsId,
-          //     goodsItemId: this.clearNum[i].goodsItemId,
-          //     name: this.clearNum[i].goodsItemName,
-          //     num: this.clearNum[i].num,
-          //     stock: this.clearNum[i].stock,
-          //     price: this.clearNum[i].price,
-          //     img: this.clearNum[i].goodsItemPic
-          //   }
-        }
-      }
-      storage.setLocalStorage(goodsInfo, goodsObj)
-      storage.setLocalStorage(cartGoods, {goodsList: this.goodsList, page: this.page, rows: this.rows})
-      this.$router.push('/createOrder')
+      this.$emit('buy')
     }
+  },
+  mounted () {
+    console.log(this.goodsList)
   }
 }
 </script>
@@ -180,29 +208,61 @@ export default {
   color #262626
   font-size 46px
   justify-content space-between
+  display flex
+  justify-content space-between
+  align-items center
   .checkIcon
     width 70px
-    height 50px
-    float left
-    margin-top 40px
+    height 60px
+    margin-right 32px
   .all
-    width 230px
-    float left
+    margin-right 32px
+    font-weight 600
+    i
+      font-weight normal
   .price
-    width 300px
     text-align right
     float left
+    margin-right 32px
+    flex 1
+    i
+      font-size 30px
+      color #262626
   .btn
-    width 340px
+    width 300px
     height 148px
     line-height 148px
-    background-color #F0F0F0
+    background:linear-gradient(-48deg,rgba(172,124,98,1),rgba(220,166,116,1));
+    opacity:0.96
     text-align center
-    color #999999
+    color #FFFFFF
+    font-size 46px
     float right
-    &.active
-      color #ba825a
+    i
+      font-size 40px
   .delBtn
-    &.active
-      color #D54B4B
+    height 90px
+    display inline-block
+    line-height 90px
+    width 180px
+    text-align center
+    font-size 40px
+    color #D54B4B
+    border 2px solid #D54B4B
+    margin-right 50px
+    border-radius 45px
+  .collect
+    height 90px
+    line-height 90px
+    width 280px
+    text-align center
+    font-size 40px
+    color #BA825A
+    border 2px solid #BA825A
+    margin-right 50px
+    border-radius 45px
+    display inline-block
+  .btnWrap
+    flex 1
+    text-align right
 </style>

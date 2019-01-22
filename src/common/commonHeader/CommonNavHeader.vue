@@ -10,15 +10,23 @@ export default {
   name: 'CommonNavHeader',
   components: {},
   props: {
-    title: String
+    title: String,
+    replace: {
+      default: false,
+      type: Boolean
+    }
   },
 
   methods: {
     goBack () {
-      if (this.$route.name !== 'HallAtlas') {
-        this.$router.go(-1)
+      if (this.replace) {
+        this.$router.replace(this.replace)
       } else {
-        this.$router.push('/hall')
+        if (this.$route.name !== 'HallAtlas') {
+          this.$router.go(-1)
+        } else {
+          this.$router.push('/hall')
+        }
       }
     }
   }

@@ -117,7 +117,7 @@
 <script>
 import SearchTitle from './ComOrderSearchTitle'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
-import { OrderList, confirmGoods } from 'util/netApi'
+import { OrderList1, confirmGoods } from 'util/netApi'
 import { http } from 'util/request'
 import {Toast} from 'mint-ui'
 import {storage} from 'util/storage'
@@ -169,7 +169,7 @@ export default {
         rows: 1000,
         status: type
       }
-      http(OrderList, params).then((response) => {
+      http(OrderList1, params).then((response) => {
         if (response.data.code === 0) {
           this.list = response.data.body.list
         }
@@ -180,7 +180,7 @@ export default {
       let _this = this
       let type = this.$route.params.type
       if (type !== '5') {
-        _this.$router.push('/orderDetails/' + this.type + '/' + item.orderSn)
+        _this.$router.push('/orderDetails1/' + this.type + '/' + item.orderSn)
       } else if (type === '5') {
         // 申请售后
         if (item.afterSalesType === 1) {

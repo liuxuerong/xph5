@@ -4,10 +4,28 @@
     <div class="paymentSuccCon">
       <div class="paymentImg"></div>
       <span class="paymentText">支付成功</span>
-      <p class="paymentNum" v-if="immedPaymentMony">￥{{immedPaymentMony}}</p>
-      <div class="paymentBtn clearfix">
-        <router-link class="pageJump" to="/orderList/2">查看订单</router-link>
-        <router-link class="pageJump" to="/find">返回首页</router-link>
+      <p class="tip">我们将尽快为安排发货</p>
+      <ul class="infoPay" v-if="immedPaymentMony">
+        <li>
+          <span class="name">订单号</span>
+          <span class="info">{{immedPaymentMony.orderSn}}</span>
+        </li>
+        <li>
+           <span class="name">支付方式</span>
+          <span class="info">{{immedPaymentMony.payWay}}</span>
+        </li>
+        <li>
+           <span class="name">收件人</span>
+          <span class="info">{{immedPaymentMony.deliveryPeople}}</span>
+        </li>
+        <li>
+           <span class="name">付款金额</span>
+          <span class="info price">￥{{immedPaymentMony.needPayAmount}}</span>
+        </li>
+      </ul>
+      <div class="paymentBtn clearfix" v-if="immedPaymentMony">
+        <router-link class="pageJump" :to="'/orderDetails/'+immedPaymentMony.orderSn" replace>查看订单</router-link>
+        <router-link class="pageJump" to="/find" replace>返回首页</router-link>
       </div>
     </div>
   </div>
@@ -23,7 +41,7 @@ import {
 export default {
   data () {
     return {
-      immedPaymentMony: ''
+      immedPaymentMony: null
     }
   },
   components: {
@@ -43,44 +61,67 @@ export default {
   @import "~styles/mixins.styl";
   .wrapper
     width 100%
-    box-sizing border-box
-    padding-top 132px
+    min-height 100%
+    background-color #f5f5f5
+    padding 252px 50px
     .paymentSuccCon
       width 100%
-      box-sizing border-box
-      padding-top 130px
+      padding-top 150px
+      background rgba(255,255,255,1)
+      border-radius 20px
       .paymentImg
-        width 340px
-        height 250px
-        margin 0 auto 100px
+        width 280px
+        height 280px
+        margin 0 auto 50px
         bgImage('/static/images/paymentSucc')
-    span,p
+    .paymentText,p
       display block
       width 100%
       text-align center
       margin-bottom 110px
     .paymentText
-      font-size 46px
-      margin-bottom 60px
-      color #BA825A
+      font-size 50px
+      margin-bottom 20px
+      font-weight 600
+      color #333333
+    .tip
+      color #666666
+      font-size 36px
+      margin-bottom 150px
     .paymentNum
       font-size 46px
       color #262626
   .paymentBtn
-    width calc(100% - 100px)
-    height 174px
-    background #F5F5F5
-    margin 0 auto
+    height 383px
+    display flex
+    justify-content space-around
     .pageJump
       float left
-      height 100px
-      line-height 100px
-      width 50%
+      height 120px
+      line-height 120px
+      width 320px
       font-size 46px
-      color #262626
-      margin-top 32px
+      color #666
+      margin-top 130px
       text-align center
-      border-right 1px solid #CCCCCC
+      border-radius 60px
+      border 2px solid #999999
     .pageJump:last-child
-      border-right none
+      color #BA825A
+      border 2px solid #BA825A
+.infoPay
+  padding 0 50px 100px
+  border-bottom 2px dashed #E6E6E6
+  li
+    line-height 120px
+    font-size 40px
+    display flex
+    align-items center
+    justify-content space-between
+    .name
+      color #999
+    .price
+      font-size 56px
+      font-weight 600
+
 </style>

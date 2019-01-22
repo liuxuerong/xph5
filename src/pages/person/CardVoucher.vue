@@ -211,7 +211,7 @@ export default {
   .cardVoucherPage
     width 100%
     box-sizing border-box
-    padding 34px 30px 0
+    padding 34px 30px 34px
     background #f5f5f5
     .cardVouItem.grayCardVouItem
       bgImage('/static/images/cardVouItemBg')

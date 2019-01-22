@@ -18,7 +18,7 @@ import { accessToken } from 'util/const.js'
 export default {
   data () {
     return {
-      list: ['用户协议', '意见反馈', '关于我们', '账户安全']
+      list: [ '账户安全', '增票资质', '用户协议', '意见反馈', '关于我们' ]
     }
   },
   components: {
@@ -26,18 +26,22 @@ export default {
   },
   methods: {
     softwareSetingInfo (index) {
-      // 0 用户协议
-      // 1 意见反馈
-      // 2 关于我们
+      // 0 账户安全
+      // 1 增票资质
+      // 2 用户协议
+      // 3 意见反馈
+      // 4 关于我们
       // 3 账户安全
       if (index === 0) {
-        this.$router.push('/agreement')
-      } else if (index === 1) {
-        this.$router.push('/feedBack')
-      } else if (index === 2) {
-        this.$router.push('/aboutUs')
-      } else if (index === 3) {
         this.$router.push('/accountSecurity')
+      } else if (index === 1) {
+        this.$router.push('/invoiceInfo/1/2/1')
+      } else if (index === 2) {
+        this.$router.push('/agreement')
+      } else if (index === 3) {
+        this.$router.push('/feedBack')
+      } else if (index === 4) {
+        this.$router.push('/aboutUs')
       }
     },
     // 退出登录
@@ -51,24 +55,19 @@ export default {
   }
 }
 </script>
-<style lang="stylus">
-  html,body
-    width 100%
-    background #fff
-</style>
 
 <style lang="stylus" scoped>
   @import "~styles/mixins.styl";
-  body,html
-    width 100%
-    background #fff
   .wrapper
     width 100%
     box-sizing border-box
     padding-top 130px
+    height 100%
+    background #f5f5f5
   .softwareCon
     width 100%
     background #fff
+    margin-top 30px
     .softSetItem
       width 100%
       height 148px
@@ -88,11 +87,14 @@ export default {
   .logOut
     display block
     width calc(100%- 100px)
-    margin 50px auto 0
     height 146px
     line-height 146px
     text-align center
     font-size 46px
     color #262626
-    background #F4F4F4
+    background #FFFFFF
+    position fixed
+    bottom 50px
+    left 50px
+
 </style>

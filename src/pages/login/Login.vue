@@ -15,7 +15,7 @@
       </form>
     </div>
     <button class="loginBtn" @click="loginBtnClick">登录</button>
-    <router-link to="/phoneCode" class="phoneCodeLogin">手机验证码登录</router-link>
+    <router-link to="/login" class="phoneCodeLogin">手机验证码登录</router-link>
     <span class="loginTipText">未注册的手机号码验证后自动创建星品账户</span>
   </div>
 </template>
@@ -80,9 +80,11 @@ export default {
           Toast({
             message: '登录成功',
             position: 'bottom',
-            duration: 2000
+            duration: 1000
           })
-          _this.$router.push('/')
+          setTimeout(() => {
+            _this.$router.push('/')
+          }, 1000)
         } else {
           Toast({
             message: '账号和密码不匹配，请重新输入',

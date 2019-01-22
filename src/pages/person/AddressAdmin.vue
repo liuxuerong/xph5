@@ -2,23 +2,22 @@
   <div class="wrapper">
     <userinfo-header title="我的地址" :oper="oper" @operComplete="onOperComplete"></userinfo-header>
     <div class="addressCon">
-      <div class="addressItem border-bottom" v-if="addList.length > 0" v-for="item in addList" :key="item.id">
+      <div class="addressItem" v-if="addList.length > 0" v-for="(item,index) in addList" :key="item.id">
         <div class="addressInfo clearfix">
-          <div class="left" @click="selectGoodsAddress(item.id)">
+          <div class="left" @click="selectGoodsAddress(index)">
             <div class="top clearfix">
               <h4>{{item.receiverName}}</h4>
               <span>{{item.phone}}</span>
+              <em class="default" v-if="item.idDefault==1">默认</em>
             </div>
-            <div class="bottom">{{item.province}}{{item.city}}{{item.area}}{{item.detailedAddr}}</div>
           </div>
-          <div class="rigth">
+          <div class="right">
             <span class="modifyAdd" @click="modifyAddress(item.id)"></span>
           </div>
+           <div class="bottom">{{item.province}}{{item.city}}{{item.area}}{{item.detailedAddr}}</div>
         </div>
       </div>
-      <div class="addressItem border-bottom" v-if="addList.length == 0">
-        <common-empty :emptyObj="emptyObj"></common-empty>
-      </div>
+      <common-empty :emptyObj="emptyObj" v-if="addList.length == 0"></common-empty>
     </div>
   </div>
 </template>
@@ -57,20 +56,8 @@ export default {
       http(listDelivery, params).then((response) => {
         this.addList = response.data.body.list
         if (this.addList.length > 0) {
-          this.oper = '新增地址'
+          this.oper = '新增'
         }
-        // // 判断默认地址
-        // for (var i = 0; i < data.list.length; i++) {
-        //   if (data.list[i].idDefault === 1) {
-        //     this.addName = data.list[i].receiverName
-        //     this.phone = data.list[i].phone.substring(0, 3) + '****' + data.list[i].phone.substring(7, 11)
-        //     if (data.list[i].province === '上海' || data.list[i].province === '重庆' || data.list[i].province === '北京' || data.list[i].province === '天津') {
-        //       this.address = data.list[i].city + data.list[i].area + data.list[i].detailedAddr
-        //     } else {
-        //       this.address = data.list[i].province + data.list[i].city + data.list[i].area + data.list[i].detailedAddr
-        //     }
-        //   }
-        // }
       })
     },
     // 新增地址
@@ -82,15 +69,14 @@ export default {
       this.$router.push('/goodsAddress/2/' + id)
     },
     // 选择地址
-    selectGoodsAddress (id) {
-      if (this.$route.params.need) {
-        let info = storage.getLocalStorage(orderInfo) || {}
-        info.addressId = id
-        info.addressType = '快递配送'
-        info.shippingMethod = 2
-        storage.setLocalStorage(orderInfo, info)
-        this.$router.replace({path: '/createOrder/2'})
-      }
+    selectGoodsAddress (index) {
+      // if (this.$route.params.need) {
+      let info = storage.getLocalStorage(orderInfo) || {}
+      info.addressInfo = this.addList[index]
+      info.addressId = this.addList[index].id
+      storage.setLocalStorage(orderInfo, info)
+      this.$router.replace({path: '/createOrder/2'})
+      // }
     }
   },
   watch: {
@@ -106,50 +92,67 @@ export default {
   }
 }
 </script>
-<style lang="stylus">
-  html,body
-    background #fff
-</style>
 <style lang="stylus" scoped>
   @import "~styles/mixins.styl";
+  .wrapper >>> .commonEmpty
+    background-color #F5F5F5
   .wrapper
     width 100%
     box-sizing border-box
+    background-color #F5F5F5
+    min-height 100vh
     padding-top 132px
+  .addressCon
+    padding 0 50px
   .addressItem
     width 100%
-    box-sizing border-box
+    border-radius:20px;
+    margin-top 30px
+    background-color #fff
     padding 80px 52px
   .addressInfo
     width 100%
     height auto
     .left
       float left
-      width 84%
       height 100%
-      border-right 1px solid #e6e6ee
+      width 84%
       box-sizing border-box
       padding-right 60px
       .top
         line-height 42px
         margin-bottom 42px
         font-size 46px
-        color #000
-        font-weight bold
+        color #333333
         h4
           float left
-          margin-right 100px
-          font-weight bold
+          margin-right 50px
+          font-size 46px
+          color #333333
+          width 190px
+          ellipsis()
+          font-weight 600
         span
           float left
           height 50px
           line-height 50px
-          font-weight bold
-    .rigth
+          font-weight 600
+        .default
+          font-size 30px
+          color #BA825A
+          font-size 30px
+          border 1px solid #BA825A
+          height 50px
+          line-height 50px
+          width 78px
+          text-align center
+          display inline-block
+          margin-left 50px
+          border-radius 4px
+    .right
       float left
       width 60px
       height 100%
-      margin-top 40px
       margin-left 80px
       .modifyAdd
         display block
@@ -158,7 +161,8 @@ export default {
         bgImage('/static/icons/modifyAddress')
     .bottom
       width 100%
-      font-size 36px
-      line-height 44px
-      color #262626
+      font-size 46px
+      color #333333
+      line-height 60px
+      float left
 </style>

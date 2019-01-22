@@ -10,7 +10,10 @@ i {
 em {
   font-weight: normal;
 }
-body, html, #app{
+
+body,
+html,
+#app {
   height: 100%;
   background-color: #fff;
 }
@@ -66,6 +69,7 @@ body, html, #app{
   height: 10px;
   background-color: #F5F5F5;
 }
+
 .cutOffLine30 {
   width: 100%;
   height: 30px;
@@ -90,7 +94,7 @@ body, html, #app{
   height: 3px !important;
   width: 380px !important;
   background-color: #e9e9f9;
-  background-image:none !important;
+  background-image: none !important;
   position: absolute !important;
 }
 
@@ -134,23 +138,28 @@ body, html, #app{
   font-size: 56px;
   font-weight: 600;
 }
-.weui-dialog .weui-dialog__hd{
-  padding-top: 107px;
+
+.weui-dialog .weui-dialog__hd {
+  padding: 107px 0px 0.5em;
 }
-.weui-dialog .weui-dialog__bd>div{
+
+.weui-dialog .weui-dialog__bd>div {
   font-size: 40px;
   color: #262626;
 }
-.weui-dialog .weui-dialog__btn{
+
+.weui-dialog .weui-dialog__btn {
   font-size: 50px;
 }
+
 .weui-dialog__ft {
   height: 150px !important;
   position: absolute !important;
   bottom: 0;
   width: 100%;
 }
-.weui-dialog__btn{
+
+.weui-dialog__btn {
   line-height: 150px;
 }
 
@@ -166,24 +175,29 @@ body, html, #app{
   color: #cccccc !important;
 }
 
-.weui-mask{
+.weui-mask {
   z-index: 9999998 !important;
 }
-.weui-dialog{
+
+.weui-dialog {
   z-index: 9999999 !important;
 }
-.mint-toast{
+
+.mint-toast {
   z-index: 999999 !important;
 }
-#__vconsole .vc-switch{
+
+#__vconsole .vc-switch {
   z-index: 99999999 !important;
 }
 
 
-.mint-toast-text,.weui-toast__content{
+.mint-toast-text,
+.weui-toast__content {
   font-size: 0.32rem !important;
 }
-.moreTip{
+
+.moreTip {
   color: #999999;
   font-size: 40px;
   padding-left: 200px !important;
@@ -193,22 +207,58 @@ body, html, #app{
   text-align: left !important;
   min-width: 400px;
 }
-.moreTip::after{
-  content:'';
+
+.moreTip::after {
+  content: '';
   width: 60px;
   height: 4px;
   position: absolute;
-  background:#E6E6E6;
-  left:200px;
+  background: #E6E6E6;
+  left: 200px;
   top: 360px;
   display: block;
 }
-.weui-mask_transparent{
-  z-index:9999999;
+
+.weui-mask_transparent {
+  z-index: 9999999;
 }
-.overH{
-  overflow:hidden;
+
+.overH {
+  overflow: hidden;
 }
-.mint-cell-wrapper{
+
+.mint-cell-wrapper {
   padding: 0 !important;
+}
+
+.vux-x-input .weui-icon,
+.weui-icon-clear {
+  font-size: 40px !important;
+}
+
+.weui-icon_toast.weui-icon-success-no-circle:before {
+  font-size: 160px !important;
+}
+
+.vux-popup-picker-container .vux-no-group-title {
+  margin-top: 0;
+}
+
+.vux-popup-picker-container .vux-popup-header {
+  height: 130px;
+  line-height: 130px;
+  font-size: 40px;
+}
+
+.vux-popup-picker-container .vux-popup-header-right {
+  color: #ba825a;
+}
+
+.vux-popup-picker-container .vux-popup-picker-value {
+  float: left;
+  color: #808080;
+  font-size: 40px;
+}
+.vux-popover{
+  position: fixed !important;
 }

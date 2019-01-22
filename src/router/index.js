@@ -71,7 +71,7 @@ const router = new Router({
       component: resolve => require(['@/pages/goods/Goods'], resolve)
     },
     {
-      path: '/createOrder/:info?',
+      path: '/createOrder/:info?', // 创建订单
       name: 'CreateOrder',
       meta: { requireLogin: true },
       component: resolve => require(['@/pages/createOrder/CreateOrder'], resolve)
@@ -89,6 +89,12 @@ const router = new Router({
       component: resolve => require(['@/pages/createOrder/StoreAddress'], resolve)
     },
     {
+      path: '/invoiceApply/:info?', // 申请开票
+      name: 'InvoiceApply',
+      meta: { requireLogin: true },
+      component: resolve => require(['@/pages/invoice/InvoiceApply'], resolve)
+    },
+    {
       path: '/search',
       name: 'Search',
       component: resolve => require(['@/pages/search/Search'], resolve)
@@ -98,6 +104,17 @@ const router = new Router({
       name: 'Invoice',
       meta: { requireLogin: true },
       component: resolve => require(['@/pages/invoice/Invoice'], resolve)
+    },
+    {
+      path: '/idCodeExplain',
+      name: 'IdCodeExplain',
+      component: resolve => require(['@/pages/invoice/IdCodeExplain'], resolve)
+    },
+    {
+      path: '/invoiceInfo/:invoiceType/:invoiceStatus/:from', // from 1设置页面 2创建订单3.申请开票
+      name: 'invoiceInfo',
+      meta: { requireLogin: true },
+      component: resolve => require(['@/pages/invoice/InvoiceInfo'], resolve)
     },
     {
       path: '/instructions',
@@ -119,12 +136,12 @@ const router = new Router({
     {
       path: '/login',
       name: 'Login',
-      component: resolve => require(['@/pages/login/Login'], resolve)
+      component: resolve => require(['@/pages/login/PhoneCode'], resolve)
     },
     {
       path: '/phoneCode',
       name: 'phoneCode',
-      component: resolve => require(['@/pages/login/PhoneCode'], resolve)
+      component: resolve => require(['@/pages/login/Login'], resolve)
     },
     {
       path: '/remberPassword',
@@ -176,16 +193,31 @@ const router = new Router({
       component: resolve => require(['@/pages/order/OrderIndex'], resolve)
     },
     {
-      path: '/orderList/:type',
-      name: 'orderList',
+      path: '/orderList1/:type',
+      name: 'orderList1',
       meta: { requireLogin: true },
       component: resolve => require(['@/pages/order/OrderList'], resolve)
     },
     {
-      path: '/orderDetails/:type/:orderCode',
-      name: 'orderDetails',
+      path: '/orderList',
+      name: 'orderList',
+      meta: { requireLogin: true },
+      component: resolve => require(['@/pages/orderM/OrderList'], resolve),
+      children: [
+        {name: 'orderListStatus', path: ':status', component: resolve => require(['@/pages/orderM/OrderListStatus'], resolve)}
+      ]
+    },
+    {
+      path: '/orderDetails1/:type/:orderCode',
+      name: 'orderDetails1',
       meta: { requireLogin: true },
       component: resolve => require(['@/pages/order/OrderDetails'], resolve)
+    },
+    {
+      path: '/orderDetails/:orderSn',
+      name: 'orderDetails',
+      meta: { requireLogin: true },
+      component: resolve => require(['@/pages/orderM/OrderDetails'], resolve)
     },
     {
       path: '/immedPayment/:orderCode',
@@ -267,7 +299,7 @@ const router = new Router({
       component: resolve => require(['@/pages/person/CardDetails'], resolve)
     },
     {
-      path: '/chooseCoupons',
+      path: '/chooseCoupons/:type',
       name: 'chooseCoupons',
       meta: { requireLogin: true },
       component: resolve => require(['@/pages/createOrder/ChooseCoupons'], resolve)
@@ -279,7 +311,7 @@ const router = new Router({
       component: resolve => require(['@/pages/person/ToolStore'], resolve)
     },
     {
-      path: '/watchLogistics',
+      path: '/watchLogistics/:orderSn',
       name: 'watchLogistics',
       meta: { requireLogin: true },
       component: resolve => require(['@/pages/order/WatchLogistics'], resolve)
@@ -329,10 +361,10 @@ const router = new Router({
       component: resolve => require(['@/pages/order/ReturnGoodsMoney'], resolve)
     },
     {
-      path: '/returnLogistics',
-      name: 'returnLogistics',
+      path: '/returnLogistics1',
+      name: 'returnLogistics1',
       meta: { requireLogin: true },
-      component: resolve => require(['@/pages/order/ReturnLogistics'], resolve)
+      component: resolve => require(['@/pages/order/ReturnLogistics1'], resolve)
     },
     {
       path: '/touristToolCenter',
@@ -353,6 +385,63 @@ const router = new Router({
       path: '/classfiyGoods/:classfiyId',
       name: 'classfiyGoods',
       component: resolve => require(['@/pages/activitys/ClassfiyGoods'], resolve)
+    },
+
+    // 售后
+    {
+      path: '/afterSaleSelect/:orderStatus/:orderItemId', //  orderStatus:// 2: 待发货// 3: 待收货// 5: 交易成功
+      name: 'AfterSaleSelect', // 选择售后类型
+      meta: { requireLogin: true },
+      component: resolve => require(['@/pages/afterSale/AfterSaleSelect'], resolve)
+    },
+    {
+      path: '/applyAfterSales/:orderStatus/:orderItemId/:type', //  orderStatus:主订单状态 orderItemId:子订单编号 type:服务类型; 1=仅退款 2=退货退款 3=维修
+      name: 'ApplyAfterSales', // 会员申请售后
+      meta: { requireLogin: true },
+      component: resolve => require(['@/pages/afterSale/ApplyAfterSales'], resolve)
+    },
+    {
+      path: '/modifyAfterSales',
+      name: 'ModifyAfterSales', // 会员修改售后
+      meta: { requireLogin: true },
+      component: resolve => require(['@/pages/afterSale/ModifyAfterSales'], resolve)
+    },
+    {
+      path: '/afterSaleList',
+      name: 'AfterSaleList', // 售后列表
+      meta: { requireLogin: true },
+      component: resolve => require(['@/pages/afterSale/AfterSaleList'], resolve)
+    },
+    {
+      path: '/record/:saleSn',
+      name: 'Record', // 操作记录
+      meta: { requireLogin: true },
+      component: resolve => require(['@/pages/afterSale/Record'], resolve)
+    },
+
+    {
+      path: '/returnLogistics/:saleSn',
+      name: 'ReturnLogistics', // 填写物流信息
+      meta: { requireLogin: true },
+      component: resolve => require(['@/pages/afterSale/ReturnLogistics'], resolve)
+    },
+    {
+      path: '/appeal/:saleSn',
+      name: 'Appeal', // 申诉
+      meta: { requireLogin: true },
+      component: resolve => require(['@/pages/afterSale/Appeal'], resolve)
+    },
+    {
+      path: '/afterEvaluation/:saleSn',
+      name: 'AfterEvaluation', // 售后评价
+      meta: { requireLogin: true },
+      component: resolve => require(['@/pages/afterSale/AfterEvaluation'], resolve)
+    },
+    {
+      path: '/afterSaleDetails/:saleSn',
+      name: 'AfterSaleDetails', // 售后详情
+      meta: { requireLogin: true },
+      component: resolve => require(['@/pages/afterSale/AfterSaleDetails'], resolve)
     }
   ]
 })

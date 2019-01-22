@@ -126,6 +126,9 @@ export default {
         }
       }, 100)
     }
+  },
+  beforeDestroy () {
+    clearInterval(this.timer)
   }
 }
 

@@ -11,29 +11,16 @@
 </template>
 
 <script>
-import Find from '@/pages/find/Find'
-import Classfiy from '@/pages/classify/Classify'
-// import Brand from '@/pages/brand/Brand'
-import Hall from '@/pages/hall/Hall'
-import Story from '@/pages/story/Story'
-import Person from '@/pages/person/PersonCenter'
 export default {
   name: 'Index',
-  components: {
-    Find,
-    Classfiy,
-    Hall,
-    Story,
-    Person
-  },
   data () {
     return {
       tabItemData: [
         {
           id: 'tabbar1',
           to: '/find',
-          imgSrc: '/static/icons/find_icon_Tabbar@2x.png',
-          imgSrcSelect: '/static/icons/find_icon_Tabbar_active@2x.png',
+          imgSrc: '/static/icons/find_icon_Tabbar.png',
+          imgSrcSelect: '/static/icons/find_icon_Tabbar_active.png',
           text: '发现',
           selected: true
         },
@@ -48,24 +35,24 @@ export default {
         {
           id: 'tabbar3',
           to: '/hall',
-          imgSrc: '/static/icons/logo@2x.png',
-          imgSrcSelect: '/static/icons/logo_active@2x.png',
+          imgSrc: '/static/icons/logo.png',
+          imgSrcSelect: '/static/icons/logo_active.png',
           text: '',
           selected: false
         },
         {
           id: 'tabbar4',
           to: '/story',
-          imgSrc: '/static/icons/story_icon_Tabbar@2x.png',
-          imgSrcSelect: '/static/icons/story_icon_Tabbar_active@2x.png',
+          imgSrc: '/static/icons/story_icon_Tabbar.png',
+          imgSrcSelect: '/static/icons/story_icon_Tabbar_active.png',
           text: '故事',
           selected: false
         },
         {
           id: 'tabbar5',
           to: '/personCenter',
-          imgSrc: '/static/icons/person_icon_Tabbar@2x.png',
-          imgSrcSelect: '/static/icons/person_icon_Tabbar_active@2x.png',
+          imgSrc: '/static/icons/person_icon_Tabbar.png',
+          imgSrcSelect: '/static/icons/person_icon_Tabbar_active.png',
           text: '我',
           selected: false
         }
@@ -111,7 +98,6 @@ export default {
         color #BA825A
     a:nth-child(3)
       img
-        width 111px
-        height 126px
-
+        width 130px
+        height 130px
 </style>

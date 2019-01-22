@@ -134,6 +134,7 @@ import OrderIndex from '../order/OrderIndex'
 import { config } from 'util/config'
 import BScroll from 'better-scroll'
 export default {
+  name: 'PersonCenter',
   data () {
     return {
       list: [],
@@ -177,11 +178,11 @@ export default {
     // 基础信息加载
     getUserInfo () {
       http(memberCenter).then((response) => {
+        console.log(response)
         let data = response.data.body
         if (data.coupons.length > 0) {
           this.coupons = data.coupons
           this.cardScrollWidth = (this.coupons.length * 970 - 50) / 112.5
-          // this.$refs.cardScrollWidth.style.width = (this.coupons.length * 970 - 50) / 112.5 + 'rem'
         }
         let operPhone = data.memberName
         if ((/^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/.test(Number(operPhone)))) {
