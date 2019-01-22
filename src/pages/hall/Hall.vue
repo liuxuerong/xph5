@@ -118,7 +118,7 @@ export default {
     }
   },
   created () {
-    // this.popVisible = !storage.getLocalStorage(logisticsInform)
+    this.popVisible = !storage.getLocalStorage(logisticsInform)
   },
   mounted () {
     this.getHallData()
