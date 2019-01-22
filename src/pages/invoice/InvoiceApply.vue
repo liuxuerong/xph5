@@ -4,7 +4,7 @@
     <div class="applyWrap">
       <div class="wrap">
         <div class="cellLink">
-          <div>实付金额<span>¥</span></div>
+          <div>实付金额<span>¥{{invoiceAmount}}</span></div>
         </div>
         <div>
           <div class="cellLink">
@@ -73,7 +73,6 @@ import {
   Icon
 } from 'vux'
 import {
-
   addOrderInvoice
 } from 'util/netApi'
 import {
@@ -81,7 +80,8 @@ import {
 } from 'util/request'
 import {
   orderInfo,
-  orderSn
+  orderSn,
+  invoiceAmount
 } from 'util/const'
 export default {
   name: 'InvoiceApply',
@@ -93,7 +93,8 @@ export default {
       info: null, // 创建订单参数
       invoiceStatusSelect: 'One',
       orderSn: '',
-      money: ''
+      money: '',
+      invoiceAmount
     }
   },
   components: {
@@ -169,6 +170,7 @@ export default {
     // this.money = this.$route.params.money
     this.info = storage.getLocalStorage(orderInfo)
     this.orderSn = storage.getLocalStorage(orderSn)
+    this.invoiceAmount = storage.getLocalStorage(invoiceAmount)
   }
 }
 </script>

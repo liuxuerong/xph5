@@ -41,7 +41,7 @@
           <div class="title">
             <h4>发票信息</h4>
             <!-- <div class="btn" v-if="orderData.invoice">查看发票</div> -->
-            <router-link :to="`/invoiceApply/${orderData.invoiceAmount}`" class="btn" v-if="orderData.invoiceStatus==4">申请开票</router-link>
+            <router-link to="/invoiceApply" class="btn" v-if="orderData.invoiceStatus==4">申请开票</router-link>
              <div class="btn" @click="invoiceToast" v-if="orderData.invoiceStatus==5">申请开票</div>
           </div>
           <ul class="infoItem" v-if="orderData.invoice">
@@ -178,7 +178,8 @@ import {
 } from 'util/storage'
 import {
   aftersale,
-  orderSn
+  orderSn,
+  invoiceAmount
 } from 'util/const'
 import {
   Icon
@@ -235,6 +236,7 @@ export default {
         console.log(res)
         this.orderData = res.data.body
         this.delayState = res.data.body.delayState
+        storage.setLocalStorage(invoiceAmount, res.data.body.invoiceAmount)
         let _this = this
         _this.confirmTime = res.data.body.allowPayTimeSecond
         _this.remainingTime = _this.formatDuring(_this.confirmTime)
