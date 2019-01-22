@@ -91,7 +91,7 @@
       <!-- <span class="gray" @click="delSure" v-if="orderData.type===1&&(orderData.status===3||orderData.status===5)||orderData.type===2&&(orderData.status===5||orderData.status===7)||orderData.type===3&&(orderData.status===3)">删除订单</span> -->
       <span class="gray" @click="customerService">联系客服</span>
       <span class="glod" @click="afterEval" v-if="((orderData.type===1||orderData.type===3)&&(orderData.status===3)||orderData.type===2&&(orderData.status===5))&&orderData.evaluateStatus==0">售后评价</span>
-      <span class="glod" @click="appealOrder" v-if="(orderData.type===1&&(orderData.status===4||orderData.status===6)||orderData.type===2&&(orderData.status===6||orderData.status===8)||orderData.type===3&&orderData.status===4)&&orderData.appealStatus==0">我要申诉</span>
+      <span class="glod" @click="appealOrder" v-if="(orderData.type===1&&(orderData.status===4||orderData.status===6)||orderData.type===2&&(orderData.status===6||orderData.status===8)||orderData.type===3&&orderData.status===4||orderData.status===6)&&orderData.appealStatus==0">我要申诉</span>
     </div>
   </div>
 </template>

@@ -37,21 +37,28 @@
             </li>
           </ul>
         </div>
-        <div class="wrap">
+        <div class="wrap" v-if="orderData.invoice&&orderData.invoice.invoiceStatus==1&&orderData.examineStatus!=6">
           <div class="title">
             <h4>发票信息</h4>
             <!-- <div class="btn" v-if="orderData.invoice">查看发票</div> -->
-            <router-link to="/invoiceApply" class="btn" v-if="orderData.invoiceStatus==4">申请开票</router-link>
-             <div class="btn" @click="invoiceToast" v-if="orderData.invoiceStatus==5">申请开票</div>
           </div>
-          <ul class="infoItem" v-if="orderData.invoice">
+          <ul class="infoItem">
             <li><span class="name">发票类型：</span><span class="content">{{orderData.invoice.invoiceStatus==1?'电子普通发票':'增值税专用发票'}}</span>
             </li>
             <li> <span class="name">发票抬头：</span><span class="content">{{orderData.invoice.name||'个人'}}</span></li>
             <li> <span class="name">发票内容：</span><span class="content">商品明细</span></li>
             <li> <span class="name" v-if="orderData.invoice.idCode">纳税人识别号：</span><span class="content">{{orderData.invoice.idCode}}</span></li>
           </ul>
-          <ul class="infoItem" v-else>
+
+        </div>
+        <div class="wrap" v-else>
+          <div class="title">
+            <h4>发票信息</h4>
+            <!-- <div class="btn" v-if="orderData.invoice">查看发票</div> -->
+            <router-link to="/invoiceApply" class="btn" v-if="orderData.invoiceStatus==4">申请开票</router-link>
+             <div class="btn" @click="invoiceToast" v-if="orderData.invoiceStatus==5">申请开票</div>
+          </div>
+           <ul class="infoItem">
             <li>
               <span class="name">发票类型：</span><span class="content">不开发票</span>
             </li>

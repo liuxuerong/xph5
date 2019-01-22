@@ -19,6 +19,14 @@
         </div>
       </div>
     </div>
+    <mt-popup position="bottom" v-model="popVisible" @touchmove.prevent>
+      <div class="popWrap">
+        <img class="logisticsInfo" src="/static/images/logisticsInform.png" alt="">
+        <div class="btn" @click="closeLogistics">
+          <img src="/static/images/indexClose.png" alt="">
+        </div>
+      </div>
+    </mt-popup>
   </div>
 </template>
 
@@ -33,8 +41,12 @@ import {
   config
 } from 'util/config.js'
 import {
-  experience
+  experience,
+  logisticsInform
 } from 'util/const.js'
+import {
+  Popup
+} from 'mint-ui'
 import {
   storage
 } from 'util/storage.js'
@@ -46,6 +58,7 @@ export default {
   data () {
     return {
       imageUrl: config.imageUrl,
+      popVisible: true,
       swiperData: [],
       swiperOption: {
         direction: 'vertical',
@@ -61,7 +74,8 @@ export default {
     }
   },
   components: {
-    CommonHeader
+    CommonHeader,
+    'mt-popup': Popup
   },
   methods: {
     getHallData () {
@@ -96,7 +110,15 @@ export default {
       }).catch(err => {
         console.log(err)
       })
+    },
+    // 关闭物流提示
+    closeLogistics () {
+      this.popVisible = false
+      storage.setLocalStorage(logisticsInform, true)
     }
+  },
+  created () {
+    this.popVisible = !storage.getLocalStorage(logisticsInform)
   },
   mounted () {
     this.getHallData()
@@ -152,6 +174,16 @@ export default {
       height 100%
 .swiper-container
   width 100%
+.popWrap
+  .logisticsInfo
+    width calc(100%-(100px))
+    margin 100px 50px
+  .btn
+    margin 0 auto
+    width 200px
+    img
+      width 200px
+      height 200px
 </style>
 
 <style lang="stylus">
@@ -174,4 +206,13 @@ export default {
         display block !important
         font-size 36px
         line-height 60px
+.xpHall
+  .mint-popup
+    width 100%
+    z-index 9999999 !important
+  .v-modal
+    z-index 9999998 !important
+  .popWrap
+    height 100vh
+    background:rgba(0,0,0,0.4);
 </style>

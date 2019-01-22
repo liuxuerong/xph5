@@ -19,3 +19,4 @@ export const immedPaymentMony = 'IMMEDPAYMENTMONY' // 支付金额
 export const activityCategory = 'ACTIVITYCATEGORY' // 品类秒杀查看详情
 export const fromRoute = 'FROMROUTE' // 编辑收入地址的地址来自哪里
 export const invoiceAmount = 'INVOICEAMOUNT' // 发票金额
+export const logisticsInform = 'LOGISTICSINFORM' // 首页物流信息是否展示
