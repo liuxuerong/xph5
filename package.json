@@ -40,7 +40,7 @@
     "vuelidate": "^0.7.4",
     "vuex": "^3.0.1",
     "vux-loader": "^1.2.9",
-    "vux": "git+git@gitlab.jdhoe.com:JDHOE/vuxcopy.git",
+    "vux": "git+https://gitlab.jdhoe.com/xuz/vux.git",
     "weixin-js-sdk": "^1.4.0-test"
   },
   "devDependencies": {
