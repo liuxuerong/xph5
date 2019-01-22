@@ -37,7 +37,7 @@
             </li>
           </ul>
         </div>
-        <div class="wrap" v-if="orderData.invoice&&orderData.invoice.invoiceStatus==1&&orderData.invoice.examineStatus!=6">
+        <div class="wrap" v-if="orderData.invoice&&((orderData.invoice.invoiceStatus==1&&orderData.invoice.examineStatus!=6)||orderData.invoice.invoiceStatus!=1)">
           <div class="title">
             <h4>发票信息</h4>
             <!-- <div class="btn" v-if="orderData.invoice">查看发票</div> -->
@@ -49,14 +49,13 @@
             <li> <span class="name">发票内容：</span><span class="content">商品明细</span></li>
             <li> <span class="name" v-if="orderData.invoice.idCode">纳税人识别号：</span><span class="content">{{orderData.invoice.idCode}}</span></li>
           </ul>
-
         </div>
         <div class="wrap" v-if="!orderData.invoice">
           <div class="title">
             <h4>发票信息</h4>
             <!-- <div class="btn" v-if="orderData.invoice">查看发票</div> -->
             <router-link to="/invoiceApply" class="btn" v-if="orderData.invoiceStatus==4">申请开票</router-link>
-             <div class="btn" @click="invoiceToast" v-if="orderData.invoiceStatus==5">申请开票</div>
+            <div class="btn" @click="invoiceToast" v-if="orderData.invoiceStatus==5">申请开票</div>
           </div>
            <ul class="infoItem">
             <li>
