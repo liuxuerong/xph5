@@ -14,7 +14,7 @@
           <div class="promotion">
             {{formatSpec}}
           </div>
-          <div class="num">
+          <div class="num" v-if="pricesData.type!=3">
             x{{pricesData.num}}
           </div>
         </div>

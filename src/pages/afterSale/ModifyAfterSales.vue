@@ -413,9 +413,6 @@ export default {
     },
     // 弹窗显示与隐藏
     changePopStatus (v) {
-      console.log(this.params.type)
-      console.log(this.params.orderStatus)
-      console.log(this.params.goodsType)
       if (this.params.type == 1) { // 仅退款
         if (this.params.orderStatus == 2) {
           this.reasonData = ['错拍/多拍/不想要', '协商一致退款', '未按照指定时间发货', '其他'] // 待发货

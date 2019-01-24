@@ -155,7 +155,6 @@ export default {
         this.toastShow('请填写发票抬头！')
         return false
       }
-      console.log(this.orderSn)
       http(addOrderInvoice, [this.orderSn, this.info.invoicingId]).then(res => {
         console.log(res)
         this.toastShow('申请成功')
