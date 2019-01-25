@@ -72,12 +72,6 @@ export default {
       objImgs: []
     }
   },
-  computed: {
-
-  },
-  watch: {
-
-  },
   methods: {
     // 检查已上传图片
     checkLength () {

@@ -125,9 +125,9 @@ export default {
       }
     },
     submit () {
-      if (typeof (this.validate()) ==='undefined') {
+      if (typeof (this.validate()) === 'undefined') {
         http(afterSaleDelivery, this.inputForm).then(res => {
-          if(res.data.code==0){
+          if (res.data.code == 0) {
             this.$router.go(-1)
           }
         })
