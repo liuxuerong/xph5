@@ -38,8 +38,7 @@ const webpackConfig = merge(baseWebpackConfig, {
         compress: {
           warnings: false,
           drop_debugger: true,//console
-          drop_console: true,
-          pure_funcs: ['console.log']//移除console
+          drop_console: true
         }
       },
       sourceMap: config.build.productionSourceMap,
