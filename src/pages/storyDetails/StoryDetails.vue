@@ -5,7 +5,7 @@
       <div>
         <story-details-header v-if="details" :details="details" />
         <common-content v-if="details" :goodsItems="goodsItems" :details="details" />
-        <h2 v-if="details&&details.articleRecommends.length">热文推荐</h2>
+        <h2 v-if="details&&details.articleRecommends&&details.articleRecommends.length">热文推荐</h2>
         <common-article-rec v-if="details" :articleRecommends="details.articleRecommends" :linkTo="linkTo" />
       </div>
     </div>
@@ -43,6 +43,11 @@ export default {
       linkTo: '/storyDetails/',
       hideHead: false,
       platform: ''
+    }
+  },
+  watch: {
+    $route (to, from) {
+      this.$router.go(0)
     }
   },
   methods: {
