@@ -19,14 +19,6 @@
         </div>
       </div>
     </div>
-    <mt-popup position="bottom" v-model="popVisible" @touchmove.prevent>
-      <div class="popWrap">
-        <div class="logisticsInfo"></div>
-        <div class="btn" @click="closeLogistics">
-          <img src="/static/images/indexClose.png" alt="">
-        </div>
-      </div>
-    </mt-popup>
   </div>
 </template>
 
@@ -58,7 +50,6 @@ export default {
   data () {
     return {
       imageUrl: config.imageUrl,
-      popVisible: true,
       swiperData: [],
       swiperOption: {
         direction: 'vertical',
@@ -110,15 +101,7 @@ export default {
       }).catch(err => {
         console.log(err)
       })
-    },
-    // 关闭物流提示
-    closeLogistics () {
-      this.popVisible = false
-      storage.setLocalStorage(logisticsInform, true)
     }
-  },
-  created () {
-    this.popVisible = !storage.getLocalStorage(logisticsInform)
   },
   mounted () {
     this.getHallData()
