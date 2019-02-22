@@ -419,7 +419,7 @@ export default {
       storage.setLocalStorage(aftersale, pricesData)
       if (type == 1) {
         if (this.orderData.status == 7) {
-          this.$router.push(`/applyAfterSales/${this.orderData.status}/${orderItemId}/3`)
+          this.$router.push(`/applyAfterSales/${this.orderData.status}/${orderItemId}/3`)// 只能申请维修
         } else {
           this.$router.push(`/afterSaleSelect/${this.orderData.status}/${orderItemId}`)
         }
