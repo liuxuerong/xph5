@@ -59,7 +59,7 @@ export const payMoney = { url: '/pay/pay', method: 'POST', version: v2 }
 export const payMoney1 = { url: '/pay/pay', method: 'POST', version: '' }
 
 // 获取会员资料
-export const memberData = { url: '/member/api/obtainMemberData', method: 'GET', version: v1 }
+export const memberData = { url: '/member/api/obtainMemberData', method: 'GET', version: v2 }
 
 // 设置会员基础信息
 export const setMemberData = { url: '/member/api/settingMemberBasics', method: 'PUT', version: v1 }
