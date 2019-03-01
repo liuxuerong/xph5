@@ -58,9 +58,8 @@ export default {
           if (this.operAndroid) {
             window.close()
           } else {
-            // console.log('下载安卓App')
             this.btnText = '下载星品优汇'
-            window.location = 'https://alissl.ucdl.pp.uc.cn/fs08/2018/10/09/0/110_860ee7b483abf81ecd840fac557d70b2.apk?appid=7876272&packageid=100445992&md5=5fb0eadbece066eb0f3411c98c408c59&apprd=7876272&pkg=com.jdhoe.android&vcode=17&fname=%E6%98%9F%E5%93%81%E4%BC%98%E6%B1%87&iconUrl=http%3A%2F%2Fandroid%2Dartworks%2E25pp%2Ecom%2Ffs08%2F2018%2F10%2F09%2F2%2F110%5Fcf55896e1e02c66b3c2f6f810a9a05d7%5Fcon%2Epng'
+            window.location = 'https://www.upinstar.com/android/download/release/jdhoe.apk'
           }
         }
       }
@@ -92,13 +91,13 @@ export default {
           try {
             // console.log('打开安卓App')
             window.location.href = 'jdhoe://android'
-            state = true
+            state = false
           } catch (e) {}
           if (state) {
             window.close()
           } else {
             // console.log('下载安卓App')
-            window.location = 'https://alissl.ucdl.pp.uc.cn/fs08/2018/10/09/0/110_860ee7b483abf81ecd840fac557d70b2.apk?appid=7876272&packageid=100445992&md5=5fb0eadbece066eb0f3411c98c408c59&apprd=7876272&pkg=com.jdhoe.android&vcode=17&fname=%E6%98%9F%E5%93%81%E4%BC%98%E6%B1%87&iconUrl=http%3A%2F%2Fandroid%2Dartworks%2E25pp%2Ecom%2Ffs08%2F2018%2F10%2F09%2F2%2F110%5Fcf55896e1e02c66b3c2f6f810a9a05d7%5Fcon%2Epng'
+            window.location = 'https://www.upinstar.com/android/download/release/jdhoe.apk'
           }
         }
       }
