@@ -19,7 +19,7 @@ import {
 import {storage} from 'util/storage'
 import {accessToken} from 'util/const'
 export default {
-  name: 'CommonNavHeader',
+  name: 'CommonNavSearch',
   components: {},
   props: {
     title: String,

@@ -442,6 +442,11 @@ const router = new Router({
       name: 'AfterSaleDetails', // 售后详情
       meta: { requireLogin: true },
       component: resolve => require(['@/pages/afterSale/AfterSaleDetails'], resolve)
+    },
+    {
+      path: '/activityTemps/:id',
+      name: 'ActivityTemps', // 活动
+      component: resolve => require(['@/pages/activityTemps/ActivityTemps'], resolve)
     }
   ]
 })
