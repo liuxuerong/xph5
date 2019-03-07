@@ -47,10 +47,10 @@ export default {
   components: {
     LoginBack
   },
-  beforeRouteEnter (to, from, next) {
-    // 第一次进入创建订单页面
-    if (console.log(from, to)) { next() }
-  },
+  // beforeRouteEnter (to, from, next) {
+  //   // 第一次进入创建订单页面
+  //   if (console.log(from, to)) { next() }
+  // },
   watch: {
     '$route' (to, from) {
       if (to.name === 'Login') {

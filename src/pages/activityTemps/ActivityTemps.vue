@@ -1,5 +1,5 @@
 <template>
-  <div class="activityTemps" :class="{wrapperTitle:titleShow}">
+  <div class="activityTemps mobile-wrap" :class="{wrapperTitle:titleShow}">
     <CommonNavHeader :class="{hide:titleShow}"/>
      <div class="activitysContent" v-html="activityDetails">
     </div>
@@ -78,11 +78,16 @@ window.clickTo = function (couponId) {
     couponId
   }
   http(memberCouponRecord, params).then((response) => {
-    console.log(response)
     if (response.data.code === 0) {
       Toast({
         message: '优惠券领取成功',
-        position: 'bottom',
+        position: 'center',
+        duration: 2000
+      })
+    } else {
+      Toast({
+        message: response.data.message,
+        position: 'center',
         duration: 2000
       })
     }
