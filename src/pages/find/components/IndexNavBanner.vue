@@ -8,7 +8,7 @@
       :key="item.id">
       <router-link :to="linkUrl+item.id">
       <img
-        v-lazy="imageUrl+item.articleCoverImage"
+        v-lazy="imageUrl+item.articleCoverImage+imageAfterUrl"
         alt="" class="banner">
       <index-content
         v-if="showContent"
@@ -54,7 +54,8 @@ export default {
   },
   data () {
     return {
-      imageUrl: config.imageUrl
+      imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl
     }
   }
 }

@@ -50,7 +50,6 @@ export default {
   },
   data () {
     return {
-      imageUrl: config.imageUrl,
       articles: [],
       brandListData: [],
       storyRecom: [],

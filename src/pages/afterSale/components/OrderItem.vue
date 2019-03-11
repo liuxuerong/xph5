@@ -3,7 +3,7 @@
     <div class="orderItem">
       <div class="imgContainer">
         <router-link :to="'/details/'+pricesData.goodsId">
-          <img v-lazy="imageUrl+pricesData.goodsPic" alt="">
+          <img v-lazy="imageUrl+pricesData.goodsPic+imageAfterUrl" alt="">
         </router-link>
       </div>
       <div class="info" @click="goDetails">
@@ -61,7 +61,8 @@ export default {
   },
   data () {
     return {
-      imageUrl: config.imageUrl
+      imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl
     }
   }
 }

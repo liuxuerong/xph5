@@ -12,7 +12,7 @@
           <span>{{itemC.key}}:{{itemC.value}}</span>
         </div>
         <div class="imgContent">
-          <img :src="imageUrl+itemImg" alt="" v-for="(itemImg,index) in item.commentsPics.split(',')" :key="itemImg" @click="show(i,index)" class="previewer-demo-img">
+          <img :src="imageUrl+itemImg+imageAfterUrl" alt="" v-for="(itemImg,index) in item.commentsPics.split(',')" :key="itemImg" @click="show(i,index)" class="previewer-demo-img">
           <div v-transfer-dom>
             <previewer :list="list[i]" ref="previewer" :options="options"></previewer>
           </div>
@@ -50,6 +50,7 @@ export default {
   data () {
     return {
       imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl,
       comments: null,
       title: '评论',
       emptyObj: {

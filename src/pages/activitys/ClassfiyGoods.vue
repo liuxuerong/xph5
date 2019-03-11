@@ -5,7 +5,6 @@
       <div class="bscroll-container">
         <div class="classfiyGoodsBg">
           <div class="mask"></div>
-          <!-- <img class="classfiyGoodsImg" v-lazy="imageUrl+activeData.picture" alt=""> -->
           <img class="classfiyGoodsImg" src="static/images/activeClassfiyBg.jpg" alt="">
           <div class="classfiyGoodsText">
             <h3>{{activeData.name}}</h3>
@@ -47,7 +46,6 @@ export default {
   data () {
     return {
       title: '品类秒杀',
-      imageUrl: config.imageUrl, // 图片路径
       titleShow: false,
       activeData: '',
       goodsData: '',

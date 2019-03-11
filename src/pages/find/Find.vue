@@ -48,7 +48,7 @@
             </div>
             <ul class="goodsContainer" v-if="goodsListData.length&&tabbar.length">
               <div class="classfiyBanner" ref="classfiyBanner">
-                <img :src="imageUrl+tabbar[pageIndex].appImage" alt="">
+                <img :src="imageUrl+tabbar[pageIndex].appImage+imageAfterUrl" alt="">
               </div>
               <li v-for="item in goodsListData" v-if="goodsListData.length" :key="item.id" ref="goodsItem">
                 <common-img-prices :pricesData="item" />
@@ -121,6 +121,7 @@ export default {
   data () {
     return {
       imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl,
       goodsCategoryList: [],
       tabbar: [],
       goodsListData: [],

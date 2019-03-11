@@ -10,7 +10,7 @@
     <div class="searchOrderCon" v-if="list.length > 0">
       <div class="orderItem" v-for="(item, i) in list" :key="i">
         <div class="goodsItem border-bottom" v-for="(childItem,j) in item.memberOrderGoods" :key="j" @click="orderDetails(item.orderSn,item.memberOrderGoods[0].orderItemStatus,item.memberOrderGoods[0].orderItemId)">
-          <img v-if="childItem.pic != ''" :src="imageUrl+childItem.pic" alt="">
+          <img v-if="childItem.pic != ''" :src="imageUrl+childItem.pic+imageAfterUrl" alt="">
           <img v-else src="/static/images/personalHeader.png">
           <div class="goodsinfo">
             <h3>{{childItem.goodsName}}</h3>
@@ -90,6 +90,7 @@ export default {
     return {
       searchName: '',
       imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl,
       list: [],
       emptyObj: {
         emptyImg: '/static/images/commentEmptySearch.png',

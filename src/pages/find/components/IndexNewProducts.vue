@@ -5,7 +5,7 @@
       <swiper :options="swiperOption">
         <swiper-slide v-for="item in swiperData" :key="item.id">
           <router-link :to="'/details/'+item.id" class="swiperHref">
-            <img v-lazy="imageUrl+item.coverImage" alt="" class="lazyImg">
+            <img v-lazy="imageUrl+item.coverImage+imageAfterUrl" alt="" class="lazyImg">
             <div class="indexContent">
               <h5>
                 <span class="title">{{item.name.substr(0,7)}}</span>
@@ -56,7 +56,8 @@ export default {
         }
       },
       navSwiperData: {},
-      imageUrl: config.imageUrl
+      imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl
     }
   },
   mounted () {}

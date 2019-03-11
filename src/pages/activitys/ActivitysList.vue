@@ -39,7 +39,6 @@ export default {
   data () {
     return {
       title: '活动精选',
-      imageUrl: config.imageUrl, // 图片路径
       titleShow: false,
       activitysTitle: [
         {'title': '单品秒杀', 'subTitle': '限时单品秒杀'},

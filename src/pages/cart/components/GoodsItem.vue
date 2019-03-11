@@ -9,7 +9,7 @@
           </div>
           <div class="goodsItemMain">
             <router-link :to="'/details/'+goodsItem.goodsId" class="linkDetails">
-              <img v-lazy="imageUrl+goodsItem.goodsItemPic" alt="" >
+              <img v-lazy="imageUrl+goodsItem.goodsItemPic+imageAfterUrl" alt="" >
               <img src="/static/images/soldOut.png" alt="" class="soldOut" v-if="goodsItem.stock==0&&goodsItem.status==1">
               </router-link>
             <div class="info">
@@ -104,6 +104,7 @@ export default {
   data () {
     return {
       imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl,
       specs: [],
       subDisabled: false,
       addDisabled: false
@@ -192,7 +193,7 @@ export default {
       let spec = this.specs.join('/')
       let productTitle = goodsItem.goodsItemName
       let productUrl = `${config.url}/#/details/${goodsItem.goodsId}`
-      let productImage = this.imageUrl + goodsItem.goodsItemPic
+      let productImage = this.imageUrl + goodsItem.goodsItemPic + this.imageAfterUrl
       let prodect = `&product_title=${productTitle}&product_url=${productUrl}&product_image=${productImage}&product_规格=${spec}`
       window.location.href = customerService + prodect
     },

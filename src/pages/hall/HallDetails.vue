@@ -2,7 +2,7 @@
   <div class="hallDetailsContainer">
     <common-nav-header :title="experienceObj.title" v-if="experienceObj" />
     <div ref="hallDetails" class="hallDetails" v-if="experienceObj">
-      <img :src="imageUrl+experienceObj.experienceCoverImage" alt="" ref="zoomImg">
+      <img :src="imageUrl+experienceObj.experienceCoverImage+imageAfterUrl" alt="" ref="zoomImg">
       <div class="tag" ref="tag" v-for="(item,index) in experienceObj.experienceGoods" :key="item.goodsId" :style="{left:item.left,top:item.top}" @click="showDetails(index)">
         <img src="/static/icons/hall_tag_icon.png" alt="">
       </div>
@@ -11,7 +11,7 @@
       <popup v-model="showOne">
         <router-link :to="'/details/'+itemObj.goodId" v-if="itemObj">
           <div class="details">
-            <img :src="imageUrl+itemObj.goodCoverImage" alt="">
+            <img :src="imageUrl+itemObj.goodCoverImage+imageAfterUrl" alt="">
             <div class="text">
               <span class="name">{{itemObj.goodName}}</span>
               <span class="price">￥{{itemObj.minPrice}}起</span>
@@ -26,7 +26,7 @@
         <div class="titlExa">样板间商品</div>
         <div class="details" v-if="experienceObj" v-for="(itemObj,index) in experienceObj.experienceGoods" :key="itemObj.goodId">
           <router-link :to="'/details/'+itemObj.goodId">
-            <img v-lazy="imageUrl+itemObj.goodCoverImage" alt="">
+            <img v-lazy="imageUrl+itemObj.goodCoverImage+imageAfterUrl" alt="">
           </router-link>
           <div class="text">
             <p class="name">{{itemObj.goodName}}</p>
@@ -75,6 +75,7 @@ export default {
   data () {
     return {
       imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl,
       experienceObj: null,
       options: {},
       index: '',

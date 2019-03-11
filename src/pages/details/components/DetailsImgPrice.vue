@@ -1,6 +1,6 @@
 <template>
   <div class="detailsImgPrice">
-    <img :src="imageUrl+goods.coverImage" alt="">
+    <img :src="imageUrl+goods.coverImage+imageAfterUrl" alt="">
     <div class="right">
       <div class="name">{{goods.name}}</div>
       <div class="price">
@@ -26,7 +26,8 @@ export default {
   },
   data () {
     return {
-      imageUrl: config.imageUrl
+      imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl
     }
   },
   computed: mapState({

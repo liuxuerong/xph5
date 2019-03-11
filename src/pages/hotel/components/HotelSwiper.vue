@@ -5,7 +5,7 @@
       <swiper :options="swiperOption" ref="mySwiper">
         <swiper-slide v-for="item in bannerData.articles" :key="item.id">
           <router-link :to="'/hotelDetails/'+item.id" class="swiperHref">
-            <img v-lazy="imageUrl+item.articleCoverImage" alt="" class="lazyImg">
+            <img v-lazy="imageUrl+item.articleCoverImage+imageAfterUrl" alt="" class="lazyImg">
           </router-link>
         </swiper-slide>
       </swiper>
@@ -18,7 +18,7 @@
       <div class="itemList">
         <div class="container" v-for="goods in item.goodsItems" :key="goods.id">
           <router-link :to="'/details/'+goods.id">
-            <img v-lazy="imageUrl+goods.coverImage" alt="">
+            <img v-lazy="imageUrl+goods.coverImage+imageAfterUrl" alt="">
             <p class="name">
               {{goods.name}}
             </p>
@@ -55,6 +55,7 @@ export default {
   data () {
     return {
       imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl,
       linkUrl: '/hotelDetails/',
       swiperData: [],
       index: 0,

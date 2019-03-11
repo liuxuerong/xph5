@@ -70,7 +70,6 @@ export default {
   },
   data () {
     return {
-      imageUrl: config.imageUrl,
       tabbar: [],
       title: '',
       goodsListData: [],

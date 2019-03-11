@@ -1,6 +1,6 @@
 <template>
   <div class="goodsItem clearfix">
-    <img v-if="goodsData.pic != ''" :src="imageUrl+goodsData.pic" alt="">
+    <img v-if="goodsData.pic != ''" :src="imageUrl+goodsData.pic+imageAfterUrl" alt="">
     <img v-else src="/static/images/personalHeader.png">
     <div class="orderText">
       <h3 class="goodsName">{{goodsData.goodsName}} {{goodsData.pic != ''}}</h3>
@@ -18,7 +18,8 @@ export default {
   props: ['goodsData'],
   data () {
     return {
-      imageUrl: config.imageUrl
+      imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl
     }
   }
 }

@@ -130,6 +130,7 @@ export default {
   data () {
     return {
       imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl,
       orderData: null,
       saleSn: '',
       spec: ''
@@ -161,7 +162,7 @@ export default {
       this.formatSpec()
       let productTitle = this.orderData.goodsName
       let productUrl = `${config.url}/#/details/${this.orderData.goodsId}`
-      let productImage = this.imageUrl + this.orderData.goodsPic
+      let productImage = this.imageUrl + this.orderData.goodsPic + this.imageAfterUrl
       let prodect = `&product_title=${productTitle}&product_url=${productUrl}&product_image=${productImage}&product_规格=${this.spec}`
       window.location.href = customerService + prodect
     },

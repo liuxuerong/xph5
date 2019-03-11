@@ -1,7 +1,7 @@
 <template>
   <div class="indexGoodsLabel">
     <h4>口碑爆款</h4>
-    <img :src="imageUrl+goodsLabel.appImage" alt="" class="banner">
+    <img :src="imageUrl+goodsLabel.appImage+imageAfterUrl" alt="" class="banner">
     <div class="goodsContainer">
       <common-img-prices class="goodsItem" v-for="(item,index) in goodsLabel.goodsDetails" :key="item.id" :pricesData="item" v-if="bestChoiceGoods.length&&index<3"/>
       <div class="moreGoods">
@@ -36,6 +36,7 @@ export default {
     return {
       indexRecomondData: {},
       imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl,
       bestChoiceGoods: [],
       hotelDetails: '/hotelDetails/'
     }

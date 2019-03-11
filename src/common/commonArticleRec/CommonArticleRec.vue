@@ -3,7 +3,7 @@
     <ul>
       <li v-for="item in articleRecommends" :key="item.id">
         <router-link :to="linkTo+item.id" class="routerDetailes">
-        <img v-lazy="imageUrl+item.articleCoverImage" alt="" class="lazyImg">
+        <img v-lazy="imageUrl+item.articleCoverImage+imageAfterUrl" alt="" class="lazyImg">
         <p class="title">{{item.title}} <em v-if="item.subTitle">|</em> {{item.subTitle}}</p>
         <slot></slot>
         <div class="summary" v-if="item.summary">{{item.summary}}</div>
@@ -24,7 +24,8 @@ export default {
   },
   data () {
     return {
-      imageUrl: config.imageUrl
+      imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl
     }
   }
 }

@@ -46,7 +46,6 @@ export default {
   name: 'AfterSaleSelect',
   data () {
     return {
-      // imageUrl: config.imageUrl,
       title: '选择售后类型',
       goodsData: null
     }

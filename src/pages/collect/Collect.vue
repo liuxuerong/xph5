@@ -65,7 +65,6 @@ export default {
   data () {
     return {
       title: '我的收藏',
-      imageUrl: config.imageUrl,
       content: [],
       goods: [],
       showWhich: 0,

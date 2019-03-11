@@ -4,7 +4,7 @@
     <div class="orderCon" v-if="list.length > 0">
       <div class="orderItem" v-for="(item, i) in list" :key="i">
         <div class="goodsItem border-bottom" v-for="(childItem,j) in item.memberOrderGoods" :key="j" @click="orderDetails(item)">
-          <img v-if="childItem.pic != ''" :src="imageUrl+childItem.pic" alt="">
+          <img v-if="childItem.pic != ''" :src="imageUrl+childItem.pic+imageAfterUrl" alt="">
           <img v-else src="/static/images/personalHeader.png">
           <div class="goodsinfo">
             <h3>{{childItem.goodsName}}</h3>
@@ -131,6 +131,7 @@ export default {
       list: [],
       type: '', // type 1 待付款 2待发货 3 待收货 4 待评价 5 退款售后
       imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl,
       orderState: '',
       otrderStateArr: [],
       emptyObj: {

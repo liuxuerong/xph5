@@ -43,7 +43,6 @@ export default {
   },
   data () {
     return {
-      imageUrl: config.imageUrl,
       title: '口碑爆款',
       goodsListData: [],
       page: 1,

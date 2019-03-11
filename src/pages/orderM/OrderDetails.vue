@@ -195,7 +195,6 @@ export default {
     return {
       orderData: null,
       list: [],
-      imageUrl: config.imageUrl,
       orderStatus: Number,
       computedTime: 0,
       time: '',

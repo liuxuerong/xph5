@@ -1,6 +1,6 @@
 // import axios from 'axios'
-import {storage} from 'util/storage.js'
-import {accessToken} from 'util/const.js'
+import { storage } from 'util/storage.js'
+import { accessToken } from 'util/const.js'
 import { config } from 'util/config' // 图片路径
 export const uploadPic = (e, fn) => {
   let files = e.target.files

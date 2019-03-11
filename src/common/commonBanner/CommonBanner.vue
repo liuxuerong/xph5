@@ -4,7 +4,7 @@
     </h4> -->
     <div v-for="item in bannerData.articles" :key="item.id">
       <router-link :to="linkUrl+item.id" class="nav">
-        <img v-lazy="imageUrl+item.articleCoverImage" alt="" class="banner lazyImg">
+        <img v-lazy="imageUrl+item.articleCoverImage+imageAfterUrl" alt="" class="banner lazyImg">
         <div class="commonContent">
           <h5>
             <span class="title">{{item.title}}</span>
@@ -36,7 +36,8 @@ export default {
   },
   data () {
     return {
-      imageUrl: config.imageUrl
+      imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl
     }
   }
 }

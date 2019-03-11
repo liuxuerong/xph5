@@ -9,7 +9,7 @@
           <span class="setProperty">头像</span>
           <div class="headerImg">
             <img v-if="!headImage" src="/static/images/personalHeader.png">
-            <img v-else :src="imageUrl+headImage">
+            <img v-else :src="imageUrl+headImage+imageAfterUrl">
             <input type="file" name="" class="headerImgFile" @change="headerUpfile($event)">
           </div>
         </div>
@@ -82,6 +82,7 @@ export default {
       memberLevelName: '',
       birthdayStatus: 1,
       imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl,
       startDate: new Date('1940-01-01'),
       endDate: new Date(),
       list: [],

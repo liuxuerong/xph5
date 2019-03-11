@@ -1,7 +1,7 @@
 <template>
   <div class="detailsHeader border-bottom">
     <div class="top">
-      <img :src="imageUrl+details.brandLogo" alt="" class="brandLogo">
+      <img :src="imageUrl+details.brandLogo+imageAfterUrl" alt="" class="brandLogo">
     <div class="title">
       <p class="title">{{details.title}} <em v-if="details.subTitle&&details.subTitle!=''">|</em> {{details.subTitle}}</p>
     </div>
@@ -25,7 +25,8 @@ export default {
   },
   data () {
     return {
-      imageUrl: config.imageUrl
+      imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl
     }
   },
   props: {

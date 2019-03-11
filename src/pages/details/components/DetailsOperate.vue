@@ -44,7 +44,8 @@ export default {
     return {
       collect: false,
       params: null,
-      imageUrl: config.imageUrl
+      imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl
     }
   },
   props: {
@@ -120,7 +121,7 @@ export default {
     contactService () {
       let productTitle = this.goods.name
       let productUrl = `${config.url}/#/details/${this.goods.id}`
-      let productImage = this.imageUrl + this.goods.coverImage
+      let productImage = this.imageUrl + this.goods.coverImage + this.imageAfterUrl
       let prodect = `&product_title=${productTitle}&product_url=${productUrl}&product_image=${productImage}`
       window.location.href = customerService + prodect
     }

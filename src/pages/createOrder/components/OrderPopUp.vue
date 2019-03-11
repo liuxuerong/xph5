@@ -5,7 +5,7 @@
       </div>
       <ul>
         <li v-for="goods in unsatisfactoryData" :key="goods.goodsItemId" class="goodsItem">
-          <img v-lazy="imageUrl+goods.goodsItemPic" alt="">
+          <img v-lazy="imageUrl+goods.goodsItemPic+imageAfterUrl" alt="">
           <div class="info">
             <p class="name">
               {{goods.goodsItemName}}
@@ -48,7 +48,8 @@ export default {
   },
   data () {
     return {
-      imageUrl: config.imageUrl
+      imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl
     }
   },
   methods: {

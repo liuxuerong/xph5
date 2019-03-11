@@ -5,7 +5,7 @@
       <swiper :options="swiperOption">
         <swiper-slide v-for="item in swiperData.articles" :key="item.id">
           <router-link :to="isShowImgTitle?'/goods':'/details/'+item.goodsId" class="swiperHref">
-            <img v-lazy="imageUrl+item.goodsPicture" alt="">
+            <img v-lazy="imageUrl+item.goodsPicture+imageAfterUrl" alt="">
             <div class="cutDown">
               <h6>{{item.goodsName}}</h6>
               <div class="price">
@@ -60,16 +60,9 @@ export default {
   },
   data () {
     return {
-      // swiperOption: {
-      //   spaceBetween: 15,
-      //   slidesPerView: 1.1,
-      //   pagination: {
-      //     el: '.swiper-pagination',
-      //     type: 'fraction'
-      //   }
-      // },
       navSwiperData: {},
-      imageUrl: config.imageUrl
+      imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl
     }
   },
   mounted () {

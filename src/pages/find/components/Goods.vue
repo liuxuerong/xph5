@@ -77,7 +77,6 @@ export default {
   },
   data () {
     return {
-      imageUrl: config.imageUrl,
       goodsCategoryList: [],
       tabbar: [],
       goodsListData: [],

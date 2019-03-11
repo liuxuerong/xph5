@@ -11,7 +11,7 @@
         <div class="integralItem border-bottom" v-for="item in list" :key="item.id">
           <div class="top">
             <div class="left">
-              <img v-if="item.image !== undefined || item.image !== ''" :src="imageUrl+item.image" alt="">
+              <img v-if="item.image !== undefined || item.image !== ''" :src="imageUrl+item.image+imageAfterUrl" alt="">
               <h3>{{item.content}}</h3>
             </div>
             <div class="right" v-if="item.type=='1'||item.type=='5'" :class="item.type=='1'||item.type=='5'?'active':''">+{{item.integral}}.0</div>
@@ -46,6 +46,7 @@ export default {
       totalIntegral: '',
       emptyShow: false,
       imageUrl: config.imageUrl, // 图片路径
+      imageAfterUrl: config.imageAfterUrl,
       emptyObj: {
         emptyImg: '/static/images/emptyIntegral.png',
         emptyBold: '暂无积分',

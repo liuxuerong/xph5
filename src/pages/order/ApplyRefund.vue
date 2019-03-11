@@ -5,7 +5,7 @@
       <!-- 未发货退款 -->
       <div class="orderGoodsInfo" v-if="type=='1'">
         <div class="orderGoods clearfix" v-for="(item,index) in list.memberOrderGoods" :key="index" @click="goodsDetails(item.goodsId)">
-          <img v-if="item.pic != ''" :src="imageUrl+item.pic" alt="">
+          <img v-if="item.pic != ''" :src="imageUrl+item.pic+imageAfterUrl" alt="">
           <img v-else src="/static/images/personalHeader.png">
           <div class="orderText">
             <h3 class="goodsName">{{item.goodsName}}</h3>
@@ -41,7 +41,7 @@
       <div class="refundTitle" v-if="type=='2'">上传凭证</div>
       <div class="uploadWrapper" v-if="type=='2'">
         <div class="uploadItem" v-for="(childImg,j) in objImgs" :key="j">
-          <img :src="imageUrl+childImg" alt="">
+          <img :src="imageUrl+childImg+imageAfterUrl" alt="">
           <span class="deletePic" @click="deletePic(j)"></span>
         </div>
         <div class="uploadPicBtn" v-if="(!objImgs) || ( objImgs.length < 3)">
@@ -84,6 +84,7 @@ export default {
       popData: ['7天无理由退换货', '颜色/尺寸/参数不符', '商品瑕疵', '质量问题', '少件/漏发', '发票问题 '],
       popupVisible: false, // 退款理由显示问题
       imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl,
       type: '',
       objImgs: [],
       pic: ''

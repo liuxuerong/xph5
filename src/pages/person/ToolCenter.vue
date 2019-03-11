@@ -6,7 +6,7 @@
         <h3 class="userInfoTitle">个人中心</h3>
       </div>
       <div class="centerHeaderBot">
-        <img v-if="list.headImage" :src="imageUrl+list.headImage" class="headerImg">
+        <img v-if="list.headImage" :src="imageUrl+list.headImage+imageAfterUrl" class="headerImg">
         <img v-else src="/static/images/memberHeader.png" class="headerImg">
         <div class="headerInfoText">
           <h3>{{list.name}}</h3>
@@ -106,6 +106,7 @@ export default {
       active: '1',
       totalShoppingMoneyHTML: '',
       imageUrl: config.imageUrl, // 图片路径
+      imageAfterUrl: config.imageAfterUrl,
       swiperOption: {
         direction: 'horizontal',
         spaceBetween: 90,

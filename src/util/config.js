@@ -16,6 +16,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 const config = {
   imageUrl: 'https://resource.upinstar.com/',
+  imageAfterUrl: '?imageslim',
   baseUrl,
   url
 }

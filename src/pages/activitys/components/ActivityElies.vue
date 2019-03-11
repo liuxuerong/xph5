@@ -1,6 +1,6 @@
 <template>
   <div class="eliesItem" @click="activityInfoDetails(activityInfoData.id)">
-    <img v-lazy="imageUrl+activityInfoData.articleCoverImage" alt="">
+    <img v-lazy="imageUrl+activityInfoData.articleCoverImage+imageAfterUrl" alt="">
     <h3 class="activityTitle">{{activityInfoData.title}}</h3>
     <span class="activitySummary" v-if="activityInfoData.summary">{{activityInfoData.summary}}</span>
   </div>
@@ -15,7 +15,8 @@ export default {
   },
   data () {
     return {
-      imageUrl: config.imageUrl // 图片路径
+      imageUrl: config.imageUrl, // 图片路径
+      imageAfterUrl: config.imageAfterUrl
     }
   },
   methods: {

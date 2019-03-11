@@ -3,7 +3,7 @@
     <ul>
       <li v-for="item in articles" :key="item.id" class="item">
         <router-link :to="'/brandDetails/'+item.id">
-          <img :src="imageUrl+item.bandCoverImage" alt="">
+          <img :src="imageUrl+item.bandCoverImage+imageAfterUrl" alt="">
           <div class="name">{{item.title}}</div>
           <div class="subName">{{item.subTitle}}</div>
         </router-link>
@@ -25,7 +25,8 @@ export default {
   },
   data () {
     return {
-      imageUrl: config.imageUrl
+      imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl
     }
   },
   methods: {

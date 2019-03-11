@@ -42,7 +42,7 @@
       </div>
       <div class="orderGoodsInfo">
         <div class="orderGoods clearfix" v-for="(item,index) in list.memberOrderGoods" :key="index">
-          <img v-if="item.pic !=''" :src="imageUrl+item.pic" alt="">
+          <img v-if="item.pic !=''" :src="imageUrl+item.pic+imageAfterUrl" alt="">
           <img v-else src="/static/images/personalHeader.png">
           <div class="orderText">
             <h3 class="goodsName">{{item.goodsName}}</h3>
@@ -101,6 +101,7 @@ export default {
       title: '',
       list: [],
       imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl,
       goodsInfo: [],
       afterSales: ''
     }

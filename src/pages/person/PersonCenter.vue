@@ -10,7 +10,7 @@
       </div>
       <div class="perHeader">
         <div class="headerInfo">
-          <img v-if="list.memberHead" :src="imageUrl+list.memberHead" class="headerImg" @click="userDataSet">
+          <img v-if="list.memberHead" :src="imageUrl+list.memberHead+imageAfterUrl" class="headerImg" @click="userDataSet">
           <img v-else src="/static/images/memberHeader.png" class="headerImg"  @click="userDataSet">
           <div class="headerRightText">
             <h2 class="headerName" @click="userDataSet">{{phone}}</h2>
@@ -47,7 +47,7 @@
       <div class="collectBox" v-else>
         <!-- 有收藏商品 -->
         <div class="goodsCollImg">
-          <img :src="imageUrl + item.goodsPics[0].value" alt="" v-for="item in goodsCollArr" :key="item.id" @click="goodsDetails(item.id)">
+          <img :src="imageUrl + item.goodsPics[0].value+imageAfterUrl" alt="" v-for="item in goodsCollArr" :key="item.id" @click="goodsDetails(item.id)">
         </div>
       </div>
       <div class="collectNumber">
@@ -141,6 +141,7 @@ export default {
       name: '',
       hasAddress: false,
       imageUrl: config.imageUrl, // 图片路径
+      imageAfterUrl: config.imageAfterUrl,
       memberHead: '',
       collNum: [], // shangp收藏数量
       coupons: [], // 卡券
@@ -250,11 +251,11 @@ export default {
         if (data.list.length > 1) {
           if (data.collections.collectionGoods.length > 3) {
             for (let i = 0; i < 3; i++) {
-              this.goodsCollArr.push(config.imageUrl + data.list[i].goodsImage)
+              this.goodsCollArr.push(this.imageUrl + data.list[i].goodsImage + this.imageAfterUrl)
             }
           } else {
             for (let i = 0; i < data.list.length; i++) {
-              this.goodsCollArr.push(config.imageUrl + data.list[i].goodsImage)
+              this.goodsCollArr.push(this.imageUrl + data.list[i].goodsImage + this.imageAfterUrl)
             }
           }
         }

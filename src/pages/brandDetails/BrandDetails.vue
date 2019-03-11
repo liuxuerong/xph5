@@ -4,7 +4,7 @@
     <div class="brandDetails" ref="brandDetails">
       <div>
         <div class="topBgImg" v-if="details">
-          <img :src="imageUrl+details.articleCoverImage" alt="" class="articleCoverImage">
+          <img :src="imageUrl+details.articleCoverImage+imageAfterUrl" alt="" class="articleCoverImage">
         </div>
         <details-header v-if="details" :details="details" />
         <common-content v-if="details&&goodsItems.length" :goodsItems="goodsItems" :details="details" />
@@ -44,6 +44,7 @@ export default {
     return {
       id: '',
       imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl,
       details: null, // 详情
       goodsItems: [],
       linkTo: '/brandDetails/',

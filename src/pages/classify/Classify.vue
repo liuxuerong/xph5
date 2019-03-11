@@ -9,7 +9,7 @@
               <p class="title">{{item.catName}}</p>
               <p class="subTitle">{{item.appCode}}</p>
             </div>
-            <img v-lazy="imageUrl+item.appIcon" alt="">
+            <img v-lazy="imageUrl+item.appIcon+imageAfterUrl" alt="">
           </div>
             <ul class="classifyDetails" :class="{active:showIndex==index}" >
               <li class="border-bottom" v-for="(goods,innerIndex) in item.children" :key="goods.id">
@@ -44,6 +44,7 @@ export default {
   data () {
     return {
       imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl,
       showIndex: 0,
       classfiyData: []
     }

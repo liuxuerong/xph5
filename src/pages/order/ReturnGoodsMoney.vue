@@ -52,7 +52,7 @@
           <span>温馨提示：</span>寄回物品时应不影响我司进行二次销售，即商品及包装保持出售时原状且配件齐全(含发票)，方可享受全额退货服务。若您对我们退换货政策还有任何疑问，欢迎联系我们在线客服。
         </div>
         <div class="orderGoods clearfix" v-for="(item,index) in list.memberOrderGoods" :key="index">
-          <img v-if="item.pic !=''" :src="imageUrl+item.pic" alt="">
+          <img v-if="item.pic !=''" :src="imageUrl+item.pic+imageAfterUrl" alt="">
           <img v-else src="/static/images/personalHeader.png">
           <div class="orderText">
             <h3 class="goodsName">{{item.goodsName}}</h3>
@@ -112,6 +112,7 @@ export default {
       list: null,
       afterSales: '',
       imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl,
       goodsInfo: [],
       logisticsName: '',
       logisticsNum: ''

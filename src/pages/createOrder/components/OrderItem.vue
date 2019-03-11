@@ -2,7 +2,7 @@
   <div class="orderItem">
     <router-link :to="'/details/'+pricesData.goodsId">
       <div class="imgContainer">
-        <img v-lazy="imageUrl+pricesData.pic" alt="">
+        <img v-lazy="imageUrl+pricesData.pic+imageAfterUrl" alt="">
       </div>
       <div class="info">
         <p class="name">
@@ -38,7 +38,8 @@ export default {
   },
   data () {
     return {
-      imageUrl: config.imageUrl
+      imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl
     }
   }
 }

@@ -79,7 +79,6 @@ export default {
   },
   data () {
     return {
-      imageUrl: config.imageUrl,
       swiperOption: {
         spaceBetween: 12,
         slidesPerView: 1.2

@@ -3,7 +3,7 @@
       <swiper :options="swiperOption">
         <swiper-slide v-for="item in swiperData" :key="item.adId">
           <router-link :to="'/details/'+item.linkId" class="swiperHref">
-            <img v-lazy="imageUrl+item.image" alt="" class="lazyImg">
+            <img v-lazy="imageUrl+item.image+imageAfterUrl" alt="" class="lazyImg">
           </router-link>
         </swiper-slide>
         <div class="swiper-pagination" slot="pagination"></div>
@@ -25,6 +25,7 @@ export default {
   data () {
     return {
       imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl,
       swiperOption: {
         loop: true,
         autoplay: {

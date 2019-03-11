@@ -15,7 +15,7 @@
         <ul class="goodsContainer" v-if="imgsList.length">
           <li v-for="item in imgsList" v-if="imgsList.length" :key="item.index">
               <router-link :to="'/hallDetails/'+item.index">
-                <img :src="imageUrl+item.img" alt="">
+                <img :src="imageUrl+item.img+imageAfterUrl" alt="">
               </router-link>
             </li>
             <li class="emptyBox"></li>
@@ -52,6 +52,7 @@ export default {
     return {
       title: '图集',
       imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl,
       imgsList: [],
       hallAtlasData: [{
         name: '全部',

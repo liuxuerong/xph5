@@ -6,7 +6,7 @@
         <story-details-header v-if="details" :details="details" :imageShow="true"/>
         <div v-for="item in goodsItems" v-if="goodsItems.length" :key="item.id" class="goodsItems">
           <router-link :to="'/details/'+item.id">
-            <img v-lazy="imageUrl+item.coverImage" alt="" class="banner">
+            <img v-lazy="imageUrl+item.coverImage+imageAfterUrl" alt="" class="banner">
             <div class="hotelContent">
               <h5>
                 <span class="title">{{item.name}}</span>
@@ -55,6 +55,7 @@ export default {
       goodsItems: [],
       linkTo: '/storyDetails/',
       imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl,
       hideHead: false,
       platform: '',
       articleShow: true

@@ -1,6 +1,6 @@
 <template>
   <div class="activityGoodsItem" @click="activityGoodsDetails(activityGoods.goodsId)">
-    <img v-lazy="imageUrl+activityGoods.coverImage" class="goodsImg">
+    <img v-lazy="imageUrl+activityGoods.coverImage+imageAfterUrl" class="goodsImg">
     <div class="goodsText">
       <h3 class="goodsName">{{activityGoods.goodsName}}</h3>
       <div class="goodsPrice">
@@ -23,6 +23,7 @@ export default {
   data () {
     return {
       imageUrl: config.imageUrl, // 图片路径
+      imageAfterUrl: config.imageAfterUrl,
       beginTime: 0,
       time: ''
     }

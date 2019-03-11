@@ -89,7 +89,6 @@ export default {
   },
   data () {
     return {
-      imageUrl: config.imageUrl,
       goodsId: '',
       swiperData: [],
       goods: null,

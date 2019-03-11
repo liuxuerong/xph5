@@ -38,7 +38,6 @@ export default {
   },
   data () {
     return {
-      imageUrl: config.imageUrl,
       goodsList: [],
       page: 1,
       noMore: false,

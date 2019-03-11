@@ -39,7 +39,7 @@
                   <img src="/static/icons/invoice_carmer1.png" alt="">
                 </span>
             </div>
-            <img :src="imageUrl+inputForm.certificate" alt="" class="upImg" v-show="inputForm.certificate!=''">
+            <img :src="imageUrl+inputForm.certificate+imageAfterUrl" alt="" class="upImg" v-show="inputForm.certificate!=''">
             <div class="delIcon" v-if="inputForm.certificate!=''" @click="delImg ('certificate')"></div>
           </div>
           <div class="upWrap">
@@ -50,7 +50,7 @@
                   <img src="/static/icons/invoice_carmer2.png" alt="">
                 </span>
             </div>
-            <img :src="imageUrl+inputForm.advice" alt="" class="upImg" v-show="inputForm.advice!=''">
+            <img :src="imageUrl+inputForm.advice+imageAfterUrl" alt="" class="upImg" v-show="inputForm.advice!=''">
             <div class="delIcon" v-if="inputForm.advice!=''" @click="delImg ('advice')"></div>
           </div>
           <div class="upWrap">
@@ -61,7 +61,7 @@
                   <img src="/static/icons/invoice_carmer3.png" alt="">
                 </span>
             </div>
-            <img :src="imageUrl+inputForm.license" alt="" class="upImg" v-show="inputForm.license!=''">
+            <img :src="imageUrl+inputForm.license+imageAfterUrl" alt="" class="upImg" v-show="inputForm.license!=''">
             <div class="delIcon" v-if="inputForm.license!=''" @click="delImg ('license')"></div>
           </div>
         </group>
@@ -96,13 +96,13 @@
         <group title="资质附件" v-if="inputForm.invoiceStatus==2">
           <p class="tip">为确保增票开具的准确性，请提交资质附件以作为开票校验依据</p>
           <div class="upWrap">
-            <img :src="imageUrl+inputForm.certificate" alt="" class="upImg" v-show="inputForm.certificate!=''">
+            <img :src="imageUrl+inputForm.certificate+imageAfterUrl" alt="" class="upImg" v-show="inputForm.certificate!=''">
           </div>
           <div class="upWrap">
-            <img :src="imageUrl+inputForm.advice" alt="" class="upImg" v-show="inputForm.advice!=''">
+            <img :src="imageUrl+inputForm.advice+imageAfterUrl" alt="" class="upImg" v-show="inputForm.advice!=''">
           </div>
           <div class="upWrap">
-            <img :src="imageUrl+inputForm.license" alt="" class="upImg" v-show="inputForm.license!=''">
+            <img :src="imageUrl+inputForm.license+imageAfterUrl" alt="" class="upImg" v-show="inputForm.license!=''">
           </div>
         </group>
       </group>
@@ -203,6 +203,7 @@ export default {
   data () {
     return {
       imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl,
       title: '发票信息',
       info: null, // 已经存在的发票信息
       explainVisible: false,

@@ -4,7 +4,7 @@
     <div class="evaluateCon">
       <div class="goodsItem" v-for="(item,index) in list" :key="item.goodsItemId">
         <div class="evaluateTop clearfix">
-          <img v-if="item.pic != ''" :src="imageUrl+item.pic" alt="">
+          <img v-if="item.pic != ''" :src="imageUrl+item.pic+imageAfterUrl" alt="">
           <img v-else src="/static/images/personalHeader.png">
           <div class="orderText">
             <h3 class="goodsName">{{item.goodsName}}</h3>
@@ -23,7 +23,7 @@
             <input name="file" @change="uploadPic($event,index)" ref="inputer"  type="file" v-if="!objImgs[index]||objImgs[index]&&objImgs[index].length<5"/>
           </div>
           <div class="uploadItem" v-for="(childImg,j) in objImgs[index]" :key="j">
-            <img :src="imageUrl+childImg" alt="">
+            <img :src="imageUrl+childImg+imageAfterUrl" alt="">
             <span class="deletePic" @click="deletePic(index,j)"></span>
           </div>
         </div>
@@ -49,6 +49,7 @@ export default {
       orderCode: '',
       list: [],
       imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl,
       objImgs: [],
       evaluateText: '',
       Surplus: 0,

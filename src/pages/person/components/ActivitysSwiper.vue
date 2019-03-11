@@ -2,7 +2,7 @@
   <div class="activitysWrapper">
     <swiper :options="swiperOption">
       <swiper-slide class="swiperItem" v-for="item in activitysData" :key="item.id" @click.native="activitysList">
-        <img :src="imageUrl+item.articleCoverImage" alt="">
+        <img :src="imageUrl+item.articleCoverImage+imageAfterUrl" alt="">
         <!-- <h3 class="title" v-if="item.title">{{item.title}}</h3>
         <p class="subTitle" v-if="item.subTitle">{{item.subTitle}}</p>
         <span class="summary" v-if="item.summary">{{item.summary}}</span> -->
@@ -18,6 +18,7 @@ export default {
   data () {
     return {
       imageUrl: config.imageUrl, // 图片路径
+      imageAfterUrl: config.imageAfterUrl,
       swiperOption: {
         notNextTick: true,
         slidesPerView: 'auto',

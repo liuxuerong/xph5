@@ -1,7 +1,7 @@
 <template>
   <div class="commonImgPrices" :class={left:left} @click="goodsDetail (pricesData.id)">
       <div class="imgContainer" v-if="img">
-        <img v-lazy="imageUrl+img" alt="">
+        <img v-lazy="imageUrl+img+imageAfterUrl" alt="">
       </div>
       <p class="name">
         {{pricesData.name}}
@@ -37,6 +37,7 @@ export default {
   data () {
     return {
       imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl,
       img: null
     }
   },

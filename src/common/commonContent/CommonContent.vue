@@ -4,7 +4,7 @@
       <div v-for="item in goodsItems" :key="item.id" v-if="goodsItems.length">
         <div class="goodsItems" v-if="JSON.stringify(item) != '{}'">
           <div>
-            <img :src="imageUrl+item.coverImage" alt="" :key="item.coverImage">
+            <img :src="imageUrl+item.coverImage+imageAfterUrl" alt="" :key="item.coverImage">
           </div>
           <div class="right">
             <div class="name">{{item.name}}</div>
@@ -42,6 +42,7 @@ export default {
       content: '',
       contentArr: [],
       imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl,
       platform: ''
     }
   },

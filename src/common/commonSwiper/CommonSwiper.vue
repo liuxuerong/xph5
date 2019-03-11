@@ -2,7 +2,7 @@
   <div class="xpSwiper" v-if="swiperData.length">
       <swiper :options="swiperOption">
         <swiper-slide v-for="item in swiperData" :key="item.id">
-            <img :src="imageUrl+item.value" alt="">
+            <img :src="imageUrl+item.value+imageAfterUrl" alt="">
         </swiper-slide>
         <div class="swiper-pagination" slot="pagination" v-if="showPagination"></div>
       </swiper>
@@ -26,6 +26,7 @@ export default {
   data () {
     return {
       imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl,
       swiperOption: {
         loop: true,
         lazy: {

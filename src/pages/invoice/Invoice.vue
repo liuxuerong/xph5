@@ -38,7 +38,7 @@
               <p>公司营业执照<br>（非必填）</p>
             </span>
           </div>
-          <img v-lazy="imageUrl+inputForm.certificate" alt="" class="upImg" v-else>
+          <img v-lazy="imageUrl+inputForm.certificate+imageAfterUrl" alt="" class="upImg" v-else>
           <div class="delIcon"  v-if="inputForm.certificate!==''" @click="delImg ('certificate')"></div>
         </div>
       </group>
@@ -52,7 +52,7 @@
               <p>公司营业执照</p>
               </span>
           </div>
-          <img v-lazy="imageUrl+inputForm.certificate" alt="" class="upImg" v-show="inputForm.certificate!==''">
+          <img v-lazy="imageUrl+inputForm.certificate+imageAfterUrl" alt="" class="upImg" v-show="inputForm.certificate!==''">
           <div class="delIcon"  v-if="inputForm.certificate!==''" @click="delImg ('certificate')"></div>
         </div>
         <div class="upWrap">
@@ -64,7 +64,7 @@
               <p>一般纳税人认定通知书</p>
             </span>
           </div>
-          <img v-lazy="imageUrl+inputForm.advice" alt="" class="upImg" v-show="inputForm.advice!==''">
+          <img v-lazy="imageUrl+inputForm.advice+imageAfterUrl" alt="" class="upImg" v-show="inputForm.advice!==''">
           <div class="delIcon"  v-if="inputForm.advice!==''" @click="delImg ('advice')"></div>
         </div>
         <div class="upWrap">
@@ -76,7 +76,7 @@
               <p>开户许可证</p>
             </span>
           </div>
-          <img v-lazy="imageUrl+inputForm.license" alt="" class="upImg" v-show="inputForm.license!==''">
+          <img v-lazy="imageUrl+inputForm.license+imageAfterUrl" alt="" class="upImg" v-show="inputForm.license!==''">
           <div class="delIcon"  v-if="inputForm.license!==''"  @click="delImg ('license')"></div>
         </div>
       </group>
@@ -129,6 +129,7 @@ export default {
   data () {
     return {
       imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl,
       title: '开具发票',
       invoiceType: ['个人', '企业'],
       invoiceStatus: ['增值税普票'],

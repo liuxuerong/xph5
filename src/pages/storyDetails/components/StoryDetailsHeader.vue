@@ -1,6 +1,6 @@
 <template>
   <div class="storyDetailsHeader border-bottom">
-    <img v-if="articleShow||imageShow" :src="imageUrl+details.articleCoverImage" alt="">
+    <img v-if="articleShow||imageShow" :src="imageUrl+details.articleCoverImage+imageAfterUrl" alt="">
     <div class="titleCont">
       <p class="title titleReturn">{{details.title}} <em v-if="details.subTitle !==''">|</em> {{details.subTitle}}</p>
       <common-collection class="collection" v-if="!articleShow" />
@@ -39,6 +39,7 @@ export default {
   data () {
     return {
       imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl,
       articleShow: false
     }
   },

@@ -60,7 +60,7 @@
           <input name="file" @change="uploadPic($event)" ref="inputer"  type="file"/>
         </div>
         <div class="uploadItem" v-for="(childImg,j) in objImgs" :key="j">
-          <img :src="imageUrl+childImg" alt="">
+          <img :src="imageUrl+childImg+imageAfterUrl" alt="">
           <span class="deletePic" @click="deletePic(j)"></span>
         </div>
       </div>
@@ -221,6 +221,7 @@ export default {
         contactName: ''
       },
       imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl,
       objImgs: []
     }
   },

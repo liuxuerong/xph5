@@ -7,7 +7,7 @@
     <div class="itemList">
       <div class="container" v-for="item in itemsData.goodsItems" :key="item.id">
         <router-link :to="'/details/'+item.id">
-          <img v-lazy="imageUrl+item.coverImage" alt="">
+          <img v-lazy="imageUrl+item.coverImage+imageAfterUrl" alt="">
           <p class="name">
             {{item.name}}
           </p>
@@ -28,7 +28,8 @@ export default {
   },
   data () {
     return {
-      imageUrl: config.imageUrl
+      imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl
     }
   }
 }

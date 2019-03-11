@@ -18,7 +18,7 @@
         <textarea name="" v-model="feedback" class="feedbackText" placeholder="请写下对星品的感受，我们将不断优化对您的服务！"></textarea>
         <div class="uploadWrapper">
           <div class="uploadItem" v-for="(childImg,j) in objImgs" :key="j">
-            <img :src="imageUrl+childImg" alt="">
+            <img :src="imageUrl+childImg+imageAfterUrl" alt="">
             <span class="deletePic" @click="deletePic(j)"></span>
           </div>
           <div class="uploadPicBtn" v-if="(!objImgs) || ( objImgs.length < 3)">
@@ -52,6 +52,7 @@ export default {
       feedbackType: ['功能建议', '购买遇到的问题', '性能问题', '其他'],
       active: 0,
       imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl,
       objImgs: [],
       feedback: '',
       phone: ''

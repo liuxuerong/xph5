@@ -7,7 +7,7 @@
       <div class="swiper-wrapper">
         <div class="swiper-slide" v-for="(item,index) in swiperData" :key="item.id">
           <router-link :to="'/hallDetails/'+index" class="navIndex">
-            <img :src="imageUrl+item.experienceCoverImage" alt="" class="swiperImg">
+            <img :src="imageUrl+item.experienceCoverImage+imageAfterUrl" alt="" class="swiperImg">
             <div class="infoContainer">
               <div class="left">
                 <div class="title">{{item.title}}</div>
@@ -50,6 +50,7 @@ export default {
   data () {
     return {
       imageUrl: config.imageUrl,
+      imageAfterUrl: config.imageAfterUrl,
       swiperData: [],
       swiperOption: {
         direction: 'vertical',

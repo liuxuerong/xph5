@@ -1,7 +1,6 @@
 <template>
   <div class="activityCategoryItem" v-if="activityCategory.activityEndTime !== '00:00:00'">
     <div class="categoryInfo">
-      <!-- <img class="categoryImg" v-lazy="imageUrl+activityCategory.picture" alt=""> -->
       <img class="categoryImg" src="static/images/activeClassfiyBg.jpg" alt="">
       <dir class="categoryName">
         <h3 class="name">{{activityCategory.name}}
@@ -14,7 +13,7 @@
     <div class="goodsInfo">
       <div class="goodsInfoBox clearfix">
         <div class="goodsInfoItem" v-if="activityCategoryGoods" v-for="goods in activityCategoryGoods" :key="goods.id" @click="activityGoodsDetails(goods.id)">
-          <img v-lazy="imageUrl+goods.goodsPics[0].value" alt="">
+          <img v-lazy="imageUrl+goods.goodsPics[0].value+imageAfterUrl" alt="">
           <div class="goodsInfoText">
             <h3>{{goods.name}}</h3>
             <p>￥{{goods.minPrice}}<del>￥{{goods.marketPrice}}</del></p>
@@ -42,6 +41,7 @@ export default {
   data () {
     return {
       imageUrl: config.imageUrl, // 图片路径
+      imageAfterUrl: config.imageAfterUrl,
       beginTime: 0,
       time: '',
       platform: '',
