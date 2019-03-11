@@ -33,8 +33,7 @@ import {
   config
 } from 'util/config.js'
 import {
-  experience,
-  logisticsInform
+  experience
 } from 'util/const.js'
 import {
   Popup
@@ -51,18 +50,7 @@ export default {
     return {
       imageUrl: config.imageUrl,
       imageAfterUrl: config.imageAfterUrl,
-      swiperData: [],
-      swiperOption: {
-        direction: 'vertical',
-        notNextTick: true,
-        setWrapperSize: true,
-        mousewheelControl: true,
-        observeParents: true,
-        slidesPerView: 1,
-        loopedSlides: 1,
-        height: window.innerHeight,
-        loop: true
-      }
+      swiperData: []
     }
   },
   components: {

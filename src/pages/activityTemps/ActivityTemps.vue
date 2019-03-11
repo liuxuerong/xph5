@@ -19,8 +19,14 @@ import {
 import {
   Toast
 } from 'mint-ui'
+import {
+  storage
+} from 'util/storage'
 import dsbridge from 'dsbridge'
 import { getUrlParam } from '@/func/params'
+import {
+  accessToken
+} from 'util/const.js'
 export default {
   name: 'ActivityTemps',
   components: {
@@ -30,14 +36,9 @@ export default {
     return {
       titleShow: false,
       activityDetails: null,
-      params: ''
+      params: '',
+      token: ''
     }
-  },
-  computed: {
-
-  },
-  watch: {
-
   },
   methods: {
     activitiesRender () {
@@ -77,23 +78,27 @@ window.clickTo = function (couponId) {
   let params = {
     couponId
   }
-  http(memberCouponRecord, params).then((response) => {
-    if (response.data.code === 0) {
-      Toast({
-        message: '优惠券领取成功',
-        position: 'center',
-        duration: 2000
-      })
-    } else {
-      Toast({
-        message: response.data.message,
-        position: 'center',
-        duration: 2000
-      })
-    }
-  }).catch((err) => {
-    console.log(err)
-  })
+  if (storage.getLocalStorage(accessToken)) {
+    http(memberCouponRecord, params).then((response) => {
+      if (response.data.code === 0) {
+        Toast({
+          message: '优惠券领取成功',
+          position: 'center',
+          duration: 2000
+        })
+      } else {
+        Toast({
+          message: response.data.message,
+          position: 'center',
+          duration: 2000
+        })
+      }
+    }).catch((err) => {
+      console.log(err)
+    })
+  } else {
+    window.location.href = `${window.location.origin}/#/login`
+  }
 }
 
 </script>

@@ -136,11 +136,6 @@ const router = new Router({
     {
       path: '/login',
       name: 'Login',
-      component: resolve => require(['@/pages/login/PhoneCode'], resolve)
-    },
-    {
-      path: '/phoneCode',
-      name: 'phoneCode',
       component: resolve => require(['@/pages/login/Login'], resolve)
     },
     {
@@ -186,17 +181,18 @@ const router = new Router({
       path: '/aboutMember',
       name: 'aboutMember',
       component: resolve => require(['@/pages/person/AboutMember'], resolve)
-    }, {
+    },
+    {
+      path: '/memberCenter',
+      name: 'memberCenter',
+      meta: { requireLogin: true },
+      component: resolve => require(['@/pages/memberCenter/MemberCenter'], resolve)
+    },
+    {
       path: '/orderIndex',
       name: 'orderIndex',
       meta: { requireLogin: true },
       component: resolve => require(['@/pages/order/OrderIndex'], resolve)
-    },
-    {
-      path: '/orderList1/:type',
-      name: 'orderList1',
-      meta: { requireLogin: true },
-      component: resolve => require(['@/pages/order/OrderList'], resolve)
     },
     {
       path: '/orderList',
@@ -206,12 +202,6 @@ const router = new Router({
       children: [
         {name: 'orderListStatus', path: ':status', component: resolve => require(['@/pages/orderM/OrderListStatus'], resolve)}
       ]
-    },
-    {
-      path: '/orderDetails1/:type/:orderCode',
-      name: 'orderDetails1',
-      meta: { requireLogin: true },
-      component: resolve => require(['@/pages/order/OrderDetails'], resolve)
     },
     {
       path: '/orderDetails/:orderSn',

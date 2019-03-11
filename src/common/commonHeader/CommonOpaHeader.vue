@@ -1,0 +1,68 @@
+<template>
+  <div class="commonNavHeader">
+    <div class="back" @click.stop="goBack"></div>
+    {{title}}
+    <slot></slot>
+  </div>
+</template>
+<script>
+export default {
+  name: 'CommonOpaHeader',
+  components: {},
+  props: {
+    title: String,
+    replace: {
+      default: false,
+      type: Boolean
+    }
+  },
+
+  methods: {
+    goBack () {
+      if (this.replace) {
+        this.$router.replace(this.replace)
+      } else {
+        if (this.$route.name !== 'HallAtlas') {
+          this.$router.go(-1)
+        } else {
+          this.$router.push('/hall')
+        }
+      }
+    }
+  }
+}
+</script>
+<style lang="stylus" scoped>
+@import '~styles/mixins.styl'
+  .commonNavHeader
+    position fixed
+    top 0
+    height 120px
+    line-height 120px
+    font-weight 600
+    text-align center
+    font-size 56px
+    color #fff
+    width 100%
+    z-index 9999
+    padding 0 57px
+    ellipsis()
+    .back
+      position absolute
+      width 100px
+      height 120px
+      left 50px
+      z-index 99999
+    .back:before,.back:after
+      width 0
+      height 0
+      content ''
+      position absolute
+      border 30px solid transparent
+      border-right 30px solid #fff
+      left -30px
+      top 30px
+    .back:after
+      border-right 30px solid #252525
+      left -24px
+</style>
