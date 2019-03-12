@@ -178,15 +178,21 @@ const router = new Router({
       component: resolve => require(['@/pages/person/ToolCenter'], resolve)
     },
     {
-      path: '/aboutMember',
+      path: '/aboutMember', // 会员介绍
       name: 'aboutMember',
       component: resolve => require(['@/pages/person/AboutMember'], resolve)
     },
     {
-      path: '/memberCenter',
+      path: '/memberCenter', // 会员中心
       name: 'memberCenter',
       meta: { requireLogin: true },
       component: resolve => require(['@/pages/memberCenter/MemberCenter'], resolve)
+    },
+    {
+      path: '/transactionRecord', // 交易记录（会员卡购买记录）
+      name: 'transactionRecord',
+      meta: { requireLogin: true },
+      component: resolve => require(['@/pages/memberCenter/TransactionRecord'], resolve)
     },
     {
       path: '/orderIndex',

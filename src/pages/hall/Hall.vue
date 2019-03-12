@@ -69,7 +69,6 @@ export default {
             }
           }
         }
-        this.swiperOption.loopedSlides = this.swiperData.length
         storage.setLocalStorage(experience, experienceData)
         this.$nextTick(function () {
           setTimeout(() => {

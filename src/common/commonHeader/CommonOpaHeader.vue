@@ -46,6 +46,7 @@ export default {
     width 100%
     z-index 9999
     padding 0 57px
+    background-color #252525
     ellipsis()
     .back
       position absolute

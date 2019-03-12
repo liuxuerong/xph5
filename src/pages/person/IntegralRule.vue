@@ -1,25 +1,57 @@
 <template>
   <div class="wrapper" :class="{wrapperTitle:titleShow}">
-    <userinfo-header :title="title" :class="{hide:titleShow}" oper=''></userinfo-header>
+    <userinfo-header :title="title" :class="{hide:titleShow}" oper></userinfo-header>
     <div class="integralRuleCon">
       <div class="integralRuleText">
         <h3>积分获取规则</h3>
-        <span>1.在星品优汇旗舰店、APP、小程序消费任意商品满1元积分1分</span>
-        <span>2.星品优汇会员日（每月18日），双倍积分</span>
-        <span>3.会员生日当天购物，双倍积分</span>
+        <span>
+          <em class="num">1.</em>
+          <p>在星品优汇线下门店、网上商城
+            <a href="www.upinstar.com">（www.upinstar.com）</a>APP、小程序消费任意金额即可获得积分
+          </p>
+        </span>
+        <span>
+          <em class="num">2.</em>
+          <p>会员生日当天购物，双倍积分</p>
+        </span>
         <h3>积分说明及有效期</h3>
-        <span>1.积分可累加，积分有效期以自然年为计算单位，两年为一个有效期实时滚动清零，即每年1月1日，将对两年前获取且未使用的积分进行清零。积分清零之前，星品优汇将通过站内短信息提醒</span>
-        <span>2.积分的数值精准到个位（小数点后全部舍弃，不进行四舍五入），例如：原价56.9元的商品，返56个积分</span>
-        <span>3.购买过程中，积分已实际消费金额为准，不受产品折扣/活动影响</span>
-        <span>4.在线上购买商品时，在完成该笔交易后（订单状态为“交易成功”）,方可得到此次交易的相应积分，线下购买商品则以线下买单时实际金额做实时累积，若已购买的商品在完成交易后，申请过售后并有退款产生，系统将根据退款金额进行积分扣减</span>
-        <span>5.在使用积分时，优先消耗旧积分（如您的积分由5月份到11月份共同累积，则优先消耗去年5月份的积分）</span>
-        <span>6.所有等级会员积分原则完全相同</span>
-        <span>7.若柜台积分原则与以上清单不同，请以柜台实际情况为准</span>
-        <span>8.积分不能兑现，不可转让</span>
+        <span>
+          <em class="num">1.</em>
+          <p>消费每满10元积1分，单笔不满10元部分视为积1分，例如：订单金额50.4元，交易成功后返6个积分</p>
+        </span>
+        <span>
+          <em class="num">2.</em>
+          <p>积分数量以订单金额为准</p>
+        </span>
+        <span>
+          <em class="num">3.</em>
+          <p>交易成功后，积分到账</p>
+        </span>
+        <span>
+          <em class="num">4.</em>
+          <p>在使用积分时，优先消耗旧积分</p>
+        </span>
+        <span>
+          <em class="num">5.</em>
+          <p>积分不可提现，不可转让</p>
+        </span>
+        <span>
+          <em class="num">6.</em>
+          <p>积分可累积，每年1月1日将对2年前的剩余积分进行清零，例如：2019年1月1号，清零2017年1月1日前的购物积分</p>
+        </span>
         <h3>积分使用方式</h3>
-        <span>1.攒积分兑换商品，精品美物随心兑</span>
-        <span>2.星品超值活动，积分换购优先权</span>
-        <span>3.使用积分兑换星品优汇超值优惠券（具体使用方式以积分商城为准)</span>
+        <span>
+          <em class="num">1.</em>
+          <p>攒积分兑换商品，精品美物随心兑</p>
+        </span>
+         <span>
+          <em class="num">2.</em>
+          <p>星品超值活动，积分换购优先权</p>
+        </span>
+         <span>
+          <em class="num">3.</em>
+          <p>使用积分兑换星品优汇超值优惠券（具体使用方式以积分商城为准)</p>
+        </span>
       </div>
       <p class="concludingTip">更多惊喜，我们正在不断完善，只为给您更好的体验</p>
     </div>
@@ -48,7 +80,11 @@ export default {
     },
     IntegralRuleRender () {
       this.platform = getUrlParam('platform')
-      if (this.platform === 'i' || this.platform === 'a' || this.platform === 'wx') {
+      if (
+        this.platform === 'i' ||
+        this.platform === 'a' ||
+        this.platform === 'wx'
+      ) {
         this.titleShow = true
         this.returnTitle(this.title)
       }
@@ -61,49 +97,56 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-  @import "~styles/mixins.styl";
-  .hide
-    display none
-  .wrapper.wrapperTitle
-    padding-top 0
-  .wrapper
+@import '~styles/mixins.styl'
+
+.hide
+  display none
+.wrapper.wrapperTitle
+  padding-top 0
+.wrapper
+  width 100%
+  box-sizing border-box
+  padding-top 132px
+.integralRuleCon
+  display block
+  width 100%
+  padding-bottom 158px
+  bgImage('/static/images/IntegralRuleBg')
+  box-sizing border-box
+  padding-top 64px
+.integralRuleText
+  width calc(100% - 100px)
+  margin 0 auto
+  border-radius 20px
+  background #fff
+  box-sizing border-box
+  padding 0 40px 40px
+  overflow hidden
+  h3
     width 100%
-    box-sizing border-box
-    padding-top 132px
-  .integralRuleCon
+    font-size 46px
+    font-weight bold
+    color #262626
+    margin 100px 0 58px
+  span
     display block
     width 100%
-    height 3024px
-    bgImage('/static/images/IntegralRuleBg')
-    box-sizing border-box
-    padding-top 64px
-  .integralRuleText
-    width calc(100% - 100px)
-    margin 0 auto
-    border-radius 20px
-    background #fff
-    box-sizing border-box
-    padding 0 40px 40px
-    overflow hidden
-    h3
-      width 100%
-      font-size 46px
-      font-weight bold
-      color #262626
-      margin 100px 0 58px
-    span
-      display block
-      width 100%
-      line-height 70px
-      font-size 40px
-      margin-bottom 16px
-      color #262626
-  .concludingTip
-    display block
-    width 100%
-    height 40px
-    text-align center
-    font-size 36px
-    color #fff
-    margin-top 54px
+    line-height 70px
+    font-size 40px
+    margin-bottom 16px
+    color #262626
+    display flex
+    align-items top
+    p
+      word-break break-all
+      a
+        color #262626
+.concludingTip
+  display block
+  width 100%
+  height 40px
+  text-align center
+  font-size 36px
+  color #fff
+  margin-top 54px
 </style>
