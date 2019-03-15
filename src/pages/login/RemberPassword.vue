@@ -152,7 +152,7 @@ export default {
 			float left
 			width 32px
 			height 58px
-			bgImage('/static/icons/back')
+			bgImage('../../icons/back')
 		.remberPassword
 			float right
 			width 18%

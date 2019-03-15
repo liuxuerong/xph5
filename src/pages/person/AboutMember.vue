@@ -138,13 +138,13 @@ export default {
         height 96px
         margin 0 auto
       .aboutGroup01
-        background url('/static/icons/menberGrade01.png') no-repeat center center /100% 100%
+        background url('../../icons/menberGrade01.png') no-repeat center center /100% 100%
       .aboutGroup02
-        background url('/static/icons/menberGrade02.png') no-repeat center center /100% 100%
+        background url('../../icons/menberGrade02.png') no-repeat center center /100% 100%
       .aboutGroup03
-        background url('/static/icons/menberGrade03.png') no-repeat center center /100% 100%
+        background url('../../icons/menberGrade03.png') no-repeat center center /100% 100%
       .aboutGroup04
-        background url('/static/icons/menberGrade04.png') no-repeat center center /100% 100%
+        background url('../../icons/menberGrade04.png') no-repeat center center /100% 100%
   .memberWays
    width 100%
    li

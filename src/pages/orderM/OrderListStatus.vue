@@ -73,6 +73,7 @@ import {
 import notice from 'util/notice.js'
 import OrderItem from './components/OrderItem'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
+import emptyImg from '../../images/commentEmptyList.png'
 import BScroll from 'better-scroll'
 export default {
   name: 'OrderListStatus',
@@ -89,7 +90,7 @@ export default {
       noMore: false,
       orderSn: '',
       emptyObj: {
-        emptyImg: '/static/images/commentEmptyList.png',
+        emptyImg,
         emptyBold: '暂无订单',
         emptyP: '您还没有购买的订单',
         buttonText: null,

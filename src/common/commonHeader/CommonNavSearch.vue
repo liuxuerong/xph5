@@ -87,14 +87,14 @@ export default {
     .search
       width 60px
       height 60px
-      bgImage("/static/icons/search_black")
+      bgImage("../../icons/search_black")
       vertical-align middle
       margin-top 20px
       margin-right 50px
     .car
       width 83px
       height 83px
-      bgImage("/static/icons/car")
+      bgImage("../../icons/car")
       margin-top 13px
       position relative
       margin-right 50px

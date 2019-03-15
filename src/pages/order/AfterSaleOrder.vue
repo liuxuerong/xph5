@@ -43,7 +43,7 @@
       <div class="orderGoodsInfo">
         <div class="orderGoods clearfix" v-for="(item,index) in list.memberOrderGoods" :key="index">
           <img v-if="item.pic !=''" :src="imageUrl+item.pic+imageAfterUrl" alt="">
-          <img v-else src="/static/images/personalHeader.png">
+          <img v-else src="../../images/personalHeader.png">
           <div class="orderText">
             <h3 class="goodsName">{{item.goodsName}}</h3>
             <div class="goodsSpecWrapper clearfix">
@@ -328,19 +328,19 @@ export default {
           display block
           width 30px
           height 30px
-          bgImage('/static/icons/hookGray')
+          bgImage('../../icons/hookGray')
           position absolute
           left 0
           right 0
           top 72px
           margin auto
         .hookIcon.hookGreen
-          bgImage('/static/icons/hookGreen')
+          bgImage('../../icons/hookGreen')
         .hookIcon.hookActive
           width 50px
           height 50px
           top 62px
-          bgImage('/static/icons/hookActive')
+          bgImage('../../icons/hookActive')
         .hookIcon:after
           display block
           content ""

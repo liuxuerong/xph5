@@ -5,21 +5,21 @@
       <goods-item :goodsData="goodsData"></goods-item>
       <div class="returnType">
         <div class="returnTypeCon" @click="returnType(1)">
-          <span class="returnGoodsIcon"><img src="/static/icons/afterMoney.png" alt=""></span>
+          <span class="returnGoodsIcon"><img src="../../icons/afterMoney.png" alt=""></span>
           <div class="right">
             <h3>仅退款</h3>
             <p>未收到货（包含未签收）或与平台协商同意前提下</p>
           </div>
         </div>
         <div class="returnTypeCon" @click="returnType(2)">
-          <span class="returnGoodsIcon"><img src="/static/icons/afterReturn.png" alt=""></span>
+          <span class="returnGoodsIcon"><img src="../../icons/afterReturn.png" alt=""></span>
           <div class="right">
             <h3>退款退货</h3>
             <p>已收到货，需要退换已收到的货物</p>
           </div>
         </div>
         <div class="returnTypeCon" @click="returnType(3)">
-          <span class="returnGoodsIcon"><img src="/static/icons/afterRepair.png" alt=""></span>
+          <span class="returnGoodsIcon"><img src="../../icons/afterRepair.png" alt=""></span>
           <div class="right">
             <h3>维修</h3>
             <p>已收到货，需要维修的货物</p>

@@ -23,8 +23,8 @@ Vue.use(Confirm)
 Vue.use(ConfirmPlugin)
 Vue.use(ToastPlugin)
 Vue.use(VueLazyLoad, {
-  error: '/static/images/defaultImg.png',
-  loading: '/static/images/defaultImg.png'
+  error: '../../images/defaultImg.png',
+  loading: '../../images/defaultImg.png'
 })
 fastClick.attach(document.body)
 Vue.use(Vuelidate)

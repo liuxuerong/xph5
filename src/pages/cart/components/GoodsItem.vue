@@ -10,7 +10,7 @@
           <div class="goodsItemMain">
             <router-link :to="'/details/'+goodsItem.goodsId" class="linkDetails">
               <img v-lazy="imageUrl+goodsItem.goodsItemPic+imageAfterUrl" alt="" >
-              <img src="/static/images/soldOut.png" alt="" class="soldOut" v-if="goodsItem.stock==0&&goodsItem.status==1">
+              <img src="../../../images/soldOut.png" alt="" class="soldOut" v-if="goodsItem.stock==0&&goodsItem.status==1">
               </router-link>
             <div class="info">
               <div class="name">{{goodsItem.goodsItemName}}</div>

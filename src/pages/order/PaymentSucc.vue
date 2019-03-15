@@ -73,7 +73,7 @@ export default {
         width 280px
         height 280px
         margin 0 auto 50px
-        bgImage('/static/images/paymentSucc')
+        bgImage('../../images/paymentSucc')
     .paymentText,p
       display block
       width 100%

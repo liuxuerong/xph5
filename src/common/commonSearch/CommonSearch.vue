@@ -41,7 +41,7 @@ export default {
      position absolute
      width 60px
      height 60px
-     bgImage("/static/icons/serch_icon")
+     bgImage("../../icons/serch_icon")
      top 35px
      right 70px
 .search.searchActive

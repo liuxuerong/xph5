@@ -11,7 +11,7 @@
             </div>
             <img v-lazy="imageUrl+item.appIcon+imageAfterUrl" alt="">
           </div>
-            <ul class="classifyDetails" :class="{active:showIndex==index}" >
+            <ul class="classifyDetails" :class="{active:showIndex===index}" >
               <li class="border-bottom" v-for="(goods,innerIndex) in item.children" :key="goods.id">
                 <router-link :to="`/goods/${index}/${innerIndex}`"  class="nav">{{goods.catName}}</router-link>
               </li>
@@ -45,7 +45,7 @@ export default {
     return {
       imageUrl: config.imageUrl,
       imageAfterUrl: config.imageAfterUrl,
-      showIndex: 0,
+      showIndex: '',
       classfiyData: []
     }
   },

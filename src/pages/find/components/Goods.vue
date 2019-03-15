@@ -36,6 +36,7 @@
 import CommonNavSearch from 'common/commonHeader/CommonNavSearch'
 import CommonImgPrices from 'common/commonImgPrices/CommonImgPrices'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
+import emptyImg from '../../images/commentEmptyGoods.png'
 import {
   Tab,
   TabItem,
@@ -85,7 +86,7 @@ export default {
       noMore: false,
       showCart: false,
       emptyObj: {
-        emptyImg: '/static/images/commentEmptyGoods.png',
+        emptyImg,
         emptyBold: '暂无商品',
         emptyP: '此类商品暂未上架，星品君正在努力挖掘中..',
         buttonText: null,

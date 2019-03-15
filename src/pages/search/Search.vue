@@ -161,7 +161,7 @@ export default {
     .glass
       width 80px
       height 80px
-      bgImage("/static/icons/serch_icon")
+      bgImage("../../icons/serch_icon")
       top 14px
       right 50px
     .close

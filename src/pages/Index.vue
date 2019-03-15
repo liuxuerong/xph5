@@ -11,6 +11,17 @@
 </template>
 
 <script>
+import find from '../icons/find_icon_Tabbar.png'
+import findSelect from '../icons/find_icon_Tabbar_active.png'
+import classify from '../icons/classify_icon.png'
+import classifySelect from '../icons/classify_icon_active.png'
+import hall from '../icons/logo.png'
+import hallSelect from '../icons/logo_active.png'
+import story from '../icons/story_icon_Tabbar.png'
+import storySelect from '../icons/story_icon_Tabbar_active.png'
+import personCenter from '../icons/person_icon_Tabbar.png'
+import personCenterSelect from '../icons/person_icon_Tabbar_active.png'
+
 export default {
   name: 'Index',
   data () {
@@ -19,40 +30,40 @@ export default {
         {
           id: 'tabbar1',
           to: '/find',
-          imgSrc: '/static/icons/find_icon_Tabbar.png',
-          imgSrcSelect: '/static/icons/find_icon_Tabbar_active.png',
+          imgSrc: find,
+          imgSrcSelect: findSelect,
           text: '发现',
           selected: true
         },
         {
           id: 'tabbar2',
           to: '/classify',
-          imgSrc: '/static/icons/classify_icon.png',
-          imgSrcSelect: '/static/icons/classify_icon_active.png',
+          imgSrc: classify,
+          imgSrcSelect: classifySelect,
           text: '分类',
           selected: false
         },
         {
           id: 'tabbar3',
           to: '/hall',
-          imgSrc: '/static/icons/logo.png',
-          imgSrcSelect: '/static/icons/logo_active.png',
+          imgSrc: hall,
+          imgSrcSelect: hallSelect,
           text: '',
           selected: false
         },
         {
           id: 'tabbar4',
           to: '/story',
-          imgSrc: '/static/icons/story_icon_Tabbar.png',
-          imgSrcSelect: '/static/icons/story_icon_Tabbar_active.png',
+          imgSrc: story,
+          imgSrcSelect: storySelect,
           text: '故事',
           selected: false
         },
         {
           id: 'tabbar5',
           to: '/personCenter',
-          imgSrc: '/static/icons/person_icon_Tabbar.png',
-          imgSrcSelect: '/static/icons/person_icon_Tabbar_active.png',
+          imgSrc: personCenter,
+          imgSrcSelect: personCenterSelect,
           text: '我',
           selected: false
         }

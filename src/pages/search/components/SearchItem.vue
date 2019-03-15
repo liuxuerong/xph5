@@ -16,6 +16,7 @@
 <script>
 import CommonImgPrices from 'common/commonImgPrices/CommonImgPrices'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
+import emptyImg from '../../../images/commentEmptySearch.png'
 import BScroll from 'better-scroll'
 import {
   http
@@ -23,9 +24,6 @@ import {
 import {
   goodsList
 } from 'util/netApi'
-import {
-  config
-} from 'util/config.js'
 import {
   Divider
 } from 'vux'
@@ -42,7 +40,7 @@ export default {
       page: 1,
       noMore: false,
       emptyObj: {
-        emptyImg: '/static/images/commentEmptySearch.png',
+        emptyImg,
         emptyBold: '没有找到相关产品',
         emptyP: '没有找到关键字为“飞机大炮”的产品',
         buttonText: null,

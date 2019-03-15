@@ -23,6 +23,7 @@
 </template>
 <script>
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
+import emptyImg from '../../images/enptyAddress.png'
 import UserinfoHeader from './components/ComUserSetHeader'
 import { listDelivery } from 'util/netApi'
 import {http} from 'util/request'
@@ -34,7 +35,7 @@ export default {
       addList: [],
       oper: '',
       emptyObj: {
-        emptyImg: '/static/images/enptyAddress.png',
+        emptyImg,
         emptyBold: '暂无地址',
         emptyP: '您还没有添加收货地址~',
         buttonText: '立即添加',
@@ -158,7 +159,7 @@ export default {
         display block
         width 60px
         height 60px
-        bgImage('/static/icons/modifyAddress')
+        bgImage('../../icons/modifyAddress')
     .bottom
       width 100%
       font-size 46px

@@ -56,7 +56,7 @@ export default {
       display inline-block
       width 24px
       height 45px
-      bgImage('/static/icons/enterNextGray')
+      bgImage('../../icons/enterNextGray')
       margin-left 18px
       vertical-align middle
       position relative

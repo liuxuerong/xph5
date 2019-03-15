@@ -152,13 +152,13 @@ export default {
     width 485px
     .udesk
       flex 1
-      background: url('/static/icons/udesk_icon.png') no-repeat center center/38% 38%
+      background: url('../../../icons/udesk_icon.png') no-repeat center center/38% 38%
     .collect
       flex 1
-      background: url('/static/icons/collection_icon.png') no-repeat center center/40% 40%
+      background: url('../../../icons/collection_icon.png') no-repeat center center/40% 40%
     .cart
       flex 1
-      background: url('/static/icons/cart_icon.png') no-repeat center center/36% 40%
+      background: url('../../../icons/cart_icon.png') no-repeat center center/36% 40%
       position relative
       .num
         position absolute
@@ -173,7 +173,7 @@ export default {
         transform translate(-50%,50%)
         right 0
     .collect.active
-      background: url('/static/icons/collection_icon_active.png') no-repeat center center/40% 40%
+      background: url('../../../icons/collection_icon_active.png') no-repeat center center/40% 40%
   .operateRight
     flex 1
     display flex

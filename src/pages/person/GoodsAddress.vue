@@ -447,14 +447,14 @@ export default {
     height 60px
     line-height 60px
     margin-top 37px
-    bgImage('/static/icons/payUnchecked')
+    bgImage('../../icons/payUnchecked')
     input
       display block
       width 100%
       height 100%
       opacity 0
   .checkboxInput.active
-    bgImage('/static/icons/paySelect')
+    bgImage('../../icons/paySelect')
 
   .changeAddress
     float left

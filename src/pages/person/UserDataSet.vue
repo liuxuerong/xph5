@@ -8,7 +8,7 @@
         <div class="headerSet border-bottom">
           <span class="setProperty">头像</span>
           <div class="headerImg">
-            <img v-if="!headImage" src="/static/images/personalHeader.png">
+            <img v-if="!headImage" src="../../images/personalHeader.png">
             <img v-else :src="imageUrl+headImage+imageAfterUrl">
             <input type="file" name="" class="headerImgFile" @change="headerUpfile($event)">
           </div>
@@ -301,7 +301,7 @@ export default {
     height 45px
     margin-left 30px
     margin-top 50px
-    bgImage('/static/icons/enterNextGray')
+    bgImage('../../icons/enterNextGray')
 .userInfoSetCon
   width 100%
   background #F5F5F5

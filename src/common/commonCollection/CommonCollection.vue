@@ -70,7 +70,7 @@ export default {
     width 52px
     height 52px
     margin-top 20px
-    bgImage("/static/icons/Collection_icon")
+    bgImage("../../icons/Collection_icon")
     &.active
-      bgImage("/static/icons/Collection_icon_click")
+      bgImage("../../icons/Collection_icon_click")
 </style>

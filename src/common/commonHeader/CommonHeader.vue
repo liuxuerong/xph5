@@ -69,7 +69,7 @@ export default {
   .scan
     width 60px
     height 60px
-    bgImage("/static/icons/scan")
+    bgImage("../../icons/scan")
     margin-right 40px
     vertical-align middle
     margin-top 10px
@@ -79,7 +79,7 @@ export default {
   .search
     width 60px
     height 60px
-    bgImage("/static/icons/search_black")
+    bgImage("../../icons/search_black")
     margin-right 40px
     margin-top 0
     vertical-align middle
@@ -89,7 +89,7 @@ export default {
     top 20px
     right 50px
     height 60px
-    bgImage("/static/icons/car")
+    bgImage("../../icons/car")
     margin-top 13px
     position absolute
     .num

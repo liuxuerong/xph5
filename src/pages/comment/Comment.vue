@@ -38,6 +38,7 @@ import {
 } from '@/func/preview'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
 import CommonNavHeader from '@/common/commonHeader/CommonNavHeader'
+import emptyImg from '../../images/commentEmpty.png'
 import {
   Previewer,
   TransferDom
@@ -54,7 +55,7 @@ export default {
       comments: null,
       title: '评论',
       emptyObj: {
-        emptyImg: '/static/images/commentEmpty.png',
+        emptyImg,
         emptyBold: '暂无评论',
         emptyP: '该商品还没有人写评价',
         buttonText: null,

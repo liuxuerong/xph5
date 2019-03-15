@@ -77,9 +77,9 @@ import CommonSearch from 'common/commonSearch/CommonSearch'
 import CommonHeader from 'common/commonHeader/CommonHeader'
 import IndexSwiper from './components/IndexSwiper'
 import IndexGoodsLabel from './components/IndexGoodsLabel'
-// import IndexLimit from './components/IndexLimit'
 import IndexStoreActivity from './components/IndexStoreActivity'
 import IndexNewProducts from './components/IndexNewProducts'
+import emptyImg from '../../images/commentEmptyGoods.png'
 import {
   Tab,
   TabItem,
@@ -142,7 +142,7 @@ export default {
       goodsLabel: null,
       timer: '',
       emptyObj: {
-        emptyImg: '/static/images/commentEmptyGoods.png',
+        emptyImg,
         emptyBold: '暂无商品',
         emptyP: '此类商品暂未上架，星品君正在努力挖掘中..',
         buttonText: null,
@@ -150,10 +150,6 @@ export default {
       }
     }
   },
-  // created () {
-  //   let _this = this
-  //   window.addEventListener('scroll', _this.getTop)
-  // },
   methods: {
     scrollToTop () {
       this.$refs.topScroll.scrollIntoView()
@@ -280,7 +276,7 @@ export default {
   bottom 296px
   right 45px
   z-index 9999999
-  background url(/static/icons/scrollTop.png) no-repeat center center/50% 50%
+  background url(../../icons/scrollTop.png) no-repeat center center/50% 50%
   background-color rgba(0,0,0,0.3)
 .xpGoodsTop>>>.vux-tab .vux-tab-item.vux-tab-selected
   color #333333
@@ -381,17 +377,17 @@ export default {
       color #333333
       font-size 24px
   .left
-    background url("/static/images/recommond_bg.png") no-repeat center center/100% 100%
+    background url("../../images/recommond_bg.png") no-repeat center center/100% 100%
     margin-right 10px
   .right
     display flex
     flex-direction column
     .top
-      background url("/static/images/goods_bg.png") no-repeat center center/100% 100%
+      background url("../../images/goods_bg.png") no-repeat center center/100% 100%
       margin-bottom 10px
       flex 1
     .bottom
-      background url("/static/images/hotel_bg.png") no-repeat center center/100% 100%
+      background url("../../images/hotel_bg.png") no-repeat center center/100% 100%
       flex 1
 .classfiyBanner
   width 100%

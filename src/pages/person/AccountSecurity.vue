@@ -54,5 +54,5 @@ export default {
         width 24px
         height 45px
         margin-top 50px
-        bgImage('/static/icons/enterNextGray')
+        bgImage('../../icons/enterNextGray')
 </style>

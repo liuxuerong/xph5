@@ -98,6 +98,6 @@ export default {
       width 50px
       height 30px
       display inline-block
-      background url('/static/icons/browse_icon.png') no-repeat center center/100% 100%
+      background url('../../../icons/browse_icon.png') no-repeat center center/100% 100%
       margin-right 35px
 </style>

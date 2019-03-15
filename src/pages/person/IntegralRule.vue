@@ -111,7 +111,7 @@ export default {
   display block
   width 100%
   padding-bottom 158px
-  bgImage('/static/images/IntegralRuleBg')
+  bgImage('../../images/IntegralRuleBg')
   box-sizing border-box
   padding-top 64px
 .integralRuleText

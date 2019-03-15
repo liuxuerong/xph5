@@ -81,6 +81,7 @@ import {Toast} from 'mint-ui'
 import {storage} from 'util/storage'
 import {mapMutations, mapState} from 'vuex'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
+import emptyImg from '../../images/emptyCard.png'
 export default {
   data () {
     return {
@@ -88,7 +89,7 @@ export default {
       index: 0,
       list: [],
       emptyObj: {
-        emptyImg: '/static/images/emptyCard.png',
+        emptyImg,
         emptyBold: '暂无卡券',
         emptyP: '更多卡券在飞奔向你的路上~',
         buttonText: null,
@@ -214,13 +215,13 @@ export default {
     padding 34px 30px 34px
     background #f5f5f5
     .cardVouItem.grayCardVouItem
-      bgImage('/static/images/cardVouItemBg')
+      bgImage('../../images/cardVouItemBg')
     .cardVouItem
       width 100%
       height 280px
       margin-bottom 50px
       background #fff
-      bgImage('/static/images/newCardVouItemBg')
+      bgImage('../../images/newCardVouItemBg')
       .left
         float left
         width 300px

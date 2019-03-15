@@ -219,7 +219,7 @@ export default {
     width 100%
     height 100%
     overflow hidden
-    background url(/static/images/loginBg@3x.jpg) no-repeat center center/100% 100%
+    background url(../../images/loginBg@3x.jpg) no-repeat center center/100% 100%
   .loginInfo
     width 88%
     height 530px
@@ -247,9 +247,9 @@ export default {
 			margin-left 30px
 			vertical-align middle
 		.loginIcon.phoneIcon
-			bgImage('/static/icons/userName')
+			bgImage('../../icons/userName')
 		.loginIcon.passwordIcon
-      bgImage('/static/icons/password')
+      bgImage('../../icons/password')
     .passWordOper
       float right
       color #fff

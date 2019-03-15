@@ -28,7 +28,7 @@
                 <span class="operBtn newReceive" v-if="type == '1'&&item.useStatus == '1'" @click.stop="receiveCard(item.id)">立即领取</span>
                 <span class="operBtn noReceive" v-if="type == '1'&&item.useStatus == '2'">已领取</span>
                 <span class="operBtn noReceive" v-if="type == '1'&&item.useStatus == '3'">领光了</span>
-                <span class="operBtn newUse" v-if="type == '2'" @click="useCoupon(item.id,item.name,item.type)">立即使用</span>
+                <span class="operBtn newUse" v-if="type == '2'||type == '3'" @click="useCoupon(item.id,item.name,item.type)">立即使用</span>
               </div>
               <div class="activityTime">
                 <span class="drawTime" v-if="type==1">
@@ -72,6 +72,7 @@ import {
   orderInfo
 } from 'util/const.js'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
+import emptyImg from '../../images/emptyCard.png'
 import {
   Toast
 } from 'mint-ui'
@@ -84,7 +85,7 @@ export default {
       type: 1,
       routeName: '',
       emptyObj: {
-        emptyImg: '/static/images/emptyCard.png',
+        emptyImg,
         emptyBold: '暂无卡券',
         emptyP: '更多卡券在飞奔向你的路上~',
         buttonText: null,
@@ -109,10 +110,7 @@ export default {
     // 优惠券页面渲染
     headleTabsChange (url) {
       let parmas = storage.getLocalStorage(couponByGoods)
-      console.log(url)
-      console.log(parmas)
       http(url, parmas).then((response) => {
-        console.log(response)
         if (response.data.code === 0) {
           this.list = []
           for (let item of response.data.body) {
@@ -120,6 +118,10 @@ export default {
               this.list.push(item)
             } else if (this.type === '2' && item.useStatus === 2) {
               this.list.push(item)
+            } else if (this.type === '1') {
+              if (response.data.body.type == '4') {
+                this.list.push(item)
+              }
             }
           }
         }
@@ -127,12 +129,17 @@ export default {
         console.log(err)
       })
     },
-
+    // shippingFavorableId
     // 立即使用优惠券
     useCoupon (id, name, type) {
       let info = storage.getLocalStorage(orderInfo) || {}
-      info.couponId = id
-      info.couponName = name
+      if (type == 4) {
+        info.shippingFavorableId = id
+        info.shippingFavorableName = name
+      } else {
+        info.couponId = id
+        info.couponName = name
+      }
       storage.setLocalStorage(orderInfo, info)
       this.$router.replace({
         path: '/createOrder/3'
@@ -174,20 +181,14 @@ export default {
       this.title = '领取优惠券'
       this.routeName = '/cart'
       this.headleTabsChange(listUseCouponByGoodsId)
-    } else {
+    } else if (this.type === '2') {
       this.title = '选择优惠券'
       this.routeName = '/createOrder/3'
       this.headleTabsChange(listCouponByGoodsItemIds)
-    }
-  },
-  mounted () {
-
-  },
-  watch: {
-    '$route' (to, from) {
-      // if (to.name === 'chooseCoupons') {
-      //   this.headleTabsChange()
-      // }
+    } else if (this.type === '3') {
+      this.title = '选择优惠券'
+      this.routeName = '/createOrder/5'
+      this.headleTabsChange(listCouponByGoodsItemIds)
     }
   }
 }
@@ -228,7 +229,7 @@ export default {
       height 280px
       margin-bottom 50px
       background #fff
-      bgImage('/static/images/cardVouItemBg')
+      bgImage('../../images/cardVouItemBg')
   .cardVoucherPage
     width 100%
     padding 34px 30px 0
@@ -240,7 +241,7 @@ export default {
       height 280px
       margin-bottom 50px
       background #fff
-      bgImage('/static/images/newCardVouItemBg')
+      bgImage('../../images/newCardVouItemBg')
       .left
         float left
         width 300px

@@ -67,7 +67,7 @@ export default {
 			display block
 			width 32px
 			height 58px
-			bgImage('/static/icons/back')
+			bgImage('../../../icons/back')
 	.userInfoTitle
 		width 60%
 		height 130px

@@ -36,7 +36,7 @@
               <input type="hidden" :value="inputForm.certificate" name="need" placeholder="公司营业执照">
               <input type="file" accept="image/*" @change="headerUpfile(1)">
               <span class="info">
-                  <img src="/static/icons/invoice_carmer1.png" alt="">
+                  <img src="../../icons/invoice_carmer1.png" alt="">
                 </span>
             </div>
             <img :src="imageUrl+inputForm.certificate+imageAfterUrl" alt="" class="upImg" v-show="inputForm.certificate!=''">
@@ -47,7 +47,7 @@
               <input type="hidden" :value="inputForm.advice" name="need" placeholder="一般纳税人认定通知书">
               <input type="file" accept="image/*" @change="headerUpfile(2)">
               <span class="info">
-                  <img src="/static/icons/invoice_carmer2.png" alt="">
+                  <img src="../../icons/invoice_carmer2.png" alt="">
                 </span>
             </div>
             <img :src="imageUrl+inputForm.advice+imageAfterUrl" alt="" class="upImg" v-show="inputForm.advice!=''">
@@ -58,7 +58,7 @@
               <input type="hidden" :value="inputForm.license" name="need" placeholder="开户许可证">
               <input type="file" accept="image/*" @change="headerUpfile(3)">
               <span class="info">
-                  <img src="/static/icons/invoice_carmer3.png" alt="">
+                  <img src="../../icons/invoice_carmer3.png" alt="">
                 </span>
             </div>
             <img :src="imageUrl+inputForm.license+imageAfterUrl" alt="" class="upImg" v-show="inputForm.license!=''">
@@ -686,7 +686,7 @@ export default {
       width 40px
       height 40px
       position absolute
-      background url("/static/icons/del_icon.png") no-repeat center center/100% 100%
+      background url("../../icons/del_icon.png") no-repeat center center/100% 100%
       top -20px
       right -20px
       z-index 9

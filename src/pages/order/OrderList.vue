@@ -5,7 +5,7 @@
       <div class="orderItem" v-for="(item, i) in list" :key="i">
         <div class="goodsItem border-bottom" v-for="(childItem,j) in item.memberOrderGoods" :key="j" @click="orderDetails(item)">
           <img v-if="childItem.pic != ''" :src="imageUrl+childItem.pic+imageAfterUrl" alt="">
-          <img v-else src="/static/images/personalHeader.png">
+          <img v-else src="../../images/personalHeader.png">
           <div class="goodsinfo">
             <h3>{{childItem.goodsName}}</h3>
             <div class="goodsSpecWrapper clearfix">
@@ -117,6 +117,7 @@
 <script>
 import SearchTitle from './ComOrderSearchTitle'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
+import emptyImg from '../../images/orderEmpty.png'
 import { OrderList1, confirmGoods } from 'util/netApi'
 import { http } from 'util/request'
 import {Toast} from 'mint-ui'
@@ -135,7 +136,7 @@ export default {
       orderState: '',
       otrderStateArr: [],
       emptyObj: {
-        emptyImg: '/static/images/orderEmpty.png',
+        emptyImg,
         emptyBold: '暂无订单',
         emptyP: '您还没有购买的订单',
         buttonText: null,

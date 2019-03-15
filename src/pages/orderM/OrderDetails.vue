@@ -27,10 +27,13 @@
               <span class="name">商品总额</span><span class="price">￥{{orderData.totalAmount}}</span>
             </li>
             <li>
-              <span class="name">优惠</span><span class="price">￥{{orderData.offerAmount}}</span>
+              <span class="name">商品优惠</span><span class="price">-￥{{orderData.offerAmount}}</span>
             </li>
             <li>
-              <span class="name">运费</span><span class="price">￥{{orderData.shippingAmount}}</span>
+              <span class="name">运费</span><span class="price">+￥{{orderData.shippingAmount}}</span>
+            </li>
+            <li>
+              <span class="name">配送优惠</span><span class="price">-￥{{orderData.shippingAmount}}</span>
             </li>
             <li class="all border-top">
               <span class="name"> 共<b>{{orderData.memberOrderGoods.length}}</b>件商品</span><span class="price">实付：￥{{orderData.needPayAmount}}</span>
@@ -509,7 +512,7 @@ export default {
       border 2px solid #BA825A
   .bgTop
     height 370px
-    background url('/static/images/statusDescBg.png') no-repeat center center /100% 100%
+    background url('../../images/statusDescBg.png') no-repeat center center /100% 100%
     display flex
     .statusDesc
       font-size 66px

@@ -95,5 +95,5 @@ export default {
       bottom 0
       top 0
       margin auto
-      bgImage('/static/icons/storePhone')
+      bgImage('../../icons/storePhone')
 </style>

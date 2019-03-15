@@ -117,7 +117,7 @@ export default {
   float right
   border 2px solid #C59370
   border-radius 50%
-  background url("/static/icons/orange_cart.png") no-repeat center center/60% 60%
+  background url("../../icons/orange_cart.png") no-repeat center center/60% 60%
 .hideCart.cart
   display none
 

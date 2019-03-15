@@ -38,7 +38,7 @@
       <div class="orderGoodsInfo">
         <div class="orderGoods clearfix" v-for="(item,index) in list.memberOrderGoods" :key="index" @click.stop.prevent="goodsDetails(item.goodsId)">
           <img v-if="item.pic != ''" :src="imageUrl+item.pic+imageAfterUrl" alt="">
-          <img v-else src="/static/images/personalHeader.png">
+          <img v-else src="../../images/personalHeader.png">
           <div class="orderText">
             <h3 class="goodsName">{{item.goodsName}}</h3>
             <div class="goodsSpecWrapper clearfix">

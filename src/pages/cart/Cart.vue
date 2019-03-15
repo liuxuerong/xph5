@@ -42,6 +42,8 @@ import CommonNavHeader from 'common/commonHeader/CommonNavHeader'
 import GoodsItem from './components/GoodsItem'
 import CartOperate from './components/CartOperate'
 import DetailsPopUp from '../details/components/DetailsPopUp'
+import emptyImg from '../../images/commentEmptyCart.png'
+
 import {
   Toast
 } from 'mint-ui'
@@ -69,6 +71,7 @@ import {
 import {
   couponByGoods, goodsInfo
 } from 'util/const.js'
+
 export default {
   name: 'Cart',
   components: {
@@ -84,7 +87,7 @@ export default {
     return {
       title: '购物车',
       emptyObj: {
-        emptyImg: '/static/images/commentEmptyCart.png',
+        emptyImg,
         emptyBold: '购物车是空的',
         emptyP: '好多新上架的商品在等着您哟~',
         buttonText: '去购物',

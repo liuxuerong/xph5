@@ -116,7 +116,7 @@ export default {
     height 280px
     margin-bottom 30px
     background #fff
-    bgImage('/static/images/newCardVouItemBg')
+    bgImage('../../../images/newCardVouItemBg')
     .left
       float left
       width 300px

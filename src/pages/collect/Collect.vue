@@ -50,7 +50,7 @@ import CommonImgPrices from 'common/commonImgPrices/CommonImgPrices'
 import CommonArticleRec from '@/common/commonArticleRec/CommonArticleRec'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
 import BScroll from 'better-scroll'
-
+import emptyImg from '../../images/commentEmptyCollect.png'
 export default {
   name: 'Collect',
   components: {
@@ -74,14 +74,14 @@ export default {
       type: '1',
       linkTo: '/storyDetails/',
       emptyObj: {
-        emptyImg: '/static/images/commentEmptyCollect.png',
+        emptyImg,
         emptyBold: '暂无商品',
         emptyP: '您还没有收藏任何商品',
         buttonText: '去看看',
         buttonRouter: '/find'
       },
       emptyContent: {
-        emptyImg: '/static/images/commentEmptyCollect.png',
+        emptyImg: '../../images/commentEmptyCollect.png',
         emptyBold: '暂无内容',
         emptyP: '您还没有收藏任何内容',
         buttonText: '去看看',

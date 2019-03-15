@@ -92,15 +92,15 @@ export default {
           height 83px
           margin 0 auto 30px
         .orderIcon01
-          bgImage('/static/icons/orderItem01')
+          bgImage('../../icons/orderItem01')
         .orderIcon02
-          bgImage('/static/icons/orderItem02')
+          bgImage('../../icons/orderItem02')
         .orderIcon03
-          bgImage('/static/icons/orderItem03')
+          bgImage('../../icons/orderItem03')
         .orderIcon04
-          bgImage('/static/icons/orderItem04')
+          bgImage('../../icons/orderItem04')
         .orderIcon05
-          bgImage('/static/icons/orderItem05')
+          bgImage('../../icons/orderItem05')
   .centerTitle
     width 100%
     height 160px
@@ -121,7 +121,7 @@ export default {
       display inline-block
       width 24px
       height 45px
-      bgImage('/static/icons/enterNextGray')
+      bgImage('../../icons/enterNextGray')
       margin-left 18px
       vertical-align middle
       position relative

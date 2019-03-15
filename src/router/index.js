@@ -171,12 +171,12 @@ const router = new Router({
       meta: { requireLogin: true },
       component: resolve => require(['@/pages/person/AddressAdmin'], resolve)
     },
-    {
-      path: '/toolCenter',
-      name: 'toolCenter',
-      meta: { requireLogin: true },
-      component: resolve => require(['@/pages/person/ToolCenter'], resolve)
-    },
+    // {
+    //   path: '/toolCenter',
+    //   name: 'toolCenter',
+    //   meta: { requireLogin: true },
+    //   component: resolve => require(['@/pages/person/ToolCenter'], resolve)
+    // },
     {
       path: '/aboutMember', // 会员介绍
       name: 'aboutMember',
@@ -295,7 +295,7 @@ const router = new Router({
       component: resolve => require(['@/pages/person/CardDetails'], resolve)
     },
     {
-      path: '/chooseCoupons/:type',
+      path: '/chooseCoupons/:type', // type:1领取 2选择 3选择配送优惠券
       name: 'chooseCoupons',
       meta: { requireLogin: true },
       component: resolve => require(['@/pages/createOrder/ChooseCoupons'], resolve)
@@ -316,12 +316,6 @@ const router = new Router({
       path: '/appDownload',
       name: 'appDownload',
       component: resolve => require(['@/pages/download/AppDownload'], resolve)
-    },
-    {
-      path: '/returnGoods/:orderId',
-      name: 'returnGoods',
-      meta: { requireLogin: true },
-      component: resolve => require(['@/pages/order/ReturnGoods'], resolve)
     },
     {
       path: '/accountSecurity',

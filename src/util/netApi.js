@@ -50,13 +50,12 @@ export const listCart = { url: '/cart/carts', method: 'GET', version: v2 } // �
 
 // 获取订单详情
 export const goodOrderData = { url: '/order/detail', method: 'POST', version: v1 }
-// 确认订单
+// 创建订单
 export const createOrderData = { url: '/order/create', method: 'POST', version: v2 }
 // 检查订单
 export const checkOrderData = { url: '/order/check', method: 'GET', version: v1, join: true }
 // 支付
 export const payMoney = { url: '/pay/pay', method: 'POST', version: v2 }
-export const payMoney1 = { url: '/pay/pay', method: 'POST', version: '' }
 
 // 获取会员资料
 export const memberData = { url: '/member/api/obtainMemberData', method: 'GET', version: v2 }

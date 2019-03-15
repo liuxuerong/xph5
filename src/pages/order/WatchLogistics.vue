@@ -136,7 +136,7 @@ export default {
         margin-right 30px
         vertical-align middle
         margin-top -8px
-        background url('/static/icons/parcelIcon.png') no-repeat center center/100% 100%
+        background url('../../icons/parcelIcon.png') no-repeat center center/100% 100%
       .top
         height 130px
         line-height 130px
@@ -187,14 +187,14 @@ export default {
   top -75px
   width 60px
   height 75px
-  bgImage('/static/icons/logisticsDizhi')
+  bgImage('../../icons/logisticsDizhi')
 .noLogisticsDizhi
   position absolute
   left -35px
   top -75px
   width 60px
   height 75px
-  bgImage('/static/icons/noLogisticsDizhi')
+  bgImage('../../icons/noLogisticsDizhi')
 .logisticsTime
   position absolute
   left 50px

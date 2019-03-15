@@ -248,7 +248,7 @@ export default {
     background #F5F5F5
   .bgTop
     height 370px
-    background url('/static/images/statusDescBg.png') no-repeat center center /100% 100%
+    background url('../../images/statusDescBg.png') no-repeat center center /100% 100%
     padding-top 40px
     .statusDesc
       font-size 66px

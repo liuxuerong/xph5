@@ -86,7 +86,7 @@ export default {
       width 124px
       height 104px
       margin-right 40px
-      bgImage('/static/icons/returnGoods')
+      bgImage('../../icons/returnGoods')
     h3
       font-size 46px
       line-height 50px

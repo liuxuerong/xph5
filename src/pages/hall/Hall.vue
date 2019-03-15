@@ -13,7 +13,7 @@
                 <div class="title">{{item.title}}</div>
                 <div class="summary">{{item.summary}}</div>
               </div>
-              <div class="experienceGoods"><img src="/static/icons/outsidelabel_icon.png" alt="">{{item.experienceGoods.length}}</div>
+              <div class="experienceGoods"><img src="../../icons/outsidelabel_icon.png" alt="">{{item.experienceGoods.length}}</div>
             </div>
           </router-link>
         </div>
@@ -147,11 +147,6 @@ export default {
   width 100%
 .popWrap
   padding-top 10vh
-  .logisticsInfo
-    width 53vh
-    height 70vh
-    margin 0 auto 100px
-    background url('/static/images/logisticsInform.png') no-repeat center center /100% 100%
   .btn
     margin 0 auto
     width 200px

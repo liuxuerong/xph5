@@ -129,6 +129,6 @@ export default {
      width 68px
      height 58px
      margin-right 33px
-     background url('/static/icons/udesk_icon.png') no-repeat center center /100%
+     background url('../../icons/udesk_icon.png') no-repeat center center /100%
      vertical-align middle
 </style>

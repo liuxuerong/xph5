@@ -4,7 +4,7 @@
     <div ref="hallDetails" class="hallDetails" v-if="experienceObj">
       <img :src="imageUrl+experienceObj.experienceCoverImage+imageAfterUrl" alt="" ref="zoomImg">
       <div class="tag" ref="tag" v-for="(item,index) in experienceObj.experienceGoods" :key="item.goodsId" :style="{left:item.left,top:item.top}" @click="showDetails(index)">
-        <img src="/static/icons/hall_tag_icon.png" alt="">
+        <img src="../../icons/hall_tag_icon.png" alt="">
       </div>
     </div>
     <div v-transfer-dom class="oneGoodsWrap">
@@ -276,9 +276,9 @@ export default {
             height 52px
             // margin-top 20px
             display inline-block
-            bgImage("/static/icons/Collection_icon")
+            bgImage("../../icons/Collection_icon")
             &.active
-                bgImage("/static/icons/Collection_icon_click")
+                bgImage("../../icons/Collection_icon_click")
       img
         width 260px
         height 260px

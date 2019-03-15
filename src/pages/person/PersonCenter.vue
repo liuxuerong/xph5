@@ -11,13 +11,15 @@
       <div class="perHeader">
         <div class="headerInfo">
           <img v-if="list.memberHead" :src="imageUrl+list.memberHead+imageAfterUrl" class="headerImg" @click="userDataSet">
-          <img v-else src="/static/images/memberHeader.png" class="headerImg"  @click="userDataSet">
+          <img v-else src="../../images/memberHeader.png" class="headerImg"  @click="userDataSet">
           <div class="headerRightText">
             <h2 class="headerName" @click="userDataSet">{{phone}}</h2>
-            <span class="memberGrade" v-if="list.memberLevelName === '普卡'"><i class="memberGradeIcon01"></i>普卡会员</span>
-            <span class="memberGrade" v-if="list.memberLevelName === '银卡'"><i class="memberGradeIcon02"></i>银卡会员</span>
-            <span class="memberGrade" v-if="list.memberLevelName === '金卡'"><i class="memberGradeIcon03"></i>金卡会员</span>
-            <span class="memberGrade" v-if="list.memberLevelName === '钻卡'"><i class="memberGradeIcon04"></i>钻卡会员</span>
+            <span class="memberGrade" v-if="list.memberLevelName === '普卡'"><i class="memberGradeIcon01"></i>普卡</span>
+            <span class="memberGrade" v-if="list.memberLevelName === '金卡'"><i class="memberGradeIcon02"></i>金卡</span>
+            <span class="memberGrade" v-if="list.memberLevelName === '白金卡'"><i class="memberGradeIcon03"></i>白金卡</span>
+            <span class="memberGrade" v-if="list.memberLevelName === '黑金卡'"><i class="memberGradeIcon04"></i>黑金卡
+              <router-link to="/memberCenter" class="fr immediately"><em class="fl"></em><em>立领400元</em> <em class="fr"></em></router-link>
+            </span>
           </div>
         </div>
         <div class="userInfo border-top">
@@ -264,7 +266,7 @@ export default {
     // 必备工具跳转
     toolSpecific (type) {
       if (type === 1) {
-        this.$router.push('/toolCenter')
+        this.$router.push('/memberCenter')
       } else if (type === 2) {
         this.$router.push('/integralDetails')
       } else if (type === 3) {
@@ -331,7 +333,7 @@ export default {
     .perTopbg
       width 100%
       height 470px
-      bgImage('/static/images/personBg')
+      bgImage('../../images/personBg')
       position relative
       margin-bottom 280px
       .headerScroll
@@ -343,11 +345,11 @@ export default {
           width 60px
           height 50px
           background #fff
-          bgImage("/static/icons/personalSetupfff")
+          bgImage("../../icons/personalSetupfff")
         .perShopping
           width 60px
           height 60px
-          bgImage("/static/icons/personCartfff")
+          bgImage("../../icons/personCartfff")
           position relative
           .num
             position absolute
@@ -365,7 +367,7 @@ export default {
           width 54px
           height 60px
           margin-left 50px
-          bgImage("/static/icons/personalNewsfff")
+          bgImage("../../icons/personalNewsfff")
         .left
           float left
         .right
@@ -377,11 +379,11 @@ export default {
         z-index 19
         background #fff
         .perSeting
-          bgImage("/static/icons/personalSetup")
+          bgImage("../../icons/personalSetup")
         .perShopping
           display none
         .perNews
-          bgImage("/static/icons/personalNews")
+          bgImage("../../icons/personalNews")
       .perHeader
         width 88%
         height 480px
@@ -428,13 +430,13 @@ export default {
                 height 96px
                 margin-right 10px
               .memberGradeIcon01
-                bgImage('/static/icons/menberGrade01')
+                background url('../../icons/menberGrade01.png') no-repeat center center /100% 100%
               .memberGradeIcon02
-                bgImage('/static/icons/menberGrade02')
+                background url('../../icons/menberGrade02.png') no-repeat center center /100% 100%
               .memberGradeIcon03
-                bgImage('/static/icons/menberGrade03')
+                background url('../../icons/menberGrade03.png') no-repeat center center /100% 100%
               .memberGradeIcon04
-                bgImage('/static/icons/menberGrade04')
+                background url('../../icons/menberGrade04.png') no-repeat center center /100% 100%
         .userInfo
           display flex
           width calc(100% - 100px)
@@ -459,7 +461,7 @@ export default {
               width 50px
               height 50px
               margin 0 auto 30px
-              bgImage('/static/icons/memberCard')
+              bgImage('../../icons/memberCard')
             p
               width 100%
               font-size 36px
@@ -475,7 +477,7 @@ export default {
       overflow hidden
     .couponsScroll.couponsScrollBg
       height 100%
-      background url('/static/images/emptyDiscount@3x.png') no-repeat center center/100%
+      background url('../../images/emptyDiscount@3x.png') no-repeat center center/100%
   .addressBox,.collectBox
     width 100%
     height auto
@@ -569,13 +571,13 @@ export default {
         height 60px
         margin 0 auto 34px
       .centerIcon
-        bgImage('/static/icons/toolCenter')
+        bgImage('../../icons/toolCenter')
       .inteIcon
-        bgImage('/static/icons/toolInte')
+        bgImage('../../icons/toolInte')
       .storeIcon
-        bgImage('/static/icons/toolStore')
+        bgImage('../../icons/toolStore')
       .cusserIcon
-        bgImage('/static/icons/toolCusser')
+        bgImage('../../icons/toolCusser')
       p
         display block
         width 100%
@@ -591,7 +593,7 @@ export default {
     .enptyCoupons
       width 100%
       height 320px
-      bgImage('/static/images/emptyDiscount')
+      bgImage('../../images/emptyDiscount')
   .memberGradeScroll
     width 980px
     height 320px
@@ -600,7 +602,7 @@ export default {
       width 920px
       height 320px
       margin-right 50px
-      bgImage('/static/images/newCardVouItemBg')
+      bgImage('../../images/newCardVouItemBg')
       .left
         float left
         width 260px
@@ -682,7 +684,7 @@ export default {
   .emptyAmusingBg
     width 100%
     height 325px
-    bgImage('/static/images/amusingActive')
+    bgImage('../../images/amusingActive')
     margin-bottom 50px
   .ceshi
     width 100%
@@ -691,4 +693,29 @@ export default {
     .ceshiscroll
       width 3000px
       background red
+.immediately
+  height  64px
+  line-height 64px
+  color #333333
+  border-top-left-radius 32px
+  border-bottom-left-radius 32px
+  font-size 30px
+  background linear-gradient(45deg,#E0B286,#FAD3AF)
+  width 260px
+  display flex
+  vertical-align middle
+  align-items center
+  em
+    display inline-block
+    vertical-align middle
+  em.fl
+    width 46px
+    height 40px
+    margin 0 10px
+    background url('../../icons/icon_hb.png') no-repeat center center/100%
+  em.fr
+    width 28px
+    height 28px
+    margin-left 10px
+    background url('../../icons/round-arr.png') no-repeat center center/100%
 </style>

@@ -103,40 +103,40 @@
         <ul v-show="activeIndex===0">
           <li class="item">
             <div class="img">
-              <img src="/static/icons/privilege1.png" alt>
+              <img src="../../icons/privilege1.png" alt>
               <p>2倍</p>
             </div>
             <span>生日积分</span>
           </li>
           <li class="item">
             <div class="img">
-              <img src="/static/icons/privilege2.png" alt>
+              <img src="../../icons/privilege2.png" alt>
               <p>4张</p>
             </div>
             <span>现金抵用券</span>
           </li>
           <li class="item">
             <div class="img">
-              <img src="/static/icons/privilege2-3.png" alt>
+              <img src="../../icons/privilege2-3.png" alt>
             </div>
             <span>免费送货</span>
           </li>
           <li class="item">
             <div class="img">
-              <img src="/static/icons/privilege4.png" alt>
+              <img src="../../icons/privilege4.png" alt>
               <p>2小时/年</p>
             </div>
             <span>免费停车</span>
           </li>
           <li class="item">
             <div class="img">
-              <img src="/static/icons/privilege2-5.png" alt>
+              <img src="../../icons/privilege2-5.png" alt>
             </div>
             <span>特色服务</span>
           </li>
           <li class="item">
             <div class="img">
-              <img src="/static/icons/privilege6.png" alt>
+              <img src="../../icons/privilege6.png" alt>
             </div>
             <span>VIP客服</span>
           </li>
@@ -144,41 +144,41 @@
         <ul v-show="activeIndex===1">
           <li class="item">
             <div class="img">
-              <img src="/static/icons/privilege1.png" alt>
+              <img src="../../icons/privilege1.png" alt>
               <p>2倍</p>
             </div>
             <span>生日积分</span>
           </li>
           <li class="item">
             <div class="img">
-              <img src="/static/icons/privilege2.png" alt>
+              <img src="../../icons/privilege2.png" alt>
               <p>4张</p>
             </div>
             <span>现金抵用券</span>
           </li>
           <li class="item">
             <div class="img">
-              <img src="/static/icons/privilege3.png" alt>\
+              <img src="../../icons/privilege3.png" alt>\
               <p>1次/年</p>
             </div>
             <span>免费送货</span>
           </li>
           <li class="item">
             <div class="img">
-              <img src="/static/icons/privilege4.png" alt>
+              <img src="../../icons/privilege4.png" alt>
               <p>2小时/年</p>
             </div>
             <span>免费停车</span>
           </li>
           <li class="item">
             <div class="img">
-              <img src="/static/icons/privilege2-5.png" alt>
+              <img src="../../icons/privilege2-5.png" alt>
             </div>
             <span>特色服务</span>
           </li>
           <li class="item">
             <div class="img">
-              <img src="/static/icons/privilege6.png" alt>
+              <img src="../../icons/privilege6.png" alt>
             </div>
             <span>VIP客服</span>
           </li>
@@ -186,42 +186,42 @@
         <ul v-show="activeIndex===2">
           <li class="item">
             <div class="img">
-              <img src="/static/icons/privilege1.png" alt>
+              <img src="../../icons/privilege1.png" alt>
               <p>2倍+礼物</p>
             </div>
             <span>生日积分</span>
           </li>
           <li class="item">
             <div class="img">
-              <img src="/static/icons/privilege2.png" alt>
+              <img src="../../icons/privilege2.png" alt>
               <p>5张</p>
             </div>
             <span>现金抵用券</span>
           </li>
           <li class="item">
             <div class="img">
-              <img src="/static/icons/privilege3.png" alt>
+              <img src="../../icons/privilege3.png" alt>
               <p>2次/年</p>
             </div>
             <span>免费送货</span>
           </li>
           <li class="item">
             <div class="img">
-              <img src="/static/icons/privilege4.png" alt>
+              <img src="../../icons/privilege4.png" alt>
               <p>2小时/年</p>
             </div>
             <span>免费停车</span>
           </li>
           <li class="item">
             <div class="img">
-              <img src="/static/icons/privilege5.png" alt>
+              <img src="../../icons/privilege5.png" alt>
               <p>干洗1次/年</p>
             </div>
             <span>特色服务</span>
           </li>
           <li class="item">
             <div class="img">
-              <img src="/static/icons/privilege6.png" alt>
+              <img src="../../icons/privilege6.png" alt>
             </div>
             <span>VIP客服</span>
           </li>
@@ -229,42 +229,42 @@
         <ul v-show="activeIndex===3">
           <li class="item">
             <div class="img">
-              <img src="/static/icons/privilege1.png" alt>
+              <img src="../../icons/privilege1.png" alt>
               <p>2倍+礼物</p>
             </div>
             <span>生日积分</span>
           </li>
           <li class="item">
             <div class="img">
-              <img src="/static/icons/privilege2.png" alt>
+              <img src="../../icons/privilege2.png" alt>
               <p>6张</p>
             </div>
             <span>现金抵用券</span>
           </li>
           <li class="item">
             <div class="img">
-              <img src="/static/icons/privilege3.png" alt>\
+              <img src="../../icons/privilege3.png" alt>\
               <p>3次/年</p>
             </div>
             <span>免费送货</span>
           </li>
           <li class="item">
             <div class="img">
-              <img src="/static/icons/privilege4.png" alt>
+              <img src="../../icons/privilege4.png" alt>
               <p>2小时/年</p>
             </div>
             <span>免费停车</span>
           </li>
           <li class="item">
             <div class="img">
-              <img src="/static/icons/privilege5.png" alt>
+              <img src="../../icons/privilege5.png" alt>
               <p>干洗+除螨(1+2)次/年</p>
             </div>
             <span>特色服务</span>
           </li>
           <li class="item">
             <div class="img">
-              <img src="/static/icons/privilege6.png" alt>
+              <img src="../../icons/privilege6.png" alt>
             </div>
             <span>VIP客服</span>
           </li>

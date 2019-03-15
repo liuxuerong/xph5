@@ -131,7 +131,7 @@ export default {
 			display block
 			width 32px
 			height 58px
-			bgImage('/static/icons/back')
+			bgImage('../../icons/back')
 	.userInfoTitle
 		width 60%
 		height 130px
@@ -152,7 +152,7 @@ export default {
 		width 80px
 		height 80px
 		margin-top 30px
-		bgImage('/static/icons/serch_icon')
+		bgImage('../../icons/serch_icon')
 	.commentSubmit
 		float right
 		width auto

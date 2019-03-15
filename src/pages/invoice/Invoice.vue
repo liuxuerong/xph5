@@ -34,7 +34,7 @@
             <input type="hidden" :value="inputForm.certificate">
             <input type="file" accept="image/*" @change="headerUpfile(0)">
             <span class="info">
-              <img src="/static/icons/invoice_carmer.png" alt="">
+              <img src="../../icons/invoice_carmer.png" alt="">
               <p>公司营业执照<br>（非必填）</p>
             </span>
           </div>
@@ -48,7 +48,7 @@
             <input type="hidden" :value="inputForm.certificate" name="need" placeholder="公司营业执照">
             <input type="file" accept="image/*" @change="headerUpfile(1)">
             <span class="info">
-              <img src="/static/icons/invoice_carmer.png" alt="">
+              <img src="../../icons/invoice_carmer.png" alt="">
               <p>公司营业执照</p>
               </span>
           </div>
@@ -60,7 +60,7 @@
             <input type="hidden" :value="inputForm.advice" name="need" placeholder="一般纳税人认定通知书">
             <input type="file" accept="image/*" @change="headerUpfile(2)">
             <span class="info">
-              <img src="/static/icons/invoice_carmer.png" alt="">
+              <img src="../../icons/invoice_carmer.png" alt="">
               <p>一般纳税人认定通知书</p>
             </span>
           </div>
@@ -72,7 +72,7 @@
             <input type="hidden" :value="inputForm.license" name="need" placeholder="开户许可证">
             <input type="file" accept="image/*" @change="headerUpfile(3)">
             <span class="info">
-              <img src="/static/icons/invoice_carmer.png" alt="">
+              <img src="../../icons/invoice_carmer.png" alt="">
               <p>开户许可证</p>
             </span>
           </div>
@@ -408,7 +408,7 @@ export default {
       width 40px
       height 40px
       position absolute
-      background url("/static/icons/del_icon.png") no-repeat center center/100% 100%
+      background url("../../icons/del_icon.png") no-repeat center center/100% 100%
       top -20px
       right -20px
       z-index 9

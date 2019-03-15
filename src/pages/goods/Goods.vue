@@ -37,6 +37,7 @@
 import CommonNavSearch from 'common/commonHeader/CommonNavSearch'
 import CommonImgPrices from 'common/commonImgPrices/CommonImgPrices'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
+import emptyImg from '../../images/commentEmptyGoods.png'
 import {
   storage
 } from 'util/storage'
@@ -80,7 +81,7 @@ export default {
       showCart: false,
       currentIndex: 1,
       emptyObj: {
-        emptyImg: '/static/images/commentEmptyGoods.png',
+        emptyImg,
         emptyBold: '暂无商品',
         emptyP: '此类商品暂未上架，星品君正在努力挖掘中..',
         buttonText: null,

@@ -166,13 +166,13 @@ html,body,#app
         height 128px
         margin 0 auto
       .memberGradeIcon01
-        bgImage('/static/icons/menberGrade01')
+        background url('../../icons/menberGrade01.png') no-repeat center center /100% 100%
       .memberGradeIcon02
-        bgImage('/static/icons/menberGrade02')
+        background url('../../icons/menberGrade02.png') no-repeat center center /100% 100%
       .memberGradeIcon03
-        bgImage('/static/icons/menberGrade03')
+        background url('../../icons/menberGrade03.png') no-repeat center center /100% 100%
       .memberGradeIcon04
-        bgImage('/static/icons/menberGrade04')
+        background url('../../icons/menberGrade04.png') no-repeat center center /100% 100%
       span
         width 100%
         height 40px
@@ -242,7 +242,7 @@ html,body,#app
   .centerHeaderBot
     width 88%
     height 470px
-    bgImage('/static/images/centerHeaderBg')
+    bgImage('../../images/centerHeaderBg')
     position absolute
     left 0
     right 0
@@ -277,13 +277,13 @@ html,body,#app
           background red
           margin-right 50px
         .memberGradeIcon01
-          bgImage('/static/icons/menberGrade01')
+          background url('../../icons/menberGrade01.png') no-repeat center center /100% 100%
         .memberGradeIcon02
-          bgImage('/static/icons/menberGrade02')
+          background url('../../icons/menberGrade02.png') no-repeat center center /100% 100%
         .memberGradeIcon03
-          bgImage('/static/icons/menberGrade03')
+          background url('../../icons/menberGrade03.png') no-repeat center center /100% 100%
         .memberGradeIcon04
-          bgImage('/static/icons/menberGrade04')
+          background url('../../icons/menberGrade04.png') no-repeat center center /100% 100%
     .stopTimeTips
       width 100%
       height 94px
@@ -365,13 +365,13 @@ html,body,#app
         height 180px
         margin 62px auto 52px
       .activityIcon01
-        bgImage('/static/icons/activityIcon01')
+        bgImage('../../icons/activityIcon01')
       .activityIcon02
-        bgImage('/static/icons/activityIcon02')
+        bgImage('../../icons/activityIcon02')
       .activityIcon03
-        bgImage('/static/icons/activityIcon03')
+        bgImage('../../icons/activityIcon03')
       .activityIcon04
-        bgImage('/static/icons/activityIcon04')
+        bgImage('../../icons/activityIcon04')
       p
         display block
         width 100%
@@ -400,7 +400,7 @@ html,body,#app
         float right
         width 24px
         height 45px
-        bgImage('/static/icons/enterNextGray')
+        bgImage('../../icons/enterNextGray')
         margin-top 70px
         margin-left 30px
 </style>

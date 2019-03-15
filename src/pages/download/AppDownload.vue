@@ -135,7 +135,7 @@ export default {
       position absolute
       left 0
       top 0
-      background url(/static/images/appDownload@3x.jpg) no-repeat center center/100% 100%
+      background url(../../images/appDownload@3x.jpg) no-repeat center center/100% 100%
       .appText
         position absolute
         top 300px
@@ -180,14 +180,14 @@ export default {
         height 48px
         vertical-align middle
         margin -2px 8px 0
-        bgImage('/static/icons/iconBrowser')
+        bgImage('../../icons/iconBrowser')
     .operBrowser
       width 160px
       height 110px
       position absolute
       top 28px
       right 40px
-      bgImage('/static/icons/operBrowser')
+      bgImage('../../icons/operBrowser')
   .downloadBtn
     position absolute
     left 0

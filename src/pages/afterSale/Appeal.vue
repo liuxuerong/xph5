@@ -212,7 +212,7 @@ export default {
       float left
       width 130px
       height 130px
-      background url(/static/images/upLoadPic.png) no-repeat center center/70%
+      background url(../../images/upLoadPic.png) no-repeat center center/70%
       input[type="file"]
         display block
         width 130px
@@ -238,7 +238,7 @@ export default {
       position absolute
       right 5px
       top -20px
-      bgImage('/static/icons/deletePic')
+      bgImage('../../icons/deletePic')
 .cellLink
   line-height 148px
   padding 0 50px

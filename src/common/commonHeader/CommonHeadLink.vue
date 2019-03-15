@@ -7,19 +7,19 @@
       <div slot="content" class="popover-demo-content">
         <ul>
           <li>
-            <span class="icon"><img src="/static/icons/homeBack_icon.png" alt=""></span>
+            <span class="icon"><img src="../../icons/homeBack_icon.png" alt=""></span>
             <router-link to="/find" class="item">首页</router-link>
           </li>
           <li >
-            <span class="icon"><img src="/static/icons/searchBack_icon.png" alt=""></span>
+            <span class="icon"><img src="../../icons/searchBack_icon.png" alt=""></span>
             <router-link to="/search" class="item">搜索</router-link>
           </li>
           <li >
-            <span class="icon"><img src="/static/icons/service_icon.png" alt=""></span>
+            <span class="icon"><img src="../../icons/service_icon.png" alt=""></span>
             <span @click="customerService" class="item">客服</span>
           </li>
           <li >
-            <span class="icon"><img src="/static/icons/feedback_icon.png" alt=""></span>
+            <span class="icon"><img src="../../icons/feedback_icon.png" alt=""></span>
             <router-link to="/feedBack" class="item">反馈</router-link>
           </li>
         </ul>

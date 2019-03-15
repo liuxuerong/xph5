@@ -11,7 +11,7 @@
       <div class="orderItem" v-for="(item, i) in list" :key="i">
         <div class="goodsItem border-bottom" v-for="(childItem,j) in item.memberOrderGoods" :key="j" @click="orderDetails(item.orderSn,item.memberOrderGoods[0].orderItemStatus,item.memberOrderGoods[0].orderItemId)">
           <img v-if="childItem.pic != ''" :src="imageUrl+childItem.pic+imageAfterUrl" alt="">
-          <img v-else src="/static/images/personalHeader.png">
+          <img v-else src="../../images/personalHeader.png">
           <div class="goodsinfo">
             <h3>{{childItem.goodsName}}</h3>
             <div class="goodsSpecWrapper clearfix">
@@ -78,6 +78,7 @@
 <script>
 import SearchTitle from './ComOrderSearchTitle'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
+import emptyImg from '../../images/commentEmptySearch.png'
 import { orderSearch, confirmGoods } from 'util/netApi'
 import {Toast} from 'mint-ui'
 import notice from 'util/notice'
@@ -93,7 +94,7 @@ export default {
       imageAfterUrl: config.imageAfterUrl,
       list: [],
       emptyObj: {
-        emptyImg: '/static/images/commentEmptySearch.png',
+        emptyImg,
         emptyBold: '暂无订单',
         emptyP: '对不起，未查询到相关订单~',
         buttonText: null,
@@ -209,7 +210,7 @@ export default {
         width 60px
         height 60px
         margin-top 20px
-        bgImage('/static/icons/serch_icon')
+        bgImage('../../icons/serch_icon')
       input
         float left
         height 100%

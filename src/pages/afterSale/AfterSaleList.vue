@@ -29,6 +29,7 @@ import {
 import OrderItem from './components/OrderItem'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
 import BScroll from 'better-scroll'
+import emptyImg from '../../images/commentEmptyList.png'
 export default {
   name: 'AfterSaleList',
   components: {
@@ -43,7 +44,7 @@ export default {
       page: 1,
       noMore: false,
       emptyObj: {
-        emptyImg: '/static/images/commentEmptyList.png',
+        emptyImg,
         emptyBold: '暂无售后订单',
         emptyP: '您还没有发起售后订单',
         buttonText: null,

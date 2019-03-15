@@ -77,7 +77,7 @@ export default {
         width 46px
         height 46px
         margin-top 52px
-        bgImage('/static/icons/emptyText')
+        bgImage('../../icons/emptyText')
   .userNamePerText
     display block
     width 100%
@@ -125,7 +125,7 @@ export default {
 			display block
 			width 32px
 			height 58px
-			bgImage('/static/icons/back')
+			bgImage('../../icons/back')
 	.userInfoTitle
 		width 60%
 		height 130px

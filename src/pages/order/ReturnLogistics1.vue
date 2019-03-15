@@ -139,7 +139,7 @@ export default {
     height 50px
     line-height 50px
     margin-top 42px
-    bgImage('/static/icons/payUnchecked')
+    bgImage('../../icons/payUnchecked')
   .checkboxInput.active
-    bgImage('/static/icons/paySelect')
+    bgImage('../../icons/paySelect')
 </style>

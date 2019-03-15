@@ -14,7 +14,7 @@
             <p class="infoBottom">{{info.addressInfo.province}}{{info.addressInfo.city}}{{info.addressInfo.area}}{{info.addressInfo.detailedAddr}}</p>
           </div>
         </router-link>
-        <router-link class="cellLink" to="/addressAdmin/need" v-else-if="addressInfo">
+        <router-link class="cellLink" to="/addressAdmin/need" v-else-if="addressInfo" replace>
           <div class="addressWrap  text">
             <div class="infoTop clearfix">
               <h4>{{addressInfo.receiverName}}</h4>
@@ -43,7 +43,14 @@
         <div class="cellLink">
           <div>配送方式<span class="fr">快递</span></div>
         </div>
-        <div class="cellLink" @click.prevent="chooseCoupons">
+        <div class="cellLink" @click.prevent="chooseCouponsDelivery">
+          <div class="text">配送优惠
+            <span class="fr" v-if="info&&info.shippingFavorableName">{{info.shippingFavorableName}}</span>
+            <span class="fr availableCouponNum" v-else-if="availableCoupon&&availableCouponNum"><i>{{availableCouponNum}}</i>张可用</span>
+            <span class="fr" v-else>无可用</span>
+          </div>
+        </div>
+        <div class="cellLink" @click.prevent="chooseCouponsGoods">
           <div class="text">优惠券
             <span class="fr" v-if="info&&info.couponName">{{info.couponName}}</span>
             <span class="fr availableCouponNum" v-else-if="availableCoupon&&availableCouponNum"><i>{{availableCouponNum}}</i>张可用</span>
@@ -61,7 +68,7 @@
           <div class="cellLink">
             <div>发票内容<span class="fr">商品明细</span></div>
           </div>
-          <router-link :to="`/invoiceInfo/${invoiceType}/${invoiceStatus}/2`" class="cellLink">
+          <router-link :to="`/invoiceInfo/${invoiceType}/${invoiceStatus}/2`" class="cellLink" replace>
             <div class=" text">发票抬头<span class="fr" v-if="info&&info.invoicingId">{{info.invoiceTitle}}</span></div>
           </router-link>
         </div>
@@ -296,6 +303,9 @@ export default {
         if (this.info.couponId) {
           params.favorableId = this.info.couponId
         }
+        if (this.info.shippingFavorableId) {
+          params.shippingFavorableId = this.info.shippingFavorableId
+        }
         if (this.info.invoicingId) {
           params.invoicingId = this.info.invoicingId
           this.invoiceType = this.info.invoiceType
@@ -421,7 +431,7 @@ export default {
       })
     },
     // 使用优惠券
-    chooseCoupons () {
+    chooseCoupons (type) {
       for (let i = 0; i < this.pricesData.length; i++) {
         this.couponArr[i] = {
           'goodsItemId': this.pricesData[i].id,
@@ -429,7 +439,15 @@ export default {
         }
       }
       storage.setLocalStorage(couponByGoods, this.couponArr)
-      this.$router.push('/chooseCoupons/2')
+      this.$router.replace(`/chooseCoupons/${type}`)
+    },
+    // 选取商品优惠券
+    chooseCouponsGoods () {
+      this.chooseCoupons(2)
+    },
+    // 选取配送优惠
+    chooseCouponsDelivery () {
+      this.chooseCoupons(3)
     }
   },
 

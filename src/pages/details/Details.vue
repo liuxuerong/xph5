@@ -51,6 +51,7 @@ import DetailsCommentSwiper from './components/DetailsCommentSwiper'
 import DetailsCoupon from './components/DetailsCoupon'
 import { accessToken } from 'util/const.js'
 import BScroll from 'better-scroll'
+import emptyImg from '../../images/commentEmptyGoods.png'
 import {
   mapMutations,
   mapState
@@ -99,7 +100,7 @@ export default {
       goodsComment: null,
       emptyTitle: '商品过期不存在',
       emptyObj: {
-        emptyImg: '/static/images/commentEmptyGoods.png',
+        emptyImg,
         emptyBold: '商品过期不存在',
         emptyP: '哇噢~商品过期了哦~快去找新商品吧',
         buttonText: '回到首页',
@@ -355,10 +356,10 @@ export default {
     position absolute
     top 24px
   .home
-    bgImage("/static/icons/home_icon")
+    bgImage("../../icons/home_icon")
     right 50px
   .share
-    bgImage("/static/icons/share_icon")
+    bgImage("../../icons/share_icon")
     background-size 100% 100%
     width 58px
     height 58px

@@ -218,7 +218,7 @@ export default {
       float left
       width 185px
       height 185px
-      background url(/static/images/upLoadPic.png) no-repeat center center/70%
+      background url(../../images/upLoadPic.png) no-repeat center center/70%
       input[type="file"]
         display block
         width 185px
@@ -244,7 +244,7 @@ export default {
         position absolute
         right 5px
         top -20px
-        bgImage('/static/icons/deletePic')
+        bgImage('../../icons/deletePic')
   .feedbackSubmit
     width calc(100% - 100px)
     height 146px

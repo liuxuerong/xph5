@@ -5,7 +5,7 @@
       <div class="goodsItem" v-for="(item,index) in list" :key="item.goodsItemId">
         <div class="evaluateTop clearfix">
           <img v-if="item.pic != ''" :src="imageUrl+item.pic+imageAfterUrl" alt="">
-          <img v-else src="/static/images/personalHeader.png">
+          <img v-else src="../../images/personalHeader.png">
           <div class="orderText">
             <h3 class="goodsName">{{item.goodsName}}</h3>
             <div class="goodsSpecWrapper clearfix">
@@ -270,7 +270,7 @@ export default {
       float left
       width 130px
       height 130px
-      background url(/static/images/upLoadPic.png) no-repeat center center/70%
+      background url(../../images/upLoadPic.png) no-repeat center center/70%
       input[type="file"]
         display block
         width 130px
@@ -296,7 +296,7 @@ export default {
       position absolute
       right 5px
       top -20px
-      bgImage('/static/icons/deletePic')
+      bgImage('../../icons/deletePic')
   .goodsSpec
     color #808080
     font-size 36px

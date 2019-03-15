@@ -24,6 +24,7 @@
     "exif-js": "^2.3.0",
     "fastclick": "^1.0.6",
     "gzip": "^0.1.0",
+    "image-webpack-loader": "^4.6.0",
     "lib-flexible": "^0.3.2",
     "mint-ui": "^2.2.13",
     "moment": "^2.22.2",

@@ -60,7 +60,7 @@ export default {
       width 240px
       height 240px
       margin 0 auto
-      bgImage('/static/images/appLogo')
+      bgImage('../../images/appLogo')
     .versionNum
       display block
       width 100%
@@ -73,7 +73,7 @@ export default {
     width 24px
     height 45px
     margin-top 60px
-    bgImage('/static/icons/enterNextGray')
+    bgImage('../../icons/enterNextGray')
   .aboutUsSelect
     width 100%
     background #fff
@@ -91,10 +91,10 @@ export default {
       margin-right 40px
     .selectItem:nth-of-type(1)
       .selectIcon
-        bgImage('/static/icons/aboutTelephone')
+        bgImage('../../icons/aboutTelephone')
     .selectItem:nth-of-type(2)
       .selectIcon
-        bgImage('/static/icons/aboutMicroblog')
+        bgImage('../../icons/aboutMicroblog')
   .aboutText
     float left
     width auto

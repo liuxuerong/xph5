@@ -114,6 +114,4 @@ window.clickTo = function (couponId) {
     padding-top 130px
   .activitysContent
       width 100%
-      height 100%
-      background #F5F5F5
 </style>

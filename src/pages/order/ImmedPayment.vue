@@ -203,9 +203,9 @@ export default {
         width 116px
         height 116px
       .alipayImg
-        bgImage('/static/icons/alipay')
+        bgImage('../../icons/alipay')
       .wechatImg
-        bgImage('/static/icons/wechat')
+        bgImage('../../icons/wechat')
       span
         float left
         height 116px
@@ -218,10 +218,10 @@ export default {
         float right
         width 60px
         height 60px
-        bgImage('/static/icons/payUnchecked')
+        bgImage('../../icons/payUnchecked')
         margin-top 20px
       i.redio.active
-        bgImage('/static/icons/paySelect')
+        bgImage('../../icons/paySelect')
   .immedPayment
     display block
     width calc(100% - 100px)

@@ -35,6 +35,7 @@
 <script >
 import UserinfoHeader from './components/ComUserSetHeader'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
+import emptyImg from '../../images/emptyIntegral.png'
 import {getMemberIntegral} from 'util/netApi'
 import {http} from 'util/request'
 import { config } from 'util/config'
@@ -48,7 +49,7 @@ export default {
       imageUrl: config.imageUrl, // 图片路径
       imageAfterUrl: config.imageAfterUrl,
       emptyObj: {
-        emptyImg: '/static/images/emptyIntegral.png',
+        emptyImg,
         emptyBold: '暂无积分',
         emptyP: '快去购物赚积分吧',
         buttonText: '去购物',
@@ -102,7 +103,7 @@ export default {
   .integralHeader
     width 100%
     height 520px
-    bgImage('/static/images/IntegralDetailBg')
+    bgImage('../../images/IntegralDetailBg')
     box-sizing border-box
     padding-top 140px
     .integralNum
