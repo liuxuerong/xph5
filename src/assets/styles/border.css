@@ -101,12 +101,7 @@
     border-left: 1px solid #E6E6E6;
     transform-origin: 0 0;
 }
-.border-top::before,
-.border-topbottom::before,
-.border-topleft::before,
-.border-topright::before {
-    top: 0;
-}
+
 .border-right::before,
 .border-rightleft::after,
 .border-rightbottom::before,

@@ -175,16 +175,9 @@ html,
   z-index: 9999998 !important;
 }
 
-.weui-dialog {
-  z-index: 9999999 !important;
-}
-
-
-
 #__vconsole .vc-switch {
   z-index: 99999999 !important;
 }
-
 
 .mint-toast-text,
 .weui-toast__content {

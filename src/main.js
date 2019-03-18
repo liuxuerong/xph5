@@ -16,6 +16,7 @@ import { AlertPlugin, LoadingPlugin, Confirm, ConfirmPlugin, ToastPlugin } from 
 import Vuelidate from 'vuelidate'
 /* eslint-disable no-unused-vars */
 // import vConsole from '@/assets/vconsole.js'
+import image from '@/images/defaultImg.png'
 Vue.use(AlertPlugin)
 
 Vue.use(LoadingPlugin)
@@ -23,8 +24,8 @@ Vue.use(Confirm)
 Vue.use(ConfirmPlugin)
 Vue.use(ToastPlugin)
 Vue.use(VueLazyLoad, {
-  error: '../../images/defaultImg.png',
-  loading: '../../images/defaultImg.png'
+  error: image,
+  loading: image
 })
 fastClick.attach(document.body)
 Vue.use(Vuelidate)

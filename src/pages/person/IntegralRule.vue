@@ -75,7 +75,6 @@ export default {
   methods: {
     returnTitle (title) {
       dsbridge.call('getTitle', title, function (v) {
-        alert(v)
       })
     },
     IntegralRuleRender () {

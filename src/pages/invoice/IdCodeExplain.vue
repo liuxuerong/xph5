@@ -31,7 +31,6 @@ export default {
   methods: {
     returnTitle () {
       dsbridge.call('getTitle', '关于发票税号的说明', function (v) {
-        alert(v)
       })
     }
   },

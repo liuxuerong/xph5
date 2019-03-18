@@ -132,7 +132,7 @@ export const http = (opts, params, noLoading) => {
   httpDefaultOptions = {
     url: baseUrl + opts.version + opts.url,
     method: opts.method,
-    headers: headerOption(opts.method),
+    headers: headerOption(),
     timeout: 30000,
     params: Array.isArray(params) && opts.join ? {} : params,
     data: Array.isArray(params) && opts.join ? {} : params

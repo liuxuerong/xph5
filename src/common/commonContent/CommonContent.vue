@@ -58,7 +58,6 @@ export default {
   methods: {
     returnTitle (title) {
       dsbridge.call('getTitle', title, function (v) {
-        alert(v)
       })
     },
     goodsDetail (goodsId) {
@@ -69,7 +68,6 @@ export default {
         })
       } else if (this.platform === 'i' || this.platform === 'a') {
         dsbridge.call('goodsDetail', goodsId, function (v) {
-          alert(v)
         })
       } else {
         this.$router.push(`/details/${goodsId}`)

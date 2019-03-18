@@ -64,7 +64,6 @@ let platform = getUrlParam('platform')
 window.toGoodDetail = function (goodsId) {
   if (platform === 'i' || platform === 'a') {
     dsbridge.call('goodsDetail', goodsId, function (v) {
-      alert(v)
     })
   } else {
     window.open(`${window.location.origin}/#/details/${goodsId}`)

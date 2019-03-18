@@ -62,7 +62,6 @@ export default {
     },
     returnTitle (title) {
       dsbridge.call('getTitle', title, function (v) {
-        alert(v)
       })
     },
     hideHeads () {

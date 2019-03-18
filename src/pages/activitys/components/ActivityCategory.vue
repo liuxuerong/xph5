@@ -64,7 +64,6 @@ export default {
         })
       } else if (this.platform === 'i' || this.platform === 'a') {
         dsbridge.call('goodsDetail', goodsId, function (v) {
-          alert(v)
         })
       } else {
         this.$router.push(`/details/${goodsId}`)

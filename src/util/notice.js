@@ -1,7 +1,7 @@
 import Vue from 'vue'
 
 const notice = {
-  alert: (title = '提示', content, showFn, hideFn) => {
+  alert: (content, showFn, hideFn, title = '提示') => {
     return Vue.$vux.alert.show({
       title,
       content,
