@@ -76,7 +76,7 @@ export default {
             flag = false
             break
           }
-        };
+        }
         if (flag) {
           this.hallAtlasData.push({
             name: this.experience[i].categoryName,

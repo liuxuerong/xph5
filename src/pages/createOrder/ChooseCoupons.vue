@@ -28,7 +28,7 @@
                 <span class="operBtn newReceive" v-if="type == '1'&&item.useStatus == '1'" @click.stop="receiveCard(item.id)">立即领取</span>
                 <span class="operBtn noReceive" v-if="type == '1'&&item.useStatus == '2'">已领取</span>
                 <span class="operBtn noReceive" v-if="type == '1'&&item.useStatus == '3'">领光了</span>
-                <span class="operBtn newUse" v-if="type == '2'||type == '3'" @click="useCoupon(item.id,item.name,item.type)">立即使用</span>
+                <span class="operBtn newUse" v-if="type == '2'||type == '3'" @click="useCoupon(item,item.type)">立即使用</span>
               </div>
               <div class="activityTime">
                 <span class="drawTime" v-if="type==1">
@@ -118,8 +118,8 @@ export default {
               this.list.push(item)
             } else if (this.type === '2' && item.useStatus === 2) {
               this.list.push(item)
-            } else if (this.type === '1') {
-              if (response.data.body.type == '4') {
+            } else if (this.type === '3') {
+              if (item.type === 4) {
                 this.list.push(item)
               }
             }
@@ -131,18 +131,18 @@ export default {
     },
     // shippingFavorableId
     // 立即使用优惠券
-    useCoupon (id, name, type) {
+    useCoupon (coupon, type) {
       let info = storage.getLocalStorage(orderInfo) || {}
       if (type == 4) {
-        info.shippingFavorableId = id
-        info.shippingFavorableName = name
+        info.shippingFavorableId = coupon.id
+        info.shippingFavorableAmount = coupon.subMoney
       } else {
-        info.couponId = id
-        info.couponName = name
+        info.couponId = coupon.id
+        info.couponName = coupon.name
       }
       storage.setLocalStorage(orderInfo, info)
       this.$router.replace({
-        path: '/createOrder/3'
+        path: this.routeName
       })
     },
     // 不使用优惠券
@@ -152,7 +152,7 @@ export default {
       info.couponName = null
       storage.setLocalStorage(orderInfo, info)
       this.$router.replace({
-        path: '/createOrder/3'
+        path: this.routeName
       })
     },
     // 领取优惠券

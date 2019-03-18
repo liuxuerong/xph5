@@ -27,13 +27,13 @@
               <span class="name">商品总额</span><span class="price">￥{{orderData.totalAmount}}</span>
             </li>
             <li>
-              <span class="name">商品优惠</span><span class="price">-￥{{orderData.offerAmount}}</span>
+              <span class="name">商品优惠</span><span class="price">-￥{{orderData.favorableAmount}}</span>
             </li>
             <li>
               <span class="name">运费</span><span class="price">+￥{{orderData.shippingAmount}}</span>
             </li>
             <li>
-              <span class="name">配送优惠</span><span class="price">-￥{{orderData.shippingAmount}}</span>
+              <span class="name">配送优惠</span><span class="price">-￥{{orderData.shippingFavorableAmount}}</span>
             </li>
             <li class="all border-top">
               <span class="name"> 共<b>{{orderData.memberOrderGoods.length}}</b>件商品</span><span class="price">实付：￥{{orderData.needPayAmount}}</span>

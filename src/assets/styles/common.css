@@ -28,11 +28,6 @@ html,
   color: #4D4D4D;
 }
 
-::-moz-placeholder {
-  font-size: 0.408889rem;
-  color: #4D4D4D;
-}
-
 ::-webkit-input-placeholder {
   font-size: 0.408889rem;
   color: #4D4D4D;
@@ -131,6 +126,7 @@ html,
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  z-index: 999999 !important;
 }
 
 .weui-dialog .weui-dialog__title {
@@ -183,9 +179,7 @@ html,
   z-index: 9999999 !important;
 }
 
-.mint-toast {
-  z-index: 999999 !important;
-}
+
 
 #__vconsole .vc-switch {
   z-index: 99999999 !important;
@@ -259,6 +253,7 @@ html,
   color: #808080;
   font-size: 40px;
 }
-.vux-popover{
+
+.vux-popover {
   position: fixed !important;
 }

@@ -25,37 +25,38 @@ let getAccessToken = () => {
 }
 
 // 请求头设置
-let headerOption = method => {
-  let _accessToken = {
-    Authorization: getAccessToken()
-  }
-  switch (method) {
-    case 'GET':
-      return Object.assign({
-        'content-type': 'application/json;'
-      },
-      _accessToken
-      )
-    case 'POST':
-      return Object.assign({
-        'content-type': 'application/json;'
-      },
-      _accessToken
-      )
-    case 'DELETE':
-      return Object.assign({
-        'content-type': 'application/json;'
-      },
-      _accessToken
-      )
-    case 'PUT':
-      return Object.assign({
-        'content-type': 'application/json;'
-      },
-      _accessToken
-      )
+let headerOption = () => {
+  return {
+    Authorization: getAccessToken(),
+    'content-type': 'application/json;'
   }
 }
+// switch (method) {
+//   case 'GET':
+//     return Object.assign({
+//       'content-type': 'application/json;'
+//     },
+//     _accessToken
+//     )
+//   case 'POST':
+//     return Object.assign({
+//       'content-type': 'application/json;'
+//     },
+//     _accessToken
+//     )
+//   case 'DELETE':
+//     return Object.assign({
+//       'content-type': 'application/json;'
+//     },
+//     _accessToken
+//     )
+//   case 'PUT':
+//     return Object.assign({
+//       'content-type': 'application/json;'
+//     },
+//     _accessToken
+//     )
+// }
 // http返回码状态判断
 let state = (res, noLoading) => {
   if (noLoading) {

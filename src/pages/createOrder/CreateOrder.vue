@@ -45,8 +45,8 @@
         </div>
         <div class="cellLink" @click.prevent="chooseCouponsDelivery">
           <div class="text">配送优惠
-            <span class="fr" v-if="info&&info.shippingFavorableName">{{info.shippingFavorableName}}</span>
-            <span class="fr availableCouponNum" v-else-if="availableCoupon&&availableCouponNum"><i>{{availableCouponNum}}</i>张可用</span>
+            <span class="fr" v-if="info&&info.shippingFavorableAmount">已优惠<i>{{info.shippingFavorableAmount}}</i>元</span>
+            <span class="fr availableCouponNum" v-else-if="availableShippingCoupon&&availableShippingCouponNum"><i>{{availableShippingCouponNum}}</i>张可用</span>
             <span class="fr" v-else>无可用</span>
           </div>
         </div>
@@ -179,7 +179,9 @@ export default {
       canClick: true,
       title: '确认订单',
       availableCoupon: '',
+      availableShippingCoupon: '',
       availableCouponNum: 0,
+      availableShippingCouponNum: 0,
       goodsId: '',
       goodsItemId: '',
       num: '',
@@ -286,14 +288,6 @@ export default {
     // 获取数据渲染页面
     getDetails () {
       let goodsInfoCart = storage.getLocalStorage(goodsInfo)
-      // this.unsatisfactoryData = []
-      // 库存不满足商品过滤
-      // for (let i = 0; i < goodsInfoCart.goodsItems.length; i++) {
-      //   if (goodsInfoCart.goodsItems[i].num > goodsInfoCart.goodsItems[i].stock) {
-      //     this.unsatisfactoryData.push(goodsInfoCart.goodsItems[i])
-      //   }
-      // }
-      // if (!this.unsatisfactoryData.length) {
       const orderInfoData = storage.getLocalStorage(orderInfo)
       this.info = orderInfoData
       let params = {}
@@ -318,7 +312,9 @@ export default {
         if (res.data.code === 0) {
           params.key = res.data.body.key
           this.availableCoupon = res.data.body.availableCoupon
+          this.availableShippingCoupon = res.data.body.availableShippingCoupon
           this.availableCouponNum = res.data.body.availableCouponNum
+          this.availableShippingCouponNum = res.data.body.availableShippingCouponNum
           this.pricesData = res.data.body.orderGoodsItems
           this.shippingAmount = res.data.body.shippingAmount
           this.offerAmount = res.data.body.offerAmount
@@ -377,6 +373,7 @@ export default {
       // params.shippingMethod = orderInfoData.shippingMethod
       params.shippingMethod = 2
       params.favorableId = orderInfoData && orderInfoData.couponId
+      params.shippingFavorableId = orderInfoData && orderInfoData.shippingFavorableId
       params.invoicingType = orderInfoData && orderInfoData.invoicingType
 
       params = Object.assign(this.params, params)
@@ -720,7 +717,8 @@ export default {
       opacity 0
       width 60px
       height 60px
-
+.createOrder .createOrderWrap .cellLink .text span i
+  color #D55050
 </style>
 
 <style lang="stylus">

@@ -310,14 +310,7 @@ export default {
 
       // 未发货仅退款
       if (this.orderStatus == 2 && this.params.type == 1) {
-        if (this.params.reason == '') {
-          Toast({
-            message: '请选择退款原因',
-            position: 'center',
-            duration: 2000
-          })
-          return
-        }
+        this.showSelectReason()
         // 已发货仅退款
       } else if (this.orderStatus != 2 && this.params.type == 1) {
         if (this.params.goodsType == '') {
@@ -328,14 +321,7 @@ export default {
           })
           return
         }
-        if (this.params.reason == '') {
-          Toast({
-            message: '请选择退款原因',
-            position: 'center',
-            duration: 2000
-          })
-          return
-        }
+        this.showSelectReason()
         // 退货退款
       } else if (this.orderStatus != 2 && this.params.type == 2) {
         if (this.params.reason == '') {
@@ -422,6 +408,15 @@ export default {
     reasonChoice (index) {
       this.reason = this.popData[index]
       this.popupVisible = false
+    },
+    showSelectReason () {
+      if (this.params.reason == '') {
+        Toast({
+          message: '请选择退款原因',
+          position: 'center',
+          duration: 2000
+        })
+      }
     }
   },
   mounted () {
