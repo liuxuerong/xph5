@@ -302,8 +302,8 @@ export default {
 
     // 初始化得到结果集
     initSKU () {
-      let i = this.getObjKeys(this.sku.data)
-      let j = this.getObjKeys(this.sku.data)
+      let i = 0
+      let j = 0
       let skuKeys = this.getObjKeys(this.sku.data)
       for (i = 0; i < skuKeys.length; i++) {
         let skuKey = skuKeys[i] // 一条SKU信息key

@@ -62,9 +62,9 @@
               <span v-else-if="list.condMoney != '0'&& list.range == '4'">满 {{list.condMoney}}.0 可用</span>
               <span v-else>无门槛</span>
               <!-- 未使用 -->
-              <span v-if="mainType == '0' && list.activityStart && list.activityEnd" class="activityTime">{{list.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{list.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
+              <span v-if="mainType == '0' && list.overdueStart && list.overdueEnd" class="activityTime">{{list.overdueStart.split('T')[0].replace(/-/ig,'.')}} - {{list.overdueEnd.split('T')[0].replace(/-/ig,'.')}}</span>
               <!-- 已使用  已过期-->
-              <span v-else-if="list.activityStart && list.activityEnd" class="activityTime">{{list.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{list.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
+              <span v-else-if="list.overdueStart && list.overdueEnd" class="activityTime">{{list.overdueStart.split('T')[0].replace(/-/ig,'.')}} - {{list.overdueEnd.split('T')[0].replace(/-/ig,'.')}}</span>
             </div>
           </div>
         </div>

@@ -146,6 +146,7 @@ import {
   accessToken
 } from 'util/const'
 import axios from 'axios'
+import { isPhone } from 'util/validate'
 export default {
   name: 'ApplyAfterSales',
   data () {
@@ -358,7 +359,6 @@ export default {
           })
           return
         }
-        const isPhone = (value) => /^1\d{10}$/gi.test(value)
         if (this.params.contactNumber !== '' && !isPhone(this.params.contactNumber)) {
           Toast({
             message: '请填写一个正确的手机号码',

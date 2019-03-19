@@ -56,6 +56,7 @@ import {
   http
 } from 'util/request'
 import { logisticsCompany, afterSaleDelivery } from 'util/netApi'
+import { isPhone } from 'util/validate'
 export default {
   name: 'ReturnLogistics',
   components: {
@@ -118,7 +119,6 @@ export default {
           }
         }
       }
-      const isPhone = (value) => /^1\d{10}$/gi.test(value)
       if (this.inputForm.phone != '' && !isPhone(this.inputForm.contactWay)) {
         this.toastShow('请填写一个正确的手机号码')
         return false

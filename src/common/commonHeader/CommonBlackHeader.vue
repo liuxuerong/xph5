@@ -42,7 +42,7 @@ export default {
     width 100%
     z-index 9999
     padding 0 57px
-    background-color opacity
+    background-color #252525
     ellipsis()
     .back
       position absolute
@@ -50,13 +50,16 @@ export default {
       height 120px
       left 50px
       z-index 99999
-    .back::before
-      display block
+    .back:before,.back:after
+      width 0
+      height 0
       content ''
-      width 40px
-      height 40px
-      margin-top 40px
-      border-left 6px solid #fff
-      border-top 6px solid #fff
-      transform rotate(-45deg)
+      position absolute
+      border 30px solid transparent
+      border-right 30px solid #fff
+      left -30px
+      top 30px
+    .back:after
+      border-right 30px solid #252525
+      left -24px
 </style>

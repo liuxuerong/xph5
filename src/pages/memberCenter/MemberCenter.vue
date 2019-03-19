@@ -1,15 +1,15 @@
 <template>
-  <div class="memberCenter">
+  <div class="memberCenter" v-if="memberData">
     <div class="topMember">
-      <CommonOpaHeader>
+      <common-black-header>
         <span class="about">关于会员卡</span>
-      </CommonOpaHeader>
+      </common-black-header>
       <div class="swiperOut">
         <swiper ref="mySwiper" :options="swiperOption" class="swiperCont">
           <swiper-slide class="cardWrap">
             <div class="top clearfix">
               <div class="status statusOther fl">已升级</div>
-              <div class="no fr no1">NO.370010100001</div>
+              <div class="no fr no1">{{memberData.cardNo}}</div>
             </div>
             <div class="name">普卡会员</div>
             <div class="time">有效期至2019-12-31</div>
@@ -297,13 +297,15 @@ import {
   CheckIcon
 } from 'vux'
 import 'swiper/dist/css/swiper.css'
-import CommonOpaHeader from 'common/commonHeader/CommonOpaHeader'
+import CommonBlackHeader from 'common/commonHeader/CommonOpaHeader'
+import { http } from 'util/request'
+import { getMemberCenter } from 'util/netApi'
 export default {
   name: 'MemberCenter',
   components: {
     swiper,
     swiperSlide,
-    CommonOpaHeader,
+    CommonBlackHeader,
     CheckIcon
   },
   data () {
@@ -319,7 +321,8 @@ export default {
             this.activeIndex = this.swiper.activeIndex
           }
         }
-      }
+      },
+      memberData: null
     }
   },
   computed: {
@@ -328,9 +331,16 @@ export default {
     }
   },
   watch: {},
-  methods: {},
+  methods: {
+    getData () {
+      http(getMemberCenter).then(res => {
+        console.log(res)
+        this.memberData = res.data.body
+      })
+    }
+  },
   created () {
-
+    this.getData()
   }
 }
 </script>

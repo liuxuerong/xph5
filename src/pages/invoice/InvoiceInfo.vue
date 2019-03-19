@@ -187,6 +187,7 @@ import {
   ChinaAddressV4Data
 } from 'vux'
 
+import {isPhone, regTel, isEmail, isidCode, isAccountNumber} from 'util/validate'
 export default {
   name: 'Invoice',
   components: {
@@ -369,11 +370,6 @@ export default {
             }
           }
         }
-        const isPhone = (value) => /^1\d{10}$/gi.test(value)
-
-        const regTel = (value) => /^0((\d{2}-\d{8})|(\d{3}-\d{7,8}))/.test(value) // 座机带区号
-
-        const isEmail = (value) => /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/.test(value)
 
         if (this.inputForm.phone != '' && !isPhone(this.inputForm.phone)) {
           this.toastShow('请填写一个正确的手机号码')
@@ -404,19 +400,16 @@ export default {
         }
       }
 
-      const isidCode = (value) => /^[0-9a-zA-Z]{15,18}$/.test(value)
       if (this.inputForm.idCode != '' && !isidCode(this.inputForm.idCode)) {
         this.toastShow('请填写正确的识别号')
         return false
       }
 
-      const isAccountNumber = (value) => /^([1-9]{1})(\d{15}|\d{18})$/.test(value)
       if (this.inputForm.accountNumber != '' && !isAccountNumber(this.inputForm.accountNumber)) {
         this.toastShow('请填写正确的银行账户')
         return false
       }
       let textarea = document.getElementsByTagName('textarea')
-      console.log(textarea)
       if (textarea.length && textarea[0].value.trim() == '') {
         this.toastShow('请填写详情收票详细地址')
         return false

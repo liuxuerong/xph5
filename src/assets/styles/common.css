@@ -126,7 +126,7 @@ html,
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  z-index: 999999 !important;
+  z-index: 9999999 !important;
 }
 
 .weui-dialog .weui-dialog__title {
@@ -249,4 +249,20 @@ html,
 
 .vux-popover {
   position: fixed !important;
+}
+
+.picker-toolbar {
+  width: 100%;
+  height: 130px !important;
+  line-height: 130px !important;
+}
+
+.picker-toolbar .mint-datetime-action {
+  height: 130px;
+  line-height: 130px;
+  font-size: 46px;
+}
+
+.picker-item {
+  font-size: 46px !important;
 }

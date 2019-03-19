@@ -437,6 +437,11 @@ const router = new Router({
       path: '/activityTemps/:id',
       name: 'ActivityTemps', // 活动
       component: resolve => require(['@/pages/activityTemps/ActivityTemps'], resolve)
+    },
+    {
+      path: '/promotion',
+      name: 'Promotion', // 地下推广注册页
+      component: resolve => require(['@/pages/promotion/Promotion'], resolve)
     }
   ]
 })

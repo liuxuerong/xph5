@@ -2,6 +2,7 @@
 // 版本号
 const v1 = 'v1'
 const v2 = 'v2'
+const v3 = 'v3'
 /**
  * 接口文件，按需加载某个/多个接口
  * url     接口连接
@@ -11,6 +12,7 @@ const v2 = 'v2'
  */
 export const getVerifyCode = { url: '/sms/send/1', method: 'POST', version: v1 } // 获取验证码
 export const getLogin = { url: '/auth/token', method: 'POST', version: '' } // 登录
+export const registerPromotion = { url: '/member/api/offline/register', method: 'POST', version: v1 } // 地推会员注册
 export const getOpenId = { url: '/auth/token', method: 'GET', version: '' } // 获取openid
 export const verifySms = { url: '/sms', method: 'GET', version: v1, join: true } // 短信验证
 export const restPassword = { url: '/member/api/rest/password', method: 'PUT', version: v1 } // 重置密码
@@ -67,7 +69,8 @@ export const setMemberData = { url: '/member/api/settingMemberBasics', method: '
 export const setPerfect = { url: '/member/api/perfect', method: 'PUT', version: v1 }
 
 // 会员中心
-export const getMemberCenter = { url: '/member/api/getMemberCenter	', method: 'GET', version: v2 }
+// export const getMemberCenter = { url: '/member/api/getMemberCenter	', method: 'GET', version: v2 }
+export const getMemberCenter = { url: '/member/api/getMemberCenter	', method: 'GET', version: v3 }
 
 // 检查会员手机号码存在
 export const checkPhone = { url: '/member/api/check', method: 'GET', version: v1, join: true }

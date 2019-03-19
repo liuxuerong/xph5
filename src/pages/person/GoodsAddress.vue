@@ -66,7 +66,7 @@ import {fromRoute} from 'util/const.js'
 import {
   storage
 } from 'util/storage'
-const isPhone = (value) => /^1\d{10}$/gi.test(value)
+import { isPhone } from 'util/validate'
 export default {
   name: 'GoodsAddress',
   data () {

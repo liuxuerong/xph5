@@ -227,16 +227,6 @@ export default {
 </script>
 <style lang="stylus">
   @import "~styles/mixins.styl";
-  .picker-toolbar
-    width 100%
-    height 130px
-    line-height 130px
-    .mint-datetime-action
-      height 130px
-      line-height 130px
-      font-size 46px
-  .picker-item
-    font-size 46px!important
   .setItemPop
     width 100%
     height 148px
@@ -286,7 +276,6 @@ export default {
     border-right 0 solid #000
   .scroller-mask
     background-size: 100% 1.206667rem;
-
 </style>
 <style lang="stylus" scoped>
 @import "~styles/mixins.styl";
