@@ -87,7 +87,7 @@ import CommonOpaHeader from 'common/commonHeader/CommonOpaHeader'
 import { Popup, DatetimePicker, Toast } from 'mint-ui'
 import { XSwitch } from 'vux'
 import moment from 'moment'// 格式化时间
-import { isPhone, isPhoneCode, isAlias } from 'util/validate'
+import { isPhone, isPhoneCode } from 'util/validate'
 import {
   getVerifyCode,
   registerPromotion,

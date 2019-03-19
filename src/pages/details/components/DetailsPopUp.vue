@@ -302,8 +302,8 @@ export default {
 
     // 初始化得到结果集
     initSKU () {
-      let i = 0
-      let j = 0
+      let i
+      let j
       let skuKeys = this.getObjKeys(this.sku.data)
       for (i = 0; i < skuKeys.length; i++) {
         let skuKey = skuKeys[i] // 一条SKU信息key
@@ -557,6 +557,7 @@ export default {
   .num
     height 100px
     line-height 100px
+
     width 400px
     color #262626
     font-size 46px
