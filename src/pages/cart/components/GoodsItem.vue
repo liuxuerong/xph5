@@ -170,7 +170,8 @@ export default {
       let notCheckGoodsList = []
       for (let i = 0; i < this.goodsList.length; i++) {
         if (this.goodsList[i].goodsId === goodsId) {
-          checkGoodsList.push(this.goodsList[i])
+          let item = this.goodsList[i]
+          checkGoodsList.push(item)
         } else {
           notCheckGoodsList.push(this.goodsList[i])
         }
