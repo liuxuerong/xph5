@@ -227,9 +227,9 @@ export default {
     // 会员福利
     touristToolCenter () {
       if (storage.getLocalStorage(accessToken)) {
-        this.$router.push('/toolCenter')
+        this.$router.push('/memberCenter/1')
       } else {
-        this.$router.push('/touristToolCenter')
+        this.$router.push('/memberCenter/2')
       }
     }
   },

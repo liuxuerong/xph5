@@ -183,9 +183,8 @@ const router = new Router({
       component: resolve => require(['@/pages/person/AboutMember'], resolve)
     },
     {
-      path: '/memberCenter', // 会员中心
+      path: '/memberCenter/:index', // 会员中心 index:1表示已登录 2.未登录
       name: 'memberCenter',
-      meta: { requireLogin: true },
       component: resolve => require(['@/pages/memberCenter/MemberCenter'], resolve)
     },
     {

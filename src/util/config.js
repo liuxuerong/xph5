@@ -3,7 +3,7 @@ let url = ''// 域名
 if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'testing') {
   baseUrl = 'https://api.test.jdhoe.com/' // 开发
   url = 'https://m.test.jdhoe.com/' // 开发
-  // baseUrl = 'http://192.168.1.202:8888/' // 开发
+  // baseUrl = 'http://192.168.1.8:8888/' // 开发
 } else if (process.env.NODE_ENV === 'preview') {
   baseUrl = 'https://api.pre.jdhoe.com/' // 预发布
   url = 'https://pre.test.jdhoe.com/'

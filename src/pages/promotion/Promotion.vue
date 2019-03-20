@@ -17,7 +17,7 @@
             <input type="text"  v-model="formData.name"  placeholder="请输入姓名">
           </li>
           <li @click="popShow(2)">
-            <input type="text"  v-model="formData.sex" readonly placeholder="请选择性别">
+            <input type="text"  v-model="sexName" readonly placeholder="请选择性别">
             <i class="arrow" :class="{active:popupVisible&&arrowActive===2}" ></i>
           </li>
           <li @click="openPicker()">
@@ -50,9 +50,8 @@
         position="bottom"
         popup >
         <ul class="selectWrap">
-          <li class="border-bottom" v-for="(item,index) in sexData" :key="index" @click="selectSex">
-            <input type="radio"  :value="item" v-model="formData.sex">
-            <p>{{item}}</p>
+           <li class="border-bottom" v-for="item in sexData" :key="item.id"  @click="selectSex(item)">
+            {{item.name}}
           </li>
         </ul>
       </mt-popup>
@@ -88,6 +87,12 @@ import { XSwitch } from 'vux'
 import moment from 'moment'// 格式化时间
 import { isPhone, isPhoneCode } from 'util/validate'
 import {
+  storage
+} from 'util/storage'
+import {
+  accessToken
+} from 'util/const'
+import {
   getVerifyCode,
   registerPromotion,
   storeAddr,
@@ -116,7 +121,12 @@ export default {
       computedTime: 0,
       selectData: null,
       franchisee: '',
-      sexData: ['男', '女', '保密'],
+      sexName: '',
+      sexData: [
+        { name: '男', id: 1 },
+        { name: '女', id: 2 },
+        { name: '保密', id: 3 }
+      ],
       isRegister: true,
       formData: {
         franchiseeId: '',
@@ -155,7 +165,9 @@ export default {
       this.formData.franchiseeId = item.id
       this.popupVisible = false
     },
-    selectSex () {
+    selectSex (item) {
+      this.sexName = item.name
+      this.formData.sex = item.id
       this.popupSex = false
     },
     // 检查是否已经注册
@@ -200,8 +212,12 @@ export default {
     submit () {
       if (this.validate()) {
         http(registerPromotion, this.formData).then(res => {
-          if (res.data.body) {
+          console.log(this.formData)
+          if (res.data.code === 0) {
             this.$router.push('/')
+            storage.setLocalStorage(accessToken, 'Bearer ' + res.data.body.access_token)
+          } else {
+            this.toastShow(res.data.message)
           }
         })
       }

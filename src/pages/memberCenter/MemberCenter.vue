@@ -1,10 +1,10 @@
 <template>
-  <div class="memberCenter" v-if="memberData">
+  <div class="memberCenter" >
     <div class="topMember">
       <common-black-header>
         <span class="about">关于会员卡</span>
       </common-black-header>
-      <div class="swiperOut">
+      <div class="swiperOut" v-if="memberData">
         <swiper ref="mySwiper" :options="swiperOption" class="swiperCont">
           <swiper-slide class="cardWrap">
             <div class="top clearfix">
@@ -92,6 +92,98 @@
                 <span class="num">12555</span>
                 <em>距升级积分</em>
               </li>
+            </ul>
+          </swiper-slide>
+        </swiper>
+      </div>
+       <div class="swiperOut" v-if="!isLogin">
+        <swiper ref="mySwiper" :options="swiperOption" class="swiperCont">
+          <swiper-slide class="cardWrap">
+            <div class="top clearfix">
+              <div class="status statusOther fl">等级介绍</div>
+              <div class="no fr no2">NO.-</div>
+            </div>
+            <div class="name">普卡会员</div>
+            <div class="time">有效期一年</div>
+            <ul class="integral">
+              <li>
+                <span class="num">免费办理</span>
+                <em>需消费(元)</em>
+              </li>
+              <li>
+                <span class="num">免费办理</span>
+                <em>所需积分</em>
+              </li>
+              <li>
+                <span class="num">白金卡</span>
+                <em>下个级别</em>
+              </li>
+            </ul>
+          </swiper-slide>
+          <swiper-slide class="cardWrap">
+            <div class="top clearfix">
+              <div class="status statusNow fl">等级介绍</div>
+              <div class="no fr no2">NO.-</div>
+            </div>
+            <div class="name">金卡会员</div>
+            <div class="time time2">有效期一年</div>
+            <ul class="integral integral2">
+              <li>
+                <span class="num">2000</span>
+                <em>需消费(元)</em>
+              </li>
+              <li>
+                <span class="num">200</span>
+                <em>所需积分</em>
+              </li>
+              <li>
+                <span class="num">金卡</span>
+                <em>下个级别</em>
+              </li>
+            </ul>
+          </swiper-slide>
+          <swiper-slide class="cardWrap">
+            <div class="top clearfix">
+              <div class="status statusOther fl">等级介绍</div>
+              <div class="no fr no3">NO.-</div>
+            </div>
+            <div class="name">白金卡会员</div>
+            <div class="time time3">有效期一年</div>
+            <ul class="integral integral3">
+              <li>
+                <span class="num">8000</span>
+                <em>需消费(元)</em>
+              </li>
+              <li>
+                <span class="num">800</span>
+                <em>所需积分</em>
+              </li>
+              <li>
+                <span class="num">白金卡</span>
+                <em>下个级别</em>
+              </li>
+            </ul>
+          </swiper-slide>
+          <swiper-slide class="cardWrap">
+            <div class="top clearfix">
+              <div class="status statusOther fl">等级介绍</div>
+              <div class="no fr no4">NO.-</div>
+            </div>
+            <div class="name name4">黑金卡会员</div>
+            <router-link to="/transactionRecord" class="time time4">有效期至2019-12-31 <span class="arrow"></span> </router-link>
+            <ul class="integral integral4">
+              <li>
+                <span class="num">15000</span>
+                <em>需消费(元)</em>
+              </li>
+              <li>
+                <span class="num">1500</span>
+                <em>所需积分</em>
+              </li>
+              <!-- <li>
+                <span class="num">12555</span>
+                <em>距升级积分</em>
+              </li> -->
             </ul>
           </swiper-slide>
         </swiper>
@@ -297,7 +389,7 @@ import {
   CheckIcon
 } from 'vux'
 import 'swiper/dist/css/swiper.css'
-import CommonBlackHeader from 'common/commonHeader/CommonOpaHeader'
+import CommonBlackHeader from 'common/commonHeader/CommonBlackHeader'
 import { http } from 'util/request'
 import { getMemberCenter } from 'util/netApi'
 export default {
@@ -312,6 +404,7 @@ export default {
     return {
       check: false,
       activeIndex: 0,
+      isLogin: false,
       swiperOption: {
         direction: 'horizontal',
         spaceBetween: 15,
@@ -340,7 +433,10 @@ export default {
     }
   },
   created () {
-    this.getData()
+    this.isLogin = (this.$route.params.index == 1)
+    if (this.isLogin) {
+      this.getData()
+    }
   }
 }
 </script>
@@ -421,7 +517,7 @@ export default {
     font-size 0
     li
       display inline-block
-      padding-right 150px
+      padding-right 1.2rem
       .num
         font-size 56px
         color #333333

@@ -86,10 +86,10 @@ export default {
     box-sizing border-box
     padding-top 130px
   .agreementCon
-    width calc(100% - 100px)
+    width 100%
     margin 0 auto
     box-sizing border-box
-    padding 50px 0 100px
+    padding 50px 50px 100px
     background #fff
     span
       display block
