@@ -11,7 +11,7 @@
         <div class="cardVouItem" :class="index ===0?'':'grayCardVouItem'" v-for="item in list" :key="item.id" @click.stop="cardDetailsPages(item.useStatus,item.id,item)">
           <div class="top">
             <div class="left">
-              <span v-if="item.type == '1' || item.type == '3'">￥<i>{{item.subMoney}}</i></span>
+              <span v-if="item.type == '1' || item.type == '3'||item.type == '4'">￥<i>{{item.subMoney}}</i></span>
               <span v-else-if="item.type == '2' && item.discount.toString().replace('.', '').length === 2"><i>{{parseInt(item.discount.toString().replace(".", ""))}}</i> 折</span>
               <span v-else-if="item.type == '2' && item.discount.toString().replace('.', '').length === 3"><i>{{item.discount.toString().replace(".", "")/10}}</i> 折</span>
               <p v-if="item.applyType == '1'">通用券</p>

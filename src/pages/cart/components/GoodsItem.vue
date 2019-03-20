@@ -166,13 +166,10 @@ export default {
         collectionType: 1,
         collectionDataId: goodsId
       }]
-      let checkGoodsList = []
+      // let checkGoodsList = []
       let notCheckGoodsList = []
       for (let i = 0; i < this.goodsList.length; i++) {
-        if (this.goodsList[i].goodsId === goodsId) {
-          let item = this.goodsList[i]
-          checkGoodsList.push(item)
-        } else {
+        if (this.goodsList[i].goodsId !== goodsId) {
           notCheckGoodsList.push(this.goodsList[i])
         }
       }

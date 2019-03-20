@@ -4,39 +4,39 @@
     <div class="top">
       <img src="../../images/logo-bg.png" alt="">
     </div>
-   <div class="centerWrap">
+    <div class="centerWrap">
       <div class="center">
       <div class="title">欢迎来到星品优汇</div>
       <form>
-       <ul>
-         <li @click="popShow(1)">
-            <input type="text"  v-model="franchisee" readonly placeholder="请选择位置">
-            <i class="arrow" :class="{active:popupVisible&&arrowActive===1}" ></i>
-         </li>
+        <ul>
+          <li @click="popShow(1)">
+              <input type="text"  v-model="franchisee" readonly placeholder="请选择位置">
+              <i class="arrow" :class="{active:popupVisible&&arrowActive===1}" ></i>
+          </li>
           <li>
             <input type="text"  v-model="formData.name"  placeholder="请输入姓名">
-         </li>
+          </li>
           <li @click="popShow(2)">
             <input type="text"  v-model="formData.sex" readonly placeholder="请选择性别">
             <i class="arrow" :class="{active:popupVisible&&arrowActive===2}" ></i>
-         </li>
+          </li>
           <li @click="openPicker()">
             <input type="text"  v-model="formData.birth" readonly placeholder="请选择生日">
             <i class="arrow" :class="{active:arrowActive===3}" ></i>
-         </li>
-         <li>
+          </li>
+          <li>
             <input type="text"  v-model="formData.phone"  placeholder="请输入手机号">
             <em v-show="!computedTime" @click="isRegisterCheck()">获取验证码</em>
             <em v-show="computedTime">({{computedTime}}s)重新发送</em>
-         </li>
+          </li>
           <li>
             <input type="text"  v-model="formData.code"  placeholder="请输入验证码">
-         </li>
-       </ul>
+          </li>
+        </ul>
         <x-switch  v-model="isInvoicing" title="" class="fr"></x-switch>
-       <div class="message">
-         <span>接收推送消息</span>
-       </div>
+        <div class="message">
+          <span>接收推送消息</span>
+        </div>
       </form>
     </div>
    </div>
@@ -51,8 +51,8 @@
         popup >
         <ul class="selectWrap">
           <li class="border-bottom" v-for="(item,index) in sexData" :key="index" @click="selectSex">
-             <input type="radio"  :value="item" v-model="formData.sex">
-             <p>{{item}}</p>
+            <input type="radio"  :value="item" v-model="formData.sex">
+            <p>{{item}}</p>
           </li>
         </ul>
       </mt-popup>
@@ -64,12 +64,12 @@
         position="bottom"
         popup >
         <ul class="selectWrap">
-            <li class="border-bottom" v-for="item in selectData" :key="item.id"  @click="selectStore(item)">
+          <li class="border-bottom" v-for="item in selectData" :key="item.id"  @click="selectStore(item)">
             {{item.name}}
           </li>
         </ul>
       </mt-popup>
-    <mt-datetime-picker
+      <mt-datetime-picker
         type="date"
         ref="picker"
         year-format="{value} 年"
@@ -77,8 +77,7 @@
         date-format="{value} 日"
         @confirm="handleConfirm"
         :startDate="startDate"
-        :endDate="endDate"
-        >
+        :endDate="endDate">
       </mt-datetime-picker>
   </div>
 </template>
