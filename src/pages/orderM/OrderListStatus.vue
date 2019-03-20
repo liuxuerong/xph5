@@ -153,7 +153,7 @@ export default {
             this.$router.go(0)
           }, 2000)
         } else {
-          this.$router.push('/immedPayment/' + orderSn)
+          this.$router.push(`/immedPayment/${orderSn}/1`)
         }
       })
     },

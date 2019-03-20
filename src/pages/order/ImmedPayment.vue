@@ -32,7 +32,7 @@ import {
   immedPaymentMony
 } from 'util/const.js'
 import CommonNavNoMemory from 'common/commonHeader/CommonNavNoMemory'
-import {payMoney, orderDetails} from 'util/netApi'
+import {payMoney, orderDetails, buyRecordPay} from 'util/netApi'
 import {http} from 'util/request'
 import notice from 'util/notice'
 import { Confirm } from 'vux'
@@ -44,7 +44,8 @@ export default {
       readioActive: '',
       confirmTime: '',
       remainingTime: '',
-      routeName: '/orderList/-1'
+      routeName: '/orderList/-1',
+      orderType: null
     }
   },
   components: {
@@ -58,8 +59,6 @@ export default {
   },
   beforeRouteLeave (to, from, next) {
     notice.confirm2('确认离开收银台', `离开后订单在${this.remainingTime}后将取消`, () => {
-      // window.location.href = '/#/orderList/-1'
-      // window.location.refresh
       next()
     }, '继续支付', '确认离开')
     clearInterval(this.timer)
@@ -102,6 +101,38 @@ export default {
     redioSelect (paymentWay) {
       this.readioActive = paymentWay
     },
+    setData (response) {
+      // 支付宝
+      let obj
+      if (this.orderType != 2) {
+        obj = {
+          needPayAmount: this.list.needPayAmount,
+          orderSn: this.list.orderSn,
+          deliveryPeople: this.list.deliveryPeople
+        }
+      } else {
+        obj = {
+          needPayAmount: 99,
+          orderSn: 3333,
+          deliveryPeople: 'vvvv'
+        }
+      }
+
+      if (this.readioActive === 2) {
+        obj = Object.assign(obj, {
+          payWay: '支付宝'
+        })
+        let dom = document.createElement('div')
+        dom.innerHTML = response.data.body
+        document.body.appendChild(dom)
+        document.forms[0].submit()
+      } else if (this.readioActive === 5) {
+        obj = Object.assign(obj, {
+          payWay: '微信'
+        })
+      }
+      storage.setLocalStorage(immedPaymentMony, obj)
+    },
     // 立即支付
     immedPayment () {
       if (this.remainingTime === '00:00') {
@@ -110,42 +141,40 @@ export default {
       }
       if (this.readioActive !== '') {
         let orderSn = this.$route.params.orderCode
-        let params = {
-          orderSn: orderSn,
-          payment: this.readioActive
-        }
-        http(payMoney, params).then((response) => {
-          // 提交接口成功
-          if (response.data.code === 0) {
-            // 支付宝
-            let obj = {
-              needPayAmount: this.list.needPayAmount,
-              orderSn: this.list.orderSn,
-              deliveryPeople: this.list.deliveryPeople
-            }
-            if (this.readioActive === 2) {
-              obj = Object.assign(obj, {
-                payWay: '支付宝'
-              })
-              let dom = document.createElement('div')
-              dom.innerHTML = response.data.body
-              document.body.appendChild(dom)
-              document.forms[0].submit()
-            } else if (this.readioActive === 5) {
-              obj = Object.assign(obj, {
-                payWay: '微信'
-              })
-            }
-            storage.setLocalStorage(immedPaymentMony, obj)
+
+        if (this.orderType != 2) {
+          let params = {
+            orderSn: orderSn,
+            payment: this.readioActive
           }
-        })
+          http(payMoney, params).then((response) => {
+          // 提交接口成功
+            if (response.data.code === 0) {
+              this.setData(response)
+            }
+          })
+        } else {
+          let params = {
+            payment: this.readioActive,
+            type: this.orderType
+          }
+          http(buyRecordPay, params).then((response) => {
+          // 提交接口成功
+            if (response.data.code === 0) {
+              this.setData(response)
+            }
+          })
+        }
       } else {
         notice.toast('请选择支付方式', 2000, 'warn')
       }
     }
   },
   mounted () {
-    this.paymentRender()
+    this.orderType = this.$route.params.orderType
+    if (this.orderType != 2) {
+      this.paymentRender()
+    }
   }
 }
 </script>

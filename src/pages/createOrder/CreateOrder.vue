@@ -390,7 +390,7 @@ export default {
       // 提交订单
       http(createOrderData, params).then(res => {
         if (res.data.code === 0) {
-          this.$router.push('/immedPayment/' + res.data.body)
+          this.$router.push(`/immedPayment/${res.data.body}/1`)
           this.canClick = false
           storage.setLocalStorage(invoiceInfo, {})
         } else if (res.data.code === 40005) {

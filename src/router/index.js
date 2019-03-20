@@ -215,7 +215,7 @@ const router = new Router({
       component: resolve => require(['@/pages/orderM/OrderDetails'], resolve)
     },
     {
-      path: '/immedPayment/:orderCode',
+      path: '/immedPayment/:orderCode/:orderType',
       name: 'immedPayment',
       meta: { requireLogin: true },
       component: resolve => require(['@/pages/order/ImmedPayment'], resolve)

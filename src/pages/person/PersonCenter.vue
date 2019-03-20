@@ -265,7 +265,7 @@ export default {
     // 必备工具跳转
     toolSpecific (type) {
       if (type === 1) {
-        this.$router.push('/memberCenter')
+        this.$router.push('/memberCenter/1')
       } else if (type === 2) {
         this.$router.push('/integralDetails')
       } else if (type === 3) {

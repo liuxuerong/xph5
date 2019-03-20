@@ -252,7 +252,7 @@ export default {
     },
     // 立即付款
     immedPayment (orderSn) {
-      this.$router.push('/immedPayment/' + orderSn)
+      this.$router.push(`/immedPayment/${orderSn}/1`)
     },
     // 确认收货
     confirmGoods (orderCode) {

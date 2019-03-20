@@ -156,7 +156,7 @@ export default {
     },
     // 立即支付
     immedPayment (orderSn) {
-      this.$router.push('/immedPayment/' + orderSn)
+      this.$router.push(`/immedPayment/${orderSn}/1`)
     },
     // 立即评价
     immedEvaluate (orderCode) {

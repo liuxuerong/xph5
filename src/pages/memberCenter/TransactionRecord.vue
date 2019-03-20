@@ -1,71 +1,27 @@
 <template>
   <div class="transactionRecord">
     <common-nav-header title="交易记录" />
-    <ul class="record">
-      <li>
+    <ul class="record" v-if="recordList.length">
+      <li v-for="item in recordList" :key="item.id">
         <div class="item">
           <span class="itemTitle">交易单号</span>
-          <span class="cont">468964134646461</span>
+          <span class="cont">{{item.sn}}</span>
         </div>
          <div class="item">
           <span class="itemTitle">交易内容</span>
-          <span class="cont bold">2年黑金卡会员</span>
+          <span class="cont bold">{{item.content}}</span>
         </div>
          <div class="item">
           <span class="itemTitle">购买时间</span>
-          <span class="cont">2019-03-04   20:30:05</span>
+          <span class="cont">{{item.createTime.split('T').join(' ')}}</span>
         </div>
          <div class="item">
           <span class="itemTitle">有效时间</span>
-          <span class="cont bold">2019-03-04至2021-03-04</span>
+          <span class="cont bold">{{item.startTime.split('T')[0]}}至{{item.endTime.split('T')[0]}}</span>
         </div>
         <div class="bottom border-top clearfix">
-          <div class="fl way">支付宝支付</div>
-          <div class="fr price">¥ 99</div>
-        </div>
-      </li>
-           <li>
-        <div class="item">
-          <span class="itemTitle">交易单号</span>
-          <span class="cont">468964134646461</span>
-        </div>
-         <div class="item">
-          <span class="itemTitle">交易内容</span>
-          <span class="cont bold">2年黑金卡会员</span>
-        </div>
-         <div class="item">
-          <span class="itemTitle">购买时间</span>
-          <span class="cont">2019-03-04   20:30:05</span>
-        </div>
-         <div class="item">
-          <span class="itemTitle">有效时间</span>
-          <span class="cont bold">2019-03-04至2021-03-04</span>
-        </div>
-        <div class="bottom border-top clearfix">
-          <div class="fl way">支付宝支付</div>
-          <div class="fr price">¥ 99</div>
-        </div>
-      </li>
-           <li>
-        <div class="item">
-          <span class="itemTitle">交易单号</span>
-          <span class="cont">468964134646461</span>
-        </div>
-         <div class="item">
-          <span class="itemTitle">交易内容</span>
-          <span class="cont bold">2年黑金卡会员</span>
-        </div>
-         <div class="item">
-          <span class="itemTitle">购买时间</span>
-          <span class="cont">2019-03-04   20:30:05</span>
-        </div>
-         <div class="item">
-          <span class="itemTitle">有效时间</span>
-          <span class="cont bold">2019-03-04至2021-03-04</span>
-        </div>
-        <div class="bottom border-top clearfix">
-          <div class="fl way">支付宝支付</div>
-          <div class="fr price">¥ 99</div>
+          <div class="fl way">{{item.paymentName}}</div>
+          <div class="fr price">¥{{item.payMoney}}</div>
         </div>
       </li>
     </ul>
@@ -73,6 +29,8 @@
 </template>
 <script>
 import CommonNavHeader from 'common/commonHeader/CommonNavHeader'
+import { http } from 'util/request'
+import { buyRecord } from 'util/netApi'
 export default {
   name: 'TransactionRecord',
   components: {
@@ -80,7 +38,7 @@ export default {
   },
   data () {
     return {
-
+      recordList: []
     }
   },
   computed: {
@@ -90,7 +48,21 @@ export default {
 
   },
   methods: {
-
+    getRecord () {
+      let params = {
+        page: 1,
+        rows: 100
+      }
+      http(buyRecord, params).then(res => {
+        console.log(res)
+        if (res.data.code === 0) {
+          this.recordList = res.data.body.list
+        }
+      })
+    }
+  },
+  created () {
+    this.getRecord()
   }
 }
 </script>

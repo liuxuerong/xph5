@@ -70,7 +70,12 @@ export const setPerfect = { url: '/member/api/perfect', method: 'PUT', version: 
 
 // 会员中心
 // export const getMemberCenter = { url: '/member/api/getMemberCenter	', method: 'GET', version: v2 }
-export const getMemberCenter = { url: '/member/api/getMemberCenter	', method: 'GET', version: v3 }
+export const getMemberCenter = { url: '/member/api/getMemberCenter', method: 'GET', version: v3 }
+
+// 黑金卡购买记录
+export const buyRecord = { url: '/memberLevelShoppingRecord/page', method: 'GET', version: v1 }
+// 黑金卡支付
+export const buyRecordPay = { url: '/pay/pay', method: 'POST', version: v2 }
 
 // 检查会员手机号码存在
 export const checkPhone = { url: '/member/api/check', method: 'GET', version: v1, join: true }

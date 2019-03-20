@@ -6,29 +6,33 @@
       </common-black-header>
       <div class="swiperOut" v-if="memberData">
         <swiper ref="mySwiper" :options="swiperOption" class="swiperCont">
-          <swiper-slide class="cardWrap">
+          <swiper-slide class="cardWrap" v-for="(item,index) in memberData.memberLevels" :key="item.id">
             <div class="top clearfix">
-              <div class="status statusOther fl">已升级</div>
-              <div class="no fr no1">{{memberData.cardNo}}</div>
+              <div class="status statusOther fl" v-if="item.level < memberData.curMemberLevel.level">已升级</div>
+              <div class="status statusNow fl" v-if="item.level == memberData.curMemberLevel.level">当前等级</div>
+              <div class="status statusOther fl" v-if="item.level > memberData.curMemberLevel.level">待升级</div>
+              <div class="no fr" :class="'no'+(item.level+1)" v-if="item.level == memberData.curMemberLevel.level">NO.-{{memberData.cardNo}}</div>
+               <div class="no fr" :class="'no'+(item.level+1)" v-else>NO.-</div>
             </div>
-            <div class="name">普卡会员</div>
-            <div class="time">有效期至2019-12-31</div>
-            <ul class="integral">
+            <div class="name"  :class="'name'+(item.level+1)">{{item.name}}会员</div>
+            <div class="time" :class="'time'+(item.level+1)" v-if="item.level == memberData.curMemberLevel.level&&memberData.curMemberLevel.level!=3">有效期至{{memberData.overdueDate.split('T')[0]}}</div>
+            <router-link to="/transactionRecord" class="time time4" v-if="item.level == memberData.curMemberLevel.level&&memberData.curMemberLevel.level==3">有效期至{{memberData.overdueDate.split('T')[0]}} <span class="arrow"></span> </router-link>
+            <ul class="integral" :class="'integral'+(item.level+1)" v-if="item.level == memberData.curMemberLevel.level">
               <li>
-                <span class="num">12555</span>
-                <em>剩余积分</em>
+                <span class="num">{{memberData.surplusIntegral}}</span>
+                <em>可用积分</em>
               </li>
               <li>
-                <span class="num">12555</span>
+                <span class="num">{{memberData.curIntegral}}</span>
                 <em>当前积分</em>
               </li>
-              <li>
-                <span class="num">12555</span>
+              <li v-if="memberData.curMemberLevel.level!=3">
+                <span class="num">{{memberData.memberLevels[index+1].upgradeLimit-memberData.curIntegral}}</span>
                 <em>距升级积分</em>
               </li>
             </ul>
           </swiper-slide>
-          <swiper-slide class="cardWrap">
+          <!-- <swiper-slide class="cardWrap">
             <div class="top clearfix">
               <div class="status statusNow fl">当前等级</div>
               <div class="no fr no2">NO.370010100001</div>
@@ -93,7 +97,7 @@
                 <em>距升级积分</em>
               </li>
             </ul>
-          </swiper-slide>
+          </swiper-slide> -->
         </swiper>
       </div>
        <div class="swiperOut" v-if="!isLogin">
@@ -180,10 +184,6 @@
                 <span class="num">1500</span>
                 <em>所需积分</em>
               </li>
-              <!-- <li>
-                <span class="num">12555</span>
-                <em>距升级积分</em>
-              </li> -->
             </ul>
           </swiper-slide>
         </swiper>
@@ -371,14 +371,15 @@
             <strong>99</strong>
           </span>
         </div>
-        <div class="agree">
+        <!-- <div class="agree">
           <div class="checkIconMember">
             <check-icon :value.sync="check" ></check-icon>
           </div>
           <span>我已阅读并同意</span>
           <router-link to="/aboutMember" class="link">《星品优汇会员服务说明》</router-link>
-        </div>
-        <div class="btnOpen">立即开通</div>
+        </div> -->
+        <div class="btnOpen" v-if="memberData&&memberData.curMemberLevel.level==3">您已是黑金卡会员无需开通</div>
+        <div class="btnOpen" @click="btnOpen" v-else>立即开通</div>
       </div>
     </div>
   </div>
@@ -408,7 +409,7 @@ export default {
       swiperOption: {
         direction: 'horizontal',
         spaceBetween: 15,
-        notNextTick: true,
+        notNextTick: false,
         on: {
           slideChangeTransitionEnd: () => {
             this.activeIndex = this.swiper.activeIndex
@@ -423,16 +424,31 @@ export default {
       return this.$refs.mySwiper.swiper
     }
   },
-  watch: {},
   methods: {
     getData () {
+      let _this = this
       http(getMemberCenter).then(res => {
-        console.log(res)
         this.memberData = res.data.body
+        let currentId = this.memberData.curMemberLevel.id
+        let memberLevels = this.memberData.memberLevels
+        for (let i = 0; i < memberLevels.length; i++) {
+          memberLevels[i].level = i
+          if (memberLevels[i].id == currentId) {
+            _this.$nextTick(function () {
+              _this.memberData.curMemberLevel.level = i
+              _this.swiper.slideTo(i, 0)
+              _this.activeIndex = i
+            })
+          }
+        }
       })
+    },
+    // 立即开通会员卡
+    btnOpen () {
+      this.$router.push(`/immedPayment/1/2`)
     }
   },
-  created () {
+  mounted () {
     this.isLogin = (this.$route.params.index == 1)
     if (this.isLogin) {
       this.getData()
@@ -484,6 +500,7 @@ export default {
     padding-right 50px
     font-size 36px
     line-height 80px
+    min-width 300px
   .no1
     color #8E92A1
   .no2
@@ -618,7 +635,7 @@ export default {
       strong
         font-size 66px
 .bottomMember
-  padding-bottom 150px
+  padding-bottom 300px
   .title
     color #333333
     font-size 50px
