@@ -74,6 +74,8 @@ export const getMemberCenter = { url: '/member/api/getMemberCenter', method: 'GE
 
 // 黑金卡购买记录
 export const buyRecord = { url: '/memberLevelShoppingRecord/page', method: 'GET', version: v1 }
+// 黑金卡最新购买记录
+export const buyRecordDetails = { url: '/memberLevelShoppingRecord/newest', method: 'GET', version: v1 }
 // 黑金卡支付
 export const buyRecordPay = { url: '/pay/pay', method: 'POST', version: v2 }
 

@@ -4,48 +4,7 @@
       <div id="couponinfo">
         <div class="couponScroll">
           <div class="couponItem" v-for="(item, index) in couponData" :key="index">
-            <div class="top">
-              <div class="left">
-                <span v-if="item.type == '1' || item.type == '3'">￥<i>{{item.subMoney}}</i></span>
-                <span v-else-if="item.type == '2' && item.discount.toString().replace('.', '').length === 2"><i>{{parseInt(item.discount.toString().replace(".", ""))}}</i> 折</span>
-                <span v-else-if="item.type == '2' && item.discount.toString().replace('.', '').length === 3"><i>{{item.discount.toString().replace(".", "")/10}}</i> 折</span>
-                <p v-if="item.applyType == '1'">通用券</p>
-                <p v-if="item.applyType == '2'">app专享</p>
-                <p v-if="item.applyType == '3'">门店专享</p>
-              </div>
-              <div class="right">
-                <h3>{{item.name}}</h3>
-                <div class="displayBtn">
-                  <div v-if="item.condMoney != '0'" class="fullSub">
-                    <span v-if="item.range == '1'">满 {{item.condMoney}}.0 可用(限指定商品)</span>
-                    <span v-else-if="item.range == '2'">满 {{item.condMoney}}.0 可用(限指定门店)</span>
-                    <span v-else-if="item.range == '3'">满 {{item.condMoney}}.0 可用(限指定分类)</span>
-                    <span v-else-if="item.range == '4'">满 {{item.condMoney}}.0 可用</span>
-                  </div>
-                  <div v-else class="fullSub">
-                    <span>无门槛</span>
-                  </div>
-                  <!-- 未使用 -->
-                  <div class="cardVoucherOper">
-                    <span class="operBtn newReceive" v-if="item.useStatus == '1'" @click.stop="receiveCard(item.id)">立即领取</span>
-                    <span class="operBtn noReceive" v-if="item.useStatus == '2'">已领取</span>
-                    <span class="operBtn noReceive" v-if="item.useStatus == '3'">领光了</span>
-                  </div>
-                </div>
-                <!-- 未使用 -->
-                <div class="activityTime">
-                  <!-- 立即领取 可以领取-->
-                  <span v-if="item.useStatus == '1'" class="activityTime">领取时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
-                  <!-- 立即使用  到达使用时间-->
-                  <span v-else-if="item.useStatus == '2' && item.display=='2' && item.invalidDay > 0" class="countDown">{{item.invalidDay}}天后过期</span>
-                  <span v-else-if="item.useStatus == '2' && item.display=='2' && item.invalidDay === 0" class="countDown">1天后过期</span>
-                  <!-- 立即使用 未到达使用时间 -->
-                  <span v-else-if="item.useStatus == '2' && item.display=='1'">使用时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
-                  <!-- 领光了 -->
-                  <span v-if="item.useStatus == '3'" class="activityTime">领取时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
-                </div>
-              </div>
-            </div>
+            <card :item="item" :index="0" :showOperate="true"/>
           </div>
         </div>
       </div>
@@ -55,6 +14,7 @@
 <script>
 import {memberCouponRecord} from 'util/netApi'
 import {http} from 'util/request'
+import Card from 'common/commonCard/Card'
 import {
   mapState
 } from 'vuex'
@@ -75,7 +35,15 @@ export default {
     coupon: state => state.coupon
   }),
   components: {
-    'mt-popup': Popup
+    'mt-popup': Popup,
+    Card
+  },
+  filters: {
+    timeFilter: function (value) {
+      if (!value) return ''
+      value = value.toString()
+      return value.split('T')[0].replace(/-/ig, '.')
+    }
   },
   methods: {
     // 领取优惠券
@@ -116,7 +84,7 @@ export default {
     height 280px
     margin-bottom 30px
     background #fff
-    bgImage('../../../images/newCardVouItemBg')
+    // bgImage('../../../images/newCardVouItemBg')
     .left
       float left
       width 300px

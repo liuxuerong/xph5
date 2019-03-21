@@ -14,7 +14,7 @@
           <img v-else src="../../images/memberHeader.png" class="headerImg"  @click="userDataSet">
           <div class="headerRightText">
             <h2 class="headerName" @click="userDataSet">{{phone}}</h2>
-            <span class="memberGrade" v-if="list.memberLevelName === '普卡'"><i class="memberGradeIcon01"></i>普卡<router-link to="/memberCenter" class="fr immediately"><em class="fl"></em><em>立领400元</em> <em class="fr"></em></router-link></span>
+            <span class="memberGrade" v-if="list.memberLevelName === '普卡'"><i class="memberGradeIcon01"></i>普卡<router-link to="/memberCenter/1" class="fr immediately"><em class="fl"></em><em>立领400元</em> <em class="fr"></em></router-link></span>
             <span class="memberGrade" v-if="list.memberLevelName === '金卡'"><i class="memberGradeIcon02"></i>金卡<router-link to="/memberCenter" class="fr immediately"><em class="fl"></em><em>立领400元</em> <em class="fr"></em></router-link></span>
             <span class="memberGrade" v-if="list.memberLevelName === '白金卡'"><i class="memberGradeIcon03"></i>白金卡<router-link to="/memberCenter" class="fr immediately"><em class="fl"></em><em>立领400元</em> <em class="fr"></em></router-link></span>
             <span class="memberGrade" v-if="list.memberLevelName === '黑金卡'"><i class="memberGradeIcon04"></i>黑金卡
@@ -63,41 +63,7 @@
       <div ref="couponsScroll" class="couponsScroll" :class="{couponsScrollBg:coupons.length === 0}">
         <ul class="memberGradeScroll clearfix" :style="{width:cardScrollWidth+'rem'}">
           <li class="cardVolItem" v-for="item in coupons" :key="item.id" @click="cardVoucher">
-            <div class="left">
-              <span v-if="item.type == '1' || item.type == '3'">￥<i>{{item.subMoney}}</i></span>
-              <span v-else-if="item.type == '2'"><i>{{item.discount.toString().split('.')[1]}}</i> 折</span>
-              <p v-if="item.applyType == '1'">通用券</p>
-              <p v-if="item.applyType == '2'">app专享</p>
-              <p v-if="item.applyType == '3'">门店专享</p>
-            </div>
-            <div class="right">
-              <h3>{{item.name}}</h3>
-              <div class="displayBtn">
-                <div v-if="item.condMoney != '0'" class="fullSub">
-                  <span v-if="item.range == '1'">满{{item.condMoney}}.0可用(限指定商品)</span>
-                  <span v-if="item.range == '2'">满{{item.condMoney}}.0可用(限指定门店)</span>
-                  <span v-if="item.range == '3'">满{{item.condMoney}}.0可用(限指定分类)</span>
-                  <span v-if="item.range == '4'">满{{item.condMoney}}.0可用</span>
-                </div>
-                <div v-else class="fullSub">
-                  <span>无门槛</span>
-                </div>
-                <router-link to="/" class="operBtn newReceive" v-if="item.useStatus == '1'">立即领取</router-link>
-                <router-link to="/" class="operBtn newUse" v-if="item.useStatus == '2'">立即使用</router-link>
-                <router-link to="/" class="operBtn noReceive" v-if="item.useStatus == '3'">领光了</router-link>
-              </div>
-              <div class="activityTime">
-                <!-- 立即领取 可以领取 -->
-                <span v-if="item.useStatus == '1' && item.activityStart" class="activityTime">领取时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
-                <!-- 立即使用  到达使用时间 -->
-                <span v-else-if="item.useStatus == '2' && item.display=='2' && item.invalidDay > 0" class="countDown">{{item.invalidDay}}天后过期</span>
-                  <span v-else-if="item.useStatus == '2' && item.display=='2' && item.invalidDay === 0" class="countDown">1天后过期</span>
-                <!-- 立即使用 未到达使用时间 -->
-                <span v-else-if="item.useStatus == '2' && item.display=='1'">使用时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
-                <!-- 领光了 -->
-                <span v-if="item.useStatus == '3'" class="activityTime">领取时限:{{item.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{item.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
-              </div>
-            </div>
+            <card :item="item" :index="0" :showOperate="true"/>
           </li>
         </ul>
       </div>
@@ -134,6 +100,7 @@ import ActivitysDetails from './components/ActivitysSwiper'
 import OrderIndex from '../order/OrderIndex'
 import { config } from 'util/config'
 import BScroll from 'better-scroll'
+import Card from 'common/commonCard/Card'
 export default {
   name: 'PersonCenter',
   data () {
@@ -164,10 +131,15 @@ export default {
   components: {
     PersonTitle,
     OrderIndex,
-    ActivitysDetails
+    ActivitysDetails,
+    Card
   },
-  computed: {
-
+  filters: {
+    timeFilter: function (value) {
+      if (!value) return ''
+      value = value.toString()
+      return value.split('T')[0].replace(/-/ig, '.')
+    }
   },
   watch: {
     '$route' (to, from) {
@@ -184,7 +156,7 @@ export default {
         let data = response.data.body
         if (data.coupons.length > 0) {
           this.coupons = data.coupons
-          this.cardScrollWidth = (this.coupons.length * 970 - 50) / 112.5
+          this.cardScrollWidth = (this.coupons.length * 1050 - 50) / 112.5
         }
         let operPhone = data.memberName
         if ((/^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/.test(Number(operPhone)))) {
@@ -598,10 +570,10 @@ export default {
     height 320px
     .cardVolItem
       float left
-      width 920px
+      width 1000px
       height 320px
       margin-right 50px
-      bgImage('../../images/newCardVouItemBg')
+      // bgImage('../../images/newCardVouItemBg')
       .left
         float left
         width 260px
@@ -616,11 +588,11 @@ export default {
           font-size 40px
           font-weight bold
           text-align center
-          color #fff
+          color #333333
           i
             display inline-block
             font-size 80px
-            color #fff
+            color #333333
             font-weight bold
         p
           display block

@@ -1,102 +1,50 @@
 <template>
-  <div class="wrapper">
+  <div class="cardWrapper" >
     <userinfo-header title="卡券中心" oper=''></userinfo-header>
     <!-- 没有id  未领取数据渲染 -->
-    <div class="cardVoucherCon" v-if="type !== '2'">
-      <div class="cardInfo" :class="mainType == '0'?'':'grayColor'">
-        <div class="top border-bottom">
-          <div class="left border-right" v-if="pastList">
-            <span v-if="pastList.type == '1' || pastList.type == '3'|| pastList.type == '4'">￥<i>{{pastList.subMoney}}</i></span>
-            <span v-else-if="pastList.type == '2' && pastList.discount.toString().replace('.', '').length === 2"><i>{{parseInt(pastList.discount.toString().replace(".", ""))}}</i> 折</span>
-            <span v-else-if="pastList.type == '2' && pastList.discount.toString().replace('.', '').length === 3"><i>{{pastList.discount.toString().replace(".", "")/10}}</i> 折</span>
-            <!-- <span>￥<i>{{pastList.subMoney}}</i></span> -->
-            <!-- <i v-else-if="list.type == '2'"><i>{{list.discount}}</i> 折</i> -->
-            <p v-if="pastList.applyType == '1'">通用券</p>
-            <p v-if="pastList.applyType == '2'">app专享</p>
-            <p v-if="pastList.applyType == '3'">门店专享</p>
-          </div>
-          <div class="right">
-            <h3>{{pastList.name}}---1</h3>
-            <div class="fullSub">
-              <span v-if="pastList.condMoney != '0' && pastList.range == '1'">满 {{pastList.condMoney}}.0 可用</span>
-              <span v-else-if="pastList.condMoney != '0' && pastList.range == '2'">满 {{pastList.condMoney}}.0 可用</span>
-              <span v-else-if="pastList.condMoney != '0' && pastList.range == '3'">满 {{pastList.condMoney}}.0 可用</span>
-              <span v-else-if="pastList.condMoney != '0' && pastList.range == '4'">满 {{pastList.condMoney}}.0 可用</span>
-              <span v-else>无门槛</span>
-              <!-- 领取状态(1-未领取 2-已领取 3-领光了) -->
-              <!-- 未使用 -->
-              <span class="activityTime" v-if="pastList.activityStart && pastList.activityEnd">{{pastList.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{pastList.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span>
-              <!-- 已使用  已过期-->
-              <!-- <span v-else class="activityTime">{{pastList.activityStart.split('T')[0].replace(/-/ig,'.')}} - {{pastList.activityEnd.split('T')[0].replace(/-/ig,'.')}}</span> -->
-            </div>
-          </div>
+    <div class="cardVoucherCon" v-if="pastList">
+      <div class="cardInfo">
+        <div class="top border-bottom" >
+          <card :item="pastList" :index="+mainType"/>
         </div>
-        <div class="bottom" v-if="mainType == '0'">
-          <router-link to="/find" class="operBtn" v-if="pastList.useStatus == '2'">立即使用</router-link>
-          <div class="operBtn" v-else-if="pastList.useStatus == '1'" @click.stop="receiveCard(pastList.id)">立即领取</div>
-          <div class="operBtn gray" v-else-if="pastList.useStatus == '3'">抢光了</div>
-        </div>
-        <div class="bottom grayBottom" v-else>
-          <div class="operBtn" >立即使用</div>
+      </div>
+      <div v-if="pastList.applyType !== 3&&pastList.useStatus == '2' && pastList.display!='1'" class="cardCodeCon">
+        <div class="tipText" v-if="mainType == '0'">使用时请向服务人员出示此二维码</div>
+        <div class="tipText" v-else>当前优惠券不能使用</div>
+        <div class="cardCodeImg">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <i class="cardNum">{{cardNo}}</i>
+          <qrcode class="Scavenging"  :value="cardNo" :fg-color="fgColor" type="img"></qrcode>
         </div>
       </div>
       <div class="cardIntroduce" ref="sentence" v-html="pastList.content"></div>
+      <div class="bottom btnCard" v-if="mainType == '0'">
+        <router-link to="/find" class="operBtn" v-if="pastList.useStatus == '2'&& pastList.display!='1'">立即使用</router-link>
+        <div class="operBtn" v-else-if="pastList.useStatus == '1'" @click.stop="receiveCard(pastList.id)">立即领取</div>
+        <div class="operBtn gray" v-else-if="pastList.useStatus == '3'">抢光了</div>
+        <div class="operBtn gray" v-else-if="pastList.useStatus == '2'&& pastList.display=='1'">立即使用</div>
+      </div>
+      <div class="bottom grayBottom btnCard" v-else>
+        <div class="operBtn" >立即使用</div>
+      </div>
     </div>
     <!-- 已经领取 有id -->
-    <div class="cardVoucherCon" v-else>
+    <!-- <div class="cardVoucherCon" v-if="type == '2'&&list">
       <div class="cardInfo" :class="mainType == '0'?'':'grayColor'">
-        <div class="top border-bottom">
-          <div class="left border-right" v-if="list">
-            <span v-if="list.type == '1' || list.type == '3'|| list.type == '4'">￥<i>{{list.subMoney}}</i></span>
-            <span v-else-if="list.type == '2'"><i>{{list.discount*10}}</i> 折</span>
-            <p v-if="list.applyType == '1'">通用券</p>
-            <p v-if="list.applyType == '2'">app专享</p>
-            <p v-if="list.applyType == '3'">门店专享</p>
-          </div>
-          <div class="right">
-            <h3>{{list.name}}</h3>
-            <div class="fullSub">
-              <span v-if="list.condMoney != '0'&& list.range == '1'">满 {{list.condMoney}}.0 可用</span>
-              <span v-else-if="list.condMoney != '0'&& list.range == '2'">满 {{list.condMoney}}.0 可用</span>
-              <span v-else-if="list.condMoney != '0'&& list.range == '3'">满 {{list.condMoney}}.0 可用</span>
-              <span v-else-if="list.condMoney != '0'&& list.range == '4'">满 {{list.condMoney}}.0 可用</span>
-              <span v-else>无门槛</span>
-              <!-- 未使用 -->
-              <span v-if="mainType == '0' && list.overdueStart && list.overdueEnd" class="activityTime">{{list.overdueStart.split('T')[0].replace(/-/ig,'.')}} - {{list.overdueEnd.split('T')[0].replace(/-/ig,'.')}}</span>
-              <!-- 已使用  已过期-->
-              <span v-else-if="list.overdueStart && list.overdueEnd" class="activityTime">{{list.overdueStart.split('T')[0].replace(/-/ig,'.')}} - {{list.overdueEnd.split('T')[0].replace(/-/ig,'.')}}</span>
-            </div>
-          </div>
-        </div>
-        <!-- 未使用 -->
-        <div class="bottom" v-if="mainType == '0'">
-          <router-link class="operBtn" to="/find"  v-if="status == '1'">立即使用</router-link>
-          <div class="operBtn" v-else-if="status == '2'" @click.stop="receiveCard(pastList.id)">立即领取</div>
-          <div class="operBtn gray" v-else-if="status == '3'">抢光了</div>
-        </div>
-        <div class="bottom grayBottom" v-else>
-          <div class="operBtn" >立即使用</div>
-        </div>
+        <card :item="list" :index="10"/>
       </div>
-      <div v-if="list.applyType !== 2" class="cardCodeCon">
-          <div class="tipText" v-if="mainType == '0'">使用时请向服务人员出示此二维码</div>
-          <div class="tipText" v-else>当前优惠券不能使用</div>
-          <div class="cardCodeImg">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <i class="cardNum">{{cardNo}}</i>
-            <qrcode class="Scavenging"  :value="cardNo" :fg-color="fgColor" type="img"></qrcode>
-          </div>
-        </div>
-        <div class="cardIntroduce" ref="sentence" v-html="list.content"></div>
-    </div>
+
+      <div class="cardIntroduce" ref="sentence" v-html="list.content"></div>
+    </div> -->
   </div>
 </template>
 <script>
 import UserinfoHeader from './components/ComUserSetHeader'
-import {getDetailById, memberCouponRecord} from 'util/netApi'
+import Card from 'common/commonCard/Card'
+import {memberCouponRecord, getDetailById} from 'util/netApi'
 import {http} from 'util/request'
 import {Toast} from 'mint-ui'
 import { Qrcode } from 'vux'
@@ -105,25 +53,33 @@ import {storage} from 'util/storage'
 export default {
   data () {
     return {
-      list: [],
+      list: null,
       cardNo: '',
       type: '',
       mainType: '', // 1 未使用 2 已使用 3 过期
       id: '',
-      pastList: [],
+      pastList: null,
       fgColor: '',
       status: '' // 未使用卡券状态  1 立即领取 2 立即使用  3 领光了
     }
   },
   components: {
     UserinfoHeader,
-    Qrcode
+    Qrcode,
+    Card
   },
   watch: {
     '$route' (to, from) {
       if (to.name === 'cardDetails') {
         this.cardDetailsRender()
       }
+    }
+  },
+  filters: {
+    timeFilter: function (value) {
+      if (!value) return ''
+      value = value.toString()
+      return value.split('T')[0].replace(/-/ig, '.')
     }
   },
   methods: {
@@ -135,6 +91,7 @@ export default {
       let id = this.$route.params.id
       this.mainType = mainType
       this.type = type
+      this.pastList = storage.getLocalStorage('card')
       if (type === '2') {
         let params = {
           couponId: id
@@ -143,6 +100,8 @@ export default {
           if (response.data.code === 0) {
             console.log(response)
             this.list = response.data.body.coupon
+            this.pastList = Object.assign(this.pastList, this.list)
+            console.log(this.pastList)
             this.status = response.data.body.status
             if (this.mainType !== '0') {
               this.fgColor = '#999999'
@@ -154,10 +113,6 @@ export default {
         }).catch((err) => {
           console.log(err)
         })
-      } else {
-        let newList = storage.getLocalStorage('card')
-        this.pastList = newList
-        console.log(newList)
       }
     },
     // 领取优惠券
@@ -175,6 +130,9 @@ export default {
           })
           setTimeout(() => {
             this.$router.push('/cardDetails/2/0/' + id)
+            let list = storage.getLocalStorage('card')
+            list.useStatus = 2
+            storage.setLocalStorage('card', list)
           }, 1000)
         }
       }).catch((err) => {
@@ -192,9 +150,10 @@ export default {
 </script>
 
 <style lang="stylus">
-  .wrapper
+  .cardWrapper
     background #f5f5f5
     min-height 100%
+    padding-bottom 250px
     .cardIntroduce
       background #fff
       width calc(100% - 100px)
@@ -225,7 +184,7 @@ export default {
 </style>
 
 <style lang="stylus" scoped>
-  .wrapper
+  .cardWrapper
     width 100%
     box-sizing border-box
     padding-top 132px
@@ -243,9 +202,7 @@ export default {
             border-color #E6E6E6
     .cardInfo
       width calc(100% - 100px)
-      height 560px
-      background #fff
-      margin 0 auto 30px
+      margin 0 auto
     .top
       width 100%
       height 320px
@@ -310,25 +267,23 @@ export default {
         background #E6E6E6
     .bottom
       width 100%
-      height 240px
-      overflow hidden
-      line-height 240px
+      position fixed
+      bottom 0
+      width calc(100% - 100px)
+      left 50px
       .operBtn
         display block
-        width 620px
+        width 100%
         height 140px
         line-height 140px
-        background linear-gradient(-45deg,rgba(172,124,98,1),rgba(220,166,116,1))
-        box-shadow 0px 16px 24px 0px rgba(207,154,111,0.66)
+        background-color #333333
         font-size 48px
         color #fff
         margin 46px auto 0
         text-align center
-        border-radius 68px
       .operBtn.gray
         display block
-        background #E6E6E6
-        box-shadow 0 0 0 0 #fff
+        background #A7A7A7
     .cardInfo.gray
       width calc(100% - 100px)
       height 560px
@@ -336,7 +291,7 @@ export default {
       margin 0 auto
   .cardIntroduce
     width calc(100% - 100px)
-    margin 0 auto
+    margin 50px auto 0
     background #fff
     overflow hidden
     p
@@ -349,7 +304,7 @@ export default {
     width calc(100% - 100px)
     height 1100px
     background #fff
-    margin 0 auto 30px
+    margin 50px auto 30px
   .tipText
     width 100%
     box-sizing border-box

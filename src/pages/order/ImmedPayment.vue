@@ -108,13 +108,14 @@ export default {
         obj = {
           needPayAmount: this.list.needPayAmount,
           orderSn: this.list.orderSn,
-          deliveryPeople: this.list.deliveryPeople
+          deliveryPeople: this.list.deliveryPeople,
+          type: this.orderType
         }
       } else {
         obj = {
           needPayAmount: 99,
           orderSn: 3333,
-          deliveryPeople: 'vvvv'
+          type: this.orderType
         }
       }
 
@@ -128,7 +129,8 @@ export default {
         document.forms[0].submit()
       } else if (this.readioActive === 5) {
         obj = Object.assign(obj, {
-          payWay: '微信'
+          payWay: '微信',
+          type: this.orderType
         })
       }
       storage.setLocalStorage(immedPaymentMony, obj)
@@ -159,7 +161,8 @@ export default {
             type: this.orderType
           }
           http(buyRecordPay, params).then((response) => {
-          // 提交接口成功
+            console.log(response)
+            // 提交接口成功
             if (response.data.code === 0) {
               this.setData(response)
             }

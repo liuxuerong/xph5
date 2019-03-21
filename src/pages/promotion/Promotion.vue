@@ -116,7 +116,7 @@ export default {
       isInvoicing: true,
       arrowActive: 0,
       timer: null,
-      startDate: new Date('1940-01-01'),
+      startDate: new Date('1980-01-01'),
       endDate: new Date(),
       computedTime: 0,
       selectData: null,

@@ -1,10 +1,11 @@
 <template>
   <div class="wrapper">
     <search-title title="支付成功" oper="2"></search-title>
-    <div class="paymentSuccCon">
+    <div class="paymentSuccCon" v-if="immedPaymentMony">
       <div class="paymentImg"></div>
       <span class="paymentText">支付成功</span>
-      <p class="tip">我们将尽快为安排发货</p>
+      <p class="tip" v-if="immedPaymentMony.type==1">我们将尽快为安排发货</p>
+      <p class="tip" v-else>您已成功开通黑金卡全部特权</p>
       <ul class="infoPay" v-if="immedPaymentMony">
         <li>
           <span class="name">订单号</span>
@@ -14,9 +15,13 @@
            <span class="name">支付方式</span>
           <span class="info">{{immedPaymentMony.payWay}}</span>
         </li>
-        <li>
-           <span class="name">收件人</span>
+        <li v-if="immedPaymentMony.type==1">
+          <span class="name">收件人</span>
           <span class="info">{{immedPaymentMony.deliveryPeople}}</span>
+        </li>
+        <li v-else>
+          <span class="name">交易内容</span>
+          <span class="info">2年黑金卡会员</span>
         </li>
         <li>
            <span class="name">付款金额</span>
@@ -24,7 +29,8 @@
         </li>
       </ul>
       <div class="paymentBtn clearfix" v-if="immedPaymentMony">
-        <router-link class="pageJump" :to="'/orderDetails/'+immedPaymentMony.orderSn" replace>查看订单</router-link>
+        <router-link class="pageJump" :to="'/orderDetails/'+immedPaymentMony.orderSn" replace v-if="immedPaymentMony.type==1">查看订单</router-link>
+        <router-link class="pageJump" to="/personCenter" replace v-else>会员中心</router-link>
         <router-link class="pageJump" to="/find" replace>返回首页</router-link>
       </div>
     </div>
@@ -38,6 +44,8 @@ import {
 import {
   immedPaymentMony
 } from 'util/const.js'
+import {buyRecordDetails} from 'util/netApi'
+import {http} from 'util/request'
 export default {
   data () {
     return {
@@ -50,6 +58,12 @@ export default {
   methods: {
     immedPaymentRender () {
       this.immedPaymentMony = storage.getLocalStorage(immedPaymentMony)
+      if (this.immedPaymentMony.type == 2) {
+        http(buyRecordDetails).then(res => {
+          this.immedPaymentMony.orderSn = res.data.body.sn
+          this.immedPaymentMony.needPayAmount = res.data.body.payMoney
+        })
+      }
     }
   },
   mounted () {

@@ -4,41 +4,7 @@
     <div class="cardVoucherCon">
       <div class="cardVoucherPage" v-if="list.length > 0">
         <div class="cardVouItem" v-for="item in list" :key="item.id">
-          <div class="top">
-            <div class="left">
-              <span v-if="item.type == '1' || item.type == '3'">￥<i>{{item.subMoney}}</i></span>
-              <span v-else-if="item.type == '2' && item.discount.toString().replace('.', '').length === 2"><i>{{parseInt(item.discount.toString().replace(".", ""))}}</i> 折</span>
-              <span v-else-if="item.type == '2' && item.discount.toString().replace('.', '').length === 3"><i>{{item.discount.toString().replace(".", "")/10}}</i> 折</span>
-              <p v-if="item.applyType == '1'">通用券</p>
-              <p v-if="item.applyType == '2'">app专享</p>
-              <p v-if="item.applyType == '3'">门店专享</p>
-            </div>
-            <div class="right">
-              <h3>{{item.name}}</h3>
-              <div class="displayBtn">
-                <div v-if="item.condMoney != '0'" class="fullSub">
-                  <span v-if="item.range == '1'">满{{item.condMoney}}.0可用(限指定商品)</span>
-                  <span v-if="item.range == '2'">满{{item.condMoney}}.0可用(限指定门店)</span>
-                  <span v-if="item.range == '3'">满{{item.condMoney}}.0可用(限指定分类)</span>
-                  <span v-if="item.range == '4'">满{{item.condMoney}}.0可用</span>
-                </div>
-                <div v-else class="fullSub">
-                  <span>无门槛</span>
-                </div>
-                <span class="operBtn newReceive" v-if="type == '1'&&item.useStatus == '1'" @click.stop="receiveCard(item.id)">立即领取</span>
-                <span class="operBtn noReceive" v-if="type == '1'&&item.useStatus == '2'">已领取</span>
-                <span class="operBtn noReceive" v-if="type == '1'&&item.useStatus == '3'">领光了</span>
-                <span class="operBtn newUse" v-if="type == '2'||type == '3'" @click="useCoupon(item,item.type)">立即使用</span>
-              </div>
-              <div class="activityTime">
-                <span class="drawTime" v-if="type==1">
-                      {{item.activityStart|timeFormat}}-{{item.activityEnd|timeFormat}}
-                  </span>
-                <span class="countDown" v-if="item.invalidDay > 0&&type==2">{{item.invalidDay}}天后过期</span>
-                <span class="countDown" v-else-if="item.invalidDay === 0&&type==2">1天后过期</span>
-              </div>
-            </div>
-          </div>
+          <card :item="item" :index="0" :showOperate="true" @useClick="useCoupon(item)"/>
         </div>
         <div class="noCoupons" @click="noCoupons" v-if="type!=1">不使用优惠券</div>
       </div>
@@ -73,6 +39,7 @@ import {
 } from 'util/const.js'
 import CommonEmpty from 'common/commonEmpty/CommonEmpty'
 import emptyImg from '../../images/emptyCard.png'
+import Card from 'common/commonCard/Card'
 import {
   Toast
 } from 'mint-ui'
@@ -97,7 +64,8 @@ export default {
     CommonNavNoMemory,
     Tab,
     TabItem,
-    CommonEmpty
+    CommonEmpty,
+    Card
   },
   filters: {
     timeFormat: function (value) {
@@ -131,9 +99,9 @@ export default {
     },
     // shippingFavorableId
     // 立即使用优惠券
-    useCoupon (coupon, type) {
+    useCoupon (coupon) {
       let info = storage.getLocalStorage(orderInfo) || {}
-      if (type == 4) {
+      if (coupon.type == 4) {
         info.shippingFavorableId = coupon.id
         info.shippingFavorableAmount = coupon.subMoney
       } else {
@@ -223,101 +191,12 @@ export default {
       .hrefCss.active
         color #262626
         border-bottom 8px solid #333333
-  .cardVoucherPage.cardVoucherPageThree
-    .cardVouItem
-      width 100%
-      height 280px
-      margin-bottom 50px
-      background #fff
-      bgImage('../../images/cardVouItemBg')
   .cardVoucherPage
     width 100%
     padding 34px 30px 0
     height 100vh
     padding-bottom 160px
     overflow-y scroll
-    .cardVouItem
-      width 100%
-      height 280px
-      margin-bottom 50px
-      background #fff
-      bgImage('../../images/newCardVouItemBg')
-      .left
-        float left
-        width 300px
-        height 280px
-        box-sizing border-box
-        padding-top 60px
-        span
-          display block
-          width 100%
-          height 80px
-          line-height 80px
-          font-size 40px
-          font-weight bold
-          text-align center
-          color #fff
-          i
-            display inline-block
-            font-size 80px
-            color #fff
-            font-weight bold
-        p
-          display block
-          width 180px
-          height 56px
-          text-align center
-          font-size 30px
-          margin 30px auto 0
-          color #FFFFFF
-          border 1px solid #fff
-      .right
-        float left
-        width 70%
-        box-sizing border-box
-        padding 20px 34px 0
-        h3
-          width 100%
-          font-size 46px
-          font-weight bold
-          color #333333
-        .displayBtn
-          width 100%
-          div
-            display inline-block
-  .operBtn
-    float right
-    width 160px
-    height 60px
-    text-align center
-    line-height 60px
-    font-size 30px
-    border-radius 30px
-  .newUse
-    color #fff
-    background linear-gradient(-45deg,rgba(172,124,98,1),rgba(220,166,116,1))
-    box-shadow 0px 16px 24px 0px rgba(207,154,111,0.66)
-  .newReceive
-    color #BA825A
-    border 2px solid #BA825A
-  .noReceive
-    color #fff
-    background #E6E6E6
-  .activityTime
-    width 100%
-    margin-top 30px
-    font-size 30px
-    color #999999
-  .countDown
-    color #D54B4B
-  .fullSub
-    font-size 36px
-    color #BA825A
-  .cardDetails
-    float right
-    background #fff
-    font-size 30px
-    color #666666
   .noCoupons
     width 100%
     height 140px

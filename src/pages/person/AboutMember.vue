@@ -8,8 +8,8 @@
         <thead>
           <tr>
             <th width="22%">标识</th>
-            <th width="20%">等级</th>
-            <th width="58%">获取门槛</th>
+            <th width="24%">等级</th>
+            <th width="54%">获取门槛</th>
           </tr>
         </thead>
         <tbody>
@@ -21,17 +21,17 @@
           <tr>
             <td><i class="aboutGroup02"></i></td>
             <td>金卡会员</td>
-            <td>普卡一年内累计消费满2000元</td>
+            <td>积分≧200分（累计消费≧2000元）</td>
           </tr>
           <tr>
             <td><i class="aboutGroup03"></i></td>
             <td>白金卡会员</td>
-            <td>金卡一年内累计消费满8000元</td>
+            <td>积分≧800分（累计消费≧8000元）</td>
           </tr>
           <tr>
             <td><i class="aboutGroup04"></i></td>
             <td>黑金卡会员</td>
-            <td>白金卡一年内累计消费满15000元(99元购买黑金卡)</td>
+            <td>积分≧1500分（累计消费≧15000元）/ <b>99元付费购买</b></td>
           </tr>
         </tbody>
       </table>
@@ -131,11 +131,12 @@ export default {
       color #262626
       border 1px solid #e5e5e5
       padding-left 30px
+      vertical-align middle
       i
         display block
-        width 87px
-        height 96px
-        margin 0 auto
+        width 94px
+        height 105px
+        margin-left 40px
       .aboutGroup01
         background url('../../icons/menberGrade01.png') no-repeat center center /100% 100%
       .aboutGroup02
@@ -144,6 +145,8 @@ export default {
         background url('../../icons/menberGrade03.png') no-repeat center center /100% 100%
       .aboutGroup04
         background url('../../icons/menberGrade04.png') no-repeat center center /100% 100%
+      b
+        font-weight bold
   .memberWays
    width 100%
    li

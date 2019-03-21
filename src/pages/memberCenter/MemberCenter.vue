@@ -4,20 +4,20 @@
       <common-black-header>
         <span class="about">关于会员卡</span>
       </common-black-header>
-      <div class="swiperOut" v-if="memberData">
+      <div class="swiperOut" v-if="memberData&&curMemberLevel">
         <swiper ref="mySwiper" :options="swiperOption" class="swiperCont">
           <swiper-slide class="cardWrap" v-for="(item,index) in memberData.memberLevels" :key="item.id">
             <div class="top clearfix">
-              <div class="status statusOther fl" v-if="item.level < memberData.curMemberLevel.level">已升级</div>
-              <div class="status statusNow fl" v-if="item.level == memberData.curMemberLevel.level">当前等级</div>
-              <div class="status statusOther fl" v-if="item.level > memberData.curMemberLevel.level">待升级</div>
-              <div class="no fr" :class="'no'+(item.level+1)" v-if="item.level == memberData.curMemberLevel.level">NO.-{{memberData.cardNo}}</div>
+              <div class="status statusOther fl" v-if="item.level < curMemberLevel.level">已升级</div>
+              <div class="status statusNow fl" v-if="item.level == curMemberLevel.level">当前等级</div>
+              <div class="status statusOther fl" v-if="item.level > curMemberLevel.level">待升级</div>
+              <div class="no fr" :class="'no'+(item.level+1)" v-if="item.level == curMemberLevel.level">NO.-{{memberData.cardNo}}</div>
                <div class="no fr" :class="'no'+(item.level+1)" v-else>NO.-</div>
             </div>
             <div class="name"  :class="'name'+(item.level+1)">{{item.name}}会员</div>
-            <div class="time" :class="'time'+(item.level+1)" v-if="item.level == memberData.curMemberLevel.level&&memberData.curMemberLevel.level!=3">有效期至{{memberData.overdueDate.split('T')[0]}}</div>
-            <router-link to="/transactionRecord" class="time time4" v-if="item.level == memberData.curMemberLevel.level&&memberData.curMemberLevel.level==3">有效期至{{memberData.overdueDate.split('T')[0]}} <span class="arrow"></span> </router-link>
-            <ul class="integral" :class="'integral'+(item.level+1)" v-if="item.level == memberData.curMemberLevel.level">
+            <div class="time" :class="'time'+(item.level+1)" v-if="item.level == curMemberLevel.level&&curMemberLevel.level!=3">有效期至{{memberData.overdueDate.split('T')[0]}}</div>
+            <router-link to="/transactionRecord" class="time time4" v-if="item.level == curMemberLevel.level&&curMemberLevel.level==3">有效期至{{memberData.overdueDate.split('T')[0]}} <span class="arrow"></span> </router-link>
+            <ul class="integral" :class="'integral'+(item.level+1)" v-if="item.level == curMemberLevel.level">
               <li>
                 <span class="num">{{memberData.surplusIntegral}}</span>
                 <em>可用积分</em>
@@ -26,78 +26,12 @@
                 <span class="num">{{memberData.curIntegral}}</span>
                 <em>当前积分</em>
               </li>
-              <li v-if="memberData.curMemberLevel.level!=3">
+              <li v-if="curMemberLevel.level!=3">
                 <span class="num">{{memberData.memberLevels[index+1].upgradeLimit-memberData.curIntegral}}</span>
                 <em>距升级积分</em>
               </li>
             </ul>
           </swiper-slide>
-          <!-- <swiper-slide class="cardWrap">
-            <div class="top clearfix">
-              <div class="status statusNow fl">当前等级</div>
-              <div class="no fr no2">NO.370010100001</div>
-            </div>
-            <div class="name">金卡会员</div>
-            <div class="time time2">有效期至2019-12-31</div>
-            <ul class="integral integral2">
-              <li>
-                <span class="num">12555</span>
-                <em>剩余积分</em>
-              </li>
-              <li>
-                <span class="num">12555</span>
-                <em>当前积分</em>
-              </li>
-              <li>
-                <span class="num">12555</span>
-                <em>距升级积分</em>
-              </li>
-            </ul>
-          </swiper-slide>
-          <swiper-slide class="cardWrap">
-            <div class="top clearfix">
-              <div class="status statusOther fl">待升级</div>
-              <div class="no fr no3">NO.370010100001</div>
-            </div>
-            <div class="name">白金卡会员</div>
-            <div class="time time3">有效期至2019-12-31</div>
-            <ul class="integral integral3">
-              <li>
-                <span class="num">12555</span>
-                <em>剩余积分</em>
-              </li>
-              <li>
-                <span class="num">12555</span>
-                <em>当前积分</em>
-              </li>
-              <li>
-                <span class="num">12555</span>
-                <em>距升级积分</em>
-              </li>
-            </ul>
-          </swiper-slide>
-          <swiper-slide class="cardWrap">
-            <div class="top clearfix">
-              <div class="status statusOther fl">待升级</div>
-              <div class="no fr no4">NO.370010100001</div>
-            </div>
-            <div class="name name4">黑金卡会员</div>
-            <router-link to="/transactionRecord" class="time time4">有效期至2019-12-31 <span class="arrow"></span> </router-link>
-            <ul class="integral integral4">
-              <li>
-                <span class="num">12555</span>
-                <em>剩余积分</em>
-              </li>
-              <li>
-                <span class="num">12555</span>
-                <em>当前积分</em>
-              </li>
-              <li>
-                <span class="num">12555</span>
-                <em>距升级积分</em>
-              </li>
-            </ul>
-          </swiper-slide> -->
         </swiper>
       </div>
        <div class="swiperOut" v-if="!isLogin">
@@ -119,7 +53,7 @@
                 <em>所需积分</em>
               </li>
               <li>
-                <span class="num">白金卡</span>
+                <span class="num">金卡</span>
                 <em>下个级别</em>
               </li>
             </ul>
@@ -141,7 +75,7 @@
                 <em>所需积分</em>
               </li>
               <li>
-                <span class="num">金卡</span>
+                <span class="num">白金卡</span>
                 <em>下个级别</em>
               </li>
             </ul>
@@ -163,7 +97,7 @@
                 <em>所需积分</em>
               </li>
               <li>
-                <span class="num">白金卡</span>
+                <span class="num">黑金卡</span>
                 <em>下个级别</em>
               </li>
             </ul>
@@ -174,7 +108,7 @@
               <div class="no fr no4">NO.-</div>
             </div>
             <div class="name name4">黑金卡会员</div>
-            <router-link to="/transactionRecord" class="time time4">有效期至2019-12-31 <span class="arrow"></span> </router-link>
+            <span class="time time4">有效期一年  </span>
             <ul class="integral integral4">
               <li>
                 <span class="num">15000</span>
@@ -378,7 +312,7 @@
           <span>我已阅读并同意</span>
           <router-link to="/aboutMember" class="link">《星品优汇会员服务说明》</router-link>
         </div> -->
-        <div class="btnOpen" v-if="memberData&&memberData.curMemberLevel.level==3">您已是黑金卡会员无需开通</div>
+        <div class="btnOpen" @click="btnOpen" v-if="memberData&&curMemberLevel.level==3">您已是黑金卡会员无需开通</div>
         <div class="btnOpen" @click="btnOpen" v-else>立即开通</div>
       </div>
     </div>
@@ -416,7 +350,8 @@ export default {
           }
         }
       },
-      memberData: null
+      memberData: null,
+      curMemberLevel: null
     }
   },
   computed: {
@@ -428,16 +363,18 @@ export default {
     getData () {
       let _this = this
       http(getMemberCenter).then(res => {
+        console.log(res)
         this.memberData = res.data.body
-        let currentId = this.memberData.curMemberLevel.id
+        this.curMemberLevel = this.memberData.curMemberLevel
+        let currentId = this.curMemberLevel.id
         let memberLevels = this.memberData.memberLevels
         for (let i = 0; i < memberLevels.length; i++) {
           memberLevels[i].level = i
           if (memberLevels[i].id == currentId) {
+            _this.curMemberLevel.level = i
             _this.$nextTick(function () {
-              _this.memberData.curMemberLevel.level = i
               _this.swiper.slideTo(i, 0)
-              _this.activeIndex = i
+              // _this.activeIndex = i
             })
           }
         }
