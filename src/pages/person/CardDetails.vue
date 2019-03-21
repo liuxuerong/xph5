@@ -8,7 +8,7 @@
           <card :item="pastList" :index="+mainType"/>
         </div>
       </div>
-      <div v-if="pastList.applyType !== 3&&pastList.useStatus == '2' && pastList.display!='1'" class="cardCodeCon">
+      <div v-if="pastList.applyType !== 2&&pastList.useStatus == '2' && pastList.display!='1'" class="cardCodeCon">
         <div class="tipText" v-if="mainType == '0'">使用时请向服务人员出示此二维码</div>
         <div class="tipText" v-else>当前优惠券不能使用</div>
         <div class="cardCodeImg">

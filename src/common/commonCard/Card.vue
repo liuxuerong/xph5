@@ -65,10 +65,10 @@
             <span v-if="item.applyType == '1'">[通用券]</span>
             <span v-if="item.applyType == '2'">[app专享]</span>
             <span v-if="item.applyType == '3'">[门店专享]</span>
-            <span v-if="item.range == '1'">满 {{item.condMoney}}.0 可用(限指定商品)</span>
-            <span v-else-if="item.range == '2'">满 {{item.condMoney}}.0 可用(限指定门店)</span>
-            <span v-else-if="item.range == '3'">满 {{item.condMoney}}.0 可用(限指定分类)</span>
-            <span v-else-if="item.range == '4'">满 {{item.condMoney}}.0 可用</span>
+            <span v-if="item.range == '1'">限定商品</span>
+            <span v-else-if="item.range == '2'">限定门店</span>
+            <span v-else-if="item.range == '3'">限指分类</span>
+            <span v-else-if="item.range == '4'">全品类通用</span>
           </div>
           <div
             v-else
@@ -178,7 +178,7 @@ export default {
     // 卡券详情
     cardDetailsPages () {
       storage.setLocalStorage('card', this.item)
-      this.$router.push(`/cardDetails/${this.item.type}/0/${this.item.id}`)
+      this.$router.push(`/cardDetails/${this.item.useStatus}/0/${this.item.id}`)
     }
   }
 }
