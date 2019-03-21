@@ -75,6 +75,7 @@
         month-format="{value} 月"
         date-format="{value} 日"
         @confirm="handleConfirm"
+        @visible-change="handleValueChange"
         :startDate="startDate"
         :endDate="endDate">
       </mt-datetime-picker>
@@ -139,17 +140,24 @@ export default {
       }
     }
   },
-  computed: {},
-  watch: {},
   methods: {
     getStore () {
       http(storeAddr).then(res => {
         this.selectData = res.data.body
       })
     },
+    handleValueChange (v) {
+      console.log(v)
+      if (v) {
+        this.arrowActive = 3
+        document.documentElement.style.overflow = 'hidden'
+      } else {
+        this.arrowActive = 0
+        document.documentElement.style.overflow = 'auto'
+      }
+    },
     openPicker () {
       this.$refs.picker.open()
-      this.arrowActive = 3
     },
     popShow (index) {
       this.arrowActive = index
@@ -207,7 +215,6 @@ export default {
       let date = moment(data).format('YYYY-MM-DD')
       this.formData.birth = date
       this.formData.birthday = `${date}T00:00:00`
-      this.arrowActive = 0
     },
     submit () {
       if (this.validate()) {

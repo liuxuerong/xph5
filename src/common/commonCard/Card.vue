@@ -59,7 +59,6 @@
 
         <div class="displayBtn">
           <div
-            v-if="item.condMoney != '0'"
             class="fullSub"
           >
             <span v-if="item.applyType == '1'">[通用券]</span>
@@ -69,15 +68,6 @@
             <span v-else-if="item.range == '2'">限定门店</span>
             <span v-else-if="item.range == '3'">限指分类</span>
             <span v-else-if="item.range == '4'">全品类通用</span>
-          </div>
-          <div
-            v-else
-            class="fullSub"
-          >
-            <span v-if="item.applyType == '1'">[通用券]</span>
-            <span v-if="item.applyType == '2'">[app专享]</span>
-            <span v-if="item.applyType == '3'">[门店专享]</span>
-            <span>无门槛</span>
           </div>
         </div>
         <!-- 未使用 -->

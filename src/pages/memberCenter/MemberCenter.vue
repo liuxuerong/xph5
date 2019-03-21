@@ -2,7 +2,7 @@
   <div class="memberCenter" >
     <div class="topMember">
       <common-black-header>
-        <span class="about">关于会员卡</span>
+        <router-link to="/aboutMember" class="about">关于会员卡</router-link>
       </common-black-header>
       <div class="swiperOut" v-if="memberData&&curMemberLevel">
         <swiper ref="mySwiper" :options="swiperOption" class="swiperCont">
@@ -312,7 +312,7 @@
           <span>我已阅读并同意</span>
           <router-link to="/aboutMember" class="link">《星品优汇会员服务说明》</router-link>
         </div> -->
-        <div class="btnOpen" @click="btnOpen" v-if="memberData&&curMemberLevel.level==3">您已是黑金卡会员无需开通</div>
+        <div class="btnOpen" v-if="memberData&&curMemberLevel.level==3">您已是黑金卡会员无需开通</div>
         <div class="btnOpen" @click="btnOpen" v-else>立即开通</div>
       </div>
     </div>
