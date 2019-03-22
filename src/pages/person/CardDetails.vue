@@ -83,7 +83,7 @@ export default {
     }
   },
   methods: {
-    // 卡券详情也难渲染
+    // 卡券详情渲染
     cardDetailsRender () {
       let type = this.$route.params.type
       // 0 未使用 1 已使用  2 已失效
@@ -98,10 +98,8 @@ export default {
         }
         http(getDetailById, params).then((response) => {
           if (response.data.code === 0) {
-            console.log(response)
             this.list = response.data.body.coupon
             this.pastList = Object.assign(this.pastList, this.list)
-            console.log(this.pastList)
             this.status = response.data.body.status
             if (this.mainType !== '0') {
               this.fgColor = '#999999'

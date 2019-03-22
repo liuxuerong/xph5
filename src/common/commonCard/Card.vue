@@ -5,7 +5,7 @@
   >
     <div
       class="cover"
-      v-if="(index !==0||(item.useStatus == '2' && item.display=='1'))&&showOperate"
+      v-if="index !==0&&showOperate"
     ></div>
     <div class="top">
       <div class="left">
@@ -32,6 +32,7 @@
             >立即领取</span>
             <span
               class="operBtn newUse"
+              :class="{noReceive:item.useStatus == '2' && item.display=='1'}"
               v-if="item.useStatus == '2'"
               @click="useClick(item)"
             >立即使用</span>

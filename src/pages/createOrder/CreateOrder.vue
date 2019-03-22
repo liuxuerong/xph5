@@ -78,13 +78,13 @@
           <div>商品金额<span class="fr">￥{{totalPric}}</span></div>
         </div>
         <div class="cellLink lh80">
-          <div>运费<span class="fr">￥{{shippingAmount}}</span></div>
+          <div>运费<span class="fr">{{shippingAmount>0?'+':''}}￥{{shippingAmount}}</span></div>
         </div>
         <div class="cellLink lh80">
-          <div>配送优惠<span class="fr">￥{{shippingFavorableAmount}}</span></div>
+          <div>配送优惠<span class="fr">{{shippingFavorableAmount>0?'-':''}}￥{{shippingFavorableAmount}}</span></div>
         </div>
         <div class="cellLink lh80">
-          <div>商品优惠<span class="fr">￥{{favorableAmount}}</span></div>
+          <div>商品优惠<span class="fr">{{favorableAmount>0?'-':''}}￥{{favorableAmount}}</span></div>
         </div>
 
       </div>

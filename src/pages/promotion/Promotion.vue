@@ -1,6 +1,6 @@
 <template>
   <div class="promotion">
-    <common-opa-header/>
+    <common-opa-header replace="/"/>
     <div class="top">
       <img src="../../images/logo-bg.png" alt="">
     </div>
