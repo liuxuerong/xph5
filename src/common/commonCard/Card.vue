@@ -78,11 +78,13 @@
         >
           <!-- 立即领取 可以领取-->
           <!-- 领光了 -->
+
           <span
             v-if="item.useStatus == '1'||item.useStatus == '3'"
             class="activityTime"
           >领取时限:{{item.activityStart|timeFilter}} - {{item.activityEnd|timeFilter}}</span>
           <!-- 立即使用  到达使用时间-->
+
           <span v-else-if="item.useStatus == '2'">使用时限:{{item.overdueStart|timeFilter}} - {{item.overdueEnd|timeFilter}}</span>
           <span
             v-else-if="item.useStatus == '2' && item.invalidDay"
@@ -196,7 +198,7 @@ export default {
       display block
       width 180px
       height 52px
-      line-height 52px
+      line-height 60px
       text-align center
       font-size 30px
       margin 30px auto 0

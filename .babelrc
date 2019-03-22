@@ -9,12 +9,17 @@
     "stage-2",
     ["es2015", { "modules": false }]
   ],
+  "env": {
+    "test": {
+      "presets": [["env", { "targets": { "node": "current" } }]]
+    }
+  },
   "plugins": [["component", [
     {
       "libraryName": "mint-ui",
       "style": true
     },{
-      name: 'vux-ui'
+      "name": "vux-ui"
     }
   ]],"transform-vue-jsx", "transform-runtime"]
 }
