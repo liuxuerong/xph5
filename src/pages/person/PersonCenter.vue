@@ -156,7 +156,7 @@ export default {
         let data = response.data.body
         if (data.coupons.length > 0) {
           this.coupons = data.coupons
-          this.cardScrollWidth = (this.coupons.length * 1050 - 50) / 112.5
+          this.cardScrollWidth = (this.coupons.length * 950 - 50) / 112.5
         }
         let operPhone = data.memberName
         if ((/^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/.test(Number(operPhone)))) {
@@ -295,6 +295,10 @@ export default {
 </script>
 <style lang='stylus' scoped>
   @import "~styles/mixins.styl";
+  .wrapper>>>.cardVouItem .right
+     width 72%
+  .wrapper>>>.cardVouItem .left
+    width 28%
   .wrapper
     width 100%
     box-sizing border-box
@@ -570,7 +574,7 @@ export default {
     height 320px
     .cardVolItem
       float left
-      width 1000px
+      width 900px
       height 320px
       margin-right 50px
       // bgImage('../../images/newCardVouItemBg')

@@ -27,11 +27,11 @@
     <div class="goodsStatus" v-if="goodsStatus!=1">商品已经{{goodsStatusText}}</div>
     <details-operate class="detailsOperate" :goodsItems="goodsItems" :goodsStatus="goodsStatus" :goods="goods"/>
     <details-pop-up :sku="sku" v-if="sku" :goods="goods" :goodsStatus="goodsStatus"/>
-    <details-coupon :couponData = "couponData"></details-coupon>
+    <details-coupon :couponData = "couponData" @receiveCard="receiveCellInfo"></details-coupon>
     </div>
     <div v-show="goodsStatus===4">
       <common-nav-header :title="emptyTitle"/>
-     <common-empty  :emptyObj="emptyObj" />
+      <common-empty  :emptyObj="emptyObj" />
     </div>
   </div>
 </template>
@@ -66,9 +66,6 @@ import {
 import {
   http
 } from 'util/request'
-import {
-  config
-} from 'util/config.js'
 import {
   storage
 } from 'util/storage.js'
@@ -122,14 +119,13 @@ export default {
       sku: null,
       goodsItems: [],
       showCoupon: false,
-      coupponVisible: false,
       couponData: []
     }
   },
-
   computed: {
     ...mapState({
-      popupVisible: state => state.details.popupVisible
+      popupVisible: state => state.details.popupVisible,
+      coupponVisible: state => state.details.coupponVisible
     })
   },
   watch: {
@@ -147,7 +143,6 @@ export default {
   methods: {
     ...mapMutations(['changePopupVisible', 'changeNowPrice', 'changeFrom', 'changeMaxCount', 'changeCoupponVisible']),
     pushKeys (arr) {
-      console.log(arr)
       if (arr.length === 1) {
         this.changeMaxCount(arr[0].stock)
       }
@@ -314,7 +309,6 @@ export default {
             if (data.length > 0) {
               this.showCoupon = true
               this.couponData = data
-              console.log(this.couponData)
             }
           }
         })
@@ -322,6 +316,7 @@ export default {
     },
     // 优惠券弹窗
     receiveCoupons () {
+      console.log(7474)
       if (storage.getLocalStorage(accessToken)) {
         this.changeCoupponVisible(true)
       } else {
@@ -335,6 +330,9 @@ export default {
       this.showCoupon = true
     }
     this.receiveCellInfo()
+  },
+  created () {
+    this.changeCoupponVisible(false)
   }
 }
 </script>

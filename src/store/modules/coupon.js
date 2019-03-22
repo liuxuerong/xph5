@@ -4,6 +4,7 @@ const coupon = {
   },
   mutations: {
     changeCoupponVisible (state, coupponVisible) {
+      console.log(141111)
       state.coupponVisible = coupponVisible
     }
   }

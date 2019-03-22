@@ -112,7 +112,6 @@ export default {
     },
     popUpShowBuy () {
       if (this.goodsStatus === 1) {
-        console.log('this.changeFrom')
         this.changeFrom(3)
         this.changePopupVisible(true)
       }
@@ -133,7 +132,6 @@ export default {
     }
   },
   mounted () {
-    console.log(this.goodsItems)
     this.hasCollection(this.params)
     if (storage.getLocalStorage(accessToken)) {
       this.getCartNum()

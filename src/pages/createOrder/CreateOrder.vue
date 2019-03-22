@@ -78,11 +78,15 @@
           <div>商品金额<span class="fr">￥{{totalPric}}</span></div>
         </div>
         <div class="cellLink lh80">
-          <div>优惠<span class="fr">￥{{offerAmount}}</span></div>
-        </div>
-        <div class="cellLink lh80">
           <div>运费<span class="fr">￥{{shippingAmount}}</span></div>
         </div>
+        <div class="cellLink lh80">
+          <div>配送优惠<span class="fr">￥{{shippingFavorableAmount}}</span></div>
+        </div>
+        <div class="cellLink lh80">
+          <div>商品优惠<span class="fr">￥{{favorableAmount}}</span></div>
+        </div>
+
       </div>
 
       <div class="cutOffLine30"></div>
@@ -194,6 +198,8 @@ export default {
       needPayPrice: '',
       offerAmount: '',
       cartList: '',
+      favorableAmount: '',
+      shippingFavorableAmount: '',
       addressInfo: null,
       isInvoicing: false,
       invoiceVisible: false,
@@ -310,15 +316,19 @@ export default {
       }
       http(goodOrderData, params).then(res => {
         if (res.data.code === 0) {
-          params.key = res.data.body.key
-          this.availableCoupon = res.data.body.availableCoupon
-          this.availableShippingCoupon = res.data.body.availableShippingCoupon
-          this.availableCouponNum = res.data.body.availableCouponNum
-          this.availableShippingCouponNum = res.data.body.availableShippingCouponNum
-          this.pricesData = res.data.body.orderGoodsItems
-          this.shippingAmount = res.data.body.shippingAmount
-          this.offerAmount = res.data.body.offerAmount
-          this.addressInfo = res.data.body.delivery
+          console.log(res.data.body)
+          let data = res.data.body
+          params.key = data.key
+          this.availableCoupon = data.availableCoupon
+          this.availableShippingCoupon = data.availableShippingCoupon
+          this.availableCouponNum = data.availableCouponNum
+          this.availableShippingCouponNum = data.availableShippingCouponNum
+          this.pricesData = data.orderGoodsItems
+          this.shippingAmount = data.shippingAmount
+          this.offerAmount = data.offerAmount
+          this.addressInfo = data.delivery
+          this.favorableAmount = data.favorableAmount
+          this.shippingFavorableAmount = data.shippingFavorableAmount
           for (let i = 0; i < this.pricesData.length; i++) {
             let spec = JSON.parse(this.pricesData[i].spec)
             this.pricesData[i].spec = []
@@ -326,7 +336,7 @@ export default {
               this.pricesData[i].spec.push(spec[j].value)
             }
           }
-          let goodsItems = res.data.body.orderGoodsItems
+          let goodsItems = data.orderGoodsItems
           let goodsItemsNew = []
           for (let index in goodsItems) {
             for (let k in this.pricesData) {
@@ -336,10 +346,10 @@ export default {
               }
             }
           }
-          this.params.key = res.data.body.key
+          this.params.key = data.key
           this.params.goodsItems = goodsItemsNew
-          this.totalPric = res.data.body.totalPrice
-          this.needPayPrice = res.data.body.needPayPrice
+          this.totalPric = data.totalPrice
+          this.needPayPrice = data.needPayPrice
           // storage.setLocalStorage(goodsInfo, params)
         } else {
           Toast({

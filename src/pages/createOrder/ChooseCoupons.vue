@@ -4,7 +4,7 @@
     <div class="cardVoucherCon">
       <div class="cardVoucherPage" v-if="list.length > 0">
         <div class="cardVouItem" v-for="item in list" :key="item.id">
-          <card :item="item" :index="0" :showOperate="true" @useClick="useCoupon(item)"/>
+          <card :item="item" :index="0" :showOperate="true" @useClick="useCoupon(item)" @receiveCard="receiveCard(item.id)"/>
         </div>
         <div class="noCoupons" @click="noCoupons" v-if="type!=1">不使用优惠券</div>
       </div>
@@ -85,7 +85,9 @@ export default {
             if (this.type === '1') {
               this.list.push(item)
             } else if (this.type === '2' && item.useStatus === 2) {
-              this.list.push(item)
+              if (item.type !== 4) {
+                this.list.push(item)
+              }
             } else if (this.type === '3') {
               if (item.type === 4) {
                 this.list.push(item)
@@ -100,13 +102,16 @@ export default {
     // shippingFavorableId
     // 立即使用优惠券
     useCoupon (coupon) {
+      console.log(coupon)
       let info = storage.getLocalStorage(orderInfo) || {}
       if (coupon.type == 4) {
         info.shippingFavorableId = coupon.id
         info.shippingFavorableAmount = coupon.subMoney
       } else {
+        console.log(111)
         info.couponId = coupon.id
         info.couponName = coupon.name
+        console.log(info)
       }
       storage.setLocalStorage(orderInfo, info)
       this.$router.replace({
@@ -133,7 +138,7 @@ export default {
         if (response.data.code === 0) {
           Toast({
             message: '优惠券领取成功',
-            position: 'bottom',
+            position: 'center',
             duration: 2000
           })
           this.headleTabsChange(listUseCouponByGoodsId)
@@ -173,6 +178,7 @@ export default {
     padding-top 132px
     background #f5f5f5
     min-height 100vh
+    padding-bottom 130px
   .cardVoucherTitle
     width 100%
     height 120px

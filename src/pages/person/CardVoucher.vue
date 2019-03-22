@@ -9,7 +9,7 @@
       </div>
       <div class="cardVoucherPage" v-if="list.length > 0">
          <div class="cardVouItem"  v-for="item in list" :key="item.id" @click.stop="cardDetailsPages(item.useStatus,item.id,item)">
-           <card :item="item" :index="index" :showOperate="true"/>
+           <card :item="item" :index="index" :showOperate="true" @receiveCard="receiveCard(item.id)"/>
          </div>
       </div>
       <div class="cardVoucherPage" :class="{cardVoucherPageBg:list.length == 0}" v-else>

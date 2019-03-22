@@ -4,7 +4,7 @@
       <div id="couponinfo">
         <div class="couponScroll">
           <div class="couponItem" v-for="(item, index) in couponData" :key="index">
-            <card :item="item" :index="0" :showOperate="true"/>
+            <card :item="item" :index="0" :showOperate="true" @receiveCard="receiveCard(item.id)"/>
           </div>
         </div>
       </div>
@@ -48,6 +48,7 @@ export default {
   methods: {
     // 领取优惠券
     receiveCard (id) {
+      console.log(id)
       let params = {
         couponId: id
       }
@@ -56,16 +57,16 @@ export default {
           Toast({
             message: '优惠券领取成功',
             position: 'bottom',
-            duration: 5000
+            duration: 2000
           })
-          this.headleTabsChange(0)
+          // this.headleTabsChange(0)
+          this.$emit('receiveCard')
         }
       }).catch((err) => {
         console.log(err)
       })
     }
-  },
-  mounted () {}
+  }
 }
 </script>
 

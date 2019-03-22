@@ -110,10 +110,7 @@
 
 </template>
 <script>
-import { memberCouponRecord } from 'util/netApi'
 import {storage} from 'util/storage'
-import { http } from 'util/request'
-import { Toast } from 'mint-ui'
 export default {
   name: 'Card',
   props: {
@@ -143,23 +140,7 @@ export default {
   methods: {
     // 领取优惠券
     receiveCard (id) {
-      let params = {
-        couponId: id
-      }
-      http(memberCouponRecord, params)
-        .then(response => {
-          if (response.data.code === 0) {
-            Toast({
-              message: '优惠券领取成功',
-              position: 'bottom',
-              duration: 5000
-            })
-            this.headleTabsChange(0)
-          }
-        })
-        .catch(err => {
-          console.log(err)
-        })
+      this.$emit('receiveCard')
     },
     // 使用按钮点击
     useClick (item) {

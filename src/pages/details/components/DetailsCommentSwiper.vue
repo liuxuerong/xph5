@@ -54,7 +54,6 @@ export default {
   },
   watch: {
     goodsComment (v) {
-      console.log(v)
       const commemts = v
       if (commemts.totals) {
         this.swiperData = commemts.list
@@ -69,7 +68,6 @@ export default {
     }
   },
   mounted () {
-    console.log(this.goodsComment)
     const commemts = this.goodsComment
     if (commemts.totals) {
       this.swiperData = commemts.list
