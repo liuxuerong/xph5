@@ -32,6 +32,7 @@
         <span></span>
         <span></span>
         <qrcode class="Scavenging"  :value="codeValue" type="img"></qrcode>
+        <p class="tip">使用时请向服务人员出示会员码，以累积积分</p>
       </div>
     </div>
   </div>
@@ -195,4 +196,11 @@ export default {
       bottom 120px
       border-bottom 6px solid #F2F2F2
       border-right 6px solid #F2F2F2
+  .tip
+    position absolute
+    bottom 37px
+    width 100%
+    text-align center
+    color #333333
+    font-size 36px
 </style>

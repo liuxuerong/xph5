@@ -25,27 +25,32 @@
         </div>
       </li>
     </ul>
+    <common-empty  :emptyObj="emptyObj"/>
   </div>
 </template>
 <script>
 import CommonNavHeader from 'common/commonHeader/CommonNavHeader'
+import CommonEmpty from 'common/commonEmpty/CommonEmpty'
+import emptyImg from '../../images/commentEmptyList.png'
 import { http } from 'util/request'
 import { buyRecord } from 'util/netApi'
 export default {
   name: 'TransactionRecord',
   components: {
-    CommonNavHeader
+    CommonNavHeader,
+    CommonEmpty
   },
   data () {
     return {
-      recordList: []
+      recordList: [],
+      emptyObj: {
+        emptyImg,
+        emptyBold: '暂无交易纪录',
+        emptyP: '您还没有交易记录哦',
+        buttonText: null,
+        buttonRouter: null
+      }
     }
-  },
-  computed: {
-
-  },
-  watch: {
-
   },
   methods: {
     getRecord () {

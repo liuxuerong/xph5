@@ -27,8 +27,11 @@
         <div class="operBtn gray" v-else-if="pastList.useStatus == '3'">抢光了</div>
         <div class="operBtn gray" v-else-if="pastList.useStatus == '2'&& pastList.display=='1'">立即使用</div>
       </div>
-      <div class="bottom grayBottom btnCard" v-else>
-        <div class="operBtn" >立即使用</div>
+      <div class="bottom grayBottom btnCard" v-if="mainType == '1'">
+        <div class="operBtn" >已使用</div>
+      </div>
+      <div class="bottom grayBottom btnCard" v-if="mainType == '2'">
+        <div class="operBtn" >已失效</div>
       </div>
     </div>
     <!-- 已经领取 有id -->
@@ -92,14 +95,18 @@ export default {
       this.mainType = mainType
       this.type = type
       this.pastList = storage.getLocalStorage('card')
+      console.log(type)
       if (type === '2') {
         let params = {
           couponId: id
         }
         http(getDetailById, params).then((response) => {
+          console.log(response)
           if (response.data.code === 0) {
             this.list = response.data.body.coupon
-            this.pastList = Object.assign(this.pastList, this.list)
+            console.log(this.list)
+            this.pastList = Object.assign({}, this.pastList, this.list)
+            console.log(this.pastList)
             this.status = response.data.body.status
             if (this.mainType !== '0') {
               this.fgColor = '#999999'
