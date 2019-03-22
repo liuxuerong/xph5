@@ -109,6 +109,6 @@ export default {
         color #BA825A
     a:nth-child(3)
       img
-        width 130px
-        height 130px
+        width 111px
+        height 126px
 </style>

@@ -319,9 +319,9 @@ export default {
 <style lang="stylus" scoped>
 .promotion
   min-height 100vh
-  padding-bottom 350px
+  padding-bottom 1.333333rem
   .top
-    height 660px
+    height 495px
     background url("../../images/register_bg.png") no-repeat center center/100% 100%
     padding-top 200px
     img

@@ -12,14 +12,14 @@ export default {
   props: {
     title: String,
     replace: {
-      default: false,
-      type: Boolean
+      default: '',
+      type: String
     }
   },
 
   methods: {
     goBack () {
-      if (this.replace) {
+      if (this.replace !== '') {
         this.$router.replace(this.replace)
       } else {
         this.$router.go(-1)
