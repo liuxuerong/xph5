@@ -137,23 +137,34 @@ export default {
         birthday: '',
         phone: '',
         code: ''
+      },
+      handler: function (e) {
+        e.preventDefault()
       }
     }
   },
   methods: {
+    /* 解决页面层级相互影响滑动的问题 */
+    closeTouch () {
+      document.getElementsByTagName('body')[0].addEventListener('touchmove', this.handler, {passive: false})// 阻止默认事件
+    },
+    openTouch () {
+      document.getElementsByTagName('body')[0].removeEventListener('touchmove', this.handler, {passive: false})// 打开默认事件
+    },
     getStore () {
       http(storeAddr).then(res => {
         this.selectData = res.data.body
       })
     },
     handleValueChange (v) {
-      console.log(v)
       if (v) {
         this.arrowActive = 3
-        document.documentElement.style.overflow = 'hidden'
+        // document.documentElement.style.overflow = 'hidden'
+        this.closeTouch()
       } else {
         this.arrowActive = 0
         document.documentElement.style.overflow = 'auto'
+        this.openTouch()
       }
     },
     openPicker () {
@@ -307,6 +318,8 @@ export default {
 </style>
 <style lang="stylus" scoped>
 .promotion
+  min-height 100vh
+  padding-bottom 350px
   .top
     height 660px
     background url("../../images/register_bg.png") no-repeat center center/100% 100%
@@ -352,10 +365,12 @@ export default {
       margin-bottom 28px
     input
       width 100%
-      padding 0 32px
-      border 1px solid #E5E8EC
+      padding 30px 32px
       height 130px
-      line-height 130px
+      line-height 60px
+      border 1px solid #E5E8EC
+      -webkit-appearance none
+      caret-color #999
     .arrow
       position absolute
       right 40px
@@ -409,7 +424,6 @@ export default {
     line-height 180px
     font-size 40px
     color #666666
-    margin-bottom 350px
     text-align center
     a
       color #CC986E

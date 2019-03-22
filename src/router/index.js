@@ -334,7 +334,6 @@ const router = new Router({
     {
       path: '/paymentSucc',
       name: 'paymentSucc',
-      meta: { requireLogin: true },
       component: resolve => require(['@/pages/order/PaymentSucc'], resolve)
     },
     // ActivitysList

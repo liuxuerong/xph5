@@ -31,32 +31,6 @@ let headerOption = () => {
     'content-type': 'application/json;'
   }
 }
-// switch (method) {
-//   case 'GET':
-//     return Object.assign({
-//       'content-type': 'application/json;'
-//     },
-//     _accessToken
-//     )
-//   case 'POST':
-//     return Object.assign({
-//       'content-type': 'application/json;'
-//     },
-//     _accessToken
-//     )
-//   case 'DELETE':
-//     return Object.assign({
-//       'content-type': 'application/json;'
-//     },
-//     _accessToken
-//     )
-//   case 'PUT':
-//     return Object.assign({
-//       'content-type': 'application/json;'
-//     },
-//     _accessToken
-//     )
-// }
 // http返回码状态判断
 let state = (res, noLoading) => {
   if (noLoading) {
@@ -111,11 +85,6 @@ let state = (res, noLoading) => {
       break
   }
 }
-
-// storage.delLocalStorage(accessToken)
-// this.navigateTo({
-//   url: '../login/login'
-// })
 /**
  * opts 包含url和method的对象
  * params 请求的参数
@@ -123,9 +92,6 @@ let state = (res, noLoading) => {
 export const http = (opts, params, noLoading) => {
   if (!noLoading || noLoading === 'undefined') {
     notice.loading()
-    // setTimeout(function () {
-    //   notice.loading()
-    // }, 300)
   }
   // 请求默认配置
   let httpDefaultOptions = {}

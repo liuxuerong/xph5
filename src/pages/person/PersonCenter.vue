@@ -15,8 +15,8 @@
           <div class="headerRightText">
             <h2 class="headerName" @click="userDataSet">{{phone}}</h2>
             <span class="memberGrade" v-if="list.memberLevelName === '普卡'"><i class="memberGradeIcon01"></i>普卡<router-link to="/memberCenter/1" class="fr immediately"><em class="fl"></em><em>立领400元</em> <em class="fr"></em></router-link></span>
-            <span class="memberGrade" v-if="list.memberLevelName === '金卡'"><i class="memberGradeIcon02"></i>金卡<router-link to="/memberCenter" class="fr immediately"><em class="fl"></em><em>立领400元</em> <em class="fr"></em></router-link></span>
-            <span class="memberGrade" v-if="list.memberLevelName === '白金卡'"><i class="memberGradeIcon03"></i>白金卡<router-link to="/memberCenter" class="fr immediately"><em class="fl"></em><em>立领400元</em> <em class="fr"></em></router-link></span>
+            <span class="memberGrade" v-if="list.memberLevelName === '金卡'"><i class="memberGradeIcon02"></i>金卡<router-link to="/memberCenter/1" class="fr immediately"><em class="fl"></em><em>立领400元</em> <em class="fr"></em></router-link></span>
+            <span class="memberGrade" v-if="list.memberLevelName === '白金卡'"><i class="memberGradeIcon03"></i>白金卡<router-link to="/memberCenter/1" class="fr immediately"><em class="fl"></em><em>立领400元</em> <em class="fr"></em></router-link></span>
             <span class="memberGrade" v-if="list.memberLevelName === '黑金卡'"><i class="memberGradeIcon04"></i>黑金卡
             </span>
           </div>
