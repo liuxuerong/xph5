@@ -85,7 +85,7 @@
           >领取时限:{{item.activityStart|timeFilter}} - {{item.activityEnd|timeFilter}}</span>
           <!-- 立即使用  到达使用时间-->
 
-          <span v-else-if="item.useStatus == '2'">使用时限:{{item.overdueStart|timeFilter}} - {{item.overdueEnd|timeFilter}}</span>
+          <span v-else-if="item.useStatus == '2'&&!item.invalidDay">使用时限:{{item.overdueStart|timeFilter}} - {{item.overdueEnd|timeFilter}}</span>
           <span
             v-else-if="item.useStatus == '2' && item.invalidDay"
             class="countDown"
@@ -100,7 +100,8 @@
           class="activityTime"
           v-else
         >
-          <span class="activityTime">{{item.activityStart|timeFilter}} - {{item.activityEnd|timeFilter}}</span>
+          <span class="activityTime" v-if="item.useStatus == '2'">使用时限：{{item.activityStart|timeFilter}} - {{item.activityEnd|timeFilter}}</span>
+          <span class="activityTime" v-if="item.useStatus == '1'">领取时限：{{item.activityStart|timeFilter}} - {{item.activityEnd|timeFilter}}</span>
           <span
             class="cardDetails"
             v-if="showOperate"
