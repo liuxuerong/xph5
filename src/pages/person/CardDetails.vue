@@ -22,7 +22,7 @@
       </div>
       <div class="cardIntroduce" ref="sentence" v-html="pastList.content"></div>
       <div class="bottom btnCard" v-if="mainType == '0'">
-        <router-link to="/find" class="operBtn" v-if="pastList.useStatus == '2'&& pastList.display!='1'">立即使用</router-link>
+        <router-link to="/find" class="operBtn" v-if="pastList.useStatus == '2'&& pastList.display!='1'&&pastList.applyType!='3'">立即使用</router-link>
         <div class="operBtn" v-else-if="pastList.useStatus == '1'" @click.stop="receiveCard(pastList.id)">立即领取</div>
         <div class="operBtn gray" v-else-if="pastList.useStatus == '3'">抢光了</div>
         <div class="operBtn gray" v-else-if="pastList.useStatus == '2'&& pastList.display=='1'">立即使用</div>
