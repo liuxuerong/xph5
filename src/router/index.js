@@ -440,7 +440,8 @@ const router = new Router({
       path: '/promotion',
       name: 'Promotion', // 地下推广注册页
       component: resolve => require(['@/pages/promotion/Promotion'], resolve)
-    }
+    },
+    {path: '*', redirect: '/'}
   ]
 })
 

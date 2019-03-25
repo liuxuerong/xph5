@@ -77,7 +77,8 @@
         @confirm="handleConfirm"
         @visible-change="handleValueChange"
         :startDate="startDate"
-        :endDate="endDate">
+        :endDate="endDate"
+        v-model="dateVal">
       </mt-datetime-picker>
   </div>
 </template>
@@ -117,8 +118,9 @@ export default {
       isInvoicing: true,
       arrowActive: 0,
       timer: null,
-      startDate: new Date('1980-01-01'),
+      startDate: new Date('1920-01-01'),
       endDate: new Date(),
+      dateVal: '',
       computedTime: 0,
       selectData: null,
       franchisee: '',
@@ -159,15 +161,18 @@ export default {
     handleValueChange (v) {
       if (v) {
         this.arrowActive = 3
-        // document.documentElement.style.overflow = 'hidden'
         this.closeTouch()
       } else {
         this.arrowActive = 0
-        document.documentElement.style.overflow = 'auto'
         this.openTouch()
       }
     },
     openPicker () {
+      if (this.formData.birth !== '') {
+        this.dateVal = this.formData.birth
+      } else {
+        this.dateVal = new Date('1980-01-01')
+      }
       this.$refs.picker.open()
     },
     popShow (index) {

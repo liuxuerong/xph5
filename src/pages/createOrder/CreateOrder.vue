@@ -43,7 +43,7 @@
         <div class="cellLink">
           <div>配送方式<span class="fr">快递</span></div>
         </div>
-        <div class="cellLink" @click.prevent="chooseCouponsDelivery">
+        <div class="cellLink" @click.prevent="chooseCouponsDelivery" v-if="!shippingFree">
           <div class="text">配送优惠
             <span class="fr" v-if="info&&info.shippingFavorableAmount">已优惠<i>{{info.shippingFavorableAmount}}</i>元</span>
             <span class="fr availableCouponNum" v-else-if="availableShippingCoupon&&availableShippingCouponNum"><i>{{availableShippingCouponNum}}</i>张可用</span>
@@ -80,7 +80,7 @@
         <div class="cellLink lh80">
           <div>运费<span class="fr">{{shippingAmount>0?'+':''}}￥{{shippingAmount}}</span></div>
         </div>
-        <div class="cellLink lh80">
+        <div class="cellLink lh80" v-if="!shippingFree">
           <div>配送优惠<span class="fr">{{shippingFavorableAmount>0?'-':''}}￥{{shippingFavorableAmount}}</span></div>
         </div>
         <div class="cellLink lh80">
@@ -200,6 +200,7 @@ export default {
       cartList: '',
       favorableAmount: '',
       shippingFavorableAmount: '',
+      shippingFree: false,
       addressInfo: null,
       isInvoicing: false,
       invoiceVisible: false,
@@ -329,6 +330,7 @@ export default {
           this.addressInfo = data.delivery
           this.favorableAmount = data.favorableAmount
           this.shippingFavorableAmount = data.shippingFavorableAmount
+          this.shippingFree = data.shippingFree
           for (let i = 0; i < this.pricesData.length; i++) {
             let spec = JSON.parse(this.pricesData[i].spec)
             this.pricesData[i].spec = []
