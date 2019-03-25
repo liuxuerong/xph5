@@ -4,7 +4,7 @@
       <div id="couponinfo">
         <div class="couponScroll">
           <div class="couponItem" v-for="(item, index) in couponData" :key="index">
-            <card :item="item" :index="0" :showOperate="true" @receiveCard="receiveCard(item.id)"/>
+            <card :item="item" :index="0" :showOperate="true" :isUse="true" @receiveCard="receiveCard(item.id)"/>
           </div>
         </div>
       </div>
@@ -25,11 +25,6 @@ import {
 export default {
   props: {
     couponData: Array
-  },
-  data () {
-    return {
-
-    }
   },
   computed: mapState({
     coupon: state => state.coupon

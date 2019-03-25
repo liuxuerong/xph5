@@ -4,7 +4,7 @@
     <div class="cardVoucherCon">
       <div class="cardVoucherPage" v-if="list.length > 0">
         <div class="cardVouItem" v-for="item in list" :key="item.id">
-          <card :item="item" :index="0" :showOperate="true" @useClick="useCoupon(item)" @receiveCard="receiveCard(item.id)"/>
+          <card :item="item" :index="0" :isUse="isUse" :showOperate="true" @useClick="useCoupon(item)" @receiveCard="receiveCard(item.id)"/>
         </div>
         <div class="noCoupons" @click="noCoupons" v-if="type!=1">不使用优惠券</div>
       </div>
@@ -48,6 +48,7 @@ export default {
   data () {
     return {
       list: [],
+      isUse: false,
       title: '',
       type: 1,
       routeName: '',
@@ -102,16 +103,13 @@ export default {
     // shippingFavorableId
     // 立即使用优惠券
     useCoupon (coupon) {
-      console.log(coupon)
       let info = storage.getLocalStorage(orderInfo) || {}
       if (coupon.type == 4) {
         info.shippingFavorableId = coupon.id
         info.shippingFavorableAmount = coupon.subMoney
       } else {
-        console.log(111)
         info.couponId = coupon.id
         info.couponName = coupon.name
-        console.log(info)
       }
       storage.setLocalStorage(orderInfo, info)
       this.$router.replace({
@@ -152,6 +150,7 @@ export default {
     this.type = this.$route.params.type
     if (this.type === '1') {
       this.title = '领取优惠券'
+      this.isUse = true
       this.routeName = '/cart'
       this.headleTabsChange(listUseCouponByGoodsId)
     } else if (this.type === '2') {

@@ -35,7 +35,7 @@
               :class="{noReceive:item.useStatus == '2' && item.display=='1'}"
               v-if="item.useStatus == '2'"
               @click="useClick(item)"
-            >立即使用</span>
+            >{{isUse?'已领取':'立即使用'}}</span>
             <!-- <span class="operBtn newUse" v-if="type == '2'||type == '3'" @click="useCoupon(item,item.type)">立即使用</span> -->
             <span
               class="operBtn noReceive"
@@ -128,6 +128,11 @@ export default {
       // 是否显示按钮和详情文字
       type: Boolean,
       default: false
+    },
+    // 是否是在使用的页面
+    isUse: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -217,6 +222,9 @@ export default {
       font-size 42px
       font-weight bold
       color #333333
+      text-overflow ellipsis
+      overflow hidden
+      white-space nowrap
     .displayBtn
       width 100%
       div
