@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Index from '@/Index'
 
-describe('Index.vue', () => {
+describe('Component.Index', () => {
   it('should render correct contents', () => {
     const Constructor = Vue.extend(Index)
     const vm = new Constructor().$mount()
