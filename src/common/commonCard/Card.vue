@@ -92,7 +92,7 @@
           >{{item.invalidDay>0?item.invalidDay+'天后过期':'1天后过期'}}</span>
           <span
             class="cardDetails"
-            v-if="showOperate"
+            v-if="showOperate&&showDetailsText"
             @click.stop="cardDetailsPages"
           >详情&nbsp;></span>
         </div>
@@ -104,7 +104,7 @@
           <span class="activityTime" v-if="item.useStatus == '1'">领取时限：{{item.activityStart|timeFilter}} - {{item.activityEnd|timeFilter}}</span>
           <span
             class="cardDetails"
-            v-if="showOperate"
+            v-if="showDetailsText"
             @click.stop="cardDetailsPages"
           >详情&nbsp;></span>
         </div>
@@ -126,9 +126,14 @@ export default {
       default: 0
     },
     showOperate: {
-      // 是否显示按钮和详情文字
+      // 是否显示按钮
       type: Boolean,
       default: false
+    },
+    showDetailsText: {
+      // 是否显示详情文字
+      type: Boolean,
+      default: true
     },
     // 是否是在使用的页面
     isUse: {

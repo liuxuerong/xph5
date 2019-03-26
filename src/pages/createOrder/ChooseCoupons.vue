@@ -4,7 +4,7 @@
     <div class="cardVoucherCon">
       <div class="cardVoucherPage" v-if="list.length > 0">
         <div class="cardVouItem" v-for="item in list" :key="item.id">
-          <card :item="item" :index="0" :isUse="isUse" :showOperate="true" @useClick="useCoupon(item)" @receiveCard="receiveCard(item.id)"/>
+          <card :item="item" :index="0" :isUse="isUse" :showOperate="true" :showDetailsText="false" @useClick="useCoupon(item)" @receiveCard="receiveCard(item.id)"/>
         </div>
         <div class="noCoupons" @click="noCoupons" v-if="type!=1">不使用优惠券</div>
       </div>
