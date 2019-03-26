@@ -5,7 +5,7 @@
     <div class="cardVoucherCon" v-if="pastList">
       <div class="cardInfo">
         <div class="top border-bottom" >
-          <card :item="pastList" :index="+mainType"/>
+          <card :item="pastList" :index="+mainType" :showDetailsText="false"/>
         </div>
       </div>
       <div v-if="pastList.applyType !== 2&&pastList.useStatus == '2' && pastList.display!='1'" class="cardCodeCon">

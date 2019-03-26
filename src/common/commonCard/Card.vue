@@ -78,7 +78,6 @@
         >
           <!-- 立即领取 可以领取-->
           <!-- 领光了 -->
-
           <span
             v-if="item.useStatus == '1'||item.useStatus == '3'"
             class="activityTime"
@@ -100,7 +99,7 @@
           class="activityTime"
           v-else
         >
-          <span class="activityTime" v-if="item.useStatus == '2'">使用时限：{{item.activityStart|timeFilter}} - {{item.activityEnd|timeFilter}}</span>
+          <span class="activityTime" v-if="item.useStatus == '2'">使用时限：{{item.overdueStart|timeFilter}} - {{item.overdueEnd|timeFilter}}</span>
           <span class="activityTime" v-if="item.useStatus == '1'">领取时限：{{item.activityStart|timeFilter}} - {{item.activityEnd|timeFilter}}</span>
           <span
             class="cardDetails"

@@ -71,6 +71,7 @@ export default {
         }
         http(coupon, params).then((result) => {
           this.list = result.data.body.list
+          console.log(this.list)
         }).catch((err) => {
           console.log(err)
         })
@@ -83,6 +84,7 @@ export default {
         }
         http(coupon, params).then((result) => {
           this.list = result.data.body.list
+          console.log(this.list)
         }).catch((err) => {
           console.log(err)
         })
