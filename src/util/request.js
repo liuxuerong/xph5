@@ -52,6 +52,7 @@ let state = (res, noLoading) => {
       break
     case 401:
       notice.errorModal('未授权，请重新登录', function () {
+        router.push({path: '/login'})
       })
       break
     case 403:
