@@ -11,3 +11,5 @@ export const isAccountNumber = (value) => /^([1-9]{1})(\d{15}|\d{18})$/.test(val
 export const isPhoneCode = (value) => /^\d{6}$/gi.test(value)// 验证码
 
 export const isAlias = (value) => !/[@#$%^&*]+/gi.test(value)// 用户昵称
+
+export const rightPassword = (value) => /[0-9A-Za-z]{6,12}/gi.test(value)// 用户昵称

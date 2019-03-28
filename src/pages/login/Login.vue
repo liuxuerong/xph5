@@ -29,6 +29,7 @@
 
 <script type="text/javascript">
 import LoginBack from './components/LoginBack'
+import { isPhone, isPhoneCode, rightPassword } from 'util/validate'
 import {
   Toast
 } from 'mint-ui'
@@ -65,29 +66,15 @@ export default {
       storage.setLocalStorage(loginPro, from.path)
     }
     next()
-    // console.log(from, to)
   },
   components: {
     LoginBack
   },
-  computed: {
-    // 判断手机号码
-    rightPhoneNumber: function () {
-      return /^1\d{10}$/gi.test(this.phone)
-    },
-    // 判断验证码
-    rightPhoneCode: function () {
-      return /^\d{6}$/gi.test(this.code)
-    },
-    // 密码验证
-    rightPassword () {
-      return /[0-9A-Za-z]{6,12}/gi.test(this.password)
-    }
-  },
+
   methods: {
-    //   获取验证码
+    // 获取验证码
     obtainCodeBtn: function () {
-      if (this.rightPhoneNumber) {
+      if (isPhone(this.phone)) {
         let params = {
           request: this.phone
         }
@@ -106,14 +93,14 @@ export default {
         Toast({
           message: '请输入正确的手机号码',
           position: 'bottom',
-          duration: 5000
+          duration: 2000
         })
       }
     },
     // 验证码登录
     loginPhoneCode: function () {
       let _this = this
-      if (this.rightPhoneNumber && this.rightPhoneCode) {
+      if (isPhone(this.phone) && isPhoneCode(this.code)) {
         let params = {
           phone: this.phone,
           code: this.code,
@@ -139,7 +126,7 @@ export default {
             Toast({
               message: '请输入正确的验证码',
               position: 'bottom',
-              duration: 5000
+              duration: 2000
             })
           }
         })
@@ -147,48 +134,54 @@ export default {
         Toast({
           message: '请输入正确的手机号码或者验证码',
           position: 'bottom',
-          duration: 5000
+          duration: 2000
         })
       }
     },
     // 密码登录
     loginPassword () {
       let _this = this
-      let param = {
-        username: this.phone,
-        password: this.password,
-        type: 1,
-        userType: 1
-      }
-      http(getLogin, param).then((response) => {
-        if (response.data.code === 0) {
-          storage.setLocalStorage('userId', response.data.body.user_id)
-          storage.setLocalStorage(accessToken, 'Bearer ' + response.data.body.access_token)
-          Toast({
-            message: '登录成功',
-            position: 'bottom',
-            duration: 1000
-          })
-          setTimeout(() => {
-            console.log(this.redirect)
-            if (this.redirect) {
-              _this.$router.push(this.redirect)
-              storage.delLocalStorage(loginPro)
-            } else {
-              _this.$router.push('/')
-            }
-          }, 1000)
-        } else {
-          Toast({
-            message: '账号和密码不匹配，请重新输入',
-            position: 'bottom',
-            duration: 2000
-          })
+      if (isPhone(this.phone) && rightPassword(this.password)) {
+        let param = {
+          username: this.phone,
+          password: this.password,
+          type: 1,
+          userType: 1
         }
-      })
+        http(getLogin, param).then((response) => {
+          if (response.data.code === 0) {
+            storage.setLocalStorage('userId', response.data.body.user_id)
+            storage.setLocalStorage(accessToken, 'Bearer ' + response.data.body.access_token)
+            Toast({
+              message: '登录成功',
+              position: 'bottom',
+              duration: 1000
+            })
+            setTimeout(() => {
+              if (this.redirect) {
+                _this.$router.push(this.redirect)
+                storage.delLocalStorage(loginPro)
+              } else {
+                _this.$router.push('/')
+              }
+            }, 1000)
+          } else {
+            Toast({
+              message: '账号和密码不匹配，请重新输入',
+              position: 'bottom',
+              duration: 2000
+            })
+          }
+        })
+      } else {
+        Toast({
+          message: '请输入正确的手机号码或者密码',
+          position: 'bottom',
+          duration: 2000
+        })
+      }
     },
     login () {
-      console.log(this.isCode)
       if (this.isCode) {
         this.loginPhoneCode()
       } else {
