@@ -26,8 +26,12 @@
             v-if="index === 0&&showOperate"
           >
             <span
+              class="operBtn  noReceive"
+              v-if="item.useStatus == '1'&&item.display == '1'"
+            >立即领取</span>
+            <span
               class="operBtn newReceive"
-              v-if="item.useStatus == '1'"
+              v-if="item.useStatus == '1'&&item.display == '2'"
               @click.stop="receiveCard(item.id)"
             >立即领取</span>
             <span
