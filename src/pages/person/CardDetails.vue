@@ -134,7 +134,7 @@ export default {
             duration: 1000
           })
           setTimeout(() => {
-            this.$router.push('/cardDetails/2/0/' + id)
+            this.$router.replace('/cardDetails/2/0/' + id)
             let list = storage.getLocalStorage('card')
             list.useStatus = 2
             storage.setLocalStorage('card', list)
