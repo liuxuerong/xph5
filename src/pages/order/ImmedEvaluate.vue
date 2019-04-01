@@ -211,7 +211,6 @@ export default {
       padding 50px
       background #fff
       margin-bottom 30px
-      border-radius 20px
       img
         float left
         width 286px

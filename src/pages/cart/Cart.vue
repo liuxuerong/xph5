@@ -425,11 +425,9 @@ export default {
     background-color #fff
 .abledWrap
   background-color #fff
-  border-radius 20px
 .disabledWrap
   margin-top 30px
   background-color #fff
-  border-radius 20px
   .empty
     display flex
     height 138px

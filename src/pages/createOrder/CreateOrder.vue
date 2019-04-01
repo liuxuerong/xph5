@@ -636,7 +636,6 @@ export default {
     padding 50px 50px 0
   .wrap
     background-color #fff
-    border-radius 20px
     margin-bottom 30px
     .addAddress
       color #999999 !important
@@ -695,7 +694,6 @@ export default {
       border 2px solid #FAF7F3
     li
       border 2px solid #E6E6E6
-      border-radius 20px
       margin-bottom 30px
       padding 20px 50px
       .top

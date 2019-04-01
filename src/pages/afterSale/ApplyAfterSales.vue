@@ -471,7 +471,6 @@ export default {
       bgImage('../../icons/deletePic')
  .wrap
     background-color #fff
-    border-radius 20px
     margin-top 30px
 .cellLink
   line-height 148px

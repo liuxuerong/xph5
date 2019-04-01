@@ -328,7 +328,7 @@ export default {
   .top
     height 495px
     background url("../../images/register_bg.png") no-repeat center center/100% 100%
-    padding-top 200px
+    padding-top 100px
     img
       width 257px
       height 234px

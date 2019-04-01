@@ -651,7 +651,6 @@ export default {
   .xpInvoiceWrap
     .wrap
       background-color #fff
-      border-radius 20px
       margin-bottom 30px
       padding 0 38px
     .tip
@@ -750,7 +749,6 @@ export default {
   background-color rgba(0,0,0,0.5)
   .wrap
     height 100%
-    border-radius 20px
     padding 210px 50px 150px
     background #fff
     position relative
@@ -795,7 +793,6 @@ export default {
   width 100%
   height 140px
   line-height 140px
-  border-radius 20px
   display flex
   background-color #fff
   margin-bottom 30px

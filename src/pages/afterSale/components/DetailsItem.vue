@@ -64,7 +64,6 @@ export default {
 @import "~styles/mixins.styl";
 .goodsItem
   background-color #fff
-  border-radius 20px
   font-size 40px
   width 100%
   display flex

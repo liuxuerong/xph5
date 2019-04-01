@@ -90,7 +90,6 @@ export default {
     padding 120px 50px
     .wrap
       background #FFFFFF
-      border-radius 20px
       padding 50px
       margin-top 32px
     .identity

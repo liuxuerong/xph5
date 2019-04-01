@@ -207,7 +207,6 @@ export default {
   .logisticsWrap
     .wrap
       background-color #fff
-      border-radius 20px
       margin-bottom 30px
       padding 0 38px
 .iconWrap

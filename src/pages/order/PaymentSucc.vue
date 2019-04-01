@@ -82,7 +82,6 @@ export default {
       width 100%
       padding-top 150px
       background rgba(255,255,255,1)
-      border-radius 20px
       .paymentImg
         width 280px
         height 280px

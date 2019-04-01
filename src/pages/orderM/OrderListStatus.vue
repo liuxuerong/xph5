@@ -236,7 +236,6 @@ export default {
     padding-bottom 140px
   li
     background-color #fff
-    border-radius 20px
     margin-bottom 30px
   .itemBottom
     padding 0 50px 50px

@@ -212,7 +212,6 @@ export default {
         transform rotate(45deg)
   .wrap
     background-color #fff
-    border-radius 20px
     margin-top 30px
 .popWrap
   .bottomClose
@@ -246,7 +245,6 @@ export default {
       border 2px solid #FAF7F3
     li
       border 2px solid #E6E6E6
-      border-radius 20px
       margin-bottom 30px
       padding 20px 50px
       .top

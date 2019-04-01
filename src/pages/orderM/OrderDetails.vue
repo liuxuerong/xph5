@@ -460,7 +460,6 @@ export default {
     margin-top -140px
     .wrap
       background-color #fff
-      border-radius 20px
       margin-bottom 30px
       padding-left 48px
       padding-right 48px

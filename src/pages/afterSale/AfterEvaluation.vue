@@ -80,7 +80,6 @@ export default {
   height calc(100vh-(148px))
 .wrap
   background-color #fff
-  border-radius 20px
   margin-top 30px
 .padding50
   padding 50px 50px
