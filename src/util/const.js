@@ -20,3 +20,4 @@ export const activityCategory = 'ACTIVITYCATEGORY' // 品类秒杀查看详情
 export const fromRoute = 'FROMROUTE' // 编辑收入地址的地址来自哪里
 export const invoiceAmount = 'INVOICEAMOUNT' // 发票金额
 export const loginPro = 'LOGINPRO' // 登录页面之前的页面
+export const localFranchiseeId = 'FRANCHISEEID' // 订单标识

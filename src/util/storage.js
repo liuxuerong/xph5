@@ -1,7 +1,7 @@
 const storage = {
   // 设置本地存储
   setLocalStorage (name, value) {
-    const curTime = new Date().getTime() + 1000 * 60 * 60 * 24 * 3
+    const curTime = new Date().getTime() + 1000 * 60 * 60 * 24 * 1
     localStorage.setItem(name, JSON.stringify({
       data: value,
       time: curTime

@@ -49,7 +49,7 @@ import DetailsOperate from './components/DetailsOperate'
 import DetailsImgTextDesc from './components/DetailsImgTextDesc'
 import DetailsCommentSwiper from './components/DetailsCommentSwiper'
 import DetailsCoupon from './components/DetailsCoupon'
-import { accessToken } from 'util/const.js'
+import { accessToken, localFranchiseeId } from 'util/const.js'
 import BScroll from 'better-scroll'
 import emptyImg from '../../images/commentEmptyGoods.png'
 import {
@@ -261,6 +261,10 @@ export default {
     },
     initDeatils () {
       this.goodsId = this.$route.params.goodsId
+      let franchiseeId = this.$route.query.franchiseeId
+      if (franchiseeId) {
+        storage.setLocalStorage(localFranchiseeId, franchiseeId)
+      }
       this.changePopupVisible(false)
       // 商品详情
       if (this.goodsId !== '' || this.goodsId !== undefined) {

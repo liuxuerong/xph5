@@ -164,7 +164,8 @@ import {
   orderInfo,
   couponByGoods,
   invoiceInfo,
-  createOrderFrom
+  createOrderFrom,
+  localFranchiseeId
 } from 'util/const.js'
 export default {
   name: 'CreateOrder',
@@ -378,7 +379,10 @@ export default {
       let params = {}
       const info = storage.getLocalStorage(goodsInfo)
       let orderInfoData = storage.getLocalStorage(orderInfo)
-
+      let franchiseeId = storage.getLocalStorage(localFranchiseeId)
+      if (franchiseeId) {
+        params.storeId = franchiseeId
+      }
       params.fromCart = info.fromCart || false
       params.deliveryId = (orderInfoData && orderInfoData.addressId) || (this.addressInfo && this.addressInfo.id)
       params.invoicingId = orderInfoData && orderInfoData.invoicingId
@@ -399,6 +403,7 @@ export default {
         this.toastShow('请填写发票抬头！')
         return false
       }
+      console.log(params)
       // 提交订单
       http(createOrderData, params).then(res => {
         if (res.data.code === 0) {
