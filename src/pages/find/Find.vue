@@ -117,7 +117,11 @@ export default {
     IndexStoreActivity,
     IndexNewProducts
   },
-  props: {},
+   watch:{
+      '$route' (to, from) {
+        console.log(to,'111');
+    }
+  },
   data () {
     return {
       imageUrl: config.imageUrl,

@@ -2,7 +2,7 @@
   <div class="xpGoods">
     <keep-alive>
       <div class="xpGoodsWrap">
-        <common-nav-search :showCart="showCart">
+        <common-nav-search :showCart="showCart" >
           {{title}}
         </common-nav-search>
         <div class="xpGoodsTop" ref="xpGoodsTop">
@@ -70,7 +70,7 @@ export default {
     Divider
   },
   data () {
-    return {
+    return {test:'',
       tabbar: [],
       title: '',
       goodsListData: [],
@@ -158,6 +158,11 @@ export default {
   },
   mounted () {
     this.initData()
+  },
+  watch:{
+    '$route'(to,from){
+      console.log(to,from);
+    }
   }
 }
 </script>
